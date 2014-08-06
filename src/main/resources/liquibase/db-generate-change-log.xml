@@ -1,0 +1,769 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet author="bernard (generated)" id="1392305897010-1">
+        <createTable catalogName="gnuob" tableName="GNUOB_ACCESS">
+            <column autoIncrement="true" name="ID" type="BIGINT(19)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="INT(10)"/>
+            <column name="ACTIVE" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="group_ID" type="BIGINT(19)">
+                <!-- <constraints nullable="false"/> -->
+            </column>
+            <column name="permission_ID" type="BIGINT(19)">
+                <!-- <constraints nullable="false"/> -->
+            </column>
+            <column name="site_ID" type="BIGINT(19)">
+                <!-- <constraints nullable="false"/> -->
+            </column>
+            <column name="user_ID" type="BIGINT(19)">
+               <!--  <constraints nullable="false"/> -->
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-2">
+        <createTable catalogName="gnuob" tableName="GNUOB_ADDRESSES">
+            <column autoIncrement="true" name="ID" type="BIGINT(19)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="INT(10)"/>
+            <column name="CITY_NAME" type="VARCHAR(255)"/>
+            <column name="COUNTRY" type="VARCHAR(255)"/>
+            <column name="COUNTRY_NAME" type="VARCHAR(255)"/>
+            <column name="INTERNATIONAL_STATE_AND_CITY" type="VARCHAR(255)"/>
+            <column name="INTERNATIONAL_STREET" type="VARCHAR(255)"/>
+            <column name="PHONE" type="VARCHAR(255)"/>
+            <column name="POSTAL_CODE" type="VARCHAR(255)"/>
+            <column name="STATE_OR_PROVINCE" type="VARCHAR(255)"/>
+            <column name="STREET1" type="VARCHAR(255)"/>
+            <column name="STREET2" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-3">
+        <createTable catalogName="gnuob" tableName="GNUOB_CATEGORIES">
+            <column name="DESCRIPTION" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POSITION" type="INT(10)"/>
+            <column name="ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-4">
+        <createTable catalogName="gnuob" tableName="GNUOB_CATEGORIES_GNUOB_SUB_CATEGORIES">
+            <column name="GNUOB_CATEGORIES_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subCategories_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-5">
+        <createTable catalogName="gnuob" tableName="GNUOB_CONTENTS">
+            <column name="CONTENT" type="MEDIUMBLOB">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FORMAT" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-6">
+        <createTable catalogName="gnuob" tableName="GNUOB_CONTRACTS">
+            <column name="CONTRACT_ID" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-7">
+        <createTable catalogName="gnuob" tableName="GNUOB_CUSTOMERS">
+            <column name="BUYER_EMAIL" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BUYER_MARKETING_EMAIL" type="VARCHAR(255)"/>
+            <column name="CONTACT_PHONE" type="VARCHAR(255)"/>
+            <column name="FIRST_NAME" type="VARCHAR(255)"/>
+            <column name="LAST_NAME" type="VARCHAR(255)"/>
+            <column name="MIDDLE_NAME" type="VARCHAR(255)"/>
+            <column name="PAYER" type="VARCHAR(255)"/>
+            <column name="PAYER_BUSINESS" type="VARCHAR(255)"/>
+            <column name="PAYER_ID" type="VARCHAR(255)"/>
+            <column name="PAYER_STATUS" type="VARCHAR(255)"/>
+            <column name="SALUTATION" type="VARCHAR(255)"/>
+            <column name="PREFIX" type="VARCHAR(255)"/>
+            <column name="TAX_ID" type="VARCHAR(255)"/>
+            <column name="TAX_ID_TYPE" type="VARCHAR(255)"/>
+            <column name="ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-8">
+        <createTable catalogName="gnuob" tableName="GNUOB_GROUPS">
+            <column name="DESCRIPTION" type="LONGTEXT"/>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RULE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-9">
+        <createTable catalogName="gnuob" tableName="GNUOB_INVOICES">
+            <column autoIncrement="true" name="ID" type="BIGINT(19)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="INT(10)"/>
+            <column name="INVOICE_ID" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-10">
+        <createTable catalogName="gnuob" tableName="GNUOB_INVOICES_GNUOB_PAYMENTS">
+            <column name="GNUOB_INVOICES_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="payments_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-11">
+        <createTable catalogName="gnuob" tableName="GNUOB_OFFERS">
+            <column name="DESCRIPTION" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="HANDLING_TOTAL" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="INSURANCE_TOTAL" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REFERENCE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SHIPPING_DISCOUNT" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SHIPPING_TOTAL" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contract_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-12">
+        <createTable catalogName="gnuob" tableName="GNUOB_OFFERS_GNUOB_OFFER_RECORDS">
+            <column name="GNUOB_OFFERS_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="records_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-13">
+        <createTable catalogName="gnuob" tableName="GNUOB_OFFER_RECORDS">
+            <column autoIncrement="true" name="ID" type="BIGINT(19)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="INT(10)"/>
+            <column name="AMOUNT" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ITEM_HEIGHT" type="DECIMAL(19, 2)"/>
+            <column name="ITEM_HEIGHT_UNIT" type="VARCHAR(255)"/>
+            <column name="ITEM_LENGTH" type="DECIMAL(19, 2)"/>
+            <column name="ITEM_LENGTH_UNIT" type="VARCHAR(255)"/>
+            <column name="ITEM_URL" type="VARCHAR(255)"/>
+            <column name="ITEM_WEIGHT" type="DECIMAL(19, 2)"/>
+            <column name="ITEM_WEIGHT_UNIT" type="VARCHAR(255)"/>
+            <column name="ITEM_WIDTH" type="DECIMAL(19, 2)"/>
+            <column name="ITEM_WIDTH_UNIT" type="VARCHAR(255)"/>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NUMBER" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="QUANTITY" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAX" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-14">
+        <createTable catalogName="gnuob" tableName="GNUOB_ORDERS">
+            <column name="BILLING_AGREEMENT_ID" type="VARCHAR(255)"/>
+            <column name="CHECKOUT_STATUS" type="VARCHAR(255)"/>
+            <column name="CUSTOM" type="VARCHAR(255)"/>
+            <column name="GIFT_MESSAGE" type="VARCHAR(255)"/>
+            <column name="GIFT_MESSAGE_ENABLE" type="BIT(1)"/>
+            <column name="GIFT_RECEIPT_ENABLE" type="BIT(1)"/>
+            <column name="GIFT_WRAP_AMOUNT" type="DECIMAL(19, 2)"/>
+            <column name="GIFT_WRAP_ENABLE" type="BIT(1)"/>
+            <column name="GIFT_WRAP_NAME" type="VARCHAR(255)"/>
+            <column name="HANDLING_TOTAL" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="INSURANCE_OPTION_OFFERED" type="BIT(1)"/>
+            <column name="INSURANCE_TOTAL" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ITEM_TOTAL" type="DECIMAL(19, 2)"/>
+            <column name="NOTE" type="VARCHAR(255)"/>
+            <column name="NOTE_TEXT" type="VARCHAR(255)"/>
+            <column name="ORDER_DESCRIPTION" type="VARCHAR(255)"/>
+            <column name="ORDER_ID" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ORDER_TOTAL" type="DECIMAL(19, 2)"/>
+            <column name="SHIPPING_DISCOUNT" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SHIPPING_TOTAL" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAX_TOTAL" type="DECIMAL(19, 2)"/>
+            <column name="TOKEN" type="VARCHAR(255)"/>
+            <column name="TRANSACTION_ID" type="VARCHAR(255)"/>
+            <column name="ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contract_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="invoice_ID" type="BIGINT(19)"/>
+            <column name="shipment_ID" type="BIGINT(19)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-15">
+        <createTable catalogName="gnuob" tableName="GNUOB_ORDERS_GNUOB_ORDER_RECORDS">
+            <column name="GNUOB_ORDERS_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="records_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-16">
+        <createTable catalogName="gnuob" tableName="GNUOB_ORDER_RECORDS">
+            <column autoIncrement="true" name="ID" type="BIGINT(19)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="INT(10)"/>
+            <column name="AMOUNT" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ITEM_HEIGHT" type="DECIMAL(19, 2)"/>
+            <column name="ITEM_HEIGHT_UNIT" type="VARCHAR(255)"/>
+            <column name="ITEM_LENGTH" type="DECIMAL(19, 2)"/>
+            <column name="ITEM_LENGTH_UNIT" type="VARCHAR(255)"/>
+            <column name="ITEM_URL" type="VARCHAR(255)"/>
+            <column name="ITEM_WEIGHT" type="DECIMAL(19, 2)"/>
+            <column name="ITEM_WEIGHT_UNIT" type="VARCHAR(255)"/>
+            <column name="ITEM_WIDTH" type="DECIMAL(19, 2)"/>
+            <column name="ITEM_WIDTH_UNIT" type="VARCHAR(255)"/>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NUMBER" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="QUANTITY" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TAX" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-17">
+        <createTable catalogName="gnuob" tableName="GNUOB_PAYMENTS">
+            <column autoIncrement="true" name="ID" type="BIGINT(19)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="INT(10)"/>
+            <column name="EXCHANGE_RATE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="FEE_AMOUNT" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="GROSS_AMOUNT" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="HOLD_DECISION" type="VARCHAR(255)"/>
+            <column name="PAYMENT_DATE" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PAYMENT_REQUEST_ID" type="VARCHAR(255)"/>
+            <column name="PAYMENT_STATUS" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PAYMENT_TYPE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PENDING_REASON" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PROTECTION_ELIGIBILITY_TYPE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REASON_CODE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SETTLE_AMOUNT" type="DECIMAL(19, 2)"/>
+            <column name="STORE_ID" type="VARCHAR(255)"/>
+            <column name="TAX_AMOUNT" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TERMINAL_ID" type="VARCHAR(255)"/>
+            <column name="TRANSACTION_ID" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TRANSACTION_TYPE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-18">
+        <createTable catalogName="gnuob" tableName="GNUOB_PERMISSIONS">
+            <column autoIncrement="true" name="ID" type="BIGINT(19)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="INT(10)"/>
+            <column name="GROUP" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ROOT" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="USER" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-19">
+        <createTable catalogName="gnuob" tableName="GNUOB_PRODUCTS">
+            <column name="AMOUNT" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="BESTSELLERS" type="BIT(1)"/>
+            <column name="DESCRIPTION" type="LONGTEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DISCOUNT" type="DECIMAL(19, 2)"/>
+            <column name="ITEM_HEIGHT" type="DECIMAL(19, 2)"/>
+            <column name="ITEM_HEIGHT_UNIT" type="VARCHAR(255)"/>
+            <column name="ITEM_LENGTH" type="DECIMAL(19, 2)"/>
+            <column name="ITEM_LENGTH_UNIT" type="VARCHAR(255)"/>
+            <column name="ITEM_URL" type="VARCHAR(255)"/>
+            <column name="ITEM_WEIGHT" type="DECIMAL(19, 2)"/>
+            <column name="ITEM_WEIGHT_UNIT" type="VARCHAR(255)"/>
+            <column name="ITEM_WIDTH" type="DECIMAL(19, 2)"/>
+            <column name="ITEM_WIDTH_UNIT" type="VARCHAR(255)"/>
+            <column name="LATEST_COLLECTION" type="BIT(1)"/>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NUMBER" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RATING" type="INT(10)"/>
+            <column name="RECOMMENDED" type="BIT(1)"/>
+            <column name="TAX" type="DECIMAL(19, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="stock_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-20">
+        <createTable catalogName="gnuob" tableName="GNUOB_PRODUCTS_GNUOB_CONTENTS">
+            <column name="GNUOB_PRODUCTS_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contents_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-21">
+        <createTable catalogName="gnuob" tableName="GNUOB_PRODUCTS_GNUOB_SUB_CATEGORIES">
+            <column name="GNUOB_PRODUCTS_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subCategories_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-22">
+        <createTable catalogName="gnuob" tableName="GNUOB_SHIPMENTS">
+            <column autoIncrement="true" name="ID" type="BIGINT(19)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="INT(10)"/>
+            <column name="address_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-23">
+        <createTable catalogName="gnuob" tableName="GNUOB_SITES">
+            <column name="DESCRIPTION" type="LONGTEXT"/>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-24">
+        <createTable catalogName="gnuob" tableName="GNUOB_STOCKS">
+            <column autoIncrement="true" name="ID" type="BIGINT(19)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="INT(10)"/>
+            <column name="MAX_QUANTITY" type="DECIMAL(19, 2)"/>
+            <column name="MIN_QUANTITY" type="DECIMAL(19, 2)"/>
+            <column name="QUANTITY" type="DECIMAL(19, 2)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-25">
+        <createTable catalogName="gnuob" tableName="GNUOB_SUB_CATEGORIES">
+            <column autoIncrement="true" name="ID" type="BIGINT(19)">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="VERSION" type="INT(10)"/>
+            <column name="DESCRIPTION" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="POSITION" type="INT(10)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-26">
+        <createTable catalogName="gnuob" tableName="GNUOB_SUB_CATEGORIES_GNUOB_SUB_CATEGORIES">
+            <column name="GNUOB_SUB_CATEGORIES_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subCategories_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-27">
+        <createTable catalogName="gnuob" tableName="GNUOB_USERS">
+            <column name="DESCRIPTION" type="LONGTEXT"/>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="PASSWORD" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="RULE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-28">
+        <createTable catalogName="gnuob" tableName="GNUOB_USERS_GNUOB_GROUPS">
+            <column name="GNUOB_USERS_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="groups_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-29">
+        <createTable catalogName="gnuob" tableName="GNUOB_USERS_GNUOB_SITES">
+            <column name="GNUOB_USERS_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sites_ID" type="BIGINT(19)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-30">
+        <addPrimaryKey catalogName="gnuob" columnNames="ID" constraintName="PRIMARY" tableName="GNUOB_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-31">
+        <addPrimaryKey catalogName="gnuob" columnNames="GNUOB_CATEGORIES_ID, subCategories_ID" constraintName="PRIMARY" tableName="GNUOB_CATEGORIES_GNUOB_SUB_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-32">
+        <addPrimaryKey catalogName="gnuob" columnNames="ID" constraintName="PRIMARY" tableName="GNUOB_CONTENTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-33">
+        <addPrimaryKey catalogName="gnuob" columnNames="ID" constraintName="PRIMARY" tableName="GNUOB_CONTRACTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-34">
+        <addPrimaryKey catalogName="gnuob" columnNames="ID" constraintName="PRIMARY" tableName="GNUOB_CUSTOMERS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-35">
+        <addPrimaryKey catalogName="gnuob" columnNames="ID" constraintName="PRIMARY" tableName="GNUOB_GROUPS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-36">
+        <addPrimaryKey catalogName="gnuob" columnNames="GNUOB_INVOICES_ID, payments_ID" constraintName="PRIMARY" tableName="GNUOB_INVOICES_GNUOB_PAYMENTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-37">
+        <addPrimaryKey catalogName="gnuob" columnNames="ID" constraintName="PRIMARY" tableName="GNUOB_OFFERS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-38">
+        <addPrimaryKey catalogName="gnuob" columnNames="GNUOB_OFFERS_ID, records_ID" constraintName="PRIMARY" tableName="GNUOB_OFFERS_GNUOB_OFFER_RECORDS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-39">
+        <addPrimaryKey catalogName="gnuob" columnNames="ID" constraintName="PRIMARY" tableName="GNUOB_ORDERS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-40">
+        <addPrimaryKey catalogName="gnuob" columnNames="GNUOB_ORDERS_ID, records_ID" constraintName="PRIMARY" tableName="GNUOB_ORDERS_GNUOB_ORDER_RECORDS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-41">
+        <addPrimaryKey catalogName="gnuob" columnNames="ID" constraintName="PRIMARY" tableName="GNUOB_PRODUCTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-42">
+        <addPrimaryKey catalogName="gnuob" columnNames="GNUOB_PRODUCTS_ID, contents_ID" constraintName="PRIMARY" tableName="GNUOB_PRODUCTS_GNUOB_CONTENTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-43">
+        <addPrimaryKey catalogName="gnuob" columnNames="GNUOB_PRODUCTS_ID, subCategories_ID" constraintName="PRIMARY" tableName="GNUOB_PRODUCTS_GNUOB_SUB_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-44">
+        <addPrimaryKey catalogName="gnuob" columnNames="ID" constraintName="PRIMARY" tableName="GNUOB_SITES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-45">
+        <addPrimaryKey catalogName="gnuob" columnNames="GNUOB_SUB_CATEGORIES_ID, subCategories_ID" constraintName="PRIMARY" tableName="GNUOB_SUB_CATEGORIES_GNUOB_SUB_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-46">
+        <addPrimaryKey catalogName="gnuob" columnNames="ID" constraintName="PRIMARY" tableName="GNUOB_USERS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-47">
+        <addPrimaryKey catalogName="gnuob" columnNames="GNUOB_USERS_ID, groups_ID" constraintName="PRIMARY" tableName="GNUOB_USERS_GNUOB_GROUPS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-48">
+        <addPrimaryKey catalogName="gnuob" columnNames="GNUOB_USERS_ID, sites_ID" constraintName="PRIMARY" tableName="GNUOB_USERS_GNUOB_SITES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-49">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_CONTRACTS" constraintName="FK_15a661jxj673l4qqrd0klgaj8" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ACCESS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-50">
+        <addForeignKeyConstraint baseColumnNames="GNUOB_INVOICES_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_INVOICES_GNUOB_PAYMENTS" constraintName="FK_19r0634jd23vw6c8ppwhrfynm" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_INVOICES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-51">
+        <addForeignKeyConstraint baseColumnNames="GNUOB_OFFERS_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_OFFERS_GNUOB_OFFER_RECORDS" constraintName="FK_1atfp77iqaa3bhhxojo16skxr" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_OFFERS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-52">
+        <addForeignKeyConstraint baseColumnNames="records_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_OFFERS_GNUOB_OFFER_RECORDS" constraintName="FK_1xs08b7sr5jkw8qtr58xppgoh" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_OFFER_RECORDS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-53">
+        <addForeignKeyConstraint baseColumnNames="permission_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_ACCESS" constraintName="FK_2f7lu51e8mwl4nc369ip6qv86" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_PERMISSIONS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-54">
+        <addForeignKeyConstraint baseColumnNames="GNUOB_USERS_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_USERS_GNUOB_GROUPS" constraintName="FK_2of89prfectbu7xh0a3ku795s" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_USERS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-55">
+        <addForeignKeyConstraint baseColumnNames="subCategories_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_CATEGORIES_GNUOB_SUB_CATEGORIES" constraintName="FK_3uadh37m1pgbgtvj5j7o5vp7w" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_SUB_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-56">
+        <addForeignKeyConstraint baseColumnNames="group_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_ACCESS" constraintName="FK_4f6tmr7kqn2igb6yk6qx1mbtc" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_GROUPS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-57">
+        <addForeignKeyConstraint baseColumnNames="subCategories_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_PRODUCTS_GNUOB_SUB_CATEGORIES" constraintName="FK_4ybgabofa6us1bc0nby5jefvq" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_SUB_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-58">
+        <addForeignKeyConstraint baseColumnNames="contents_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_PRODUCTS_GNUOB_CONTENTS" constraintName="FK_58k9u59g2lc1yhtmxypwsolk0" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_CONTENTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-59">
+        <addForeignKeyConstraint baseColumnNames="GNUOB_ORDERS_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_ORDERS_GNUOB_ORDER_RECORDS" constraintName="FK_5sj6rf2rmkoig0xv1c18pp7w7" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ORDERS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-60">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_CATEGORIES" constraintName="FK_645vbsxdr5rl05eyqh6qowcda" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ACCESS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-61">
+        <addForeignKeyConstraint baseColumnNames="address_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_INVOICES" constraintName="FK_6h3lqdcsjf4jqqrcrrcxtcljp" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ADDRESSES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-62">
+        <addForeignKeyConstraint baseColumnNames="sites_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_USERS_GNUOB_SITES" constraintName="FK_6v6ds6gi20lc9122klmi1g2id" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_SITES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-63">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_ORDERS" constraintName="FK_74ienwwiu5r7ii1xr0ir846cl" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ACCESS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-64">
+        <addForeignKeyConstraint baseColumnNames="contract_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_ORDERS" constraintName="FK_ba8pxif47k3np4cb3lc5qtb3k" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_CONTRACTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-65">
+        <addForeignKeyConstraint baseColumnNames="stock_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_PRODUCTS" constraintName="FK_c1t1by48kgdhqjmx7bu15djbl" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_STOCKS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-66">
+        <addForeignKeyConstraint baseColumnNames="GNUOB_SUB_CATEGORIES_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_SUB_CATEGORIES_GNUOB_SUB_CATEGORIES" constraintName="FK_cayq46blv8cgp3xd0n8pd3oo6" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_SUB_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-67">
+        <addForeignKeyConstraint baseColumnNames="GNUOB_CATEGORIES_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_CATEGORIES_GNUOB_SUB_CATEGORIES" constraintName="FK_cgyvjvttu3bte4fkqh8wutneq" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-68">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_OFFERS" constraintName="FK_cy6ah709510aqh4i8rcloanyx" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ACCESS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-69">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_SITES" constraintName="FK_dhf65ra53clvdt69opmtn3fgn" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ACCESS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-70">
+        <addForeignKeyConstraint baseColumnNames="shipment_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_ORDERS" constraintName="FK_dt0yy3jlc92btuf5w23twwx4m" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_SHIPMENTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-71">
+        <addForeignKeyConstraint baseColumnNames="GNUOB_PRODUCTS_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_PRODUCTS_GNUOB_CONTENTS" constraintName="FK_dtcjv2q5cwo7oh6s96yaweb0q" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_PRODUCTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-72">
+        <addForeignKeyConstraint baseColumnNames="payments_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_INVOICES_GNUOB_PAYMENTS" constraintName="FK_er1nolxy599p5gqg24s0ix43n" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_PAYMENTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-73">
+        <addForeignKeyConstraint baseColumnNames="site_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_ACCESS" constraintName="FK_fd8m8in1e27k68ac40mstbfw7" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_SITES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-74">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_PRODUCTS" constraintName="FK_g4qcepfs1s7ggae06vfhiprus" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ACCESS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-75">
+        <addForeignKeyConstraint baseColumnNames="groups_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_USERS_GNUOB_GROUPS" constraintName="FK_i16k9uvlrswblxir6l9jh0q83" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_GROUPS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-76">
+        <addForeignKeyConstraint baseColumnNames="address_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_CUSTOMERS" constraintName="FK_j8n7rqc3mu1c4r4ajgnasq888" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ADDRESSES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-77">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_CONTENTS" constraintName="FK_kroohi4tlb9t0uiitsydb5q3f" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ACCESS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-78">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_USERS" constraintName="FK_kwnwsn3b4293dfin9nqrx9iw7" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ACCESS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-79">
+        <addForeignKeyConstraint baseColumnNames="subCategories_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_SUB_CATEGORIES_GNUOB_SUB_CATEGORIES" constraintName="FK_llxv6y88367f8j0xynai3gb0o" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_SUB_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-80">
+        <addForeignKeyConstraint baseColumnNames="GNUOB_PRODUCTS_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_PRODUCTS_GNUOB_SUB_CATEGORIES" constraintName="FK_n2jhnvpb6taedrvhdv945mg19" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_PRODUCTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-81">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_GROUPS" constraintName="FK_ny5lpbqfyrk2gxdsdu8aunnkg" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ACCESS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-82">
+        <addForeignKeyConstraint baseColumnNames="GNUOB_USERS_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_USERS_GNUOB_SITES" constraintName="FK_r5alo1pir8h2cyes6jss1n8fd" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_USERS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-83">
+        <addForeignKeyConstraint baseColumnNames="records_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_ORDERS_GNUOB_ORDER_RECORDS" constraintName="FK_suq6ev43pejb9s30om2udptw6" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ORDER_RECORDS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-84">
+        <addForeignKeyConstraint baseColumnNames="invoice_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_ORDERS" constraintName="FK_sxij78oa8nc6yyq83dwln46y" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_INVOICES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-85">
+        <addForeignKeyConstraint baseColumnNames="ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_CUSTOMERS" constraintName="FK_t7pr69kbriv3pq9264jgnesyp" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ACCESS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-86">
+        <addForeignKeyConstraint baseColumnNames="contract_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_OFFERS" constraintName="FK_tal53xp5bv29w9bi4nrbqgni9" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_CONTRACTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-87">
+        <addForeignKeyConstraint baseColumnNames="customer_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_CONTRACTS" constraintName="FK_taw9ecyy1c3f20b28qy65s31j" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_CUSTOMERS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-88">
+        <addForeignKeyConstraint baseColumnNames="address_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_SHIPMENTS" constraintName="FK_tcjhj7ssd8qwuc4lc8poa2xbv" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_ADDRESSES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-89">
+        <addForeignKeyConstraint baseColumnNames="user_ID" baseTableCatalogName="gnuob" baseTableName="GNUOB_ACCESS" constraintName="FK_x9x46sk9dtxr1cxdnku0remr" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableCatalogName="gnuob" referencedTableName="GNUOB_USERS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-90">
+        <addUniqueConstraint catalogName="gnuob" columnNames="records_ID" constraintName="UK_1xs08b7sr5jkw8qtr58xppgoh" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_OFFERS_GNUOB_OFFER_RECORDS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-91">
+        <addUniqueConstraint catalogName="gnuob" columnNames="permission_ID" constraintName="UK_2f7lu51e8mwl4nc369ip6qv86" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_ACCESS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-92">
+        <addUniqueConstraint catalogName="gnuob" columnNames="subCategories_ID" constraintName="UK_3uadh37m1pgbgtvj5j7o5vp7w" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_CATEGORIES_GNUOB_SUB_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-93">
+        <addUniqueConstraint catalogName="gnuob" columnNames="address_ID" constraintName="UK_6h3lqdcsjf4jqqrcrrcxtcljp" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_INVOICES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-94">
+        <addUniqueConstraint catalogName="gnuob" columnNames="contract_ID" constraintName="UK_ba8pxif47k3np4cb3lc5qtb3k" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_ORDERS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-95">
+        <addUniqueConstraint catalogName="gnuob" columnNames="stock_ID" constraintName="UK_c1t1by48kgdhqjmx7bu15djbl" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_PRODUCTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-96">
+        <addUniqueConstraint catalogName="gnuob" columnNames="payments_ID" constraintName="UK_er1nolxy599p5gqg24s0ix43n" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_INVOICES_GNUOB_PAYMENTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-97">
+        <addUniqueConstraint catalogName="gnuob" columnNames="address_ID" constraintName="UK_j8n7rqc3mu1c4r4ajgnasq888" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_CUSTOMERS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-98">
+        <addUniqueConstraint catalogName="gnuob" columnNames="subCategories_ID" constraintName="UK_llxv6y88367f8j0xynai3gb0o" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_SUB_CATEGORIES_GNUOB_SUB_CATEGORIES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-99">
+        <addUniqueConstraint catalogName="gnuob" columnNames="NAME" constraintName="UK_lnx88cvppggik2e0epqpm02xd" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_SITES"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-100">
+        <addUniqueConstraint catalogName="gnuob" columnNames="NAME" constraintName="UK_s26rb4nu75xrpmabb9p4kylug" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_GROUPS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-101">
+        <addUniqueConstraint catalogName="gnuob" columnNames="records_ID" constraintName="UK_suq6ev43pejb9s30om2udptw6" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_ORDERS_GNUOB_ORDER_RECORDS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-102">
+        <addUniqueConstraint catalogName="gnuob" columnNames="customer_ID" constraintName="UK_taw9ecyy1c3f20b28qy65s31j" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_CONTRACTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-103">
+        <addUniqueConstraint catalogName="gnuob" columnNames="address_ID" constraintName="UK_tcjhj7ssd8qwuc4lc8poa2xbv" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_SHIPMENTS"/>
+    </changeSet>
+    <changeSet author="bernard (generated)" id="1392305897010-104">
+        <addUniqueConstraint catalogName="gnuob" columnNames="NAME" constraintName="UK_tr3iuwutt35pwc5fmjnggk4vy" deferrable="false" disabled="false" initiallyDeferred="false" tableName="GNUOB_USERS"/>
+    </changeSet>
+</databaseChangeLog>

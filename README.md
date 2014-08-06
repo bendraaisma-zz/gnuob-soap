@@ -1,4 +1,4 @@
 gnuob-soap
 ==========
 
-GNUOB SOAP project
+GNUOB Simple Object Access Protocol project

@@ -1,0 +1,1568 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="c434c63e-c77c-4ad9-99c4-ef0dd1de7e4f" activeEnvironment="Default" name="gnuob-soap" resourceRoot="" soapui-version="5.1.1" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" id="f330feab-4c2a-4b0f-ae20-a8f3debb0d76" wsaVersion="NONE" name="OrderWebServiceImplServiceSoapBinding" type="wsdl" bindingName="{http://gnuob.netbrasoft.com/}OrderWebServiceImplServiceSoapBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/gnuob-soap/OrderWebServiceImpl?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/gnuob-soap/OrderWebServiceImpl?wsdl"><con:part><con:url>http://localhost:8080/gnuob-soap/OrderWebServiceImpl?wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="OrderWebServiceImplService" targetNamespace="http://gnuob.netbrasoft.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://gnuob.netbrasoft.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://gnuob.netbrasoft.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
+      <xs:import namespace="http://www.w3.org/2005/05/xmlmime"/>
+      <xs:element name="Address" type="tns:address"/>
+      <xs:element name="Content" type="tns:content"/>
+      <xs:element name="Contract" type="tns:contract"/>
+      <xs:element name="Customer" type="tns:customer"/>
+      <xs:element name="Invoice" type="tns:invoice"/>
+      <xs:element name="OrderBy" type="tns:orderBy"/>
+      <xs:element name="OrderRecord" type="tns:orderRecord"/>
+      <xs:element name="Paging" type="tns:paging"/>
+      <xs:element name="Payment" type="tns:payment"/>
+      <xs:element name="Product" type="tns:product"/>
+      <xs:element name="Shipment" type="tns:shipment"/>
+      <xs:element name="Stock" type="tns:stock"/>
+      <xs:element name="SubCategory" type="tns:subCategory"/>
+      <xs:element name="countOrder" type="tns:countOrder"/>
+      <xs:element name="countOrderResponse" type="tns:countOrderResponse"/>
+      <xs:element name="findOrder" type="tns:findOrder"/>
+      <xs:element name="findOrderById" type="tns:findOrderById"/>
+      <xs:element name="findOrderByIdResponse" type="tns:findOrderByIdResponse"/>
+      <xs:element name="findOrderResponse" type="tns:findOrderResponse"/>
+      <xs:element name="mergeOrder" type="tns:mergeOrder"/>
+      <xs:element name="mergeOrderResponse" type="tns:mergeOrderResponse"/>
+      <xs:element name="metaData" type="tns:metaData"/>
+      <xs:element name="persistOrder" type="tns:persistOrder"/>
+      <xs:element name="persistOrderResponse" type="tns:persistOrderResponse"/>
+      <xs:element name="refreshOrder" type="tns:refreshOrder"/>
+      <xs:element name="refreshOrderResponse" type="tns:refreshOrderResponse"/>
+      <xs:element name="removeOrder" type="tns:removeOrder"/>
+      <xs:element name="removeOrderResponse" type="tns:removeOrderResponse"/>
+      <xs:complexType name="findOrder">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="order" type="tns:Order"/>
+          <xs:element minOccurs="0" name="paging" type="tns:paging"/>
+          <xs:element minOccurs="0" name="orderBy" type="tns:orderBy"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="Order">
+        <xs:complexContent>
+          <xs:extension base="tns:access">
+            <xs:sequence>
+              <xs:element name="contract" type="tns:contract"/>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="records" nillable="true" type="tns:orderRecord"/>
+              <xs:element name="shipment" type="tns:shipment"/>
+              <xs:element name="invoice" type="tns:invoice"/>
+              <xs:element name="orderId" type="xs:string"/>
+              <xs:element minOccurs="0" name="transactionId" type="xs:string"/>
+              <xs:element minOccurs="0" name="billingAgreementID" type="xs:string"/>
+              <xs:element minOccurs="0" name="orderDescription" type="xs:string"/>
+              <xs:element minOccurs="0" name="noteText" type="xs:string"/>
+              <xs:element minOccurs="0" name="token" type="xs:string"/>
+              <xs:element minOccurs="0" name="orderTotal" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="itemTotal" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="taxTotal" type="xs:decimal"/>
+              <xs:element name="handlingTotal" type="xs:decimal"/>
+              <xs:element name="insuranceTotal" type="xs:decimal"/>
+              <xs:element name="shippingDiscount" type="xs:decimal"/>
+              <xs:element name="shippingTotal" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="insuranceOptionOffered" type="xs:boolean"/>
+              <xs:element minOccurs="0" name="custom" type="xs:string"/>
+              <xs:element minOccurs="0" name="note" type="xs:string"/>
+              <xs:element minOccurs="0" name="checkoutStatus" type="xs:string"/>
+              <xs:element minOccurs="0" name="giftMessage" type="xs:string"/>
+              <xs:element minOccurs="0" name="giftReceiptEnable" type="xs:boolean"/>
+              <xs:element minOccurs="0" name="giftMessageEnable" type="xs:boolean"/>
+              <xs:element minOccurs="0" name="giftWrapEnable" type="xs:boolean"/>
+              <xs:element minOccurs="0" name="giftWrapName" type="xs:string"/>
+              <xs:element minOccurs="0" name="giftWrapAmount" type="xs:decimal"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType abstract="true" name="access">
+        <xs:complexContent>
+          <xs:extension base="tns:type">
+            <xs:sequence/>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType abstract="true" name="type">
+        <xs:sequence/>
+        <xs:attribute name="id" type="xs:long" use="required"/>
+        <xs:attribute name="version" type="xs:int" use="required"/>
+      </xs:complexType>
+      <xs:complexType name="contract">
+        <xs:complexContent>
+          <xs:extension base="tns:access">
+            <xs:sequence>
+              <xs:element name="contractId" type="xs:string"/>
+              <xs:element name="customer" type="tns:customer"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="customer">
+        <xs:complexContent>
+          <xs:extension base="tns:access">
+            <xs:sequence>
+              <xs:element name="adress" type="tns:address"/>
+              <xs:element name="buyerEmail" type="xs:string"/>
+              <xs:element minOccurs="0" name="buyerMarketingEmail" type="xs:string"/>
+              <xs:element minOccurs="0" name="contactPhone" type="xs:string"/>
+              <xs:element minOccurs="0" name="firstName" type="xs:string"/>
+              <xs:element minOccurs="0" name="lastName" type="xs:string"/>
+              <xs:element minOccurs="0" name="middleName" type="xs:string"/>
+              <xs:element minOccurs="0" name="payer" type="xs:string"/>
+              <xs:element minOccurs="0" name="payerBusiness" type="xs:string"/>
+              <xs:element minOccurs="0" name="payerId" type="xs:string"/>
+              <xs:element minOccurs="0" name="payerStatus" type="xs:string"/>
+              <xs:element minOccurs="0" name="salutation" type="xs:string"/>
+              <xs:element minOccurs="0" name="suffix" type="xs:string"/>
+              <xs:element minOccurs="0" name="taxId" type="xs:string"/>
+              <xs:element minOccurs="0" name="taxIdType" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="address">
+        <xs:complexContent>
+          <xs:extension base="tns:type">
+            <xs:sequence>
+              <xs:element minOccurs="0" name="cityName" type="xs:string"/>
+              <xs:element minOccurs="0" name="country" type="xs:string"/>
+              <xs:element minOccurs="0" name="countryName" type="xs:string"/>
+              <xs:element minOccurs="0" name="internationalStateAndCity" type="xs:string"/>
+              <xs:element minOccurs="0" name="internationalStreet" type="xs:string"/>
+              <xs:element minOccurs="0" name="phone" type="xs:string"/>
+              <xs:element minOccurs="0" name="postalCode" type="xs:string"/>
+              <xs:element minOccurs="0" name="stateOrProvince" type="xs:string"/>
+              <xs:element minOccurs="0" name="street1" type="xs:string"/>
+              <xs:element minOccurs="0" name="street2" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="orderRecord">
+        <xs:complexContent>
+          <xs:extension base="tns:type">
+            <xs:sequence>
+              <xs:element minOccurs="0" name="amount" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="description" type="xs:string"/>
+              <xs:element minOccurs="0" name="itemHeight" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="itemHeightUnit" type="xs:string"/>
+              <xs:element minOccurs="0" name="itemLength" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="itemLengthUnit" type="xs:string"/>
+              <xs:element minOccurs="0" name="itemUrl" type="xs:string"/>
+              <xs:element minOccurs="0" name="itemWeight" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="itemWeightUnit" type="xs:string"/>
+              <xs:element minOccurs="0" name="itemWidth" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="itemWidthUnit" type="xs:string"/>
+              <xs:element minOccurs="0" name="name" type="xs:string"/>
+              <xs:element minOccurs="0" name="number" type="xs:string"/>
+              <xs:element minOccurs="0" name="product" type="tns:product"/>
+              <xs:element name="quantity" type="xs:integer"/>
+              <xs:element minOccurs="0" name="tax" type="xs:decimal"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="product">
+        <xs:complexContent>
+          <xs:extension base="tns:access">
+            <xs:sequence>
+              <xs:element name="amount" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="bestsellers" type="xs:boolean"/>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="contents" nillable="true" type="tns:content"/>
+              <xs:element name="description" type="xs:string"/>
+              <xs:element minOccurs="0" name="discount" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="itemHeight" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="itemHeightUnit" type="xs:string"/>
+              <xs:element minOccurs="0" name="itemLength" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="itemLengthUnit" type="xs:string"/>
+              <xs:element minOccurs="0" name="itemUrl" type="xs:string"/>
+              <xs:element minOccurs="0" name="itemWeight" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="itemWeightUnit" type="xs:string"/>
+              <xs:element minOccurs="0" name="itemWidth" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="itemWidthUnit" type="xs:string"/>
+              <xs:element minOccurs="0" name="latestCollection" type="xs:boolean"/>
+              <xs:element name="name" type="xs:string"/>
+              <xs:element name="number" type="xs:string"/>
+              <xs:element minOccurs="0" name="rating" type="xs:int"/>
+              <xs:element minOccurs="0" name="recommended" type="xs:boolean"/>
+              <xs:element name="stock" type="tns:stock"/>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="subCategories" nillable="true" type="tns:subCategory"/>
+              <xs:element name="tax" type="xs:decimal"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="content">
+        <xs:complexContent>
+          <xs:extension base="tns:access">
+            <xs:sequence>
+              <xs:element name="content" type="xs:base64Binary" xmime:expectedContentTypes="application/octet-stream"/>
+              <xs:element name="format" type="xs:string"/>
+              <xs:element name="name" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="stock">
+        <xs:complexContent>
+          <xs:extension base="tns:type">
+            <xs:sequence>
+              <xs:element minOccurs="0" name="maxQuantity" type="xs:integer"/>
+              <xs:element minOccurs="0" name="minQuantity" type="xs:integer"/>
+              <xs:element minOccurs="0" name="quantity" type="xs:integer"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="subCategory">
+        <xs:complexContent>
+          <xs:extension base="tns:type">
+            <xs:sequence>
+              <xs:element minOccurs="0" name="description" type="xs:string"/>
+              <xs:element minOccurs="0" name="name" type="xs:string"/>
+              <xs:element minOccurs="0" name="position" type="xs:int"/>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="subCategories" nillable="true" type="tns:subCategory"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="shipment">
+        <xs:complexContent>
+          <xs:extension base="tns:type">
+            <xs:sequence>
+              <xs:element name="address" type="tns:address"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="invoice">
+        <xs:complexContent>
+          <xs:extension base="tns:type">
+            <xs:sequence>
+              <xs:element name="address" type="tns:address"/>
+              <xs:element minOccurs="0" name="invoiceId" type="xs:string"/>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="payments" type="tns:payment"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="payment">
+        <xs:complexContent>
+          <xs:extension base="tns:type">
+            <xs:sequence>
+              <xs:element name="exchangeRate" type="xs:string"/>
+              <xs:element name="feeAmount" type="xs:decimal"/>
+              <xs:element name="grossAmount" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="holdDecision" type="xs:string"/>
+              <xs:element name="paymentDate" type="xs:string"/>
+              <xs:element minOccurs="0" name="paymentRequestId" type="xs:string"/>
+              <xs:element name="paymentStatus" type="xs:string"/>
+              <xs:element name="paymentType" type="xs:string"/>
+              <xs:element name="pendingReason" type="xs:string"/>
+              <xs:element name="protectionEligibilityType" type="xs:string"/>
+              <xs:element name="reasonCode" type="xs:string"/>
+              <xs:element minOccurs="0" name="settleAmount" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="storeId" type="xs:string"/>
+              <xs:element name="taxAmount" type="xs:decimal"/>
+              <xs:element minOccurs="0" name="terminalId" type="xs:string"/>
+              <xs:element name="transactionId" type="xs:string"/>
+              <xs:element name="transactionType" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType final="extension restriction" name="paging">
+        <xs:sequence>
+          <xs:element name="first" type="xs:int"/>
+          <xs:element name="max" type="xs:int"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="metaData">
+        <xs:sequence>
+          <xs:element name="site" type="xs:string"/>
+          <xs:element name="user" type="xs:string"/>
+          <xs:element name="password" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="findOrderResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:Order"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="countOrder">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="order" type="tns:Order"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="countOrderResponse">
+        <xs:sequence>
+          <xs:element name="return" type="xs:long"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="persistOrder">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="order" type="tns:Order"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="persistOrderResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:Order"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="refreshOrder">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="order" type="tns:Order"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="refreshOrderResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:Order"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="removeOrder">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="order" type="tns:Order"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="removeOrderResponse">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="findOrderById">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="order" type="tns:Order"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="findOrderByIdResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:Order"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="mergeOrder">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="order" type="tns:Order"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="mergeOrderResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:Order"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="orderBy">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="RECOMMENDED"/>
+          <xs:enumeration value="TOP_RATED"/>
+          <xs:enumeration value="HIGHEST_DISCOUNT"/>
+          <xs:enumeration value="LOWEST_DISCOUNT"/>
+          <xs:enumeration value="HIGHEST_PRICE"/>
+          <xs:enumeration value="LOWEST_PRICE"/>
+          <xs:enumeration value="HIGHEST_RATING"/>
+          <xs:enumeration value="LOWEST_RATING"/>
+          <xs:enumeration value="BESTSELLERS"/>
+          <xs:enumeration value="LATEST_COLLECTION"/>
+          <xs:enumeration value="TITLE_A_Z"/>
+          <xs:enumeration value="TITLE_Z_A"/>
+          <xs:enumeration value="POSITION_A_Z"/>
+          <xs:enumeration value="NONE"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="GNUOpenBusinessServiceException" type="tns:GNUOpenBusinessServiceException"/>
+      <xs:complexType name="GNUOpenBusinessServiceException">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="message" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="refreshOrderResponse">
+    <wsdl:part element="tns:refreshOrderResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeOrder">
+    <wsdl:part element="tns:removeOrder" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findOrder">
+    <wsdl:part element="tns:findOrder" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="persistOrder">
+    <wsdl:part element="tns:persistOrder" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GNUOpenBusinessServiceException">
+    <wsdl:part element="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="persistOrderResponse">
+    <wsdl:part element="tns:persistOrderResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="refreshOrder">
+    <wsdl:part element="tns:refreshOrder" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="mergeOrder">
+    <wsdl:part element="tns:mergeOrder" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeOrderResponse">
+    <wsdl:part element="tns:removeOrderResponse" name="result"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findOrderByIdResponse">
+    <wsdl:part element="tns:findOrderByIdResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="countOrderResponse">
+    <wsdl:part element="tns:countOrderResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="countOrder">
+    <wsdl:part element="tns:countOrder" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findOrderResponse">
+    <wsdl:part element="tns:findOrderResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="mergeOrderResponse">
+    <wsdl:part element="tns:mergeOrderResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findOrderById">
+    <wsdl:part element="tns:findOrderById" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="OrderWebServiceImpl">
+    <wsdl:operation name="findOrder">
+      <wsdl:input message="tns:findOrder" name="findOrder"></wsdl:input>
+      <wsdl:output message="tns:findOrderResponse" name="findOrderResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="countOrder">
+      <wsdl:input message="tns:countOrder" name="countOrder"></wsdl:input>
+      <wsdl:output message="tns:countOrderResponse" name="countOrderResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="persistOrder">
+      <wsdl:input message="tns:persistOrder" name="persistOrder"></wsdl:input>
+      <wsdl:output message="tns:persistOrderResponse" name="persistOrderResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="refreshOrder">
+      <wsdl:input message="tns:refreshOrder" name="refreshOrder"></wsdl:input>
+      <wsdl:output message="tns:refreshOrderResponse" name="refreshOrderResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="removeOrder">
+      <wsdl:input message="tns:removeOrder" name="removeOrder"></wsdl:input>
+      <wsdl:output message="tns:removeOrderResponse" name="removeOrderResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="findOrderById">
+      <wsdl:input message="tns:findOrderById" name="findOrderById"></wsdl:input>
+      <wsdl:output message="tns:findOrderByIdResponse" name="findOrderByIdResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="mergeOrder">
+      <wsdl:input message="tns:mergeOrder" name="mergeOrder"></wsdl:input>
+      <wsdl:output message="tns:mergeOrderResponse" name="mergeOrderResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="OrderWebServiceImplServiceSoapBinding" type="tns:OrderWebServiceImpl">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="findOrder">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findOrder">
+        <soap:header message="tns:findOrder" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findOrderResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="countOrder">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="countOrder">
+        <soap:header message="tns:countOrder" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="countOrderResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="persistOrder">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="persistOrder">
+        <soap:header message="tns:persistOrder" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="persistOrderResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="refreshOrder">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="refreshOrder">
+        <soap:header message="tns:refreshOrder" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="refreshOrderResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="removeOrder">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="removeOrder">
+        <soap:header message="tns:removeOrder" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="removeOrderResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="findOrderById">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findOrderById">
+        <soap:header message="tns:findOrderById" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findOrderByIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="mergeOrder">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="mergeOrder">
+        <soap:header message="tns:mergeOrder" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="mergeOrderResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="OrderWebServiceImplService">
+    <wsdl:port binding="tns:OrderWebServiceImplServiceSoapBinding" name="OrderWebServiceImplPort">
+      <soap:address location="http://localhost:8080/gnuob-soap/OrderWebServiceImpl"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/gnuob-soap/OrderWebServiceImpl</con:endpoint></con:endpoints><con:operation id="58013214-ab56-4955-bbe8-6b72fdbe7a7b" isOneWay="false" action="" name="countOrder" bindingOperationName="countOrder" type="Request-Response" outputName="countOrderResponse" inputName="countOrder" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation><con:operation id="6fa78fd1-dcd0-4fb3-b696-c8f766327664" isOneWay="false" action="" name="findOrder" bindingOperationName="findOrder" type="Request-Response" outputName="findOrderResponse" inputName="findOrder" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="2ad0a3c0-1aa2-4b25-918a-8c2561bed4d5" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/OrderWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:findOrder>
+         <!--Optional:-->
+         <order id="?" version="?">
+            <contract id="?" version="?">
+               <contractId>?</contractId>
+               <customer id="?" version="?">
+                  <adress id="?" version="?">
+                     <!--Optional:-->
+                     <cityName>?</cityName>
+                     <!--Optional:-->
+                     <country>?</country>
+                     <!--Optional:-->
+                     <countryName>?</countryName>
+                     <!--Optional:-->
+                     <internationalStateAndCity>?</internationalStateAndCity>
+                     <!--Optional:-->
+                     <internationalStreet>?</internationalStreet>
+                     <!--Optional:-->
+                     <phone>?</phone>
+                     <!--Optional:-->
+                     <postalCode>?</postalCode>
+                     <!--Optional:-->
+                     <stateOrProvince>?</stateOrProvince>
+                     <!--Optional:-->
+                     <street1>?</street1>
+                     <!--Optional:-->
+                     <street2>?</street2>
+                  </adress>
+                  <buyerEmail>?</buyerEmail>
+                  <!--Optional:-->
+                  <buyerMarketingEmail>?</buyerMarketingEmail>
+                  <!--Optional:-->
+                  <contactPhone>?</contactPhone>
+                  <!--Optional:-->
+                  <firstName>?</firstName>
+                  <!--Optional:-->
+                  <lastName>?</lastName>
+                  <!--Optional:-->
+                  <middleName>?</middleName>
+                  <!--Optional:-->
+                  <payer>?</payer>
+                  <!--Optional:-->
+                  <payerBusiness>?</payerBusiness>
+                  <!--Optional:-->
+                  <payerId>?</payerId>
+                  <!--Optional:-->
+                  <payerStatus>?</payerStatus>
+                  <!--Optional:-->
+                  <salutation>?</salutation>
+                  <!--Optional:-->
+                  <suffix>?</suffix>
+                  <!--Optional:-->
+                  <taxId>?</taxId>
+                  <!--Optional:-->
+                  <taxIdType>?</taxIdType>
+               </customer>
+            </contract>
+            <!--Zero or more repetitions:-->
+            <records id="?" version="?">
+               <!--Optional:-->
+               <amount>?</amount>
+               <!--Optional:-->
+               <description>?</description>
+               <!--Optional:-->
+               <itemHeight>?</itemHeight>
+               <!--Optional:-->
+               <itemHeightUnit>?</itemHeightUnit>
+               <!--Optional:-->
+               <itemLength>?</itemLength>
+               <!--Optional:-->
+               <itemLengthUnit>?</itemLengthUnit>
+               <!--Optional:-->
+               <itemUrl>?</itemUrl>
+               <!--Optional:-->
+               <itemWeight>?</itemWeight>
+               <!--Optional:-->
+               <itemWeightUnit>?</itemWeightUnit>
+               <!--Optional:-->
+               <itemWidth>?</itemWidth>
+               <!--Optional:-->
+               <itemWidthUnit>?</itemWidthUnit>
+               <!--Optional:-->
+               <name>?</name>
+               <!--Optional:-->
+               <number>?</number>
+               <!--Optional:-->
+               <product id="?" version="?">
+                  <amount>?</amount>
+                  <!--Optional:-->
+                  <bestsellers>?</bestsellers>
+                  <!--Zero or more repetitions:-->
+                  <contents id="?" version="?">
+                     <content>cid:349331995791</content>
+                     <format>?</format>
+                     <name>?</name>
+                  </contents>
+                  <description>?</description>
+                  <!--Optional:-->
+                  <discount>?</discount>
+                  <!--Optional:-->
+                  <itemHeight>?</itemHeight>
+                  <!--Optional:-->
+                  <itemHeightUnit>?</itemHeightUnit>
+                  <!--Optional:-->
+                  <itemLength>?</itemLength>
+                  <!--Optional:-->
+                  <itemLengthUnit>?</itemLengthUnit>
+                  <!--Optional:-->
+                  <itemUrl>?</itemUrl>
+                  <!--Optional:-->
+                  <itemWeight>?</itemWeight>
+                  <!--Optional:-->
+                  <itemWeightUnit>?</itemWeightUnit>
+                  <!--Optional:-->
+                  <itemWidth>?</itemWidth>
+                  <!--Optional:-->
+                  <itemWidthUnit>?</itemWidthUnit>
+                  <!--Optional:-->
+                  <latestCollection>?</latestCollection>
+                  <name>?</name>
+                  <number>?</number>
+                  <!--Optional:-->
+                  <rating>?</rating>
+                  <!--Optional:-->
+                  <recommended>?</recommended>
+                  <stock id="?" version="?">
+                     <!--Optional:-->
+                     <maxQuantity>?</maxQuantity>
+                     <!--Optional:-->
+                     <minQuantity>?</minQuantity>
+                     <!--Optional:-->
+                     <quantity>?</quantity>
+                  </stock>
+                  <!--Zero or more repetitions:-->
+                  <subCategories id="?" version="?">
+                     <!--Optional:-->
+                     <description>?</description>
+                     <!--Optional:-->
+                     <name>?</name>
+                     <!--Optional:-->
+                     <position>?</position>
+                     <!--Zero or more repetitions:-->
+                     <subCategories/>
+                  </subCategories>
+                  <tax>?</tax>
+               </product>
+               <quantity>?</quantity>
+               <!--Optional:-->
+               <tax>?</tax>
+            </records>
+            <shipment id="?" version="?">
+               <address id="?" version="?">
+                  <!--Optional:-->
+                  <cityName>?</cityName>
+                  <!--Optional:-->
+                  <country>?</country>
+                  <!--Optional:-->
+                  <countryName>?</countryName>
+                  <!--Optional:-->
+                  <internationalStateAndCity>?</internationalStateAndCity>
+                  <!--Optional:-->
+                  <internationalStreet>?</internationalStreet>
+                  <!--Optional:-->
+                  <phone>?</phone>
+                  <!--Optional:-->
+                  <postalCode>?</postalCode>
+                  <!--Optional:-->
+                  <stateOrProvince>?</stateOrProvince>
+                  <!--Optional:-->
+                  <street1>?</street1>
+                  <!--Optional:-->
+                  <street2>?</street2>
+               </address>
+            </shipment>
+            <invoice id="?" version="?">
+               <address id="?" version="?">
+                  <!--Optional:-->
+                  <cityName>?</cityName>
+                  <!--Optional:-->
+                  <country>?</country>
+                  <!--Optional:-->
+                  <countryName>?</countryName>
+                  <!--Optional:-->
+                  <internationalStateAndCity>?</internationalStateAndCity>
+                  <!--Optional:-->
+                  <internationalStreet>?</internationalStreet>
+                  <!--Optional:-->
+                  <phone>?</phone>
+                  <!--Optional:-->
+                  <postalCode>?</postalCode>
+                  <!--Optional:-->
+                  <stateOrProvince>?</stateOrProvince>
+                  <!--Optional:-->
+                  <street1>?</street1>
+                  <!--Optional:-->
+                  <street2>?</street2>
+               </address>
+               <!--Optional:-->
+               <invoiceId>?</invoiceId>
+               <!--Zero or more repetitions:-->
+               <payments id="?" version="?">
+                  <exchangeRate>?</exchangeRate>
+                  <feeAmount>?</feeAmount>
+                  <grossAmount>?</grossAmount>
+                  <!--Optional:-->
+                  <holdDecision>?</holdDecision>
+                  <paymentDate>?</paymentDate>
+                  <!--Optional:-->
+                  <paymentRequestId>?</paymentRequestId>
+                  <paymentStatus>?</paymentStatus>
+                  <paymentType>?</paymentType>
+                  <pendingReason>?</pendingReason>
+                  <protectionEligibilityType>?</protectionEligibilityType>
+                  <reasonCode>?</reasonCode>
+                  <!--Optional:-->
+                  <settleAmount>?</settleAmount>
+                  <!--Optional:-->
+                  <storeId>?</storeId>
+                  <taxAmount>?</taxAmount>
+                  <!--Optional:-->
+                  <terminalId>?</terminalId>
+                  <transactionId>?</transactionId>
+                  <transactionType>?</transactionType>
+               </payments>
+            </invoice>
+            <orderId>?</orderId>
+            <!--Optional:-->
+            <transactionId>?</transactionId>
+            <!--Optional:-->
+            <billingAgreementID>?</billingAgreementID>
+            <!--Optional:-->
+            <orderDescription>?</orderDescription>
+            <!--Optional:-->
+            <noteText>?</noteText>
+            <!--Optional:-->
+            <token>?</token>
+            <!--Optional:-->
+            <orderTotal>?</orderTotal>
+            <!--Optional:-->
+            <itemTotal>?</itemTotal>
+            <!--Optional:-->
+            <taxTotal>?</taxTotal>
+            <handlingTotal>?</handlingTotal>
+            <insuranceTotal>?</insuranceTotal>
+            <shippingDiscount>?</shippingDiscount>
+            <shippingTotal>?</shippingTotal>
+            <!--Optional:-->
+            <insuranceOptionOffered>?</insuranceOptionOffered>
+            <!--Optional:-->
+            <custom>?</custom>
+            <!--Optional:-->
+            <note>?</note>
+            <!--Optional:-->
+            <checkoutStatus>?</checkoutStatus>
+            <!--Optional:-->
+            <giftMessage>?</giftMessage>
+            <!--Optional:-->
+            <giftReceiptEnable>?</giftReceiptEnable>
+            <!--Optional:-->
+            <giftMessageEnable>?</giftMessageEnable>
+            <!--Optional:-->
+            <giftWrapEnable>?</giftWrapEnable>
+            <!--Optional:-->
+            <giftWrapName>?</giftWrapName>
+            <!--Optional:-->
+            <giftWrapAmount>?</giftWrapAmount>
+         </order>
+         <!--Optional:-->
+         <paging>
+            <first>?</first>
+            <max>?</max>
+         </paging>
+         <!--Optional:-->
+         <orderBy>?</orderBy>
+      </gnu:findOrder>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://gnuob.netbrasoft.com/OrderWebServiceImpl/findOrder"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="c77cb13e-4ae1-425d-9ca4-bc607aed72cc" isOneWay="false" action="" name="findOrderById" bindingOperationName="findOrderById" type="Request-Response" outputName="findOrderByIdResponse" inputName="findOrderById" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation><con:operation id="945f9af3-3748-4880-a535-a2b528da6ac4" isOneWay="false" action="" name="mergeOrder" bindingOperationName="mergeOrder" type="Request-Response" outputName="mergeOrderResponse" inputName="mergeOrder" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation><con:operation id="5629fdf3-fadf-4b14-97a6-043c7df7c5fe" isOneWay="false" action="" name="persistOrder" bindingOperationName="persistOrder" type="Request-Response" outputName="persistOrderResponse" inputName="persistOrder" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="163d9546-8a92-422a-bdba-29003c6d15de" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/OrderWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:persistOrder>
+         <!--Optional:-->
+         <order id="?" version="?">
+            <contract id="?" version="?">
+               <contractId>?</contractId>
+               <customer id="?" version="?">
+                  <adress id="?" version="?">
+                     <!--Optional:-->
+                     <cityName>?</cityName>
+                     <!--Optional:-->
+                     <country>?</country>
+                     <!--Optional:-->
+                     <countryName>?</countryName>
+                     <!--Optional:-->
+                     <internationalStateAndCity>?</internationalStateAndCity>
+                     <!--Optional:-->
+                     <internationalStreet>?</internationalStreet>
+                     <!--Optional:-->
+                     <phone>?</phone>
+                     <!--Optional:-->
+                     <postalCode>?</postalCode>
+                     <!--Optional:-->
+                     <stateOrProvince>?</stateOrProvince>
+                     <!--Optional:-->
+                     <street1>?</street1>
+                     <!--Optional:-->
+                     <street2>?</street2>
+                  </adress>
+                  <buyerEmail>?</buyerEmail>
+                  <!--Optional:-->
+                  <buyerMarketingEmail>?</buyerMarketingEmail>
+                  <!--Optional:-->
+                  <contactPhone>?</contactPhone>
+                  <!--Optional:-->
+                  <firstName>?</firstName>
+                  <!--Optional:-->
+                  <lastName>?</lastName>
+                  <!--Optional:-->
+                  <middleName>?</middleName>
+                  <!--Optional:-->
+                  <payer>?</payer>
+                  <!--Optional:-->
+                  <payerBusiness>?</payerBusiness>
+                  <!--Optional:-->
+                  <payerId>?</payerId>
+                  <!--Optional:-->
+                  <payerStatus>?</payerStatus>
+                  <!--Optional:-->
+                  <salutation>?</salutation>
+                  <!--Optional:-->
+                  <suffix>?</suffix>
+                  <!--Optional:-->
+                  <taxId>?</taxId>
+                  <!--Optional:-->
+                  <taxIdType>?</taxIdType>
+               </customer>
+            </contract>
+            <!--Zero or more repetitions:-->
+            <records id="?" version="?">
+               <!--Optional:-->
+               <amount>?</amount>
+               <!--Optional:-->
+               <description>?</description>
+               <!--Optional:-->
+               <itemHeight>?</itemHeight>
+               <!--Optional:-->
+               <itemHeightUnit>?</itemHeightUnit>
+               <!--Optional:-->
+               <itemLength>?</itemLength>
+               <!--Optional:-->
+               <itemLengthUnit>?</itemLengthUnit>
+               <!--Optional:-->
+               <itemUrl>?</itemUrl>
+               <!--Optional:-->
+               <itemWeight>?</itemWeight>
+               <!--Optional:-->
+               <itemWeightUnit>?</itemWeightUnit>
+               <!--Optional:-->
+               <itemWidth>?</itemWidth>
+               <!--Optional:-->
+               <itemWidthUnit>?</itemWidthUnit>
+               <!--Optional:-->
+               <name>?</name>
+               <!--Optional:-->
+               <number>?</number>
+               <!--Optional:-->
+               <product id="?" version="?">
+                  <amount>?</amount>
+                  <!--Optional:-->
+                  <bestsellers>?</bestsellers>
+                  <!--Zero or more repetitions:-->
+                  <contents id="?" version="?">
+                     <content>cid:1187595682048</content>
+                     <format>?</format>
+                     <name>?</name>
+                  </contents>
+                  <description>?</description>
+                  <!--Optional:-->
+                  <discount>?</discount>
+                  <!--Optional:-->
+                  <itemHeight>?</itemHeight>
+                  <!--Optional:-->
+                  <itemHeightUnit>?</itemHeightUnit>
+                  <!--Optional:-->
+                  <itemLength>?</itemLength>
+                  <!--Optional:-->
+                  <itemLengthUnit>?</itemLengthUnit>
+                  <!--Optional:-->
+                  <itemUrl>?</itemUrl>
+                  <!--Optional:-->
+                  <itemWeight>?</itemWeight>
+                  <!--Optional:-->
+                  <itemWeightUnit>?</itemWeightUnit>
+                  <!--Optional:-->
+                  <itemWidth>?</itemWidth>
+                  <!--Optional:-->
+                  <itemWidthUnit>?</itemWidthUnit>
+                  <!--Optional:-->
+                  <latestCollection>?</latestCollection>
+                  <name>?</name>
+                  <number>?</number>
+                  <!--Optional:-->
+                  <rating>?</rating>
+                  <!--Optional:-->
+                  <recommended>?</recommended>
+                  <stock id="?" version="?">
+                     <!--Optional:-->
+                     <maxQuantity>?</maxQuantity>
+                     <!--Optional:-->
+                     <minQuantity>?</minQuantity>
+                     <!--Optional:-->
+                     <quantity>?</quantity>
+                  </stock>
+                  <!--Zero or more repetitions:-->
+                  <subCategories id="?" version="?">
+                     <!--Optional:-->
+                     <description>?</description>
+                     <!--Optional:-->
+                     <name>?</name>
+                     <!--Optional:-->
+                     <position>?</position>
+                     <!--Zero or more repetitions:-->
+                     <subCategories xsi:nil="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"/>
+                  </subCategories>
+                  <tax>?</tax>
+               </product>
+               <quantity>?</quantity>
+               <!--Optional:-->
+               <tax>?</tax>
+            </records>
+            <shipment id="?" version="?">
+               <address id="?" version="?">
+                  <!--Optional:-->
+                  <cityName>?</cityName>
+                  <!--Optional:-->
+                  <country>?</country>
+                  <!--Optional:-->
+                  <countryName>?</countryName>
+                  <!--Optional:-->
+                  <internationalStateAndCity>?</internationalStateAndCity>
+                  <!--Optional:-->
+                  <internationalStreet>?</internationalStreet>
+                  <!--Optional:-->
+                  <phone>?</phone>
+                  <!--Optional:-->
+                  <postalCode>?</postalCode>
+                  <!--Optional:-->
+                  <stateOrProvince>?</stateOrProvince>
+                  <!--Optional:-->
+                  <street1>?</street1>
+                  <!--Optional:-->
+                  <street2>?</street2>
+               </address>
+            </shipment>
+            <invoice id="?" version="?">
+               <address id="?" version="?">
+                  <!--Optional:-->
+                  <cityName>?</cityName>
+                  <!--Optional:-->
+                  <country>?</country>
+                  <!--Optional:-->
+                  <countryName>?</countryName>
+                  <!--Optional:-->
+                  <internationalStateAndCity>?</internationalStateAndCity>
+                  <!--Optional:-->
+                  <internationalStreet>?</internationalStreet>
+                  <!--Optional:-->
+                  <phone>?</phone>
+                  <!--Optional:-->
+                  <postalCode>?</postalCode>
+                  <!--Optional:-->
+                  <stateOrProvince>?</stateOrProvince>
+                  <!--Optional:-->
+                  <street1>?</street1>
+                  <!--Optional:-->
+                  <street2>?</street2>
+               </address>
+               <!--Optional:-->
+               <invoiceId>?</invoiceId>
+               <!--Zero or more repetitions:-->
+               <payments id="?" version="?">
+                  <exchangeRate>?</exchangeRate>
+                  <feeAmount>?</feeAmount>
+                  <grossAmount>?</grossAmount>
+                  <!--Optional:-->
+                  <holdDecision>?</holdDecision>
+                  <paymentDate>?</paymentDate>
+                  <!--Optional:-->
+                  <paymentRequestId>?</paymentRequestId>
+                  <paymentStatus>?</paymentStatus>
+                  <paymentType>?</paymentType>
+                  <pendingReason>?</pendingReason>
+                  <protectionEligibilityType>?</protectionEligibilityType>
+                  <reasonCode>?</reasonCode>
+                  <!--Optional:-->
+                  <settleAmount>?</settleAmount>
+                  <!--Optional:-->
+                  <storeId>?</storeId>
+                  <taxAmount>?</taxAmount>
+                  <!--Optional:-->
+                  <terminalId>?</terminalId>
+                  <transactionId>?</transactionId>
+                  <transactionType>?</transactionType>
+               </payments>
+            </invoice>
+            <orderId>?</orderId>
+            <!--Optional:-->
+            <transactionId>?</transactionId>
+            <!--Optional:-->
+            <billingAgreementID>?</billingAgreementID>
+            <!--Optional:-->
+            <orderDescription>?</orderDescription>
+            <!--Optional:-->
+            <noteText>?</noteText>
+            <!--Optional:-->
+            <token>?</token>
+            <!--Optional:-->
+            <orderTotal>?</orderTotal>
+            <!--Optional:-->
+            <itemTotal>?</itemTotal>
+            <!--Optional:-->
+            <taxTotal>?</taxTotal>
+            <handlingTotal>?</handlingTotal>
+            <insuranceTotal>?</insuranceTotal>
+            <shippingDiscount>?</shippingDiscount>
+            <shippingTotal>?</shippingTotal>
+            <!--Optional:-->
+            <insuranceOptionOffered>?</insuranceOptionOffered>
+            <!--Optional:-->
+            <custom>?</custom>
+            <!--Optional:-->
+            <note>?</note>
+            <!--Optional:-->
+            <checkoutStatus>?</checkoutStatus>
+            <!--Optional:-->
+            <giftMessage>?</giftMessage>
+            <!--Optional:-->
+            <giftReceiptEnable>?</giftReceiptEnable>
+            <!--Optional:-->
+            <giftMessageEnable>?</giftMessageEnable>
+            <!--Optional:-->
+            <giftWrapEnable>?</giftWrapEnable>
+            <!--Optional:-->
+            <giftWrapName>?</giftWrapName>
+            <!--Optional:-->
+            <giftWrapAmount>?</giftWrapAmount>
+         </order>
+      </gnu:persistOrder>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://gnuob.netbrasoft.com/OrderWebServiceImpl/persistOrder"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="ee2db994-473d-4b12-8969-d004f6a810c5" isOneWay="false" action="" name="refreshOrder" bindingOperationName="refreshOrder" type="Request-Response" outputName="refreshOrderResponse" inputName="refreshOrder" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation><con:operation id="bda3bec2-687f-4cb9-9309-0497d425da10" isOneWay="false" action="" name="removeOrder" bindingOperationName="removeOrder" type="Request-Response" outputName="removeOrderResponse" inputName="removeOrder" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation></con:interface><con:interface xsi:type="con:WsdlInterface" id="905e259e-31dd-4394-b759-73efa47fd09e" wsaVersion="NONE" name="CustomerWebServiceImplServiceSoapBinding" type="wsdl" bindingName="{http://gnuob.netbrasoft.com/}CustomerWebServiceImplServiceSoapBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/gnuob-soap/CustomerWebServiceImpl?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/gnuob-soap/CustomerWebServiceImpl?wsdl"><con:part><con:url>http://localhost:8080/gnuob-soap/CustomerWebServiceImpl?wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="CustomerWebServiceImplService" targetNamespace="http://gnuob.netbrasoft.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://gnuob.netbrasoft.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http">
+  <wsdl:types>
+    <xs:schema attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://gnuob.netbrasoft.com/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+      <xs:element name="Address" type="tns:address"/>
+      <xs:element name="Customer" type="tns:customer"/>
+      <xs:element name="OrderBy" type="tns:orderBy"/>
+      <xs:element name="Paging" type="tns:paging"/>
+      <xs:element name="countCustomer" type="tns:countCustomer"/>
+      <xs:element name="countCustomerResponse" type="tns:countCustomerResponse"/>
+      <xs:element name="findCustomer" type="tns:findCustomer"/>
+      <xs:element name="findCustomerById" type="tns:findCustomerById"/>
+      <xs:element name="findCustomerByIdResponse" type="tns:findCustomerByIdResponse"/>
+      <xs:element name="findCustomerResponse" type="tns:findCustomerResponse"/>
+      <xs:element name="mergeCustomer" type="tns:mergeCustomer"/>
+      <xs:element name="mergeCustomerResponse" type="tns:mergeCustomerResponse"/>
+      <xs:element name="metaData" type="tns:metaData"/>
+      <xs:element name="persistCustomer" type="tns:persistCustomer"/>
+      <xs:element name="persistCustomerResponse" type="tns:persistCustomerResponse"/>
+      <xs:element name="refreshCustomer" type="tns:refreshCustomer"/>
+      <xs:element name="refreshCustomerResponse" type="tns:refreshCustomerResponse"/>
+      <xs:element name="removeCustomer" type="tns:removeCustomer"/>
+      <xs:element name="removeCustomerResponse" type="tns:removeCustomerResponse"/>
+      <xs:complexType name="refreshCustomer">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="customer" type="tns:customer"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="customer">
+        <xs:complexContent>
+          <xs:extension base="tns:access">
+            <xs:sequence>
+              <xs:element name="adress" type="tns:address"/>
+              <xs:element name="buyerEmail" type="xs:string"/>
+              <xs:element minOccurs="0" name="buyerMarketingEmail" type="xs:string"/>
+              <xs:element minOccurs="0" name="contactPhone" type="xs:string"/>
+              <xs:element minOccurs="0" name="firstName" type="xs:string"/>
+              <xs:element minOccurs="0" name="lastName" type="xs:string"/>
+              <xs:element minOccurs="0" name="middleName" type="xs:string"/>
+              <xs:element minOccurs="0" name="payer" type="xs:string"/>
+              <xs:element minOccurs="0" name="payerBusiness" type="xs:string"/>
+              <xs:element minOccurs="0" name="payerId" type="xs:string"/>
+              <xs:element minOccurs="0" name="payerStatus" type="xs:string"/>
+              <xs:element minOccurs="0" name="salutation" type="xs:string"/>
+              <xs:element minOccurs="0" name="suffix" type="xs:string"/>
+              <xs:element minOccurs="0" name="taxId" type="xs:string"/>
+              <xs:element minOccurs="0" name="taxIdType" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType abstract="true" name="access">
+        <xs:complexContent>
+          <xs:extension base="tns:type">
+            <xs:sequence/>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType abstract="true" name="type">
+        <xs:sequence/>
+        <xs:attribute name="id" type="xs:long" use="required"/>
+        <xs:attribute name="version" type="xs:int" use="required"/>
+      </xs:complexType>
+      <xs:complexType name="address">
+        <xs:complexContent>
+          <xs:extension base="tns:type">
+            <xs:sequence>
+              <xs:element minOccurs="0" name="cityName" type="xs:string"/>
+              <xs:element minOccurs="0" name="country" type="xs:string"/>
+              <xs:element minOccurs="0" name="countryName" type="xs:string"/>
+              <xs:element minOccurs="0" name="internationalStateAndCity" type="xs:string"/>
+              <xs:element minOccurs="0" name="internationalStreet" type="xs:string"/>
+              <xs:element minOccurs="0" name="phone" type="xs:string"/>
+              <xs:element minOccurs="0" name="postalCode" type="xs:string"/>
+              <xs:element minOccurs="0" name="stateOrProvince" type="xs:string"/>
+              <xs:element minOccurs="0" name="street1" type="xs:string"/>
+              <xs:element minOccurs="0" name="street2" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="metaData">
+        <xs:sequence>
+          <xs:element name="site" type="xs:string"/>
+          <xs:element name="user" type="xs:string"/>
+          <xs:element name="password" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="refreshCustomerResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:customer"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="mergeCustomer">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="customer" type="tns:customer"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="mergeCustomerResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:customer"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="removeCustomer">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="customer" type="tns:customer"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="removeCustomerResponse">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="findCustomerById">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="customer" type="tns:customer"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="findCustomerByIdResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:customer"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="findCustomer">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="customer" type="tns:customer"/>
+          <xs:element minOccurs="0" name="paging" type="tns:paging"/>
+          <xs:element minOccurs="0" name="orderBy" type="tns:orderBy"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType final="extension restriction" name="paging">
+        <xs:sequence>
+          <xs:element name="first" type="xs:int"/>
+          <xs:element name="max" type="xs:int"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="findCustomerResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:customer"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="countCustomer">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="customer" type="tns:customer"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="countCustomerResponse">
+        <xs:sequence>
+          <xs:element name="return" type="xs:long"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="persistCustomer">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="customer" type="tns:customer"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="persistCustomerResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:customer"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="orderBy">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="RECOMMENDED"/>
+          <xs:enumeration value="TOP_RATED"/>
+          <xs:enumeration value="HIGHEST_DISCOUNT"/>
+          <xs:enumeration value="LOWEST_DISCOUNT"/>
+          <xs:enumeration value="HIGHEST_PRICE"/>
+          <xs:enumeration value="LOWEST_PRICE"/>
+          <xs:enumeration value="HIGHEST_RATING"/>
+          <xs:enumeration value="LOWEST_RATING"/>
+          <xs:enumeration value="BESTSELLERS"/>
+          <xs:enumeration value="LATEST_COLLECTION"/>
+          <xs:enumeration value="TITLE_A_Z"/>
+          <xs:enumeration value="TITLE_Z_A"/>
+          <xs:enumeration value="POSITION_A_Z"/>
+          <xs:enumeration value="NONE"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:element name="GNUOpenBusinessServiceException" type="tns:GNUOpenBusinessServiceException"/>
+      <xs:complexType name="GNUOpenBusinessServiceException">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="message" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="persistCustomerResponse">
+    <wsdl:part element="tns:persistCustomerResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="persistCustomer">
+    <wsdl:part element="tns:persistCustomer" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findCustomerById">
+    <wsdl:part element="tns:findCustomerById" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="countCustomer">
+    <wsdl:part element="tns:countCustomer" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="countCustomerResponse">
+    <wsdl:part element="tns:countCustomerResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="refreshCustomerResponse">
+    <wsdl:part element="tns:refreshCustomerResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="GNUOpenBusinessServiceException">
+    <wsdl:part element="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeCustomerResponse">
+    <wsdl:part element="tns:removeCustomerResponse" name="result"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeCustomer">
+    <wsdl:part element="tns:removeCustomer" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="mergeCustomer">
+    <wsdl:part element="tns:mergeCustomer" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findCustomer">
+    <wsdl:part element="tns:findCustomer" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findCustomerResponse">
+    <wsdl:part element="tns:findCustomerResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="mergeCustomerResponse">
+    <wsdl:part element="tns:mergeCustomerResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findCustomerByIdResponse">
+    <wsdl:part element="tns:findCustomerByIdResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="refreshCustomer">
+    <wsdl:part element="tns:refreshCustomer" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CustomerWebServiceImpl">
+    <wsdl:operation name="refreshCustomer">
+      <wsdl:input message="tns:refreshCustomer" name="refreshCustomer"></wsdl:input>
+      <wsdl:output message="tns:refreshCustomerResponse" name="refreshCustomerResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="mergeCustomer">
+      <wsdl:input message="tns:mergeCustomer" name="mergeCustomer"></wsdl:input>
+      <wsdl:output message="tns:mergeCustomerResponse" name="mergeCustomerResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="removeCustomer">
+      <wsdl:input message="tns:removeCustomer" name="removeCustomer"></wsdl:input>
+      <wsdl:output message="tns:removeCustomerResponse" name="removeCustomerResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="findCustomerById">
+      <wsdl:input message="tns:findCustomerById" name="findCustomerById"></wsdl:input>
+      <wsdl:output message="tns:findCustomerByIdResponse" name="findCustomerByIdResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="findCustomer">
+      <wsdl:input message="tns:findCustomer" name="findCustomer"></wsdl:input>
+      <wsdl:output message="tns:findCustomerResponse" name="findCustomerResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="countCustomer">
+      <wsdl:input message="tns:countCustomer" name="countCustomer"></wsdl:input>
+      <wsdl:output message="tns:countCustomerResponse" name="countCustomerResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="persistCustomer">
+      <wsdl:input message="tns:persistCustomer" name="persistCustomer"></wsdl:input>
+      <wsdl:output message="tns:persistCustomerResponse" name="persistCustomerResponse"></wsdl:output>
+      <wsdl:fault message="tns:GNUOpenBusinessServiceException" name="GNUOpenBusinessServiceException"></wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CustomerWebServiceImplServiceSoapBinding" type="tns:CustomerWebServiceImpl">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="refreshCustomer">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="refreshCustomer">
+        <soap:header message="tns:refreshCustomer" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="refreshCustomerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="mergeCustomer">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="mergeCustomer">
+        <soap:header message="tns:mergeCustomer" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="mergeCustomerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="findCustomerById">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findCustomerById">
+        <soap:header message="tns:findCustomerById" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findCustomerByIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="removeCustomer">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="removeCustomer">
+        <soap:header message="tns:removeCustomer" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="removeCustomerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="findCustomer">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findCustomer">
+        <soap:header message="tns:findCustomer" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findCustomerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="countCustomer">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="countCustomer">
+        <soap:header message="tns:countCustomer" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="countCustomerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="persistCustomer">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="persistCustomer">
+        <soap:header message="tns:persistCustomer" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="persistCustomerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="GNUOpenBusinessServiceException">
+        <soap:fault name="GNUOpenBusinessServiceException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CustomerWebServiceImplService">
+    <wsdl:port binding="tns:CustomerWebServiceImplServiceSoapBinding" name="CustomerWebServiceImplPort">
+      <soap:address location="http://localhost:8080/gnuob-soap/CustomerWebServiceImpl"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/gnuob-soap/CustomerWebServiceImpl</con:endpoint></con:endpoints><con:operation id="c252d9da-e11c-45ce-89c3-40d967053597" isOneWay="false" action="" name="countCustomer" bindingOperationName="countCustomer" type="Request-Response" outputName="countCustomerResponse" inputName="countCustomer" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation><con:operation id="fc9e3b28-e59b-4dbc-93aa-b6bbbdc4d654" isOneWay="false" action="" name="findCustomer" bindingOperationName="findCustomer" type="Request-Response" outputName="findCustomerResponse" inputName="findCustomer" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="d57a2ce6-ae4f-4fd4-8e28-1bff126c1a7f" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CustomerWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:findCustomer>
+         <!--Optional:-->
+         <customer id="?" version="?">
+            <adress id="?" version="?">
+               <!--Optional:-->
+               <cityName>?</cityName>
+               <!--Optional:-->
+               <country>?</country>
+               <!--Optional:-->
+               <countryName>?</countryName>
+               <!--Optional:-->
+               <internationalStateAndCity>?</internationalStateAndCity>
+               <!--Optional:-->
+               <internationalStreet>?</internationalStreet>
+               <!--Optional:-->
+               <phone>?</phone>
+               <!--Optional:-->
+               <postalCode>?</postalCode>
+               <!--Optional:-->
+               <stateOrProvince>?</stateOrProvince>
+               <!--Optional:-->
+               <street1>?</street1>
+               <!--Optional:-->
+               <street2>?</street2>
+            </adress>
+            <buyerEmail>?</buyerEmail>
+            <!--Optional:-->
+            <buyerMarketingEmail>?</buyerMarketingEmail>
+            <!--Optional:-->
+            <contactPhone>?</contactPhone>
+            <!--Optional:-->
+            <firstName>?</firstName>
+            <!--Optional:-->
+            <lastName>?</lastName>
+            <!--Optional:-->
+            <middleName>?</middleName>
+            <!--Optional:-->
+            <payer>?</payer>
+            <!--Optional:-->
+            <payerBusiness>?</payerBusiness>
+            <!--Optional:-->
+            <payerId>?</payerId>
+            <!--Optional:-->
+            <payerStatus>?</payerStatus>
+            <!--Optional:-->
+            <salutation>?</salutation>
+            <!--Optional:-->
+            <suffix>?</suffix>
+            <!--Optional:-->
+            <taxId>?</taxId>
+            <!--Optional:-->
+            <taxIdType>?</taxIdType>
+         </customer>
+         <!--Optional:-->
+         <paging>
+            <first>?</first>
+            <max>?</max>
+         </paging>
+         <!--Optional:-->
+         <orderBy>?</orderBy>
+      </gnu:findCustomer>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://gnuob.netbrasoft.com/CustomerWebServiceImpl/findCustomer"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="5decec8c-e36d-4eb5-a811-0895852195bf" isOneWay="false" action="" name="findCustomerById" bindingOperationName="findCustomerById" type="Request-Response" outputName="findCustomerByIdResponse" inputName="findCustomerById" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation><con:operation id="9126c588-7bc2-4d18-b28e-5662df6a3ea2" isOneWay="false" action="" name="mergeCustomer" bindingOperationName="mergeCustomer" type="Request-Response" outputName="mergeCustomerResponse" inputName="mergeCustomer" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation><con:operation id="00c47ea5-44b4-493a-8ae8-f22e1f69f76f" isOneWay="false" action="" name="persistCustomer" bindingOperationName="persistCustomer" type="Request-Response" outputName="persistCustomerResponse" inputName="persistCustomer" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation><con:operation id="0b5a29ff-601d-4d01-8409-5b0864e16cf0" isOneWay="false" action="" name="refreshCustomer" bindingOperationName="refreshCustomer" type="Request-Response" outputName="refreshCustomerResponse" inputName="refreshCustomer" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation><con:operation id="3e063a04-3575-438d-bea8-e1c782e3bd97" isOneWay="false" action="" name="removeCustomer" bindingOperationName="removeCustomer" type="Request-Response" outputName="removeCustomerResponse" inputName="removeCustomer" receivesAttachments="false" sendsAttachments="false"><con:settings/></con:operation></con:interface><con:requirements/><con:properties/><con:wssContainer/><con:databaseConnectionContainer/><con:oAuth2ProfileContainer/><con:reporting><con:reportTemplates/><con:xmlTemplates/><con:parameters/></con:reporting><con:sensitiveInformation/></con:soapui-project>
