@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
@@ -38,7 +39,8 @@ public class Product extends Access {
 	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, optional = false)
 	private Stock stock;
 
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+	@OrderBy("position asc")
 	private Set<Content> contents = new HashSet<Content>();
 
 	@Column(name = "NAME", nullable = false)
@@ -206,14 +208,27 @@ public class Product extends Access {
 		return tax;
 	}
 
-	@PrePersist
-	@PreUpdate
-	protected void prePersistUpdateProduct() {
+	private void positionContents() {
+		int position = 0;
+
+		for (Content content : contents) {
+			content.setPosition(Integer.valueOf(position++));
+		}
+	}
+
+	private void positionSubCategories() {
 		int position = 0;
 
 		for (SubCategory subCategory : subCategories) {
 			subCategory.setPosition(Integer.valueOf(position++));
 		}
+	}
+
+	@PrePersist
+	@PreUpdate
+	protected void prePersistUpdateProduct() {
+		positionSubCategories();
+		positionContents();
 	}
 
 	public void setAmount(BigDecimal amount) {

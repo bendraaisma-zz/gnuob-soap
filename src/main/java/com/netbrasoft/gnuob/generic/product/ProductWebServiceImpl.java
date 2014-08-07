@@ -87,13 +87,8 @@ public class ProductWebServiceImpl<P extends Product> implements GenericTypeWebS
 	@WebMethod(operationName = "mergeProduct")
 	public P merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "product") P type) throws GNUOpenBusinessServiceException {
 		try {
-			for (Content content : type.getContents()) {
-				if (content.getId() > 0) {
-					securedGenericContentService.merge(metadata, content);
-				} else {
-					securedGenericContentService.persist(metadata, content);
-				}
-			}
+			persistMergeContents(metadata, type.getContents());
+			persistMergeSubCategoryContents(metadata, type.getSubCategories());
 			securedGenericProductService.merge(metadata, type);
 			return type;
 		} catch (Exception e) {
@@ -105,7 +100,8 @@ public class ProductWebServiceImpl<P extends Product> implements GenericTypeWebS
 	@WebMethod(operationName = "persistProduct")
 	public P persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "product") P type) throws GNUOpenBusinessServiceException {
 		try {
-			persistProductContents(metadata, type);
+			persistMergeContents(metadata, type.getContents());
+			persistMergeSubCategoryContents(metadata, type.getSubCategories());
 			securedGenericProductService.persist(metadata, type);
 			return type;
 		} catch (Exception e) {
@@ -113,10 +109,21 @@ public class ProductWebServiceImpl<P extends Product> implements GenericTypeWebS
 		}
 	}
 
-	private void persistProductContents(MetaData metadata, P type) {
-		if (!type.getContents().isEmpty()) {
-			for (Content content : type.getContents()) {
-				securedGenericContentService.persist(metadata, content);
+	private void persistMergeContents(MetaData metadata, Set<Content> contents) {
+		if (contents != null && !contents.isEmpty()) {
+			for (Content content : contents) {
+				if (content.getId() == 0) {
+					securedGenericContentService.persist(metadata, content);
+				}
+			}
+		}
+	}
+
+	private void persistMergeSubCategoryContents(MetaData metadata, Set<SubCategory> subCategories) {
+		if (subCategories != null && !subCategories.isEmpty()) {
+			for (SubCategory subCategory : subCategories) {
+				persistMergeContents(metadata, subCategory.getContents());
+				persistMergeSubCategoryContents(metadata, subCategory.getSubCategories());
 			}
 		}
 	}

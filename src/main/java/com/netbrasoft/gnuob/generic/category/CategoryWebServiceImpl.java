@@ -18,6 +18,7 @@ import com.netbrasoft.gnuob.generic.GenericTypeWebService;
 import com.netbrasoft.gnuob.generic.OrderBy;
 import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.generic.Parameter;
+import com.netbrasoft.gnuob.generic.content.Content;
 import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
 
@@ -27,6 +28,9 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
 
 	@EJB(beanName = "SecuredGenericTypeServiceImpl")
 	private SecuredGenericTypeService<C> securedGenericCategoryService;
+
+	@EJB(beanName = "SecuredGenericTypeServiceImpl")
+	private SecuredGenericTypeService<Content> securedGenericContentService;
 
 	@Override
 	@WebMethod(operationName = "countCategory")
@@ -77,6 +81,8 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
 	@WebMethod(operationName = "mergeCategory")
 	public C merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "category") C type) throws GNUOpenBusinessServiceException {
 		try {
+			persistMergeContents(metadata, type.getContents());
+			persistMergeSubCategoryContents(metadata, type.getSubCategories());
 			securedGenericCategoryService.merge(metadata, type);
 			return type;
 		} catch (Exception e) {
@@ -88,10 +94,31 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
 	@WebMethod(operationName = "persistCategory")
 	public C persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "category") C type) throws GNUOpenBusinessServiceException {
 		try {
+			persistMergeContents(metadata, type.getContents());
+			persistMergeSubCategoryContents(metadata, type.getSubCategories());
 			securedGenericCategoryService.persist(metadata, type);
 			return type;
 		} catch (Exception e) {
 			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+		}
+	}
+
+	private void persistMergeContents(MetaData metadata, Set<Content> contents) {
+		if (contents != null && !contents.isEmpty()) {
+			for (Content content : contents) {
+				if (content.getId() == 0) {
+					securedGenericContentService.persist(metadata, content);
+				}
+			}
+		}
+	}
+
+	private void persistMergeSubCategoryContents(MetaData metadata, Set<SubCategory> subCategories) {
+		if (subCategories != null && !subCategories.isEmpty()) {
+			for (SubCategory subCategory : subCategories) {
+				persistMergeContents(metadata, subCategory.getContents());
+				persistMergeSubCategoryContents(metadata, subCategory.getSubCategories());
+			}
 		}
 	}
 

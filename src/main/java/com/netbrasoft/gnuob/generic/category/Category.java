@@ -14,7 +14,9 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
+import com.netbrasoft.gnuob.generic.content.Content;
 import com.netbrasoft.gnuob.generic.security.Access;
 
 @Entity(name = Category.ENTITY)
@@ -36,8 +38,16 @@ public class Category extends Access {
 	@OrderBy("position asc")
 	private Set<SubCategory> subCategories = new LinkedHashSet<SubCategory>();
 
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+	@OrderBy("position asc")
+	private Set<Content> contents = new LinkedHashSet<Content>();
+
 	@Column(name = "POSITION")
 	private Integer position;
+
+	public Set<Content> getContents() {
+		return contents;
+	}
 
 	@XmlElement(name = "description")
 	public String getDescription() {
@@ -49,6 +59,7 @@ public class Category extends Access {
 		return name;
 	}
 
+	@XmlTransient
 	public Integer getPosition() {
 		return position;
 	}
@@ -57,14 +68,31 @@ public class Category extends Access {
 		return subCategories;
 	}
 
-	@PrePersist
-	@PreUpdate
-	protected void prePersistUpdateCategory() {
+	private void positionContents() {
+		int position = 0;
+
+		for (Content content : contents) {
+			content.setPosition(Integer.valueOf(position++));
+		}
+	}
+
+	private void positionSubCategories() {
 		int position = 0;
 
 		for (SubCategory subCategory : subCategories) {
 			subCategory.setPosition(Integer.valueOf(position++));
 		}
+	}
+
+	@PrePersist
+	@PreUpdate
+	protected void prePersistUpdateCategory() {
+		positionSubCategories();
+		positionContents();
+	}
+
+	public void setContents(Set<Content> contents) {
+		this.contents = contents;
 	}
 
 	public void setDescription(String description) {

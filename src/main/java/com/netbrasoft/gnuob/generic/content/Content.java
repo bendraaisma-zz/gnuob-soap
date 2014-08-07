@@ -6,6 +6,7 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.generic.security.Access;
 
@@ -17,6 +18,9 @@ public class Content extends Access {
 	private static final long serialVersionUID = -6963744731098668340L;
 	protected static final String ENTITY = "Content";
 	protected static final String TABLE = "GNUOB_CONTENTS";
+
+	@Column(name = "POSITION")
+	private Integer position;
 
 	@Column(name = "NAME", nullable = false)
 	private String name;
@@ -43,6 +47,11 @@ public class Content extends Access {
 		return name;
 	}
 
+	@XmlTransient
+	public Integer getPosition() {
+		return position;
+	}
+
 	public void setContent(byte[] content) {
 		this.content = content;
 	}
@@ -53,5 +62,9 @@ public class Content extends Access {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void setPosition(Integer position) {
+		this.position = position;
 	}
 }
