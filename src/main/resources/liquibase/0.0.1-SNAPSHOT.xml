@@ -44,6 +44,12 @@
 			<column name="groups_ID" type="NUMERIC" />
 			<column name="GNUOB_USERS_ID" type="NUMERIC" />
 		</loadData>
+		<loadData tableName="GNUOB_SETTINGS" file="src/main/resources/liquibase/GNUOB_SETTINGS.csv">
+			<column name="ID" type="NUMERIC" />
+			<column name="DESCRIPTION" type="STRING" />
+			<column name="VALUE" type="STRING" />
+			<column name="PROPERTY" type="STRING" />
+		</loadData>
 		<sql>SET FOREIGN_KEY_CHECKS = 1;</sql>
 	</changeSet>
 </databaseChangeLog>

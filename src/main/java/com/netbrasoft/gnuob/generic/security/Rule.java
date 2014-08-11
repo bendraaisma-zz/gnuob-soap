@@ -1,6 +1,5 @@
 package com.netbrasoft.gnuob.generic.security;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -8,11 +7,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "Rule")
 public enum Rule {
-	CREATE_ACCESS(Arrays.asList(Operation.CREATE, Operation.READ)), READ_ACCESS(
-			Arrays.asList(Operation.READ)), UPDATE_ACCESS(Arrays.asList(
-			Operation.CREATE, Operation.READ, Operation.UPDATE)), DELETE_ACCESS(
-			Arrays.asList(Operation.CREATE, Operation.READ, Operation.UPDATE,
-					Operation.DELETE)), NO_ACCESS(new ArrayList<Operation>());
+	CREATE_ACCESS(Arrays.asList(Operation.CREATE, Operation.READ)), READ_ACCESS(Arrays.asList(Operation.READ)), UPDATE_ACCESS(Arrays.asList(Operation.CREATE, Operation.READ, Operation.UPDATE)), DELETE_ACCESS(Arrays.asList(Operation.CREATE,
+			Operation.READ, Operation.UPDATE, Operation.DELETE)), NONE_ACCESS(Arrays.asList(Operation.NONE));
 
 	public enum Operation {
 		CREATE, READ, UPDATE, DELETE, NONE;
