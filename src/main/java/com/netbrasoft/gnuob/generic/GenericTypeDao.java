@@ -26,7 +26,7 @@ public interface GenericTypeDao<T> {
 
 	void persist(T type);
 
-	void refresh(T type);
+	T refresh(T type, long id, LockModeType lockModeType);
 
 	void remove(T type);
 }

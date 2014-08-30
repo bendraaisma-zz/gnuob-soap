@@ -78,8 +78,7 @@ public class SettingWebServiceImpl<S extends Setting> implements GenericTypeWebS
 	@WebMethod(operationName = "refreshSetting")
 	public S refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "Setting") S type) throws GNUOpenBusinessServiceException {
 		try {
-			securedGenericSettingService.refresh(metadata, type);
-			return type;
+			return securedGenericSettingService.refresh(metadata, type, type.getId());
 		} catch (Exception e) {
 			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
 		}

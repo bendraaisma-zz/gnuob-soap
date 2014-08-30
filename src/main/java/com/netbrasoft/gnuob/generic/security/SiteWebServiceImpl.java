@@ -77,8 +77,7 @@ public class SiteWebServiceImpl<S extends Site> implements GenericTypeWebService
 	@WebMethod(operationName = "refreshSite")
 	public S refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "site") S type) throws GNUOpenBusinessServiceException {
 		try {
-			securedGenericSiteService.refresh(metadata, type);
-			return type;
+			return securedGenericSiteService.refresh(metadata, type, type.getId());
 		} catch (Exception e) {
 			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
 		}

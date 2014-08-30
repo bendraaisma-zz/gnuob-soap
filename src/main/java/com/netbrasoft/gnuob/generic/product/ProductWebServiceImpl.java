@@ -132,8 +132,7 @@ public class ProductWebServiceImpl<P extends Product> implements GenericTypeWebS
 	@WebMethod(operationName = "refreshProduct")
 	public P refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "product") P type) throws GNUOpenBusinessServiceException {
 		try {
-			securedGenericProductService.refresh(metadata, type);
-			return type;
+			return securedGenericProductService.refresh(metadata, type, type.getId());
 		} catch (Exception e) {
 			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
 		}

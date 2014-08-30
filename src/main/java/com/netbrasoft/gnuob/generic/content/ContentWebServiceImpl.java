@@ -78,8 +78,7 @@ public class ContentWebServiceImpl<C extends Content> implements GenericTypeWebS
 	@WebMethod(operationName = "refreshContent")
 	public C refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) throws GNUOpenBusinessServiceException {
 		try {
-			securedGenericContentService.refresh(metadata, type);
-			return type;
+			return securedGenericContentService.refresh(metadata, type, type.getId());
 		} catch (Exception e) {
 			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
 		}

@@ -90,8 +90,7 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
 	@WebMethod(operationName = "refreshOrder")
 	public O refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type) throws GNUOpenBusinessServiceException {
 		try {
-			securedGenericOrderService.refresh(metadata, type);
-			return type;
+			return securedGenericOrderService.refresh(metadata, type, type.getId());
 		} catch (Exception e) {
 			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
 		}

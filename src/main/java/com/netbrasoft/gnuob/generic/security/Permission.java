@@ -22,43 +22,43 @@ public class Permission extends Type {
 	protected static final String ENTITY = "Permission";
 	protected static final String TABLE = "GNUOB_PERMISSIONS";
 
-	@Column(name = "ROOT", nullable = false)
+	@Column(name = "OWNER", nullable = false)
 	@Enumerated(EnumType.STRING)
-	private Rule root = Rule.DELETE_ACCESS;
+	private Rule owner = Rule.DELETE_ACCESS;
 
 	@Column(name = "\"GROUP\"", nullable = false)
 	@Enumerated(EnumType.STRING)
-	private Rule group = Rule.DELETE_ACCESS;
+	private Rule group = Rule.READ_ACCESS;
 
-	@Column(name = "\"USER\"", nullable = false)
+	@Column(name = "OTHERS", nullable = false)
 	@Enumerated(EnumType.STRING)
-	private Rule user = Rule.DELETE_ACCESS;
+	private Rule others = Rule.READ_ACCESS;
 
 	@XmlElement(name = "group", required = true)
 	public Rule getGroup() {
 		return group;
 	}
 
-	@XmlElement(name = "root", required = true)
-	public Rule getRoot() {
-		return root;
+	@XmlElement(name = "others", required = true)
+	public Rule getOthers() {
+		return others;
 	}
 
-	@XmlElement(name = "user", required = true)
-	public Rule getUser() {
-		return user;
+	@XmlElement(name = "owner", required = true)
+	public Rule getOwner() {
+		return owner;
 	}
 
 	public void setGroup(Rule group) {
 		this.group = group;
 	}
 
-	public void setRoot(Rule root) {
-		this.root = root;
+	public void setOthers(Rule others) {
+		this.others = others;
 	}
 
-	public void setUser(Rule user) {
-		this.user = user;
+	public void setOwner(Rule owner) {
+		this.owner = owner;
 	}
 
 }

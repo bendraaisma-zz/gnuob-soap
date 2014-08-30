@@ -88,8 +88,7 @@ public class OfferWebServiceImpl<O extends Offer> implements GenericTypeWebServi
 	@WebMethod(operationName = "refreshOffer")
 	public O refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) throws GNUOpenBusinessServiceException {
 		try {
-			securedGenericOfferService.refresh(metadata, type);
-			return type;
+			return securedGenericOfferService.refresh(metadata, type, type.getId());
 		} catch (Exception e) {
 			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
 		}

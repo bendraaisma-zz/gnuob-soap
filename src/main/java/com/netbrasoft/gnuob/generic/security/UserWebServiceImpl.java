@@ -1,6 +1,7 @@
 package com.netbrasoft.gnuob.generic.security;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -60,6 +61,8 @@ public class UserWebServiceImpl<U extends User> implements GenericTypeWebService
 	@WebMethod(operationName = "mergeUser")
 	public U merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "user") U type) throws GNUOpenBusinessServiceException {
 		try {
+			persistMergeSites(metadata, type.getSites());
+			persistMergeGroups(metadata, type.getGroups());
 			securedGenericUserService.merge(metadata, type);
 			return type;
 		} catch (Exception e) {
@@ -71,8 +74,8 @@ public class UserWebServiceImpl<U extends User> implements GenericTypeWebService
 	@WebMethod(operationName = "persistUser")
 	public U persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "user") U type) throws GNUOpenBusinessServiceException {
 		try {
-			persistUserSites(metadata, type);
-			persistUserGroups(metadata, type);
+			persistMergeSites(metadata, type.getSites());
+			persistMergeGroups(metadata, type.getGroups());
 			securedGenericUserService.persist(metadata, type);
 			return type;
 		} catch (Exception e) {
@@ -80,18 +83,22 @@ public class UserWebServiceImpl<U extends User> implements GenericTypeWebService
 		}
 	}
 
-	private void persistUserGroups(MetaData metadata, U type) {
-		if (!type.getGroups().isEmpty()) {
-			for (Group group : type.getGroups()) {
-				securedGenericGroupService.persist(metadata, group);
+	private void persistMergeGroups(MetaData metadata, Set<Group> groups) {
+		if (groups != null && !groups.isEmpty()) {
+			for (Group group : groups) {
+				if (group.getId() == 0) {
+					securedGenericGroupService.persist(metadata, group);
+				}
 			}
 		}
 	}
 
-	private void persistUserSites(MetaData metadata, U type) {
-		if (!type.getSites().isEmpty()) {
-			for (Site site : type.getSites()) {
-				securedGenericSiteService.persist(metadata, site);
+	private void persistMergeSites(MetaData metadata, Set<Site> sites) {
+		if (sites != null && !sites.isEmpty()) {
+			for (Site site : sites) {
+				if (site.getId() == 0) {
+					securedGenericSiteService.persist(metadata, site);
+				}
 			}
 		}
 	}
@@ -100,8 +107,7 @@ public class UserWebServiceImpl<U extends User> implements GenericTypeWebService
 	@WebMethod(operationName = "refreshUser")
 	public U refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "user") U type) throws GNUOpenBusinessServiceException {
 		try {
-			securedGenericUserService.refresh(metadata, type);
-			return type;
+			return securedGenericUserService.refresh(metadata, type, type.getId());
 		} catch (Exception e) {
 			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
 		}

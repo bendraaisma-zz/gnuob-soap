@@ -13,6 +13,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity(name = User.ENTITY)
 @Table(name = User.TABLE)
@@ -23,15 +24,18 @@ public class User extends Access {
 	protected static final String ENTITY = "User";
 	protected static final String TABLE = "GNUOB_USERS";
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
 	private Set<Site> sites = new HashSet<Site>();
 
-	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
 	private Set<Group> groups = new HashSet<Group>();
 
-	@Column(name = "RULE", nullable = false)
+	@Column(name = "ROOT")
+	private Boolean root;
+
+	@Column(name = "ACCESS", nullable = false)
 	@Enumerated(EnumType.STRING)
-	private Rule rule = Rule.DELETE_ACCESS;
+	private Rule access;
 
 	@Column(name = "NAME", nullable = false, unique = true)
 	private String name;
@@ -49,6 +53,10 @@ public class User extends Access {
 	public User(String name, String password) {
 		this.name = name;
 		this.password = password;
+	}
+
+	public Rule getAccess() {
+		return access;
 	}
 
 	@XmlElement(name = "description")
@@ -70,12 +78,17 @@ public class User extends Access {
 		return password;
 	}
 
-	public Rule getRule() {
-		return rule;
+	@XmlTransient
+	public Boolean getRoot() {
+		return root;
 	}
 
 	public Set<Site> getSites() {
 		return sites;
+	}
+
+	public void setAccess(Rule access) {
+		this.access = access;
 	}
 
 	public void setDescription(String description) {
@@ -92,10 +105,6 @@ public class User extends Access {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public void setRule(Rule rule) {
-		this.rule = rule;
 	}
 
 	public void setSites(Set<Site> sites) {

@@ -46,9 +46,9 @@ public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T> 
 	}
 
 	@Override
-	@OperationAccess(operation = Operation.UPDATE)
-	public void refresh(MetaData metadata, T type) {
-		super.refresh(type);
+	@OperationAccess(operation = Operation.READ)
+	public T refresh(MetaData metadata, T type, long id) {
+		return super.refresh(type, id);
 	}
 
 	@Override

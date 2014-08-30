@@ -83,8 +83,7 @@ public class ContractWebServiceImpl<C extends Contract> implements GenericTypeWe
 	@WebMethod(operationName = "refreshContract")
 	public C refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C type) throws GNUOpenBusinessServiceException {
 		try {
-			securedGenericContractService.refresh(metadata, type);
-			return type;
+			return securedGenericContractService.refresh(metadata, type, type.getId());
 		} catch (Exception e) {
 			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
 		}

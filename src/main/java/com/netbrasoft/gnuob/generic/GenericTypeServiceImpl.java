@@ -13,6 +13,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.criterion.Restrictions;
 
 import com.netbrasoft.gnuob.generic.security.OperationAccess;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
@@ -54,9 +55,27 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	@OperationAccess(operation = Operation.NONE)
 	public T find(T type, long id) {
-		return genericTypeDao.find(type, id, LockModeType.OPTIMISTIC);
+		Session session = genericTypeDao.getDelegate();
+		Criteria criteria = session.createCriteria(type.getClass());
+
+		criteria.add(Restrictions.eq("id", id));
+
+		criteria.setFirstResult(0);
+		criteria.setMaxResults(1);
+
+		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+		List<T> list = criteria.list();
+
+		return list.isEmpty() ? null : list.iterator().next();
+	}
+
+	@Override
+	@OperationAccess(operation = Operation.NONE)
+	public T find(T type, long id, LockModeType lockModeType) {
+		return genericTypeDao.find(type, id, lockModeType);
 	}
 
 	@Override
@@ -92,6 +111,7 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 			criteria.setMaxResults(paging.getMax());
 		}
 
+		// TODO, uitzoeken wat de beste transformatie is ivm met Has-A lijsten.
 		criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 		return criteria.list();
 	}
@@ -110,8 +130,8 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 
 	@Override
 	@OperationAccess(operation = Operation.NONE)
-	public void refresh(T type) {
-		genericTypeDao.refresh(type);
+	public T refresh(T type, long id) {
+		return genericTypeDao.refresh(type, id, LockModeType.OPTIMISTIC);
 	}
 
 	@Override

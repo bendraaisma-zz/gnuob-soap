@@ -77,8 +77,7 @@ public class GroupWebServiceImpl<G extends Group> implements GenericTypeWebServi
 	@WebMethod(operationName = "refreshGroup")
 	public G refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "group") G type) throws GNUOpenBusinessServiceException {
 		try {
-			securedGenericGroupService.refresh(metadata, type);
-			return type;
+			return securedGenericGroupService.refresh(metadata, type, type.getId());
 		} catch (Exception e) {
 			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
 		}

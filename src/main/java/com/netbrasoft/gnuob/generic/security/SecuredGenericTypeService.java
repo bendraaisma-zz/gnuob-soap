@@ -18,7 +18,7 @@ public interface SecuredGenericTypeService<T> {
 
 	void persist(MetaData metadata, T type);
 
-	void refresh(MetaData metadata, T type);
+	T refresh(MetaData metadata, T type, long id);
 
 	void remove(MetaData metadata, T type);
 }

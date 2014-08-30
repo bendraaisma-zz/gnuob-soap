@@ -5,9 +5,9 @@
 		<loadData tableName="GNUOB_PERMISSIONS" file="src/main/resources/liquibase/GNUOB_PERMISSIONS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="VERSION" type="NUMERIC" />
-			<column name="USER" type="STRING" />
-			<column name="ROOT" type="STRING" />
+			<column name="OWNER" type="STRING" />
 			<column name="GROUP" type="STRING" />
+			<column name="OTHERS" type="STRING" />
 		</loadData>
 		<loadData tableName="GNUOB_ACCESS" file="src/main/resources/liquibase/GNUOB_ACCESS.csv">
 			<column name="ID" type="NUMERIC" />
@@ -16,14 +16,15 @@
 			<column name="group_ID" type="NUMERIC" />
 			<column name="permission_ID" type="NUMERIC" />
 			<column name="site_ID" type="NUMERIC" />
-			<column name="user_ID" type="NUMERIC" />
+			<column name="owner_ID" type="NUMERIC" />
 		</loadData>
 		<loadData tableName="GNUOB_USERS" file="src/main/resources/liquibase/GNUOB_USERS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="NAME" type="STRING" />
 			<column name="PASSWORD" type="STRING" />
-			<column name="RULE" type="STRING" />
+			<column name="ACCESS" type="STRING" />
+			<column name="ROOT" type="BOOLEAN" />
 		</loadData>
 		<loadData tableName="GNUOB_GROUPS" file="src/main/resources/liquibase/GNUOB_GROUPS.csv">
 			<column name="ID" type="NUMERIC" />

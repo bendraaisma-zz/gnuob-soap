@@ -76,8 +76,13 @@ public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
 	}
 
 	@Override
-	public void refresh(T type) {
+	public T refresh(T type, long id, LockModeType lockModeType) {
+		if (!entityManager.contains(type)) {
+			return find(type, id, lockModeType);
+		}
+
 		entityManager.refresh(type);
+		return type;
 	}
 
 	@Override

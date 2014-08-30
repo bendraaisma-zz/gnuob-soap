@@ -65,7 +65,6 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
 	}
 
 	private List<Example> getSubCategoryExamples(Set<SubCategory> subCategories) {
-
 		List<Example> examples = new ArrayList<Example>();
 
 		if (subCategories != null) {
@@ -108,6 +107,8 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
 			for (Content content : contents) {
 				if (content.getId() == 0) {
 					securedGenericContentService.persist(metadata, content);
+				} else {
+					securedGenericContentService.merge(metadata, content);
 				}
 			}
 		}
@@ -126,8 +127,7 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
 	@WebMethod(operationName = "refreshCategory")
 	public C refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "category") C type) throws GNUOpenBusinessServiceException {
 		try {
-			securedGenericCategoryService.refresh(metadata, type);
-			return type;
+			return securedGenericCategoryService.refresh(metadata, type, type.getId());
 		} catch (Exception e) {
 			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
 		}
