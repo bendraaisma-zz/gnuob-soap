@@ -551,6 +551,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="ROOT" type="BIT(1)"/>
+            <column name="ROLE" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
             <column name="ID" type="BIGINT(19)">
                 <constraints nullable="false"/>
             </column>

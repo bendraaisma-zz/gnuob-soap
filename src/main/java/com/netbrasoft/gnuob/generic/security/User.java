@@ -43,6 +43,9 @@ public class User extends Access {
 	@Column(name = "PASSWORD", nullable = false)
 	private String password;
 
+	@Column(name = "ROLE", nullable = false)
+	private String role;
+
 	@Column(name = "DESCRIPTION", columnDefinition = "TEXT")
 	private String description;
 
@@ -78,6 +81,11 @@ public class User extends Access {
 		return password;
 	}
 
+	@XmlElement(name = "role", required = true)
+	public String getRole() {
+		return role;
+	}
+
 	@XmlTransient
 	public Boolean getRoot() {
 		return root;
@@ -105,6 +113,10 @@ public class User extends Access {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 	public void setSites(Set<Site> sites) {
