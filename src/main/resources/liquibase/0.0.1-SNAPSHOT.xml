@@ -2,14 +2,14 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
 	<changeSet id="GNUOB Objecten version 0.0.1-SNAPSHOT" author="Bernard Arjan Draaisma">
 		<sql>SET FOREIGN_KEY_CHECKS = 0;</sql>
-		<loadData tableName="GNUOB_PERMISSIONS" file="src/main/resources/liquibase/GNUOB_PERMISSIONS.csv">
+		<loadData tableName="gnuob_permissions" file="src/main/resources/liquibase/GNUOB_PERMISSIONS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="VERSION" type="NUMERIC" />
 			<column name="OWNER" type="STRING" />
 			<column name="GROUP" type="STRING" />
 			<column name="OTHERS" type="STRING" />
 		</loadData>
-		<loadData tableName="GNUOB_ACCESS" file="src/main/resources/liquibase/GNUOB_ACCESS.csv">
+		<loadData tableName="gnuob_access" file="src/main/resources/liquibase/GNUOB_ACCESS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="VERSION" type="NUMERIC" />
 			<column name="ACTIVE" type="BOOLEAN" />
@@ -18,7 +18,7 @@
 			<column name="site_ID" type="NUMERIC" />
 			<column name="owner_ID" type="NUMERIC" />
 		</loadData>
-		<loadData tableName="GNUOB_USERS" file="src/main/resources/liquibase/GNUOB_USERS.csv">
+		<loadData tableName="gnuob_users" file="src/main/resources/liquibase/GNUOB_USERS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="NAME" type="STRING" />
@@ -26,26 +26,26 @@
 			<column name="ACCESS" type="STRING" />
 			<column name="ROOT" type="BOOLEAN" />
 		</loadData>
-		<loadData tableName="GNUOB_GROUPS" file="src/main/resources/liquibase/GNUOB_GROUPS.csv">
+		<loadData tableName="gnuob_groups" file="src/main/resources/liquibase/GNUOB_GROUPS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="NAME" type="STRING" />
 			<column name="RULE" type="STRING" />
 		</loadData>
-		<loadData tableName="GNUOB_SITES" file="src/main/resources/liquibase/GNUOB_SITES.csv">
+		<loadData tableName="gnuob_sites" file="src/main/resources/liquibase/GNUOB_SITES.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="NAME" type="STRING" />
 		</loadData>
-		<loadData tableName="GNUOB_USERS_GNUOB_SITES" file="src/main/resources/liquibase/GNUOB_USERS_GNUOB_SITES.csv">
+		<loadData tableName="gnuob_users_gnuob_sites" file="src/main/resources/liquibase/GNUOB_USERS_GNUOB_SITES.csv">
 			<column name="sites_ID" type="NUMERIC" />
 			<column name="GNUOB_USERS_ID" type="NUMERIC" />
 		</loadData>
-		<loadData tableName="GNUOB_USERS_GNUOB_GROUPS" file="src/main/resources/liquibase/GNUOB_USERS_GNUOB_GROUPS.csv">
+		<loadData tableName="gnuob_users_gnuob_groups" file="src/main/resources/liquibase/GNUOB_USERS_GNUOB_GROUPS.csv">
 			<column name="groups_ID" type="NUMERIC" />
 			<column name="GNUOB_USERS_ID" type="NUMERIC" />
 		</loadData>
-		<loadData tableName="GNUOB_SETTINGS" file="src/main/resources/liquibase/GNUOB_SETTINGS.csv">
+		<loadData tableName="gnuob_settings" file="src/main/resources/liquibase/GNUOB_SETTINGS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="VALUE" type="STRING" />

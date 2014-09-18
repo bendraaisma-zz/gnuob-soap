@@ -112,7 +112,7 @@
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<archive>
 						<manifestEntries>
-							<dependencies>org.apache.cxf services,org.apache.cxf.impl</dependencies>
+							<dependencies>org.hornetq org.apache.cxf services,org.apache.cxf.impl</dependencies>
 						</manifestEntries>
 					</archive>
 				</configuration>
@@ -132,10 +132,11 @@
 				<configuration>
 					<changeLogFile>src/main/resources/liquibase/db-changelog.xml</changeLogFile>
 					<driver>com.mysql.jdbc.Driver</driver>
-					<url>jdbc:mysql://localhost/gnuob</url>
-					<username>gnuob</username>
-					<password>gnuob</password>
+					<url>${liquibase.url}</url>
+					<username>${liquibase.username}</username>
+					<password>${liquibase.password}</password>
 					<tag>0.0.1-SNAPSHOT</tag>
+					<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
 					<outputChangeLogFile>src/main/resources/liquibase/db-generate-change-log.xml</outputChangeLogFile>
 				</configuration>
 				<dependencies>
