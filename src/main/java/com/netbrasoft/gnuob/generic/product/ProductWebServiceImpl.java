@@ -62,9 +62,12 @@ public class ProductWebServiceImpl<P extends Product> implements GenericTypeWebS
 	@WebMethod(operationName = "findProduct")
 	public List<P> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "product") P type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) throws GNUOpenBusinessServiceException {
 		try {
-			List<Example> examples = getSubCategoryExamples(type.getSubCategories());
-			Parameter parameter = Parameter.getInstance("subCategories", Restrictions.or(examples.toArray(new Example[examples.size()])));
-			return securedGenericProductService.find(metadata, type, paging, orderBy, parameter);
+			if (!type.getSubCategories().isEmpty()) {
+				List<Example> examples = getSubCategoryExamples(type.getSubCategories());
+				Parameter parameter = Parameter.getInstance("subCategories", Restrictions.or(examples.toArray(new Example[examples.size()])));
+				return securedGenericProductService.find(metadata, type, paging, orderBy, parameter);
+			}
+			return securedGenericProductService.find(metadata, type, paging, orderBy);
 		} catch (Exception e) {
 			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
 		}
