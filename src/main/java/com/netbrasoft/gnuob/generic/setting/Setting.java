@@ -16,43 +16,43 @@ import com.netbrasoft.gnuob.generic.security.Access;
 @XmlType(name = Setting.ENTITY)
 public class Setting extends Access {
 
-	private static final long serialVersionUID = -1489369413428188989L;
-	protected static final String ENTITY = "Setting";
-	protected static final String TABLE = "GNUOB_SETTINGS";
+    private static final long serialVersionUID = -1489369413428188989L;
+    protected static final String ENTITY = "Setting";
+    protected static final String TABLE = "GNUOB_SETTINGS";
 
-	@Column(name = "PROPERTY", nullable = false)
-	@XmlElement(name = "property", required = true)
-	private String property;
+    @Column(name = "PROPERTY", nullable = false)
+    @XmlElement(name = "property", required = true)
+    private String property;
 
-	@Column(name = "VALUE", nullable = false)
-	@XmlElement(name = "value", required = true)
-	private String value;
+    @Column(name = "VALUE", nullable = false)
+    @XmlElement(name = "value", required = true)
+    private String value;
 
-	@Column(name = "DESCRIPTION", nullable = false)
-	@XmlElement(name = "description")
-	private String description;
+    @Column(name = "DESCRIPTION", nullable = false)
+    @XmlElement(name = "description")
+    private String description;
 
-	public String getDescription() {
-		return description;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public String getProperty() {
-		return property;
-	}
+    public String getProperty() {
+        return property;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return value;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setProperty(String property) {
-		this.property = property;
-	}
+    public void setProperty(String property) {
+        this.property = property;
+    }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

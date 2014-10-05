@@ -10,5 +10,5 @@ import java.lang.annotation.Target;
 @Retention(RUNTIME)
 public @interface OperationAccess {
 
-	public Rule.Operation operation() default Rule.Operation.READ;
+    public Rule.Operation operation() default Rule.Operation.READ;
 }

@@ -21,87 +21,87 @@ import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
 @Stateless(name = "OfferWebServiceImpl")
 public class OfferWebServiceImpl<O extends Offer> implements GenericTypeWebService<O> {
 
-	@EJB(beanName = "SecuredGenericTypeServiceImpl")
-	private SecuredGenericTypeService<O> securedGenericOfferService;
+    @EJB(beanName = "SecuredGenericTypeServiceImpl")
+    private SecuredGenericTypeService<O> securedGenericOfferService;
 
-	@EJB(beanName = "SecuredGenericTypeServiceImpl")
-	private SecuredGenericTypeService<Contract> securedGenericContractService;
+    @EJB(beanName = "SecuredGenericTypeServiceImpl")
+    private SecuredGenericTypeService<Contract> securedGenericContractService;
 
-	@EJB(beanName = "SecuredGenericTypeServiceImpl")
-	private SecuredGenericTypeService<Customer> securedGenericCustomerService;
+    @EJB(beanName = "SecuredGenericTypeServiceImpl")
+    private SecuredGenericTypeService<Customer> securedGenericCustomerService;
 
-	@Override
-	@WebMethod(operationName = "countOffer")
-	public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) throws GNUOpenBusinessServiceException {
-		try {
-			return securedGenericOfferService.count(metadata, type);
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "countOffer")
+    public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) {
+        try {
+            return securedGenericOfferService.count(metadata, type);
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
-	@Override
-	@WebMethod(operationName = "findOfferById")
-	public O find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) throws GNUOpenBusinessServiceException {
-		try {
-			return securedGenericOfferService.find(metadata, type, type.getId());
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "findOfferById")
+    public O find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) {
+        try {
+            return securedGenericOfferService.find(metadata, type, type.getId());
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
-	@Override
-	@WebMethod(operationName = "findOffer")
-	public List<O> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) throws GNUOpenBusinessServiceException {
-		try {
-			return securedGenericOfferService.find(metadata, type, paging, orderBy);
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "findOffer")
+    public List<O> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
+        try {
+            return securedGenericOfferService.find(metadata, type, paging, orderBy);
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
-	@Override
-	@WebMethod(operationName = "mergeOffer")
-	public O merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) throws GNUOpenBusinessServiceException {
-		try {
-			securedGenericOfferService.merge(metadata, type);
-			return type;
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "mergeOffer")
+    public O merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) {
+        try {
+            securedGenericOfferService.merge(metadata, type);
+            return type;
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
-	@Override
-	@WebMethod(operationName = "persistOffer")
-	public O persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) throws GNUOpenBusinessServiceException {
-		try {
-			securedGenericCustomerService.persist(metadata, type.getContract().getCustomer());
-			securedGenericContractService.persist(metadata, type.getContract());
-			securedGenericOfferService.persist(metadata, type);
-			return type;
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "persistOffer")
+    public O persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) {
+        try {
+            securedGenericCustomerService.persist(metadata, type.getContract().getCustomer());
+            securedGenericContractService.persist(metadata, type.getContract());
+            securedGenericOfferService.persist(metadata, type);
+            return type;
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
-	@Override
-	@WebMethod(operationName = "refreshOffer")
-	public O refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) throws GNUOpenBusinessServiceException {
-		try {
-			return securedGenericOfferService.refresh(metadata, type, type.getId());
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "refreshOffer")
+    public O refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) {
+        try {
+            return securedGenericOfferService.refresh(metadata, type, type.getId());
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
-	@Override
-	@WebMethod(operationName = "removeOffer")
-	public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) throws GNUOpenBusinessServiceException {
-		try {
-			securedGenericOfferService.remove(metadata, type);
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "removeOffer")
+    public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) {
+        try {
+            securedGenericOfferService.remove(metadata, type);
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
 }

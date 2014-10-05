@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project>
 <con:soapui-workspace name="gnuob-soap" soapui-version="5.1.1" xmlns:con="http://eviware.com/soapui/config">
-  <con:settings/>
-  <con:project name="gnuob-soap">/home/bernard/Projects/gnuob/gnuob-soap/src/test/resources/gnuob-soap-soapui-project.xml</con:project>
+	<con:settings />
+	<con:project name="gnuob-soap">/home/bernard/Projects/gnuob/gnuob-soap/src/test/resources/gnuob-soap-soapui-project.xml</con:project>
 </con:soapui-workspace>

@@ -6,37 +6,38 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "Paging")
 public final class Paging {
 
-	public static Paging getInstance(int first, int max) {
-		return new Paging(first, max);
-	}
+    public static Paging getInstance(int first, int max) {
+        return new Paging(first, max);
+    }
 
-	private int first;
-	private int max;
+    private int first;
 
-	public Paging() {
+    private int max;
 
-	}
+    public Paging() {
 
-	public Paging(int first, int max) {
-		this.first = first;
-		this.max = max;
-	}
+    }
 
-	@XmlElement(name = "first")
-	public int getFirst() {
-		return first;
-	}
+    public Paging(int first, int max) {
+        this.first = first;
+        this.max = max;
+    }
 
-	@XmlElement(name = "max")
-	public int getMax() {
-		return max;
-	}
+    @XmlElement(name = "first")
+    public int getFirst() {
+        return first;
+    }
 
-	public void setFirst(int first) {
-		this.first = first;
-	}
+    @XmlElement(name = "max")
+    public int getMax() {
+        return max;
+    }
 
-	public void setMax(int max) {
-		this.max = max;
-	}
+    public void setFirst(int first) {
+        this.first = first;
+    }
+
+    public void setMax(int max) {
+        this.max = max;
+    }
 }

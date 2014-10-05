@@ -18,24 +18,24 @@ import com.netbrasoft.gnuob.generic.customer.Address;
 @XmlRootElement(name = Shipment.ENTITY)
 public class Shipment extends Type {
 
-	private static final long serialVersionUID = 7122488386952479304L;
-	protected static final String ENTITY = "Shipment";
-	protected static final String TABLE = "GNUOB_SHIPMENTS";
+    private static final long serialVersionUID = 7122488386952479304L;
+    protected static final String ENTITY = "Shipment";
+    protected static final String TABLE = "GNUOB_SHIPMENTS";
 
-	@OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, optional = false)
-	private Address address;
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, optional = false)
+    private Address address;
 
-	public Shipment() {
+    public Shipment() {
 
-	}
+    }
 
-	@XmlElement(name = "address", required = true)
-	public Address getAddress() {
-		return address;
-	}
+    @XmlElement(name = "address", required = true)
+    public Address getAddress() {
+        return address;
+    }
 
-	public void setAddress(Address address) {
-		this.address = address;
-	}
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
 }

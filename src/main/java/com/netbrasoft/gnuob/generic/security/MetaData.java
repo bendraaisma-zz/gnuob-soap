@@ -9,49 +9,49 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = { "site", "user", "password" })
 public class MetaData {
 
-	private String site;
-	private String user;
-	private String password;
+    private String site;
+    private String user;
+    private String password;
 
-	private final boolean enabled;
+    private final boolean enabled;
 
-	public MetaData() {
-		this(true);
-	}
+    public MetaData() {
+        this(true);
+    }
 
-	public MetaData(boolean enabled) {
-		this.enabled = enabled;
-	}
+    public MetaData(boolean enabled) {
+        this.enabled = enabled;
+    }
 
-	@XmlElement(name = "password", required = true)
-	public String getPassword() {
-		return password;
-	}
+    @XmlElement(name = "password", required = true)
+    public String getPassword() {
+        return password;
+    }
 
-	@XmlElement(name = "site", required = true)
-	public String getSite() {
-		return site;
-	}
+    @XmlElement(name = "site", required = true)
+    public String getSite() {
+        return site;
+    }
 
-	@XmlElement(name = "user", required = true)
-	public String getUser() {
-		return user;
-	}
+    @XmlElement(name = "user", required = true)
+    public String getUser() {
+        return user;
+    }
 
-	@XmlTransient
-	public boolean isEnabled() {
-		return enabled;
-	}
+    @XmlTransient
+    public boolean isEnabled() {
+        return enabled;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-	public void setSite(String site) {
-		this.site = site;
-	}
+    public void setSite(String site) {
+        this.site = site;
+    }
 
-	public void setUser(String user) {
-		this.user = user;
-	}
+    public void setUser(String user) {
+        this.user = user;
+    }
 }

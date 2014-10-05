@@ -24,90 +24,90 @@ import com.netbrasoft.gnuob.generic.security.Access;
 @XmlRootElement(name = Category.ENTITY)
 public class Category extends Access {
 
-	private static final long serialVersionUID = 8531470310780646179L;
-	protected static final String ENTITY = "Category";
-	protected static final String TABLE = "GNUOB_CATEGORIES";
+    private static final long serialVersionUID = 8531470310780646179L;
+    protected static final String ENTITY = "Category";
+    protected static final String TABLE = "GNUOB_CATEGORIES";
 
-	@Column(name = "NAME", nullable = false)
-	private String name;
+    @Column(name = "NAME", nullable = false)
+    private String name;
 
-	@Column(name = "DESCRIPTION", nullable = false)
-	private String description;
+    @Column(name = "DESCRIPTION", nullable = false)
+    private String description;
 
-	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
-	@OrderBy("position asc")
-	private Set<SubCategory> subCategories = new LinkedHashSet<SubCategory>();
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+    @OrderBy("position asc")
+    private Set<SubCategory> subCategories = new LinkedHashSet<SubCategory>();
 
-	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
-	@OrderBy("position asc")
-	private Set<Content> contents = new LinkedHashSet<Content>();
+    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+    @OrderBy("position asc")
+    private Set<Content> contents = new LinkedHashSet<Content>();
 
-	@Column(name = "POSITION")
-	private Integer position;
+    @Column(name = "POSITION")
+    private Integer position;
 
-	public Set<Content> getContents() {
-		return contents;
-	}
+    public Set<Content> getContents() {
+        return contents;
+    }
 
-	@XmlElement(name = "description")
-	public String getDescription() {
-		return description;
-	}
+    @XmlElement(name = "description")
+    public String getDescription() {
+        return description;
+    }
 
-	@XmlElement(name = "name")
-	public String getName() {
-		return name;
-	}
+    @XmlElement(name = "name")
+    public String getName() {
+        return name;
+    }
 
-	@XmlTransient
-	public Integer getPosition() {
-		return position;
-	}
+    @XmlTransient
+    public Integer getPosition() {
+        return position;
+    }
 
-	public Set<SubCategory> getSubCategories() {
-		return subCategories;
-	}
+    public Set<SubCategory> getSubCategories() {
+        return subCategories;
+    }
 
-	private void positionContents() {
-		int position = 0;
+    private void positionContents() {
+        int position = 0;
 
-		for (Content content : contents) {
-			content.setPosition(Integer.valueOf(position++));
-		}
-	}
+        for (Content content : contents) {
+            content.setPosition(Integer.valueOf(position++));
+        }
+    }
 
-	private void positionSubCategories() {
-		int position = 0;
+    private void positionSubCategories() {
+        int position = 0;
 
-		for (SubCategory subCategory : subCategories) {
-			subCategory.setPosition(Integer.valueOf(position++));
-		}
-	}
+        for (SubCategory subCategory : subCategories) {
+            subCategory.setPosition(Integer.valueOf(position++));
+        }
+    }
 
-	@PrePersist
-	@PreUpdate
-	protected void prePersistUpdateCategory() {
-		positionSubCategories();
-		positionContents();
-	}
+    @PrePersist
+    @PreUpdate
+    protected void prePersistUpdateCategory() {
+        positionSubCategories();
+        positionContents();
+    }
 
-	public void setContents(Set<Content> contents) {
-		this.contents = contents;
-	}
+    public void setContents(Set<Content> contents) {
+        this.contents = contents;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setPosition(Integer position) {
-		this.position = position;
-	}
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
 
-	public void setSubCategories(Set<SubCategory> subCategories) {
-		this.subCategories = subCategories;
-	}
+    public void setSubCategories(Set<SubCategory> subCategories) {
+        this.subCategories = subCategories;
+    }
 }

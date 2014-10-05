@@ -18,47 +18,47 @@ import com.netbrasoft.gnuob.generic.Type;
 @XmlRootElement(name = Permission.ENTITY)
 public class Permission extends Type {
 
-	private static final long serialVersionUID = 3108374497171836688L;
-	protected static final String ENTITY = "Permission";
-	protected static final String TABLE = "GNUOB_PERMISSIONS";
+    private static final long serialVersionUID = 3108374497171836688L;
+    protected static final String ENTITY = "Permission";
+    protected static final String TABLE = "GNUOB_PERMISSIONS";
 
-	@Column(name = "OWNER", nullable = false)
-	@Enumerated(EnumType.STRING)
-	private Rule owner = Rule.DELETE_ACCESS;
+    @Column(name = "OWNER", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Rule owner = Rule.DELETE_ACCESS;
 
-	@Column(name = "\"GROUP\"", nullable = false)
-	@Enumerated(EnumType.STRING)
-	private Rule group = Rule.READ_ACCESS;
+    @Column(name = "\"GROUP\"", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Rule group = Rule.READ_ACCESS;
 
-	@Column(name = "OTHERS", nullable = false)
-	@Enumerated(EnumType.STRING)
-	private Rule others = Rule.READ_ACCESS;
+    @Column(name = "OTHERS", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Rule others = Rule.READ_ACCESS;
 
-	@XmlElement(name = "group", required = true)
-	public Rule getGroup() {
-		return group;
-	}
+    @XmlElement(name = "group", required = true)
+    public Rule getGroup() {
+        return group;
+    }
 
-	@XmlElement(name = "others", required = true)
-	public Rule getOthers() {
-		return others;
-	}
+    @XmlElement(name = "others", required = true)
+    public Rule getOthers() {
+        return others;
+    }
 
-	@XmlElement(name = "owner", required = true)
-	public Rule getOwner() {
-		return owner;
-	}
+    @XmlElement(name = "owner", required = true)
+    public Rule getOwner() {
+        return owner;
+    }
 
-	public void setGroup(Rule group) {
-		this.group = group;
-	}
+    public void setGroup(Rule group) {
+        this.group = group;
+    }
 
-	public void setOthers(Rule others) {
-		this.others = others;
-	}
+    public void setOthers(Rule others) {
+        this.others = others;
+    }
 
-	public void setOwner(Rule owner) {
-		this.owner = owner;
-	}
+    public void setOwner(Rule owner) {
+        this.owner = owner;
+    }
 
 }

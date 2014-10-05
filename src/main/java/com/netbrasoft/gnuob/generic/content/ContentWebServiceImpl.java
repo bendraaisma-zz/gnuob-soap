@@ -19,79 +19,79 @@ import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
 @Stateless(name = "ContentWebServiceImpl")
 public class ContentWebServiceImpl<C extends Content> implements GenericTypeWebService<C> {
 
-	@EJB(beanName = "SecuredGenericTypeServiceImpl")
-	private SecuredGenericTypeService<C> securedGenericContentService;
+    @EJB(beanName = "SecuredGenericTypeServiceImpl")
+    private SecuredGenericTypeService<C> securedGenericContentService;
 
-	@Override
-	@WebMethod(operationName = "countContent")
-	public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) throws GNUOpenBusinessServiceException {
-		try {
-			return securedGenericContentService.count(metadata, type);
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "countContent")
+    public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) {
+        try {
+            return securedGenericContentService.count(metadata, type);
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
-	@Override
-	@WebMethod(operationName = "findContentById")
-	public C find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) throws GNUOpenBusinessServiceException {
-		try {
-			return securedGenericContentService.find(metadata, type, type.getId());
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "findContentById")
+    public C find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) {
+        try {
+            return securedGenericContentService.find(metadata, type, type.getId());
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
-	@Override
-	@WebMethod(operationName = "findContent")
-	public List<C> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) throws GNUOpenBusinessServiceException {
-		try {
-			return securedGenericContentService.find(metadata, type, paging, orderBy);
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "findContent")
+    public List<C> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
+        try {
+            return securedGenericContentService.find(metadata, type, paging, orderBy);
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
-	@Override
-	@WebMethod(operationName = "mergeContent")
-	public C merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) throws GNUOpenBusinessServiceException {
-		try {
-			securedGenericContentService.merge(metadata, type);
-			return type;
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "mergeContent")
+    public C merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) {
+        try {
+            securedGenericContentService.merge(metadata, type);
+            return type;
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
-	@Override
-	@WebMethod(operationName = "persistContent")
-	public C persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) throws GNUOpenBusinessServiceException {
-		try {
-			securedGenericContentService.persist(metadata, type);
-			return type;
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "persistContent")
+    public C persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) {
+        try {
+            securedGenericContentService.persist(metadata, type);
+            return type;
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
-	@Override
-	@WebMethod(operationName = "refreshContent")
-	public C refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) throws GNUOpenBusinessServiceException {
-		try {
-			return securedGenericContentService.refresh(metadata, type, type.getId());
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "refreshContent")
+    public C refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) {
+        try {
+            return securedGenericContentService.refresh(metadata, type, type.getId());
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
-	@Override
-	@WebMethod(operationName = "removeContent")
-	public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) throws GNUOpenBusinessServiceException {
-		try {
-			securedGenericContentService.remove(metadata, type);
-		} catch (Exception e) {
-			throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-		}
-	}
+    @Override
+    @WebMethod(operationName = "removeContent")
+    public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) {
+        try {
+            securedGenericContentService.remove(metadata, type);
+        } catch (Exception e) {
+            throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+        }
+    }
 
 }
