@@ -28,21 +28,21 @@ public class Stock extends Type {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "stock")
     private Product product;
 
-    @Column(name = "QUANTITY")
+    @Column(name = "QUANTITY", nullable = false)
     private BigInteger quantity;
 
-    @Column(name = "MIN_QUANTITY")
+    @Column(name = "MIN_QUANTITY", nullable = false)
     private BigInteger minQuantity;
 
-    @Column(name = "MAX_QUANTITY")
+    @Column(name = "MAX_QUANTITY", nullable = false)
     private BigInteger maxQuantity;
 
-    @XmlElement(name = "maxQuantity")
+    @XmlElement(name = "maxQuantity", required = true)
     public BigInteger getMaxQuantity() {
         return maxQuantity;
     }
 
-    @XmlElement(name = "minQuantity")
+    @XmlElement(name = "minQuantity", required = true)
     public BigInteger getMinQuantity() {
         return minQuantity;
     }
@@ -52,7 +52,7 @@ public class Stock extends Type {
         return product;
     }
 
-    @XmlElement(name = "quantity")
+    @XmlElement(name = "quantity", required = true)
     public BigInteger getQuantity() {
         return quantity;
     }

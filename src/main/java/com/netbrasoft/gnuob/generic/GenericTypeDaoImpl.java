@@ -46,6 +46,11 @@ public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
     }
 
     @Override
+    public void flush() {
+        entityManager.flush();
+    }
+
+    @Override
     public Session getDelegate() {
         return (Session) entityManager.getDelegate();
     }

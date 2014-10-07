@@ -1,6 +1,7 @@
 package com.netbrasoft.gnuob.generic.order;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Date;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.jaxb.JaxbDateAdapter;
 
 @Entity(name = Payment.ENTITY)
 @Table(name = Payment.TABLE)
@@ -36,31 +38,31 @@ public class Payment extends Type {
     @Column(name = "GROSS_AMOUNT", nullable = false)
     private BigDecimal grossAmount;
 
-    @Column(name = "FEE_AMOUNT", nullable = false)
+    @Column(name = "FEE_AMOUNT")
     private BigDecimal feeAmount;
 
     @Column(name = "SETTLE_AMOUNT")
     private BigDecimal settleAmount;
 
-    @Column(name = "TAX_AMOUNT", nullable = false)
+    @Column(name = "TAX_AMOUNT")
     private BigDecimal taxAmount;
 
-    @Column(name = "EXCHANGE_RATE", nullable = false)
+    @Column(name = "EXCHANGE_RATE")
     private String exchangeRate;
 
     @Column(name = "PAYMENT_STATUS", nullable = false)
     private String paymentStatus;
 
-    @Column(name = "PENDING_REASON", nullable = false)
+    @Column(name = "PENDING_REASON")
     private String pendingReason;
 
-    @Column(name = "REASON_CODE", nullable = false)
+    @Column(name = "REASON_CODE")
     private String reasonCode;
 
     @Column(name = "HOLD_DECISION")
     private String holdDecision;
 
-    @Column(name = "PROTECTION_ELIGIBILITY_TYPE", nullable = false)
+    @Column(name = "PROTECTION_ELIGIBILITY_TYPE")
     private String protectionEligibilityType;
 
     @Column(name = "STORE_ID")
@@ -72,15 +74,18 @@ public class Payment extends Type {
     @Column(name = "PAYMENT_REQUEST_ID")
     private String paymentRequestId;
 
-    @Column(name = "PAYMENT_DATE", nullable = false)
+    @Column(name = "PAYMENT_DATE")
     private Date paymentDate;
 
-    @XmlElement(name = "exchangeRate", required = true)
+    @Column(name = "INSTALLMENT_COUNT")
+    private BigInteger installmentCount;
+
+    @XmlElement(name = "exchangeRate")
     public String getExchangeRate() {
         return exchangeRate;
     }
 
-    @XmlElement(name = "feeAmount", required = true)
+    @XmlElement(name = "feeAmount")
     public BigDecimal getFeeAmount() {
         return feeAmount;
     }
@@ -95,7 +100,12 @@ public class Payment extends Type {
         return holdDecision;
     }
 
-    @XmlElement(name = "paymentDate", required = true)
+    @XmlElement(name = "installmentCount")
+    public BigInteger getInstallmentCount() {
+        return installmentCount;
+    }
+
+    @XmlElement(name = "paymentDate")
     @XmlJavaTypeAdapter(JaxbDateAdapter.class)
     public Date getPaymentDate() {
         return paymentDate;
@@ -116,17 +126,17 @@ public class Payment extends Type {
         return paymentType;
     }
 
-    @XmlElement(name = "pendingReason", required = true)
+    @XmlElement(name = "pendingReason")
     public String getPendingReason() {
         return pendingReason;
     }
 
-    @XmlElement(name = "protectionEligibilityType", required = true)
+    @XmlElement(name = "protectionEligibilityType")
     public String getProtectionEligibilityType() {
         return protectionEligibilityType;
     }
 
-    @XmlElement(name = "reasonCode", required = true)
+    @XmlElement(name = "reasonCode")
     public String getReasonCode() {
         return reasonCode;
     }
@@ -141,7 +151,7 @@ public class Payment extends Type {
         return storeId;
     }
 
-    @XmlElement(name = "taxAmount", required = true)
+    @XmlElement(name = "taxAmount")
     public BigDecimal getTaxAmount() {
         return taxAmount;
     }
@@ -175,6 +185,10 @@ public class Payment extends Type {
 
     public void setHoldDecision(String holdDecision) {
         this.holdDecision = holdDecision;
+    }
+
+    public void setInstallmentCount(BigInteger installmentCount) {
+        this.installmentCount = installmentCount;
     }
 
     public void setPaymentDate(Date paymentDate) {

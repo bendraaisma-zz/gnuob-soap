@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.generic.Type;
 import com.netbrasoft.gnuob.generic.product.Product;
@@ -26,23 +27,29 @@ public class OfferRecord extends Type {
     protected static final String ENTITY = "OfferRecord";
     protected static final String TABLE = "GNUOB_OFFER_RECORDS";
 
-    @Column(name = "NAME", nullable = false)
+    @Column(name = "NAME")
     private String name;
 
-    @Column(name = "AMOUNT", nullable = false)
+    @Column(name = "AMOUNT")
     private BigDecimal amount;
 
-    @Column(name = "DESCRIPTION", nullable = false)
+    @Column(name = "DESCRIPTION")
     private String description;
 
-    @Column(name = "NUMBER", nullable = false)
+    @Column(name = "NUMBER")
     private String number;
 
-    @Column(name = "TAX", nullable = false)
+    @Column(name = "TAX")
     private BigDecimal tax;
 
     @Column(name = "QUANTITY", nullable = false)
     private BigInteger quantity;
+
+    @Column(name = "SHIPPING_COST")
+    private BigDecimal shippingCost;
+
+    @Column(name = "DISCOUNT")
+    private BigDecimal discount;
 
     @Column(name = "ITEM_WEIGHT")
     private BigDecimal itemWeight;
@@ -79,66 +86,131 @@ public class OfferRecord extends Type {
 
     @XmlElement(name = "amount")
     public BigDecimal getAmount() {
+        if (product != null && amount == null) {
+            amount = product.getAmount();
+        }
         return amount;
     }
 
     @XmlElement(name = "description")
     public String getDescription() {
+        if (product != null && description == null) {
+            description = product.getDescription();
+        }
         return description;
+    }
+
+    @XmlElement(name = "discount")
+    public BigDecimal getDiscount() {
+        if (product != null && discount == null) {
+            discount = product.getItemHeight();
+        }
+        return discount;
+    }
+
+    @Transient
+    @XmlTransient
+    public BigDecimal getDiscountTotal() {
+        if (getDiscount() != null && getQuantity() != null) {
+            return getDiscount().multiply(new BigDecimal(getQuantity()));
+        }
+        return BigDecimal.ZERO;
     }
 
     @XmlElement(name = "itemHeight")
     public BigDecimal getItemHeight() {
+        if (product != null && itemHeight == null) {
+            itemHeight = product.getItemHeight();
+        }
         return itemHeight;
     }
 
     @XmlElement(name = "itemHeightUnit")
     public String getItemHeightUnit() {
+        if (product != null && itemHeightUnit == null) {
+            itemHeightUnit = product.getItemHeightUnit();
+        }
         return itemHeightUnit;
     }
 
     @XmlElement(name = "itemLength")
     public BigDecimal getItemLength() {
+        if (product != null && itemLength == null) {
+            itemLength = product.getItemLength();
+        }
         return itemLength;
     }
 
     @XmlElement(name = "itemLengthUnit")
     public String getItemLengthUnit() {
+        if (product != null && itemLengthUnit == null) {
+            itemHeightUnit = product.getItemHeightUnit();
+        }
         return itemLengthUnit;
+    }
+
+    @Transient
+    @XmlTransient
+    public BigDecimal getItemTotal() {
+        if (getAmount() != null && getQuantity() != null) {
+            return getAmount().multiply(new BigDecimal(getQuantity()));
+        }
+        return BigDecimal.ZERO;
     }
 
     @XmlElement(name = "itemUrl")
     public String getItemUrl() {
+        if (product != null && itemUrl == null) {
+            itemUrl = product.getItemUrl();
+        }
         return itemUrl;
     }
 
     @XmlElement(name = "itemWeight")
     public BigDecimal getItemWeight() {
+        if (product != null && itemWeight == null) {
+            itemWeight = product.getItemWeight();
+        }
         return itemWeight;
     }
 
     @XmlElement(name = "itemWeightUnit")
     public String getItemWeightUnit() {
+        if (product != null && itemWeightUnit == null) {
+            itemWeightUnit = product.getItemWeightUnit();
+        }
         return itemWeightUnit;
     }
 
     @XmlElement(name = "itemWidth")
     public BigDecimal getItemWidth() {
+        if (product != null && itemWidth == null) {
+            itemWidth = product.getItemWidth();
+        }
         return itemWidth;
     }
 
     @XmlElement(name = "itemWidthUnit")
     public String getItemWidthUnit() {
+        if (product != null && itemWidthUnit == null) {
+            itemWidthUnit = product.getItemWidthUnit();
+        }
         return itemWidthUnit;
     }
 
     @XmlElement(name = "name")
     public String getName() {
+        if (product != null && name == null) {
+            name = product.getName();
+        }
         return name;
     }
 
     @XmlElement(name = "number")
     public String getNumber() {
+        if (product != null && number == null) {
+            number = product.getNumber();
+        }
         return number;
     }
 
@@ -151,9 +223,38 @@ public class OfferRecord extends Type {
         return quantity;
     }
 
+    @XmlElement(name = "shippingCost")
+    public BigDecimal getShippingCost() {
+        if (product != null && shippingCost == null) {
+            shippingCost = product.getShippingCost();
+        }
+        return shippingCost;
+    }
+
+    @Transient
+    @XmlTransient
+    public BigDecimal getShippingTotal() {
+        if (getShippingCost() != null && getQuantity() != null) {
+            return getShippingCost().multiply(new BigDecimal(getQuantity()));
+        }
+        return BigDecimal.ZERO;
+    }
+
     @XmlElement(name = "tax")
     public BigDecimal getTax() {
+        if (product != null && tax == null) {
+            tax = product.getTax();
+        }
         return tax;
+    }
+
+    @Transient
+    @XmlTransient
+    public BigDecimal getTaxTotal() {
+        if (getTax() != null && getQuantity() != null) {
+            return getTax().multiply(new BigDecimal(getQuantity()));
+        }
+        return BigDecimal.ZERO;
     }
 
     @PrePersist
@@ -165,6 +266,7 @@ public class OfferRecord extends Type {
             amount = amount == null ? product.getAmount() : amount;
             number = number == null ? product.getNumber() : number;
             tax = tax == null ? product.getTax() : tax;
+            shippingCost = shippingCost == null ? product.getShippingCost() : shippingCost;
             itemWeight = itemWeight == null ? product.getItemWeight() : itemWeight;
             itemWeightUnit = itemWeightUnit == null ? product.getItemWeightUnit() : itemWeightUnit;
             itemLength = itemLength == null ? product.getItemLength() : itemLength;
@@ -183,6 +285,10 @@ public class OfferRecord extends Type {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setDiscount(BigDecimal discount) {
+        this.discount = discount;
     }
 
     public void setItemHeight(BigDecimal itemHeight) {
@@ -235,6 +341,10 @@ public class OfferRecord extends Type {
 
     public void setQuantity(BigInteger quantity) {
         this.quantity = quantity;
+    }
+
+    public void setShippingCost(BigDecimal shippingCost) {
+        this.shippingCost = shippingCost;
     }
 
     public void setTax(BigDecimal tax) {

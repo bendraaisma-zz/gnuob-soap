@@ -14,6 +14,8 @@ public interface GenericTypeDao<T> {
 
     T find(T type, long id, LockModeType lockModeType);
 
+    void flush();
+
     Session getDelegate();
 
     LockModeType getLockModeTypeOfType(T type);

@@ -18,6 +18,8 @@ public interface GenericTypeService<T> {
 
     List<T> find(T type, Paging paging, OrderBy orderBy, Parameter... param);
 
+    void flush();
+
     void merge(T type);
 
     void persist(T type);

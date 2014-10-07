@@ -58,7 +58,10 @@ public class Product extends Access {
     @Column(name = "TAX", nullable = false)
     private BigDecimal tax;
 
-    @Column(name = "ITEM_WEIGHT")
+    @Column(name = "SHIPPING_COST", nullable = false)
+    private BigDecimal shippingCost;
+
+    @Column(name = "ITEM_WEIGHT", nullable = false)
     private BigDecimal itemWeight;
 
     @Column(name = "ITEM_WEIGHT_UNIT")
@@ -91,7 +94,7 @@ public class Product extends Access {
     @Column(name = "RATING")
     private Integer rating;
 
-    @Column(name = "DISCOUNT")
+    @Column(name = "DISCOUNT", nullable = false)
     private BigDecimal discount;
 
     @Column(name = "BESTSELLERS")
@@ -119,7 +122,7 @@ public class Product extends Access {
         return description;
     }
 
-    @XmlElement(name = "discount")
+    @XmlElement(name = "discount", required = true)
     public BigDecimal getDiscount() {
         return discount;
     }
@@ -149,7 +152,7 @@ public class Product extends Access {
         return itemUrl;
     }
 
-    @XmlElement(name = "itemWeight")
+    @XmlElement(name = "itemWeight", required = true)
     public BigDecimal getItemWeight() {
         return itemWeight;
     }
@@ -192,6 +195,11 @@ public class Product extends Access {
     @XmlElement(name = "recommended")
     public Boolean getRecommended() {
         return recommended;
+    }
+
+    @XmlElement(name = "shippingCost", required = true)
+    public BigDecimal getShippingCost() {
+        return shippingCost;
     }
 
     @XmlElement(name = "stock", required = true)
@@ -305,6 +313,10 @@ public class Product extends Access {
 
     public void setRecommended(Boolean recommended) {
         this.recommended = recommended;
+    }
+
+    public void setShippingCost(BigDecimal shippingCost) {
+        this.shippingCost = shippingCost;
     }
 
     public void setStock(Stock stock) {

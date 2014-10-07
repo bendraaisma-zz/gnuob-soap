@@ -60,6 +60,7 @@ public class ContractWebServiceImpl<C extends Contract> implements GenericTypeWe
     @WebMethod(operationName = "mergeContract")
     public C merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C type) {
         try {
+            securedGenericCustomerService.merge(metadata, type.getCustomer());
             securedGenericContractService.merge(metadata, type);
             return type;
         } catch (Exception e) {

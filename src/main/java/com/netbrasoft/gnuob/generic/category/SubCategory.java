@@ -16,6 +16,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.generic.Type;
 import com.netbrasoft.gnuob.generic.content.Content;
@@ -61,6 +62,7 @@ public class SubCategory extends Type {
         return name;
     }
 
+    @XmlTransient
     public Integer getPosition() {
         return position;
     }

@@ -1,4 +1,4 @@
-package com.netbrasoft.gnuob.generic.order;
+package com.netbrasoft.gnuob.generic.jaxb;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;

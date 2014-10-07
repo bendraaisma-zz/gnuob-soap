@@ -30,7 +30,7 @@ public class Contract extends Access {
     protected static final String ENTITY = "Contract";
     protected static final String TABLE = "GNUOB_CONTRACTS";
 
-    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, optional = false, fetch = FetchType.EAGER)
+    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH }, optional = false, fetch = FetchType.EAGER)
     private Customer customer;
 
     @OneToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER, mappedBy = "contract")

@@ -1,6 +1,7 @@
 package com.netbrasoft.gnuob.generic.order;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -25,6 +26,9 @@ public class Shipment extends Type {
     @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, optional = false)
     private Address address;
 
+    @Column(name = "SHIPMENT_TYPE")
+    private String shipmentType = "NOT_SPECIFIED";
+
     public Shipment() {
 
     }
@@ -34,8 +38,17 @@ public class Shipment extends Type {
         return address;
     }
 
+    @XmlElement(name = "shipmentType")
+    public String getShipmentType() {
+        return shipmentType;
+    }
+
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public void setShipmentType(String shipmentType) {
+        this.shipmentType = shipmentType;
     }
 
 }

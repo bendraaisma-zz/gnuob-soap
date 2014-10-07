@@ -32,9 +32,11 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
 
     @Override
     @WebMethod(operationName = "countOrder")
-    public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type) {
+    public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
         try {
-            return securedGenericOrderService.count(metadata, type);
+            securedGenericCustomerService.read(metadata, order.getContract().getCustomer());
+            securedGenericContractService.read(metadata, order.getContract());
+            return securedGenericOrderService.count(metadata, order);
         } catch (Exception e) {
             throw new GNUOpenBusinessServiceException(e.getMessage(), e);
         }
@@ -42,9 +44,11 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
 
     @Override
     @WebMethod(operationName = "findOrderById")
-    public O find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type) {
+    public O find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
         try {
-            return securedGenericOrderService.find(metadata, type, type.getId());
+            securedGenericCustomerService.read(metadata, order.getContract().getCustomer());
+            securedGenericContractService.read(metadata, order.getContract());
+            return securedGenericOrderService.find(metadata, order, order.getId());
         } catch (Exception e) {
             throw new GNUOpenBusinessServiceException(e.getMessage(), e);
         }
@@ -52,9 +56,11 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
 
     @Override
     @WebMethod(operationName = "findOrder")
-    public List<O> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
+    public List<O> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
         try {
-            return securedGenericOrderService.find(metadata, type, paging, orderBy);
+            securedGenericCustomerService.read(metadata, order.getContract().getCustomer());
+            securedGenericContractService.read(metadata, order.getContract());
+            return securedGenericOrderService.find(metadata, order, paging, orderBy);
         } catch (Exception e) {
             throw new GNUOpenBusinessServiceException(e.getMessage(), e);
         }
@@ -62,12 +68,12 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
 
     @Override
     @WebMethod(operationName = "mergeOrder")
-    public O merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type) {
+    public O merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
         try {
-            securedGenericCustomerService.merge(metadata, type.getContract().getCustomer());
-            securedGenericContractService.merge(metadata, type.getContract());
-            securedGenericOrderService.merge(metadata, type);
-            return type;
+            securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
+            securedGenericContractService.update(metadata, order.getContract());
+            securedGenericOrderService.merge(metadata, order);
+            return order;
         } catch (Exception e) {
             throw new GNUOpenBusinessServiceException(e.getMessage(), e);
         }
@@ -75,12 +81,12 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
 
     @Override
     @WebMethod(operationName = "persistOrder")
-    public O persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type) {
+    public O persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
         try {
-            securedGenericCustomerService.persist(metadata, type.getContract().getCustomer());
-            securedGenericContractService.persist(metadata, type.getContract());
-            securedGenericOrderService.persist(metadata, type);
-            return type;
+            securedGenericCustomerService.persist(metadata, order.getContract().getCustomer());
+            securedGenericContractService.persist(metadata, order.getContract());
+            securedGenericOrderService.persist(metadata, order);
+            return order;
         } catch (Exception e) {
             throw new GNUOpenBusinessServiceException(e.getMessage(), e);
         }
@@ -88,9 +94,11 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
 
     @Override
     @WebMethod(operationName = "refreshOrder")
-    public O refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type) {
+    public O refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
         try {
-            return securedGenericOrderService.refresh(metadata, type, type.getId());
+            securedGenericCustomerService.read(metadata, order.getContract().getCustomer());
+            securedGenericContractService.read(metadata, order.getContract());
+            return securedGenericOrderService.refresh(metadata, order, order.getId());
         } catch (Exception e) {
             throw new GNUOpenBusinessServiceException(e.getMessage(), e);
         }
@@ -98,9 +106,11 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
 
     @Override
     @WebMethod(operationName = "removeOrder")
-    public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type) {
+    public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
         try {
-            securedGenericOrderService.remove(metadata, type);
+            securedGenericCustomerService.delete(metadata, order.getContract().getCustomer());
+            securedGenericContractService.delete(metadata, order.getContract());
+            securedGenericOrderService.remove(metadata, order);
         } catch (Exception e) {
             throw new GNUOpenBusinessServiceException(e.getMessage(), e);
         }

@@ -13,10 +13,10 @@ import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
-@Stateless(name = "PayPalExpressCheckOutWebServiceImpl")
-public class PayPalExpressCheckOutWebServiceImpl<O extends Order> implements CheckOutWebService<O> {
+@Stateless(name = "PagseguroCheckOutWebServiceImpl")
+public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOutWebService<O> {
 
-    @EJB(beanName = "PayPalExpressCheckOutServiceImpl")
+    @EJB(beanName = "PagseguroCheckOutServiceImpl")
     private CheckOutService<O> checkOutService;
 
     @EJB(beanName = "SecuredGenericTypeServiceImpl")

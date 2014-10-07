@@ -22,6 +22,18 @@ public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T> 
     }
 
     @Override
+    @OperationAccess(operation = Operation.CREATE)
+    public void create(MetaData metadata, T type) {
+
+    }
+
+    @Override
+    @OperationAccess(operation = Operation.DELETE)
+    public void delete(MetaData metadata, T type) {
+
+    }
+
+    @Override
     @OperationAccess(operation = Operation.READ)
     public T find(MetaData metadata, T type, long id) {
         return super.find(type, id);
@@ -47,6 +59,12 @@ public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T> 
 
     @Override
     @OperationAccess(operation = Operation.READ)
+    public void read(MetaData metadata, T type) {
+
+    }
+
+    @Override
+    @OperationAccess(operation = Operation.READ)
     public T refresh(MetaData metadata, T type, long id) {
         return super.refresh(type, id);
     }
@@ -55,5 +73,11 @@ public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T> 
     @OperationAccess(operation = Operation.DELETE)
     public void remove(MetaData metadata, T type) {
         super.remove(type);
+    }
+
+    @Override
+    @OperationAccess(operation = Operation.UPDATE)
+    public void update(MetaData metadata, T type) {
+
     }
 }

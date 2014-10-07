@@ -1,5 +1,7 @@
 package com.netbrasoft.gnuob.generic.customer;
 
+import java.sql.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -7,7 +9,9 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import com.netbrasoft.gnuob.generic.jaxb.JaxbDateAdapter;
 import com.netbrasoft.gnuob.generic.security.Access;
 
 @Entity(name = Customer.ENTITY)
@@ -22,17 +26,23 @@ public class Customer extends Access {
     @Column(name = "SALUTATION")
     private String salutation;
 
-    @Column(name = "FIRST_NAME")
+    @Column(name = "FIRST_NAME", nullable = false)
     private String firstName;
+
+    @Column(name = "FRIENDLY_NAME")
+    private String friendlyName;
 
     @Column(name = "PREFIX")
     private String suffix;
 
-    @Column(name = "LAST_NAME")
+    @Column(name = "LAST_NAME", nullable = false)
     private String lastName;
 
     @Column(name = "MIDDLE_NAME")
     private String middleName;
+
+    @Column(name = "DATE_OF_BIRTH", nullable = false)
+    private Date dateOfBirth;
 
     @Column(name = "PAYER_BUSINESS")
     private String payerBusiness;
@@ -87,12 +97,26 @@ public class Customer extends Access {
         return contactPhone;
     }
 
-    @XmlElement(name = "firstName")
+    @XmlElement(name = "dateOfBirth", required = true)
+    @XmlJavaTypeAdapter(JaxbDateAdapter.class)
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    @XmlElement(name = "firstName", required = true)
     public String getFirstName() {
         return firstName;
     }
 
-    @XmlElement(name = "lastName")
+    @XmlElement(name = "friendlyName")
+    public String getFriendlyName() {
+        if (friendlyName == null) {
+            friendlyName = this.firstName + " " + this.middleName == null ? "" : this.middleName + " " + this.lastName;
+        }
+        return friendlyName;
+    }
+
+    @XmlElement(name = "lastName", required = true)
     public String getLastName() {
         return lastName;
     }
@@ -158,8 +182,16 @@ public class Customer extends Access {
         this.contactPhone = contactPhone;
     }
 
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
+    }
+
+    public void setFriendlyName(String friendlyName) {
+        this.friendlyName = friendlyName;
     }
 
     public void setLastName(String lastName) {
@@ -205,5 +237,4 @@ public class Customer extends Access {
     public void setTaxIdType(String taxIdType) {
         this.taxIdType = taxIdType;
     }
-
 }

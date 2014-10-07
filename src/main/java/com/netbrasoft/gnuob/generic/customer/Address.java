@@ -26,22 +26,31 @@ public class Address extends Type {
     @Column(name = "INTERNATIONAL_STREET")
     private String internationalStreet;
 
-    @Column(name = "STREET1")
+    @Column(name = "STREET1", nullable = false)
     private String street1;
 
     @Column(name = "STREET2")
     private String street2;
 
-    @Column(name = "CITY_NAME")
+    @Column(name = "NUMBER", nullable = false)
+    private String number;
+
+    @Column(name = "COMPLEMENT")
+    private String complement;
+
+    @Column(name = "DISTRICT")
+    private String district;
+
+    @Column(name = "CITY_NAME", nullable = false)
     private String cityName;
 
-    @Column(name = "STATE_OR_PROVINCE")
+    @Column(name = "STATE_OR_PROVINCE", nullable = false)
     private String stateOrProvince;
 
-    @Column(name = "POSTAL_CODE")
+    @Column(name = "POSTAL_CODE", nullable = false)
     private String postalCode;
 
-    @Column(name = "COUNTRY")
+    @Column(name = "COUNTRY", nullable = false)
     private String country;
 
     @Column(name = "COUNTRY_NAME")
@@ -53,12 +62,17 @@ public class Address extends Type {
     public Address() {
     }
 
-    @XmlElement(name = "cityName")
+    @XmlElement(name = "cityName", required = true)
     public String getCityName() {
         return cityName;
     }
 
-    @XmlElement(name = "country")
+    @XmlElement(name = "complement")
+    public String getComplement() {
+        return complement;
+    }
+
+    @XmlElement(name = "country", required = true)
     public String getCountry() {
         return country;
     }
@@ -66,6 +80,11 @@ public class Address extends Type {
     @XmlElement(name = "countryName")
     public String getCountryName() {
         return countryName;
+    }
+
+    @XmlElement(name = "district")
+    public String getDistrict() {
+        return district;
     }
 
     @XmlElement(name = "internationalStateAndCity")
@@ -78,22 +97,27 @@ public class Address extends Type {
         return internationalStreet;
     }
 
+    @XmlElement(name = "number", required = true)
+    public String getNumber() {
+        return number;
+    }
+
     @XmlElement(name = "phone")
     public String getPhone() {
         return phone;
     }
 
-    @XmlElement(name = "postalCode")
+    @XmlElement(name = "postalCode", required = true)
     public String getPostalCode() {
         return postalCode;
     }
 
-    @XmlElement(name = "stateOrProvince")
+    @XmlElement(name = "stateOrProvince", required = true)
     public String getStateOrProvince() {
         return stateOrProvince;
     }
 
-    @XmlElement(name = "street1")
+    @XmlElement(name = "street1", required = true)
     public String getStreet1() {
         return street1;
     }
@@ -107,6 +131,10 @@ public class Address extends Type {
         this.cityName = cityName;
     }
 
+    public void setComplement(String complement) {
+        this.complement = complement;
+    }
+
     public void setCountry(String country) {
         this.country = country;
     }
@@ -115,12 +143,20 @@ public class Address extends Type {
         this.countryName = countryName;
     }
 
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
     public void setInternationalStateAndCity(String internationalStateAndCity) {
         this.internationalStateAndCity = internationalStateAndCity;
     }
 
     public void setInternationalStreet(String internationalStreet) {
         this.internationalStreet = internationalStreet;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
     }
 
     public void setPhone(String phone) {

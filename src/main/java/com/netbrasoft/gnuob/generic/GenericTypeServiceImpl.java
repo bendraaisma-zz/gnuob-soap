@@ -30,7 +30,7 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
         Session session = genericTypeDao.getDelegate();
 
         Criteria criteria = session.createCriteria(type.getClass());
-        criteria.add(Example.create(type));
+        criteria.add(Example.create(type).excludeProperty("creation").excludeProperty("modification"));
 
         for (Parameter p : param) {
             criteria.createCriteria(p.getName()).add((Criterion) p.getValue());
@@ -85,7 +85,7 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 
         Session session = genericTypeDao.getDelegate();
         Criteria criteria = session.createCriteria(type.getClass());
-        criteria.add(Example.create(type));
+        criteria.add(Example.create(type).excludeProperty("creation").excludeProperty("modification"));
 
         switch (orderBy.getOrderBy()) {
         case ASC:
@@ -114,6 +114,12 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
         // TODO, uitzoeken wat de beste transformatie is ivm met Has-A lijsten.
         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
         return criteria.list();
+    }
+
+    @Override
+    @OperationAccess(operation = Operation.NONE)
+    public void flush() {
+        genericTypeDao.flush();
     }
 
     @Override
