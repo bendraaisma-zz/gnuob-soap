@@ -36,6 +36,11 @@
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="NAME" type="STRING" />
 		</loadData>
+		<loadData tableName="gnuob_categories" file="src/main/resources/liquibase/GNUOB_CATEGORIES.csv">
+			<column name="ID" type="NUMERIC" />
+			<column name="DESCRIPTION" type="STRING" />
+			<column name="NAME" type="STRING" />
+		</loadData>
 		<loadData tableName="gnuob_users_gnuob_sites" file="src/main/resources/liquibase/GNUOB_USERS_GNUOB_SITES.csv">
 			<column name="sites_ID" type="NUMERIC" />
 			<column name="GNUOB_USERS_ID" type="NUMERIC" />

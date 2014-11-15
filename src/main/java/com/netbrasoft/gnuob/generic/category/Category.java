@@ -14,7 +14,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.generic.content.Content;
 import com.netbrasoft.gnuob.generic.security.Access;
@@ -31,7 +30,7 @@ public class Category extends Access {
     @Column(name = "NAME", nullable = false)
     private String name;
 
-    @Column(name = "DESCRIPTION", nullable = false)
+    @Column(name = "DESCRIPTION", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
@@ -59,7 +58,7 @@ public class Category extends Access {
         return name;
     }
 
-    @XmlTransient
+    @XmlElement(name = "position")
     public Integer getPosition() {
         return position;
     }

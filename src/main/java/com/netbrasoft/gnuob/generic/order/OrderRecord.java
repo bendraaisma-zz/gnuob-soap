@@ -33,7 +33,7 @@ public class OrderRecord extends Type {
     @Column(name = "AMOUNT", nullable = false)
     private BigDecimal amount;
 
-    @Column(name = "DESCRIPTION")
+    @Column(name = "DESCRIPTION", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "NUMBER", nullable = false)
@@ -51,7 +51,7 @@ public class OrderRecord extends Type {
     @Column(name = "DISCOUNT")
     private BigDecimal discount;
 
-    @Column(name = "ITEM_WEIGHT", nullable = false)
+    @Column(name = "ITEM_WEIGHT")
     private BigDecimal itemWeight;
 
     @Column(name = "ITEM_WEIGHT_UNIT")

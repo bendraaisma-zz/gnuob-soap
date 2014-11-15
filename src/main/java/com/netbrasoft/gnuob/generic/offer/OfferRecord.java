@@ -33,7 +33,7 @@ public class OfferRecord extends Type {
     @Column(name = "AMOUNT")
     private BigDecimal amount;
 
-    @Column(name = "DESCRIPTION")
+    @Column(name = "DESCRIPTION", columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "NUMBER")

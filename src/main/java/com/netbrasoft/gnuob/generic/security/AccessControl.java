@@ -49,19 +49,19 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
                 if (siteServiceImpl.count((S) new Site(metaData.getSite())) > 0) {
                     subject.site = siteServiceImpl.find((S) new Site(metaData.getSite()), Paging.getInstance(-1, -1), OrderBy.NONE).get(0);
                 } else {
-                    throw new GNUOpenBusinessServiceException(String.format("Given site [%s] doesn't have the right access, verify that the given site has access.", metaData.getSite()));
+                    throw new GNUOpenBusinessServiceException(String.format("Given site [%s] doesn't have the right access, verify that the given site has access", metaData.getSite()));
                 }
 
                 // Check user credentials
                 if (userServiceImpl.count((U) new User(metaData.getUser(), metaData.getPassword())) > 0) {
                     subject.user = userServiceImpl.find((U) new User(metaData.getUser(), metaData.getPassword()), Paging.getInstance(-1, -1), OrderBy.NONE).get(0);
                 } else {
-                    throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access.", metaData.getUser()));
+                    throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access", metaData.getUser()));
                 }
 
                 // Check user contain access to site.
                 if (!subject.user.getSites().contains(subject.site)) {
-                    throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access for site [%s], verify that the given user have access to the site.", subject.user.getName(), subject.site.getName()));
+                    throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access for site [%s], verify that the given user have access to the site", subject.user.getName(), subject.site.getName()));
                 }
             }
         }
@@ -76,7 +76,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
 
             // Check if user has create access.
             if (!subject.user.getAccess().getOperations().contains(Operation.CREATE)) {
-                throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access.", subject.user.getName()));
+                throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access to create this entity object, verify that the given user has access", subject.user.getName()));
             }
 
             // Parameter is instance of Access?
@@ -84,7 +84,6 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
 
                 Access access = (Access) parameter;
 
-                access.setActive(true);
                 access.setGroup(subject.user.getGroup());
                 access.setSite(subject.site);
                 access.setOwner(subject.user);
@@ -97,7 +96,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
 
                     // Check if user has create access.
                     if (!subject.user.getAccess().getOperations().contains(Operation.CREATE)) {
-                        throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access.", subject.user.getName()));
+                        throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access to create this entity object, verify that the given user has access", subject.user.getName()));
                     }
                 }
             }
@@ -117,7 +116,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
 
             // Check if user has delete access.
             if (!subject.user.getAccess().getOperations().contains(Operation.DELETE)) {
-                throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access.", subject.user.getName()));
+                throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access to delete this entity object, verify that the given user has access", subject.user.getName()));
             }
 
             // Parameter is instance of Access?
@@ -130,7 +129,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
                 Access access = accessTypeService.find((A) parameter, accessId, LockModeType.NONE);
 
                 // If access object is in database?
-                if (access != null && access.getActive() != null && access.getActive()) {
+                if (access != null) {
 
                     boolean userOwnership = false;
                     boolean groupOwnership = false;
@@ -162,16 +161,15 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
                     }
 
                     if (userOwnership || groupOwnership || othersOwnership || rootOwnership) {
-                        ((Access) parameter).setActive(access.getActive());
                         ((Access) parameter).setGroup(access.getGroup());
                         ((Access) parameter).setPermission(access.getPermission());
                         ((Access) parameter).setSite(access.getSite());
                         ((Access) parameter).setOwner(access.getOwner());
                     } else {
-                        throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access.", subject.user.getName()));
+                        throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access to delete this entity object, verify that the given user has access", subject.user.getName()));
                     }
                 } else {
-                    throw new GNUOpenBusinessServiceException("Access object is not found in database, access is denied.");
+                    throw new GNUOpenBusinessServiceException("Enity object is not found in database, access is denied");
                 }
             } else {
                 // Parameter is instance of Type?
@@ -179,7 +177,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
 
                     // Check if user has delete access.
                     if (!subject.user.getAccess().getOperations().contains(Operation.DELETE)) {
-                        throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access.", subject.user.getName()));
+                        throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access to delete this entity object, verify that the given user has access", subject.user.getName()));
                     }
                 }
             }
@@ -195,13 +193,11 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
     private void disableAccessFilter() {
         accessTypeService.disableFilter(Access.NFQ1);
         accessTypeService.disableFilter(Access.NFQ2);
-        accessTypeService.disableFilter(Access.NFQ3);
     }
 
     private void enableAccessFilter(Subject subject) {
         accessTypeService.enableFilter(Access.NFQ1, new Parameter("userId", subject.user.getId()));
         accessTypeService.enableFilter(Access.NFQ2, new Parameter("siteId", subject.site.getId()));
-        accessTypeService.enableFilter(Access.NFQ3, new Parameter("active", true));
     }
 
     @AroundInvoke
@@ -224,7 +220,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
                 return deleteOperationAccess(authenticateSubject(ctx), ctx);
             }
         } else {
-            throw new GNUOpenBusinessServiceException("Operation access is not set on this method, access is denied.");
+            throw new GNUOpenBusinessServiceException("Operation access is not set on this method, access is denied");
         }
     }
 
@@ -240,7 +236,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
 
         // Check if user has read access.
         if (!subject.user.getAccess().getOperations().contains(Operation.READ)) {
-            throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access.", subject.user.getName()));
+            throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access to read this entity object, verify that the given user has access", subject.user.getName()));
         }
 
         enableAccessFilter(subject);
@@ -267,7 +263,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
 
                 // Check if user has update access.
                 if (!subject.user.getAccess().getOperations().contains(Operation.UPDATE)) {
-                    throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access.", subject.user.getName()));
+                    throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access to update this entity object, verify that the given user has access", subject.user.getName()));
                 }
 
                 // Cast parameter to a access object and get id.
@@ -277,7 +273,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
                 Access access = accessTypeService.find((A) parameter, accessId, LockModeType.NONE);
 
                 // If access object is in database?
-                if (access != null && access.getActive() != null && access.getActive()) {
+                if (access != null) {
 
                     boolean userOwnership = false;
                     boolean groupOwnership = false;
@@ -309,17 +305,16 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
                     }
 
                     if (userOwnership || groupOwnership || othersOwnership || rootOwnership) {
-                        ((Access) parameter).setActive(access.getActive());
                         ((Access) parameter).setGroup(access.getGroup());
                         ((Access) parameter).setPermission(access.getPermission());
                         ((Access) parameter).setSite(access.getSite());
                         ((Access) parameter).setOwner(access.getOwner());
                     } else {
-                        throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access.", subject.user.getName()));
+                        throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access to update this entity object, verify that the given user has access", subject.user.getName()));
                     }
 
                 } else {
-                    throw new GNUOpenBusinessServiceException("Access object is not found in database, access is denied.");
+                    throw new GNUOpenBusinessServiceException("Entity object is not found in database, access is denied");
                 }
             } else {
                 // Parameter is instance of Type?
@@ -327,7 +322,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
 
                     // Check if user has update access.
                     if (!subject.user.getAccess().getOperations().contains(Operation.UPDATE)) {
-                        throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access.", subject.user.getName()));
+                        throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access to update this entity object, verify that the given user has access", subject.user.getName()));
                     }
                 }
             }

@@ -8,6 +8,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.Filter;
@@ -24,8 +25,7 @@ import com.netbrasoft.gnuob.generic.Type;
 //@formatter:off
 @FilterDefs({
     @FilterDef(name = Access.NFQ1, parameters = @ParamDef(name = "userId", type = "long")),
-    @FilterDef(name = Access.NFQ2, parameters = @ParamDef(name = "siteId", type = "long")),
-    @FilterDef(name = Access.NFQ3, parameters = @ParamDef(name = "active", type = "boolean")) })
+    @FilterDef(name = Access.NFQ2, parameters = @ParamDef(name = "siteId", type = "long")) })
 @Filters({
     @Filter(
             // Select based on user ownership.
@@ -45,8 +45,7 @@ import com.netbrasoft.gnuob.generic.Type;
                     // Or select based on other ownership.
                     + " OR (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
                     + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OTHERS != 'NONE_ACCESS')) "),
-                    @Filter(name = Access.NFQ2, condition = "site_ID = :siteId"),
-                    @Filter(name = Access.NFQ3, condition = "active = :active") })
+                    @Filter(name = Access.NFQ2, condition = "site_ID = :siteId") })
 //@formatter:on
 public abstract class Access extends Type {
 
@@ -56,7 +55,6 @@ public abstract class Access extends Type {
 
     public static final String NFQ1 = "filterByUserIdOrGroupIdsOrOtherIds";
     public static final String NFQ2 = "filterBySiteId";
-    public static final String NFQ3 = "filterByActive";
 
     @ManyToOne(cascade = { CascadeType.PERSIST }, optional = false)
     private Site site;
@@ -73,7 +71,7 @@ public abstract class Access extends Type {
     @Column(name = "ACTIVE", nullable = false)
     private Boolean active = true;
 
-    @XmlTransient
+    @XmlElement(name = "active", required = true)
     public Boolean getActive() {
         return active;
     }

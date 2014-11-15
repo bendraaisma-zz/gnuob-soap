@@ -60,7 +60,7 @@
     </changeSet>
     <changeSet author="bernard (generated)" id="1415447276727-3">
         <createTable tableName="gnuob_categories">
-            <column name="DESCRIPTION" type="VARCHAR(255)">
+            <column name="DESCRIPTION" type="TEXT">
                 <constraints nullable="false"/>
             </column>
             <column name="NAME" type="VARCHAR(255)">
@@ -202,7 +202,7 @@
             <column name="MODIFICATION" type="datetime"/>
             <column name="VERSION" type="INT(10)"/>
             <column name="AMOUNT" type="DECIMAL(19, 2)"/>
-            <column name="DESCRIPTION" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" type="TEXT"/>
             <column name="DISCOUNT" type="DECIMAL(19, 2)"/>
             <column name="ITEM_HEIGHT" type="DECIMAL(19, 2)"/>
             <column name="ITEM_HEIGHT_UNIT" type="VARCHAR(255)"/>
@@ -235,7 +235,7 @@
                 <constraints nullable="false"/>
             </column>
             <column name="ITEM_TOTAL" type="DECIMAL(19, 2)"/>
-            <column name="OFFER_DESCRIPTION" type="VARCHAR(255)"/>
+            <column name="OFFER_DESCRIPTION" type="TEXT"/>
             <column name="OFFER_ID" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -276,16 +276,14 @@
             <column name="AMOUNT" type="DECIMAL(19, 2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="DESCRIPTION" type="VARCHAR(255)"/>
+            <column name="DESCRIPTION" type="TEXT"/>
             <column name="DISCOUNT" type="DECIMAL(19, 2)"/>
             <column name="ITEM_HEIGHT" type="DECIMAL(19, 2)"/>
             <column name="ITEM_HEIGHT_UNIT" type="VARCHAR(255)"/>
             <column name="ITEM_LENGTH" type="DECIMAL(19, 2)"/>
             <column name="ITEM_LENGTH_UNIT" type="VARCHAR(255)"/>
             <column name="ITEM_URL" type="VARCHAR(255)"/>
-            <column name="ITEM_WEIGHT" type="DECIMAL(19, 2)">
-                <constraints nullable="false"/>
-            </column>
+            <column name="ITEM_WEIGHT" type="DECIMAL(19, 2)"/>
             <column name="ITEM_WEIGHT_UNIT" type="VARCHAR(255)"/>
             <column name="ITEM_WIDTH" type="DECIMAL(19, 2)"/>
             <column name="ITEM_WIDTH_UNIT" type="VARCHAR(255)"/>
@@ -304,12 +302,12 @@
         <createTable tableName="gnuob_orders">
             <column name="BILLING_AGREEMENT_ID" type="VARCHAR(255)"/>
             <column name="CHECKOUT_STATUS" type="VARCHAR(255)"/>
-            <column name="CUSTOM" type="VARCHAR(255)"/>
+            <column name="CUSTOM" type="TEXT"/>
             <column name="DISCOUNT_TOTAL" type="DECIMAL(19, 2)"/>
             <column name="EXTRA_AMOUNT" type="DECIMAL(19, 2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="GIFT_MESSAGE" type="VARCHAR(255)"/>
+            <column name="GIFT_MESSAGE" type="TEXT"/>
             <column name="GIFT_MESSAGE_ENABLE" type="BIT(1)"/>
             <column name="GIFT_RECEIPT_ENABLE" type="BIT(1)"/>
             <column name="GIFT_WRAP_AMOUNT" type="DECIMAL(19, 2)"/>
@@ -323,9 +321,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="ITEM_TOTAL" type="DECIMAL(19, 2)"/>
-            <column name="NOTE" type="VARCHAR(255)"/>
-            <column name="NOTE_TEXT" type="VARCHAR(255)"/>
-            <column name="ORDER_DESCRIPTION" type="VARCHAR(255)"/>
+            <column name="NOTE" type="TEXT"/>
+            <column name="NOTE_TEXT" type="TEXT"/>
+            <column name="ORDER_DESCRIPTION" type="TEXT"/>
             <column name="ORDER_ID" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
@@ -484,7 +482,7 @@
     </changeSet>
     <changeSet author="bernard (generated)" id="1415447276727-23">
         <createTable tableName="gnuob_settings">
-            <column name="DESCRIPTION" type="VARCHAR(255)">
+            <column name="DESCRIPTION" type="TEXT">
                 <constraints nullable="false"/>
             </column>
             <column name="PROPERTY" type="VARCHAR(255)">
@@ -550,7 +548,7 @@
             <column name="CREATION" type="datetime"/>
             <column name="MODIFICATION" type="datetime"/>
             <column name="VERSION" type="INT(10)"/>
-            <column name="DESCRIPTION" type="VARCHAR(255)">
+            <column name="DESCRIPTION" type="TEXT">
                 <constraints nullable="false"/>
             </column>
             <column name="NAME" type="VARCHAR(255)">

@@ -39,7 +39,7 @@ public class Offer extends Access {
     @Column(name = "OFFER_ID", nullable = false)
     private String offerId;
 
-    @Column(name = "OFFER_DESCRIPTION")
+    @Column(name = "OFFER_DESCRIPTION", columnDefinition = "TEXT")
     private String offerDescription;
 
     @Column(name = "OFFER_TOTAL")

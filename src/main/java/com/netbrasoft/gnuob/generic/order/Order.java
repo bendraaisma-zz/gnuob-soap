@@ -51,10 +51,10 @@ public class Order extends Access {
     @Column(name = "BILLING_AGREEMENT_ID")
     private String billingAgreementId;
 
-    @Column(name = "ORDER_DESCRIPTION")
+    @Column(name = "ORDER_DESCRIPTION", columnDefinition = "TEXT")
     private String orderDescription;
 
-    @Column(name = "NOTE_TEXT")
+    @Column(name = "NOTE_TEXT", columnDefinition = "TEXT")
     private String noteText;
 
     @Column(name = "TOKEN")
@@ -90,16 +90,16 @@ public class Order extends Access {
     @Column(name = "INSURANCE_OPTION_OFFERED")
     private Boolean insuranceOptionOffered;
 
-    @Column(name = "CUSTOM")
+    @Column(name = "CUSTOM", columnDefinition = "TEXT")
     private String custom;
 
-    @Column(name = "NOTE")
+    @Column(name = "NOTE", columnDefinition = "TEXT")
     private String note;
 
     @Column(name = "CHECKOUT_STATUS")
     private String checkoutStatus;
 
-    @Column(name = "GIFT_MESSAGE")
+    @Column(name = "GIFT_MESSAGE", columnDefinition = "TEXT")
     private String giftMessage;
 
     @Column(name = "GIFT_RECEIPT_ENABLE")
