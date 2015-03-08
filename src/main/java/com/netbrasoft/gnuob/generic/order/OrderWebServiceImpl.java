@@ -17,11 +17,11 @@ import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.customer.Customer;
 import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
-import com.netbrasoft.gnuob.monitor.SimonInterceptor;
+import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
 @Stateless(name = "OrderWebServiceImpl")
-@Interceptors(value = { SimonInterceptor.class })
+@Interceptors(value = { AppSimonInterceptor.class })
 public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebService<O> {
 
    @EJB(beanName = "SecuredGenericTypeServiceImpl")

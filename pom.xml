@@ -4,7 +4,7 @@
 
 	<groupId>com.netbrasoft.gnuob</groupId>
 	<artifactId>gnuob-soap</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>GNU Open Business Platform</name>
 	<description>GNU Open Business Platform is a open source business framework</description>
@@ -25,7 +25,7 @@
 		<version.springframework.plugin>4.1.0.RELEASE</version.springframework.plugin>
 		<version.surefire.plugin>2.10</version.surefire.plugin>
 		<version.org.apache.cxf>2.7.11</version.org.apache.cxf>
-		<javasimon.version>4.0.1</javasimon.version>
+		<version.javasimon>4.0.1</version.javasimon>
 
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -95,22 +95,22 @@
 		<dependency>
 			<groupId>org.javasimon</groupId>
 			<artifactId>javasimon-core</artifactId>
-			<version>${javasimon.version}</version>
+			<version>${version.javasimon}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.javasimon</groupId>
 			<artifactId>javasimon-jdbc41</artifactId>
-			<version>${javasimon.version}</version>
+			<version>${version.javasimon}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.javasimon</groupId>
 			<artifactId>javasimon-javaee</artifactId>
-			<version>${javasimon.version}</version>
+			<version>${version.javasimon}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.javasimon</groupId>
 			<artifactId>javasimon-console-embed</artifactId>
-			<version>${javasimon.version}</version>
+			<version>${version.javasimon}</version>
 		</dependency>
 	</dependencies>
 
@@ -122,11 +122,18 @@
 				<artifactId>maven-war-plugin</artifactId>
 				<version>${version.war.plugin}</version>
 				<configuration>
+					<!-- Java EE 6 doesn't require web.xml, Maven needs to catch up! -->
 					<failOnMissingWebXml>false</failOnMissingWebXml>
 					<archive>
 						<manifestEntries>
+							<mode>development</mode>
+							<url>${project.url}</url>
 							<dependencies>org.apache.cxf services,org.apache.cxf.impl</dependencies>
 						</manifestEntries>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
 					</archive>
 				</configuration>
 			</plugin>
@@ -143,14 +150,12 @@
 				<artifactId>liquibase-maven-plugin</artifactId>
 				<version>3.2.2</version>
 				<configuration>
-					<changeLogFile>src/main/resources/liquibase/db-changelog.xml</changeLogFile>
 					<driver>com.mysql.jdbc.Driver</driver>
 					<url>${liquibase.url}</url>
 					<username>${liquibase.username}</username>
 					<password>${liquibase.password}</password>
-					<tag>0.0.1-SNAPSHOT</tag>
 					<promptOnNonLocalDatabase>false</promptOnNonLocalDatabase>
-					<outputChangeLogFile>src/main/resources/liquibase/db-generate-change-log.xml</outputChangeLogFile>
+					<propertyFile>/src/main/resources/liquibase/liquibase.properties</propertyFile>
 				</configuration>
 				<dependencies>
 					<dependency>

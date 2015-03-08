@@ -2,7 +2,7 @@ package com.netbrasoft.gnuob.monitor;
 
 import javax.interceptor.InvocationContext;
 
-public class SimonInterceptor extends org.javasimon.javaee.SimonInterceptor {
+public class AppSimonInterceptor extends org.javasimon.javaee.SimonInterceptor {
 
    @Override
    protected String getSimonName(InvocationContext context) {

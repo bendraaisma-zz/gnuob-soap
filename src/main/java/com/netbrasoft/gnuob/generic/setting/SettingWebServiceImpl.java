@@ -9,7 +9,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
-import com.netbrasoft.gnuob.monitor.SimonInterceptor;
+import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.GenericTypeWebService;
@@ -20,7 +20,7 @@ import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
 @Stateless(name = "SettingWebServiceImpl")
-@Interceptors(value = { SimonInterceptor.class })
+@Interceptors(value = { AppSimonInterceptor.class })
 public class SettingWebServiceImpl<S extends Setting> implements GenericTypeWebService<S> {
 
    @EJB(beanName = "SecuredGenericTypeServiceImpl")

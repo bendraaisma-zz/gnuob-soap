@@ -8,10 +8,10 @@ import javax.persistence.PersistenceContext;
 
 import org.hibernate.Filter;
 import org.hibernate.Session;
-import com.netbrasoft.gnuob.monitor.SimonInterceptor;
+import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @Stateless(name = "GenericTypeDaoImpl")
-@Interceptors(value = { SimonInterceptor.class })
+@Interceptors(value = { AppSimonInterceptor.class })
 public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
 
    @PersistenceContext(unitName = "primary")

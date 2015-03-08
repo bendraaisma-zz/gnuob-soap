@@ -15,56 +15,56 @@ import com.netbrasoft.gnuob.generic.security.Access;
 @XmlRootElement(name = Content.ENTITY)
 public class Content extends Access {
 
-    private static final long serialVersionUID = -6963744731098668340L;
-    protected static final String ENTITY = "Content";
-    protected static final String TABLE = "GNUOB_CONTENTS";
+   private static final long serialVersionUID = -6963744731098668340L;
+   protected static final String ENTITY = "Content";
+   protected static final String TABLE = "GNUOB_CONTENTS";
 
-    @Column(name = "POSITION")
-    private Integer position;
+   @Column(name = "POSITION")
+   private Integer position;
 
-    @Column(name = "NAME", nullable = false)
-    private String name;
+   @Column(name = "NAME", nullable = false)
+   private String name;
 
-    @Column(name = "FORMAT", nullable = false)
-    private String format;
+   @Column(name = "FORMAT", nullable = false)
+   private String format;
 
-    @Column(name = "CONTENT", columnDefinition = "MEDIUMBLOB", nullable = false)
-    private byte[] content;
+   @Column(name = "CONTENT", columnDefinition = "MEDIUMBLOB", nullable = false)
+   private byte[] data;
 
-    @XmlElement(name = "content", required = true)
-    @XmlMimeType("application/octet-stream")
-    public byte[] getContent() {
-        return content;
-    }
+   @XmlElement(name = "content", required = true)
+   @XmlMimeType("application/octet-stream")
+   public byte[] getData() {
+      return data;
+   }
 
-    @XmlElement(name = "format", required = true)
-    public String getFormat() {
-        return format;
-    }
+   @XmlElement(name = "format", required = true)
+   public String getFormat() {
+      return format;
+   }
 
-    @XmlElement(name = "name", required = true)
-    public String getName() {
-        return name;
-    }
+   @XmlElement(name = "name", required = true)
+   public String getName() {
+      return name;
+   }
 
-    @XmlTransient
-    public Integer getPosition() {
-        return position;
-    }
+   @XmlTransient
+   public Integer getPosition() {
+      return position;
+   }
 
-    public void setContent(byte[] content) {
-        this.content = content;
-    }
+   public void setData(byte[] data) {
+      this.data = data;
+   }
 
-    public void setFormat(String format) {
-        this.format = format;
-    }
+   public void setFormat(String format) {
+      this.format = format;
+   }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+   public void setName(String name) {
+      this.name = name;
+   }
 
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
+   public void setPosition(Integer position) {
+      this.position = position;
+   }
 }

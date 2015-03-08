@@ -1,5 +1,6 @@
 package com.netbrasoft.gnuob.generic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -13,15 +14,16 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import com.netbrasoft.gnuob.monitor.SimonInterceptor;
 
 import com.netbrasoft.gnuob.generic.security.OperationAccess;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
+import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @Stateless(name = "GenericTypeServiceImpl")
-@Interceptors(value = { SimonInterceptor.class })
+@Interceptors(value = { AppSimonInterceptor.class })
 public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 
    @EJB(beanName = "GenericTypeDaoImpl")
@@ -32,6 +34,9 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
    public long count(T type, Parameter... param) {
       Session session = genericTypeDao.getDelegate();
 
+      ProjectionList projectionList = Projections.projectionList();
+      projectionList.add(Projections.property("id"));
+
       Criteria criteria = session.createCriteria(type.getClass());
       criteria.add(Example.create(type).excludeProperty("creation").excludeProperty("modification"));
 
@@ -39,10 +44,11 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
          criteria.createCriteria(p.getName()).add((Criterion) p.getValue());
       }
 
+      criteria.setProjection(projectionList);
       criteria.setProjection(Projections.rowCount());
-      Long uniqueResult = (Long) criteria.uniqueResult();
+      criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 
-      return uniqueResult.longValue();
+      return (long) criteria.uniqueResult();
    }
 
    @Override
@@ -65,11 +71,11 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
       Criteria criteria = session.createCriteria(type.getClass());
 
       criteria.add(Restrictions.eq("id", id));
-
       criteria.setFirstResult(0);
       criteria.setMaxResults(1);
 
       criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+
       List<T> list = criteria.list();
 
       return list.isEmpty() ? null : list.iterator().next();
@@ -85,10 +91,45 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
    @SuppressWarnings("unchecked")
    @OperationAccess(operation = Operation.NONE)
    public List<T> find(T type, Paging paging, OrderBy orderBy, Parameter... param) {
+      List<Long> idlist = findIds(type, paging, orderBy, param);
 
+      if (idlist.isEmpty()) {
+         return new ArrayList<T>();
+      } else {
+         Session session = genericTypeDao.getDelegate();
+         Criteria criteria = session.createCriteria(type.getClass());
+
+         criteria.add(Restrictions.in("id", idlist));
+
+         switch (orderBy.getOrderBy()) {
+         case ASC:
+            criteria.addOrder(Order.asc(orderBy.getColumn()));
+            break;
+         case DESC:
+            criteria.addOrder(Order.desc(orderBy.getColumn()));
+            break;
+         case NONE:
+         default:
+            break;
+         }
+
+         criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+
+         return criteria.list();
+      }
+   }
+
+   @SuppressWarnings("unchecked")
+   @OperationAccess(operation = Operation.NONE)
+   protected List<Long> findIds(T type, Paging paging, OrderBy orderBy, Parameter... param) {
       Session session = genericTypeDao.getDelegate();
+
       Criteria criteria = session.createCriteria(type.getClass());
       criteria.add(Example.create(type).excludeProperty("creation").excludeProperty("modification"));
+
+      for (Parameter p : param) {
+         criteria.createCriteria(p.getName()).add((Criterion) p.getValue());
+      }
 
       switch (orderBy.getOrderBy()) {
       case ASC:
@@ -102,19 +143,20 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
          break;
       }
 
-      for (Parameter p : param) {
-         criteria.createCriteria(p.getName()).add((Criterion) p.getValue());
-      }
-
-      if (paging.getFirst() >= 0) {
+      if (paging.getFirst() > 0) {
          criteria.setFirstResult(paging.getFirst());
       }
 
-      if (paging.getMax() >= 0) {
+      if (paging.getMax() > 0) {
          criteria.setMaxResults(paging.getMax());
       }
 
+      ProjectionList projectionList = Projections.projectionList();
+      projectionList.add(Projections.property("id"));
+
+      criteria.setProjection(projectionList);
       criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+
       return criteria.list();
    }
 
