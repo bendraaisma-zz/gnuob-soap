@@ -26,407 +26,408 @@ import com.netbrasoft.gnuob.generic.security.Access;
 @XmlRootElement(name = Order.ENTITY)
 public class Order extends Access {
 
-    private static final long serialVersionUID = -43318034570501796L;
-    protected static final String ENTITY = "Order";
-    protected static final String TABLE = "GNUOB_ORDERS";
+   private static final long serialVersionUID = -43318034570501796L;
+   protected static final String ENTITY = "Order";
+   protected static final String TABLE = "GNUOB_ORDERS";
 
-    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, optional = false)
-    private Contract contract;
+   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, optional = false)
+   private Contract contract;
 
-    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<OrderRecord> records = new HashSet<OrderRecord>();
+   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, fetch = FetchType.EAGER)
+   private Set<OrderRecord> records = new HashSet<OrderRecord>();
 
-    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true)
-    private Shipment shipment;
+   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true)
+   private Shipment shipment;
 
-    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, optional = false)
-    private Invoice invoice;
+   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, optional = false)
+   private Invoice invoice;
 
-    @Column(name = "ORDER_ID", nullable = false)
-    private String orderId;
+   @Column(name = "ORDER_ID", nullable = false)
+   private String orderId;
 
-    @Column(name = "TRANSACTION_ID")
-    private String transactionId;
+   @Column(name = "TRANSACTION_ID")
+   private String transactionId;
 
-    @Column(name = "BILLING_AGREEMENT_ID")
-    private String billingAgreementId;
+   @Column(name = "BILLING_AGREEMENT_ID")
+   private String billingAgreementId;
 
-    @Column(name = "ORDER_DESCRIPTION", columnDefinition = "TEXT")
-    private String orderDescription;
+   @Column(name = "ORDER_DESCRIPTION", columnDefinition = "TEXT")
+   private String orderDescription;
 
-    @Column(name = "NOTE_TEXT", columnDefinition = "TEXT")
-    private String noteText;
+   @Column(name = "NOTE_TEXT", columnDefinition = "TEXT")
+   private String noteText;
 
-    @Column(name = "TOKEN")
-    private String token;
+   @Column(name = "TOKEN")
+   private String token;
 
-    @Column(name = "ORDER_TOTAL")
-    private BigDecimal orderTotal;
+   @Column(name = "ORDER_TOTAL")
+   private BigDecimal orderTotal;
 
-    @Column(name = "DISCOUNT_TOTAL")
-    private BigDecimal discountTotal;
+   @Column(name = "DISCOUNT_TOTAL")
+   private BigDecimal discountTotal;
 
-    @Column(name = "ITEM_TOTAL")
-    private BigDecimal itemTotal;
+   @Column(name = "ITEM_TOTAL")
+   private BigDecimal itemTotal;
 
-    @Column(name = "TAX_TOTAL")
-    private BigDecimal taxTotal;
+   @Column(name = "TAX_TOTAL")
+   private BigDecimal taxTotal;
 
-    @Column(name = "HANDLING_TOTAL", nullable = false)
-    private BigDecimal handlingTotal;
+   @Column(name = "HANDLING_TOTAL", nullable = false)
+   private BigDecimal handlingTotal;
 
-    @Column(name = "INSURANCE_TOTAL", nullable = false)
-    private BigDecimal insuranceTotal;
+   @Column(name = "INSURANCE_TOTAL", nullable = false)
+   private BigDecimal insuranceTotal;
 
-    @Column(name = "SHIPPING_DISCOUNT", nullable = false)
-    private BigDecimal shippingDiscount;
+   @Column(name = "SHIPPING_DISCOUNT", nullable = false)
+   private BigDecimal shippingDiscount;
 
-    @Column(name = "SHIPPING_TOTAL")
-    private BigDecimal shippingTotal;
+   @Column(name = "SHIPPING_TOTAL")
+   private BigDecimal shippingTotal;
 
-    @Column(name = "EXTRA_AMOUNT", nullable = false)
-    private BigDecimal extraAmount;
+   @Column(name = "EXTRA_AMOUNT", nullable = false)
+   private BigDecimal extraAmount;
 
-    @Column(name = "INSURANCE_OPTION_OFFERED")
-    private Boolean insuranceOptionOffered;
+   @Column(name = "INSURANCE_OPTION_OFFERED")
+   private Boolean insuranceOptionOffered;
 
-    @Column(name = "CUSTOM", columnDefinition = "TEXT")
-    private String custom;
+   @Column(name = "CUSTOM", columnDefinition = "TEXT")
+   private String custom;
 
-    @Column(name = "NOTE", columnDefinition = "TEXT")
-    private String note;
+   @Column(name = "NOTE", columnDefinition = "TEXT")
+   private String note;
 
-    @Column(name = "CHECKOUT_STATUS")
-    private String checkoutStatus;
+   @Column(name = "CHECKOUT_STATUS")
+   private String checkoutStatus;
 
-    @Column(name = "GIFT_MESSAGE", columnDefinition = "TEXT")
-    private String giftMessage;
+   @Column(name = "GIFT_MESSAGE", columnDefinition = "TEXT")
+   private String giftMessage;
 
-    @Column(name = "GIFT_RECEIPT_ENABLE")
-    private Boolean giftReceiptEnable;
+   @Column(name = "GIFT_RECEIPT_ENABLE")
+   private Boolean giftReceiptEnable;
 
-    @Column(name = "GIFT_MESSAGE_ENABLE")
-    private Boolean giftMessageEnable;
+   @Column(name = "GIFT_MESSAGE_ENABLE")
+   private Boolean giftMessageEnable;
 
-    @Column(name = "GIFT_WRAP_ENABLE")
-    private Boolean giftWrapEnable;
+   @Column(name = "GIFT_WRAP_ENABLE")
+   private Boolean giftWrapEnable;
 
-    @Column(name = "GIFT_WRAP_NAME")
-    private String giftWrapName;
+   @Column(name = "GIFT_WRAP_NAME")
+   private String giftWrapName;
 
-    @Column(name = "GIFT_WRAP_AMOUNT")
-    private BigDecimal giftWrapAmount;
+   @Column(name = "GIFT_WRAP_AMOUNT")
+   private BigDecimal giftWrapAmount;
 
-    public Order() {
+   public Order() {
 
-    }
+   }
 
-    @XmlElement(name = "billingAgreementId")
-    public String getBillingAgreementId() {
-        return billingAgreementId;
-    }
+   @XmlElement(name = "billingAgreementId")
+   public String getBillingAgreementId() {
+      return billingAgreementId;
+   }
 
-    @XmlElement(name = "checkoutStatus")
-    public String getCheckoutStatus() {
-        return checkoutStatus;
-    }
-
-    @XmlElement(name = "contract", required = true)
-    public Contract getContract() {
-        return contract;
-    }
-
-    @XmlElement(name = "custom")
-    public String getCustom() {
-        return custom;
-    }
-
-    @XmlElement(name = "discountTotal")
-    public BigDecimal getDiscountTotal() {
-        if (discountTotal == null) {
-            discountTotal = BigDecimal.ZERO;
-
-            for (OrderRecord orderRecord : records) {
-                discountTotal = discountTotal.add(orderRecord.getDiscountTotal());
-            }
-        }
-        return discountTotal;
-    }
-
-    @XmlElement(name = "extraAmount", required = true)
-    public BigDecimal getExtraAmount() {
-        return extraAmount;
-    }
-
-    @XmlElement(name = "giftMessage")
-    public String getGiftMessage() {
-        return giftMessage;
-    }
-
-    @XmlElement(name = "giftMessageEnable")
-    public Boolean getGiftMessageEnable() {
-        return giftMessageEnable;
-    }
-
-    @XmlElement(name = "giftReceiptEnable")
-    public Boolean getGiftReceiptEnable() {
-        return giftReceiptEnable;
-    }
-
-    @XmlElement(name = "giftWrapAmount")
-    public BigDecimal getGiftWrapAmount() {
-        return giftWrapAmount;
-    }
-
-    @XmlElement(name = "giftWrapEnable")
-    public Boolean getGiftWrapEnable() {
-        return giftWrapEnable;
-    }
-
-    @XmlElement(name = "giftWrapName")
-    public String getGiftWrapName() {
-        return giftWrapName;
-    }
-
-    @XmlElement(name = "handlingTotal", required = true)
-    public BigDecimal getHandlingTotal() {
-        return handlingTotal;
-    }
-
-    @XmlElement(name = "insuranceOptionOffered")
-    public Boolean getInsuranceOptionOffered() {
-        return insuranceOptionOffered;
-    }
-
-    @XmlElement(name = "insuranceTotal", required = true)
-    public BigDecimal getInsuranceTotal() {
-        return insuranceTotal;
-    }
-
-    @XmlElement(name = "invoice", required = true)
-    public Invoice getInvoice() {
-        return invoice;
-    }
-
-    @XmlElement(name = "itemTotal")
-    public BigDecimal getItemTotal() {
-        if (itemTotal == null) {
-            itemTotal = BigDecimal.ZERO;
-
-            for (OrderRecord orderRecord : records) {
-                itemTotal = itemTotal.add(orderRecord.getItemTotal());
-            }
-        }
-        return itemTotal;
-    }
-
-    @XmlTransient
-    @Transient
-    public BigDecimal getMaxTotal() {
-        return getItemTotal().add(getTaxTotal()).add(handlingTotal).add(insuranceTotal).add(getShippingTotal()).add(shippingDiscount).add(extraAmount).add(getDiscountTotal());
-    }
-
-    @XmlElement(name = "note")
-    public String getNote() {
-        return note;
-    }
-
-    @XmlElement(name = "noteText")
-    public String getNoteText() {
-        return noteText;
-    }
-
-    @XmlElement(name = "orderDescription")
-    public String getOrderDescription() {
-        return orderDescription;
-    }
-
-    @XmlElement(name = "orderId", required = true)
-    public String getOrderId() {
-        return orderId;
-    }
-
-    @XmlElement(name = "orderTotal")
-    public BigDecimal getOrderTotal() {
-        if (orderTotal == null) {
-            orderTotal = getItemTotal().add(getTaxTotal());
-        }
-        return orderTotal;
-    }
-
-    public Set<OrderRecord> getRecords() {
-        return records;
-    }
-
-    @XmlElement(name = "shipment")
-    public Shipment getShipment() {
-        return shipment;
-    }
-
-    @XmlElement(name = "shippingDiscount", required = true)
-    public BigDecimal getShippingDiscount() {
-        return shippingDiscount;
-    }
-
-    @XmlElement(name = "shippingTotal")
-    public BigDecimal getShippingTotal() {
-        if (shippingTotal == null) {
-            shippingTotal = BigDecimal.ZERO;
-
-            for (OrderRecord orderRecord : records) {
-                shippingTotal = shippingTotal.add(orderRecord.getShippingTotal());
-            }
-        }
-        return shippingTotal;
-    }
-
-    @XmlElement(name = "taxTotal")
-    public BigDecimal getTaxTotal() {
-        if (taxTotal == null) {
-            taxTotal = BigDecimal.ZERO;
-
-            for (OrderRecord orderRecord : records) {
-                taxTotal = taxTotal.add(orderRecord.getTaxTotal());
-            }
-        }
-        return taxTotal;
-    }
-
-    @XmlElement(name = "token")
-    public String getToken() {
-        return token;
-    }
-
-    @XmlElement(name = "transactionId")
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    @PrePersist
-    protected void prePersistOrder() {
-        if (orderId == null || "".equals(orderId.trim())) {
-            orderId = UUID.randomUUID().toString();
-        }
-
-        getTaxTotal();
-        getShippingTotal();
-        getOrderTotal();
-        getItemTotal();
-    }
-
-    public void setBillingAgreementId(String billingAgreementId) {
-        this.billingAgreementId = billingAgreementId;
-    }
-
-    public void setCheckoutStatus(String checkoutStatus) {
-        this.checkoutStatus = checkoutStatus;
-    }
-
-    public void setContract(Contract contract) {
-        this.contract = contract;
-    }
-
-    public void setCustom(String custom) {
-        this.custom = custom;
-    }
-
-    public void setDiscountTotal(BigDecimal discountTotal) {
-        this.discountTotal = discountTotal;
-    }
-
-    public void setExtraAmount(BigDecimal extraAmount) {
-        this.extraAmount = extraAmount;
-    }
-
-    public void setGiftMessage(String giftMessage) {
-        this.giftMessage = giftMessage;
-    }
-
-    public void setGiftMessageEnable(Boolean giftMessageEnable) {
-        this.giftMessageEnable = giftMessageEnable;
-    }
-
-    public void setGiftReceiptEnable(Boolean giftReceiptEnable) {
-        this.giftReceiptEnable = giftReceiptEnable;
-    }
-
-    public void setGiftWrapAmount(BigDecimal giftWrapAmount) {
-        this.giftWrapAmount = giftWrapAmount;
-    }
-
-    public void setGiftWrapEnable(Boolean giftWrapEnable) {
-        this.giftWrapEnable = giftWrapEnable;
-    }
-
-    public void setGiftWrapName(String giftWrapName) {
-        this.giftWrapName = giftWrapName;
-    }
-
-    public void setHandlingTotal(BigDecimal handlingTotal) {
-        this.handlingTotal = handlingTotal;
-    }
-
-    public void setInsuranceOptionOffered(Boolean insuranceOptionOffered) {
-        this.insuranceOptionOffered = insuranceOptionOffered;
-    }
-
-    public void setInsuranceTotal(BigDecimal insuranceTotal) {
-        this.insuranceTotal = insuranceTotal;
-    }
-
-    public void setInvoice(Invoice invoice) {
-        this.invoice = invoice;
-    }
-
-    public void setItemTotal(BigDecimal itemTotal) {
-        this.itemTotal = itemTotal;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public void setNoteText(String noteText) {
-        this.noteText = noteText;
-    }
-
-    public void setOrderDescription(String orderDescription) {
-        this.orderDescription = orderDescription;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public void setOrderTotal(BigDecimal orderTotal) {
-        this.orderTotal = orderTotal;
-    }
-
-    public void setRecords(Set<OrderRecord> records) {
-        this.records = records;
-    }
-
-    public void setShipment(Shipment shipment) {
-        this.shipment = shipment;
-    }
-
-    public void setShippingDiscount(BigDecimal shippingDiscount) {
-        this.shippingDiscount = shippingDiscount;
-    }
-
-    public void setShippingTotal(BigDecimal shippingTotal) {
-        this.shippingTotal = shippingTotal;
-    }
-
-    public void setTaxTotal(BigDecimal taxTotal) {
-        this.taxTotal = taxTotal;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
-    }
+   @XmlElement(name = "checkoutStatus")
+   public String getCheckoutStatus() {
+      return checkoutStatus;
+   }
+
+   @XmlElement(name = "contract", required = true)
+   public Contract getContract() {
+      return contract;
+   }
+
+   @XmlElement(name = "custom")
+   public String getCustom() {
+      return custom;
+   }
+
+   @XmlElement(name = "discountTotal")
+   public BigDecimal getDiscountTotal() {
+      if (discountTotal == null) {
+         discountTotal = BigDecimal.ZERO;
+
+         for (OrderRecord orderRecord : records) {
+            discountTotal = discountTotal.add(orderRecord.getDiscountTotal());
+         }
+      }
+      return discountTotal;
+   }
+
+   @XmlElement(name = "extraAmount", required = true)
+   public BigDecimal getExtraAmount() {
+      return extraAmount;
+   }
+
+   @XmlElement(name = "giftMessage")
+   public String getGiftMessage() {
+      return giftMessage;
+   }
+
+   @XmlElement(name = "giftMessageEnable")
+   public Boolean getGiftMessageEnable() {
+      return giftMessageEnable;
+   }
+
+   @XmlElement(name = "giftReceiptEnable")
+   public Boolean getGiftReceiptEnable() {
+      return giftReceiptEnable;
+   }
+
+   @XmlElement(name = "giftWrapAmount")
+   public BigDecimal getGiftWrapAmount() {
+      return giftWrapAmount;
+   }
+
+   @XmlElement(name = "giftWrapEnable")
+   public Boolean getGiftWrapEnable() {
+      return giftWrapEnable;
+   }
+
+   @XmlElement(name = "giftWrapName")
+   public String getGiftWrapName() {
+      return giftWrapName;
+   }
+
+   @XmlElement(name = "handlingTotal", required = true)
+   public BigDecimal getHandlingTotal() {
+      return handlingTotal;
+   }
+
+   @XmlElement(name = "insuranceOptionOffered")
+   public Boolean getInsuranceOptionOffered() {
+      return insuranceOptionOffered;
+   }
+
+   @XmlElement(name = "insuranceTotal", required = true)
+   public BigDecimal getInsuranceTotal() {
+      return insuranceTotal;
+   }
+
+   @XmlElement(name = "invoice", required = true)
+   public Invoice getInvoice() {
+      return invoice;
+   }
+
+   @XmlElement(name = "itemTotal")
+   public BigDecimal getItemTotal() {
+      if (itemTotal == null) {
+         itemTotal = BigDecimal.ZERO;
+
+         for (OrderRecord orderRecord : records) {
+            itemTotal = itemTotal.add(orderRecord.getItemTotal());
+         }
+      }
+      return itemTotal;
+   }
+
+   @XmlTransient
+   @Transient
+   public BigDecimal getMaxTotal() {
+      return getItemTotal().add(getTaxTotal()).add(handlingTotal).add(insuranceTotal).add(getShippingTotal())
+            .add(shippingDiscount).add(extraAmount).add(getDiscountTotal());
+   }
+
+   @XmlElement(name = "note")
+   public String getNote() {
+      return note;
+   }
+
+   @XmlElement(name = "noteText")
+   public String getNoteText() {
+      return noteText;
+   }
+
+   @XmlElement(name = "orderDescription")
+   public String getOrderDescription() {
+      return orderDescription;
+   }
+
+   @XmlElement(name = "orderId", required = true)
+   public String getOrderId() {
+      return orderId;
+   }
+
+   @XmlElement(name = "orderTotal")
+   public BigDecimal getOrderTotal() {
+      if (orderTotal == null) {
+         orderTotal = getItemTotal().add(getTaxTotal());
+      }
+      return orderTotal;
+   }
+
+   public Set<OrderRecord> getRecords() {
+      return records;
+   }
+
+   @XmlElement(name = "shipment")
+   public Shipment getShipment() {
+      return shipment;
+   }
+
+   @XmlElement(name = "shippingDiscount", required = true)
+   public BigDecimal getShippingDiscount() {
+      return shippingDiscount;
+   }
+
+   @XmlElement(name = "shippingTotal")
+   public BigDecimal getShippingTotal() {
+      if (shippingTotal == null) {
+         shippingTotal = BigDecimal.ZERO;
+
+         for (OrderRecord orderRecord : records) {
+            shippingTotal = shippingTotal.add(orderRecord.getShippingTotal());
+         }
+      }
+      return shippingTotal;
+   }
+
+   @XmlElement(name = "taxTotal")
+   public BigDecimal getTaxTotal() {
+      if (taxTotal == null) {
+         taxTotal = BigDecimal.ZERO;
+
+         for (OrderRecord orderRecord : records) {
+            taxTotal = taxTotal.add(orderRecord.getTaxTotal());
+         }
+      }
+      return taxTotal;
+   }
+
+   @XmlElement(name = "token")
+   public String getToken() {
+      return token;
+   }
+
+   @XmlElement(name = "transactionId")
+   public String getTransactionId() {
+      return transactionId;
+   }
+
+   @PrePersist
+   protected void prePersistOrder() {
+      if (orderId == null || "".equals(orderId.trim())) {
+         orderId = UUID.randomUUID().toString();
+      }
+
+      getTaxTotal();
+      getShippingTotal();
+      getOrderTotal();
+      getItemTotal();
+   }
+
+   public void setBillingAgreementId(String billingAgreementId) {
+      this.billingAgreementId = billingAgreementId;
+   }
+
+   public void setCheckoutStatus(String checkoutStatus) {
+      this.checkoutStatus = checkoutStatus;
+   }
+
+   public void setContract(Contract contract) {
+      this.contract = contract;
+   }
+
+   public void setCustom(String custom) {
+      this.custom = custom;
+   }
+
+   public void setDiscountTotal(BigDecimal discountTotal) {
+      this.discountTotal = discountTotal;
+   }
+
+   public void setExtraAmount(BigDecimal extraAmount) {
+      this.extraAmount = extraAmount;
+   }
+
+   public void setGiftMessage(String giftMessage) {
+      this.giftMessage = giftMessage;
+   }
+
+   public void setGiftMessageEnable(Boolean giftMessageEnable) {
+      this.giftMessageEnable = giftMessageEnable;
+   }
+
+   public void setGiftReceiptEnable(Boolean giftReceiptEnable) {
+      this.giftReceiptEnable = giftReceiptEnable;
+   }
+
+   public void setGiftWrapAmount(BigDecimal giftWrapAmount) {
+      this.giftWrapAmount = giftWrapAmount;
+   }
+
+   public void setGiftWrapEnable(Boolean giftWrapEnable) {
+      this.giftWrapEnable = giftWrapEnable;
+   }
+
+   public void setGiftWrapName(String giftWrapName) {
+      this.giftWrapName = giftWrapName;
+   }
+
+   public void setHandlingTotal(BigDecimal handlingTotal) {
+      this.handlingTotal = handlingTotal;
+   }
+
+   public void setInsuranceOptionOffered(Boolean insuranceOptionOffered) {
+      this.insuranceOptionOffered = insuranceOptionOffered;
+   }
+
+   public void setInsuranceTotal(BigDecimal insuranceTotal) {
+      this.insuranceTotal = insuranceTotal;
+   }
+
+   public void setInvoice(Invoice invoice) {
+      this.invoice = invoice;
+   }
+
+   public void setItemTotal(BigDecimal itemTotal) {
+      this.itemTotal = itemTotal;
+   }
+
+   public void setNote(String note) {
+      this.note = note;
+   }
+
+   public void setNoteText(String noteText) {
+      this.noteText = noteText;
+   }
+
+   public void setOrderDescription(String orderDescription) {
+      this.orderDescription = orderDescription;
+   }
+
+   public void setOrderId(String orderId) {
+      this.orderId = orderId;
+   }
+
+   public void setOrderTotal(BigDecimal orderTotal) {
+      this.orderTotal = orderTotal;
+   }
+
+   public void setRecords(Set<OrderRecord> records) {
+      this.records = records;
+   }
+
+   public void setShipment(Shipment shipment) {
+      this.shipment = shipment;
+   }
+
+   public void setShippingDiscount(BigDecimal shippingDiscount) {
+      this.shippingDiscount = shippingDiscount;
+   }
+
+   public void setShippingTotal(BigDecimal shippingTotal) {
+      this.shippingTotal = shippingTotal;
+   }
+
+   public void setTaxTotal(BigDecimal taxTotal) {
+      this.taxTotal = taxTotal;
+   }
+
+   public void setToken(String token) {
+      this.token = token;
+   }
+
+   public void setTransactionId(String transactionId) {
+      this.transactionId = transactionId;
+   }
 }

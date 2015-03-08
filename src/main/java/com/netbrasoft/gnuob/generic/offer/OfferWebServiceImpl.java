@@ -63,7 +63,9 @@ public class OfferWebServiceImpl<O extends Offer> implements GenericTypeWebServi
 
    @Override
    @WebMethod(operationName = "findOffer")
-   public List<O> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O offer, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
+   public List<O> find(@WebParam(name = "metaData", header = true) MetaData metadata,
+         @WebParam(name = "offer") O offer, @WebParam(name = "paging") Paging paging,
+         @WebParam(name = "orderBy") OrderBy orderBy) {
       try {
          if (offer.getContract() != null) {
             securedGenericCustomerService.read(metadata, offer.getContract().getCustomer());

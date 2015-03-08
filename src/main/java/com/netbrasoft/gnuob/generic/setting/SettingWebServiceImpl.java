@@ -48,7 +48,9 @@ public class SettingWebServiceImpl<S extends Setting> implements GenericTypeWebS
 
    @Override
    @WebMethod(operationName = "findSetting")
-   public List<S> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "Setting") S type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
+   public List<S> find(@WebParam(name = "metaData", header = true) MetaData metadata,
+         @WebParam(name = "Setting") S type, @WebParam(name = "paging") Paging paging,
+         @WebParam(name = "orderBy") OrderBy orderBy) {
       try {
          return securedGenericSettingService.find(metadata, type, paging, orderBy);
       } catch (Exception e) {

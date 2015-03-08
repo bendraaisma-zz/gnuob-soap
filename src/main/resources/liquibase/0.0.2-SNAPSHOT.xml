@@ -1,0 +1,73 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+	<changeSet id="GNUOB test objecten version 0.0.2-SNAPSHOT" author="Bernard Arjan Draaisma" context="test">
+		<sql>SET FOREIGN_KEY_CHECKS = 0;</sql>
+		<loadData tableName="gnuob_permissions" file="src/main/resources/liquibase/GNUOB_PERMISSIONS.csv">
+			<column name="ID" type="NUMERIC" />
+			<column name="VERSION" type="NUMERIC" />
+			<column name="OWNER" type="STRING" />
+			<column name="GROUP" type="STRING" />
+			<column name="OTHERS" type="STRING" />
+		</loadData>
+		<loadData tableName="gnuob_access" file="src/main/resources/liquibase/GNUOB_ACCESS.csv">
+			<column name="ID" type="NUMERIC" />
+			<column name="VERSION" type="NUMERIC" />
+			<column name="ACTIVE" type="BOOLEAN" />
+			<column name="group_ID" type="NUMERIC" />
+			<column name="permission_ID" type="NUMERIC" />
+			<column name="site_ID" type="NUMERIC" />
+			<column name="owner_ID" type="NUMERIC" />
+		</loadData>
+		<loadData tableName="gnuob_users" file="src/main/resources/liquibase/GNUOB_USERS.csv">
+			<column name="ID" type="NUMERIC" />
+			<column name="DESCRIPTION" type="STRING" />
+			<column name="NAME" type="STRING" />
+			<column name="PASSWORD" type="STRING" />
+			<column name="ACCESS" type="STRING" />
+			<column name="ROOT" type="BOOLEAN" />
+		</loadData>
+		<loadData tableName="gnuob_groups" file="src/main/resources/liquibase/GNUOB_GROUPS.csv">
+			<column name="ID" type="NUMERIC" />
+			<column name="DESCRIPTION" type="STRING" />
+			<column name="NAME" type="STRING" />
+			<column name="RULE" type="STRING" />
+		</loadData>
+		<loadData tableName="gnuob_sites" file="src/main/resources/liquibase/GNUOB_SITES.csv">
+			<column name="ID" type="NUMERIC" />
+			<column name="DESCRIPTION" type="STRING" />
+			<column name="NAME" type="STRING" />
+		</loadData>
+		<loadData tableName="gnuob_categories" file="src/main/resources/liquibase/GNUOB_CATEGORIES.csv">
+			<column name="ID" type="NUMERIC" />
+			<column name="DESCRIPTION" type="STRING" />
+			<column name="NAME" type="STRING" />
+		</loadData>
+		<loadData tableName="gnuob_users_gnuob_sites" file="src/main/resources/liquibase/GNUOB_USERS_GNUOB_SITES.csv">
+			<column name="sites_ID" type="NUMERIC" />
+			<column name="GNUOB_USERS_ID" type="NUMERIC" />
+		</loadData>
+		<loadData tableName="gnuob_users_gnuob_groups" file="src/main/resources/liquibase/GNUOB_USERS_GNUOB_GROUPS.csv">
+			<column name="groups_ID" type="NUMERIC" />
+			<column name="GNUOB_USERS_ID" type="NUMERIC" />
+		</loadData>
+		<loadData tableName="gnuob_settings" file="src/main/resources/liquibase/GNUOB_SETTINGS.csv">
+			<column name="ID" type="NUMERIC" />
+			<column name="DESCRIPTION" type="STRING" />
+			<column name="VALUE" type="STRING" />
+			<column name="PROPERTY" type="STRING" />
+		</loadData>
+		<sql>SET FOREIGN_KEY_CHECKS = 1;</sql>
+		<rollback>
+			<sql>SET FOREIGN_KEY_CHECKS = 0;</sql>
+			<delete tableName="gnuob_permissions" />
+			<delete tableName="gnuob_access" />
+			<delete tableName="gnuob_users" />
+			<delete tableName="gnuob_groups" />
+			<delete tableName="gnuob_sites" />
+			<delete tableName="gnuob_categories" />
+			<delete tableName="gnuob_users_gnuob_sites" />
+			<delete tableName="gnuob_users_gnuob_groups" />
+			<delete tableName="gnuob_settings" />
+			<sql>SET FOREIGN_KEY_CHECKS = 1;</sql>
+		</rollback>
+	</changeSet>
+</databaseChangeLog>

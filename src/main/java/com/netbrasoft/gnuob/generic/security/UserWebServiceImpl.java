@@ -53,7 +53,8 @@ public class UserWebServiceImpl<U extends User> implements GenericTypeWebService
 
    @Override
    @WebMethod(operationName = "findUser")
-   public List<U> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "user") U type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
+   public List<U> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "user") U type,
+         @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
       try {
          return securedGenericUserService.find(metadata, type, paging, orderBy);
       } catch (Exception e) {

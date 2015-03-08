@@ -6,29 +6,29 @@ import org.hibernate.Session;
 
 public interface GenericTypeDao<T> {
 
-    boolean contains(T type);
+   boolean contains(T type);
 
-    void disableFilter(String filterName);
+   void disableFilter(String filterName);
 
-    void enableFilter(String filterName, Parameter... param);
+   void enableFilter(String filterName, Parameter... param);
 
-    T find(T type, long id, LockModeType lockModeType);
+   T find(T type, long id, LockModeType lockModeType);
 
-    void flush();
+   void flush();
 
-    Session getDelegate();
+   Session getDelegate();
 
-    LockModeType getLockModeTypeOfType(T type);
+   LockModeType getLockModeTypeOfType(T type);
 
-    boolean isOpen();
+   boolean isOpen();
 
-    void lock(T type, LockModeType lockModeType);
+   void lock(T type, LockModeType lockModeType);
 
-    void merge(T type);
+   void merge(T type);
 
-    void persist(T type);
+   void persist(T type);
 
-    T refresh(T type, long id, LockModeType lockModeType);
+   T refresh(T type, long id, LockModeType lockModeType);
 
-    void remove(T type);
+   void remove(T type);
 }

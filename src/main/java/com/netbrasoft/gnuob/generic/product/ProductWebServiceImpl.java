@@ -42,7 +42,8 @@ public class ProductWebServiceImpl<P extends Product> implements GenericTypeWebS
       try {
          if (!type.getSubCategories().isEmpty()) {
             List<Example> examples = getSubCategoryExamples(type.getSubCategories());
-            Parameter parameter = Parameter.getInstance("subCategories", Restrictions.or(examples.toArray(new Example[examples.size()])));
+            Parameter parameter = Parameter.getInstance("subCategories",
+                  Restrictions.or(examples.toArray(new Example[examples.size()])));
             return securedGenericProductService.count(metadata, type, parameter);
          }
          return securedGenericProductService.count(metadata, type);
@@ -63,11 +64,14 @@ public class ProductWebServiceImpl<P extends Product> implements GenericTypeWebS
 
    @Override
    @WebMethod(operationName = "findProduct")
-   public List<P> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "product") P type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
+   public List<P> find(@WebParam(name = "metaData", header = true) MetaData metadata,
+         @WebParam(name = "product") P type, @WebParam(name = "paging") Paging paging,
+         @WebParam(name = "orderBy") OrderBy orderBy) {
       try {
          if (!type.getSubCategories().isEmpty()) {
             List<Example> examples = getSubCategoryExamples(type.getSubCategories());
-            Parameter parameter = Parameter.getInstance("subCategories", Restrictions.or(examples.toArray(new Example[examples.size()])));
+            Parameter parameter = Parameter.getInstance("subCategories",
+                  Restrictions.or(examples.toArray(new Example[examples.size()])));
             return securedGenericProductService.find(metadata, type, paging, orderBy, parameter);
          }
          return securedGenericProductService.find(metadata, type, paging, orderBy);

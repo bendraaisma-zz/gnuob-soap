@@ -41,11 +41,16 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
    private static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE = "NO_PRODUCTION_TOKEN";
    private static final String PAGSEGURO_SANDBOX_TOKEN_PROPERTY_VALUE = "007D4EDFF33042E79EC7B8039B5F7FCE";
    private static final String PAGSEGURO_CURRENCY_PROPERTY_VALUE = "BRL";
-   private static final String EMAIL_PROPERTY = System.getProperty(PAGSEGURO_EMAIL_PROPERTY, PAGSEGURO_EMAIL_PROPERTY_VALUE);
-   private static final String PRODUCTION_TOKEN_PROPERTY = System.getProperty(PAGSEGURO_PRODUCTION_TOKEN_PROPERTY, PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE);
-   private static final String SANDBOX_TOKEN_PROPERTY = System.getProperty(PAGSEGURO_SANDBOX_TOKEN_PROPERTY, PAGSEGURO_SANDBOX_TOKEN_PROPERTY_VALUE);
-   private static final String NOTIFICATION_URL_PROPERTY = System.getProperty(GNUOB_SITE_PROPERTY, GNUOB_SITE_PROPERTY_VALUE);
-   private static final String CURRENCY_PROPERTY = System.getProperty(PAGSEGURO_CURRENCY_PROPERTY, PAGSEGURO_CURRENCY_PROPERTY_VALUE);
+   private static final String EMAIL_PROPERTY = System.getProperty(PAGSEGURO_EMAIL_PROPERTY,
+         PAGSEGURO_EMAIL_PROPERTY_VALUE);
+   private static final String PRODUCTION_TOKEN_PROPERTY = System.getProperty(PAGSEGURO_PRODUCTION_TOKEN_PROPERTY,
+         PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE);
+   private static final String SANDBOX_TOKEN_PROPERTY = System.getProperty(PAGSEGURO_SANDBOX_TOKEN_PROPERTY,
+         PAGSEGURO_SANDBOX_TOKEN_PROPERTY_VALUE);
+   private static final String NOTIFICATION_URL_PROPERTY = System.getProperty(GNUOB_SITE_PROPERTY,
+         GNUOB_SITE_PROPERTY_VALUE);
+   private static final String CURRENCY_PROPERTY = System.getProperty(PAGSEGURO_CURRENCY_PROPERTY,
+         PAGSEGURO_CURRENCY_PROPERTY_VALUE);
 
    public PagseguroCheckOutServiceImpl() {
       if (!PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE.equals(PRODUCTION_TOKEN_PROPERTY)) {
@@ -53,12 +58,14 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
       }
    }
 
-   private String createCheckoutRequest(Checkout checkout) throws PagSeguroServiceException, ParserConfigurationException, SAXException, IOException {
+   private String createCheckoutRequest(Checkout checkout) throws PagSeguroServiceException,
+         ParserConfigurationException, SAXException, IOException {
       String email = EMAIL_PROPERTY;
       String productionToken = PRODUCTION_TOKEN_PROPERTY;
       String sandboxToken = SANDBOX_TOKEN_PROPERTY;
 
-      return CheckoutService.createCheckoutRequest(new AccountCredentials(email, productionToken, sandboxToken), checkout, false);
+      return CheckoutService.createCheckoutRequest(new AccountCredentials(email, productionToken, sandboxToken),
+            checkout, false);
    }
 
    private Address doAddress(com.netbrasoft.gnuob.generic.customer.Address address) {
@@ -276,6 +283,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
       String productionToken = PRODUCTION_TOKEN_PROPERTY;
       String sandboxToken = SANDBOX_TOKEN_PROPERTY;
 
-      return TransactionSearchService.searchByCode(new AccountCredentials(email, productionToken, sandboxToken), order.getTransactionId());
+      return TransactionSearchService.searchByCode(new AccountCredentials(email, productionToken, sandboxToken),
+            order.getTransactionId());
    }
 }

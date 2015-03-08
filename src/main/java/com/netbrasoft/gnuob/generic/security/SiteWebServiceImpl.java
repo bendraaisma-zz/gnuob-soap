@@ -46,7 +46,8 @@ public class SiteWebServiceImpl<S extends Site> implements GenericTypeWebService
 
    @Override
    @WebMethod(operationName = "findSite")
-   public List<S> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "site") S type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
+   public List<S> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "site") S type,
+         @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
       try {
          return securedGenericSiteService.find(metadata, type, paging, orderBy);
       } catch (Exception e) {

@@ -48,7 +48,9 @@ public class CustomerWebServiceImpl<C extends Customer> implements GenericTypeWe
 
    @Override
    @WebMethod(operationName = "findCustomer")
-   public List<C> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "customer") C type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
+   public List<C> find(@WebParam(name = "metaData", header = true) MetaData metadata,
+         @WebParam(name = "customer") C type, @WebParam(name = "paging") Paging paging,
+         @WebParam(name = "orderBy") OrderBy orderBy) {
       try {
          return securedGenericCustomerService.find(metadata, type, paging, orderBy);
       } catch (Exception e) {

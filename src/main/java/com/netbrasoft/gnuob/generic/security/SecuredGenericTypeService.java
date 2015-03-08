@@ -8,27 +8,27 @@ import com.netbrasoft.gnuob.generic.Parameter;
 
 public interface SecuredGenericTypeService<T> {
 
-    long count(MetaData metadata, T type, Parameter... param);
+   long count(MetaData metadata, T type, Parameter... param);
 
-    void create(MetaData metadata, T type);
+   void create(MetaData metadata, T type);
 
-    void delete(MetaData metadata, T type);
+   void delete(MetaData metadata, T type);
 
-    T find(MetaData metadata, T type, long id);
+   T find(MetaData metadata, T type, long id);
 
-    List<T> find(MetaData metadata, T type, Paging paging, OrderBy orderBy, Parameter... param);
+   List<T> find(MetaData metadata, T type, Paging paging, OrderBy orderBy, Parameter... param);
 
-    void flush();
+   void flush();
 
-    void merge(MetaData metadata, T type);
+   void merge(MetaData metadata, T type);
 
-    void persist(MetaData metadata, T type);
+   void persist(MetaData metadata, T type);
 
-    void read(MetaData metadata, T type);
+   void read(MetaData metadata, T type);
 
-    T refresh(MetaData metadata, T type, long id);
+   T refresh(MetaData metadata, T type, long id);
 
-    void remove(MetaData metadata, T type);
+   void remove(MetaData metadata, T type);
 
-    void update(MetaData metadata, T type);
+   void update(MetaData metadata, T type);
 }

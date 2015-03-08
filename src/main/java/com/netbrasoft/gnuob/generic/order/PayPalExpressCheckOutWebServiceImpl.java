@@ -48,7 +48,8 @@ public class PayPalExpressCheckOutWebServiceImpl<O extends Order> implements Che
 
    @Override
    @WebMethod(operationName = "doCheckoutDetails")
-   public O doCheckoutDetails(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
+   public O doCheckoutDetails(@WebParam(name = "metaData", header = true) MetaData metadata,
+         @WebParam(name = "order") O order) {
       try {
          checkOutService.doCheckoutDetails(order);
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
@@ -62,7 +63,8 @@ public class PayPalExpressCheckOutWebServiceImpl<O extends Order> implements Che
 
    @Override
    @WebMethod(operationName = "doCheckoutPayment")
-   public O doCheckoutPayment(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
+   public O doCheckoutPayment(@WebParam(name = "metaData", header = true) MetaData metadata,
+         @WebParam(name = "order") O order) {
       try {
          checkOutService.doCheckoutPayment(order);
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());

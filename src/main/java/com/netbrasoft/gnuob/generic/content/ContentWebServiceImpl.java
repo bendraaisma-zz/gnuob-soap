@@ -48,7 +48,9 @@ public class ContentWebServiceImpl<C extends Content> implements GenericTypeWebS
 
    @Override
    @WebMethod(operationName = "findContent")
-   public List<C> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
+   public List<C> find(@WebParam(name = "metaData", header = true) MetaData metadata,
+         @WebParam(name = "content") C type, @WebParam(name = "paging") Paging paging,
+         @WebParam(name = "orderBy") OrderBy orderBy) {
       try {
          return securedGenericContentService.find(metadata, type, paging, orderBy);
       } catch (Exception e) {

@@ -1,0 +1,1750 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project id="c6502477-7784-4688-8acd-bce94142dcd0" activeEnvironment="development" name="GNUOB-SOAP" resourceRoot="" soapui-version="6.0.0" xmlns:con="http://eviware.com/soapui/config"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.actions.iface.tools.soapui.ProTestRunnerAction@values-local"><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="Environment" value="development"/>
+  <con:entry key="Global Properties" value=""/>
+  <con:entry key="TestSuite" value="CategoryWebServiceImplServiceSoapBinding TestSuite"/>
+  <con:entry key="Password" value=""/>
+  <con:entry key="TestRunner Path" value=""/>
+  <con:entry key="Tool Args" value=""/>
+  <con:entry key="Ignore Errors" value="false"/>
+  <con:entry key="Host:Port" value=""/>
+  <con:entry key="user-settings.xml Password" value=""/>
+  <con:entry key="WSS Password Type" value=""/>
+  <con:entry key="Enable UI" value="false"/>
+  <con:entry key="Save Project" value="false"/>
+  <con:entry key="System Properties" value=""/>
+  <con:entry key="Domain" value=""/>
+  <con:entry key="Coverage Report" value="false"/>
+  <con:entry key="Export JUnit Results" value="false"/>
+  <con:entry key="Open Report" value="false"/>
+  <con:entry key="Project Properties" value=""/>
+  <con:entry key="Export All" value="false"/>
+  <con:entry key="Project Password" value=""/>
+  <con:entry key="Report Format(s)" value=""/>
+  <con:entry key="TestCase" value="persistCategory TestCase"/>
+  <con:entry key="Print Report" value="false"/>
+  <con:entry key="Username" value=""/>
+  <con:entry key="Root Folder" value=""/>
+  <con:entry key="Add Settings" value="false"/>
+  <con:entry key="Save After" value="false"/>
+  <con:entry key="Endpoint" value=""/>
+  <con:entry key="Select Report Type" value="TestSuite Report"/>
+</xml-fragment>]]></con:setting></con:settings><con:interface xsi:type="con:WsdlInterface" id="52b4363f-f0c1-4fb9-be0f-d542d4a01f4d" wsaVersion="NONE" name="CategoryWebServiceImplServiceSoapBinding" type="wsdl" bindingName="{http://gnuob.netbrasoft.com/}CategoryWebServiceImplServiceSoapBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/gnuob-soap/CategoryWebServiceImpl?wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/gnuob-soap/CategoryWebServiceImpl?wsdl"><con:part><con:url>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl?wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="CategoryWebServiceImplService" targetNamespace="http://gnuob.netbrasoft.com/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://gnuob.netbrasoft.com/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http">
+  <wsdl:types>
+    <xs:schema elementFormDefault="unqualified" targetNamespace="http://gnuob.netbrasoft.com/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xmime="http://www.w3.org/2005/05/xmlmime">
+      <xs:import namespace="http://www.w3.org/2005/05/xmlmime"/>
+      <xs:element name="Category" type="tns:category"/>
+      <xs:element name="Content" type="tns:content"/>
+      <xs:element name="OrderBy" type="tns:orderBy"/>
+      <xs:element name="Paging" type="tns:paging"/>
+      <xs:element name="Permission" type="tns:permission"/>
+      <xs:element name="Rule" type="tns:rule"/>
+      <xs:element name="SubCategory" type="tns:subCategory"/>
+      <xs:element name="countCategory" type="tns:countCategory"/>
+      <xs:element name="countCategoryResponse" type="tns:countCategoryResponse"/>
+      <xs:element name="findCategory" type="tns:findCategory"/>
+      <xs:element name="findCategoryById" type="tns:findCategoryById"/>
+      <xs:element name="findCategoryByIdResponse" type="tns:findCategoryByIdResponse"/>
+      <xs:element name="findCategoryResponse" type="tns:findCategoryResponse"/>
+      <xs:element name="mergeCategory" type="tns:mergeCategory"/>
+      <xs:element name="mergeCategoryResponse" type="tns:mergeCategoryResponse"/>
+      <xs:element name="metaData" type="tns:metaData"/>
+      <xs:element name="persistCategory" type="tns:persistCategory"/>
+      <xs:element name="persistCategoryResponse" type="tns:persistCategoryResponse"/>
+      <xs:element name="refreshCategory" type="tns:refreshCategory"/>
+      <xs:element name="refreshCategoryResponse" type="tns:refreshCategoryResponse"/>
+      <xs:element name="removeCategory" type="tns:removeCategory"/>
+      <xs:element name="removeCategoryResponse" type="tns:removeCategoryResponse"/>
+      <xs:complexType name="refreshCategory">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="category" type="tns:category"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="category">
+        <xs:complexContent>
+          <xs:extension base="tns:access">
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="contents" nillable="true" type="tns:content"/>
+              <xs:element minOccurs="0" name="description" type="xs:string"/>
+              <xs:element minOccurs="0" name="name" type="xs:string"/>
+              <xs:element minOccurs="0" name="position" type="xs:int"/>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="subCategories" nillable="true" type="tns:subCategory"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType abstract="true" name="access">
+        <xs:complexContent>
+          <xs:extension base="tns:type">
+            <xs:sequence>
+              <xs:element name="active" type="xs:boolean"/>
+              <xs:element minOccurs="0" name="permission" type="tns:permission"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType abstract="true" name="type">
+        <xs:sequence/>
+        <xs:attribute name="id" type="xs:long" use="required"/>
+        <xs:attribute name="version" type="xs:int" use="required"/>
+      </xs:complexType>
+      <xs:complexType name="content">
+        <xs:complexContent>
+          <xs:extension base="tns:access">
+            <xs:sequence>
+              <xs:element name="content" type="xs:base64Binary" xmime:expectedContentTypes="application/octet-stream"/>
+              <xs:element name="format" type="xs:string"/>
+              <xs:element name="name" type="xs:string"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="permission">
+        <xs:complexContent>
+          <xs:extension base="tns:type">
+            <xs:sequence>
+              <xs:element name="group" type="tns:rule"/>
+              <xs:element name="others" type="tns:rule"/>
+              <xs:element name="owner" type="tns:rule"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="subCategory">
+        <xs:complexContent>
+          <xs:extension base="tns:type">
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="contents" nillable="true" type="tns:content"/>
+              <xs:element minOccurs="0" name="description" type="xs:string"/>
+              <xs:element minOccurs="0" name="name" type="xs:string"/>
+              <xs:element maxOccurs="unbounded" minOccurs="0" name="subCategories" nillable="true" type="tns:subCategory"/>
+            </xs:sequence>
+          </xs:extension>
+        </xs:complexContent>
+      </xs:complexType>
+      <xs:complexType name="metaData">
+        <xs:sequence>
+          <xs:element name="site" type="xs:string"/>
+          <xs:element name="user" type="xs:string"/>
+          <xs:element name="password" type="xs:string"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="refreshCategoryResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:category"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="mergeCategory">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="category" type="tns:category"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="mergeCategoryResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:category"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="countCategory">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="category" type="tns:category"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="countCategoryResponse">
+        <xs:sequence>
+          <xs:element name="return" type="xs:long"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="findCategoryById">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="category" type="tns:category"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="findCategoryByIdResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:category"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="findCategory">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="category" type="tns:category"/>
+          <xs:element minOccurs="0" name="paging" type="tns:paging"/>
+          <xs:element minOccurs="0" name="orderBy" type="tns:orderBy"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType final="extension restriction" name="paging">
+        <xs:sequence>
+          <xs:element name="first" type="xs:int"/>
+          <xs:element name="max" type="xs:int"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="findCategoryResponse">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:category"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="removeCategory">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="category" type="tns:category"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="removeCategoryResponse">
+        <xs:sequence/>
+      </xs:complexType>
+      <xs:complexType name="persistCategory">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="category" type="tns:category"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:complexType name="persistCategoryResponse">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="return" type="tns:category"/>
+        </xs:sequence>
+      </xs:complexType>
+      <xs:simpleType name="rule">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="CREATE_ACCESS"/>
+          <xs:enumeration value="READ_ACCESS"/>
+          <xs:enumeration value="UPDATE_ACCESS"/>
+          <xs:enumeration value="DELETE_ACCESS"/>
+          <xs:enumeration value="NONE_ACCESS"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="operation">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="CREATE"/>
+          <xs:enumeration value="READ"/>
+          <xs:enumeration value="UPDATE"/>
+          <xs:enumeration value="DELETE"/>
+          <xs:enumeration value="NONE"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType name="orderBy">
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="RECOMMENDED"/>
+          <xs:enumeration value="HIGHEST_DISCOUNT"/>
+          <xs:enumeration value="LOWEST_DISCOUNT"/>
+          <xs:enumeration value="HIGHEST_PRICE"/>
+          <xs:enumeration value="LOWEST_PRICE"/>
+          <xs:enumeration value="HIGHEST_RATING"/>
+          <xs:enumeration value="LOWEST_RATING"/>
+          <xs:enumeration value="BESTSELLERS"/>
+          <xs:enumeration value="LATEST_COLLECTION"/>
+          <xs:enumeration value="TITLE_A_Z"/>
+          <xs:enumeration value="TITLE_Z_A"/>
+          <xs:enumeration value="POSITION_A_Z"/>
+          <xs:enumeration value="NONE"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="refreshCategory">
+    <wsdl:part element="tns:refreshCategory" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findCategoryResponse">
+    <wsdl:part element="tns:findCategoryResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findCategoryByIdResponse">
+    <wsdl:part element="tns:findCategoryByIdResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="countCategoryResponse">
+    <wsdl:part element="tns:countCategoryResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="mergeCategory">
+    <wsdl:part element="tns:mergeCategory" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeCategoryResponse">
+    <wsdl:part element="tns:removeCategoryResponse" name="result"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="refreshCategoryResponse">
+    <wsdl:part element="tns:refreshCategoryResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="removeCategory">
+    <wsdl:part element="tns:removeCategory" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="persistCategory">
+    <wsdl:part element="tns:persistCategory" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="persistCategoryResponse">
+    <wsdl:part element="tns:persistCategoryResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="mergeCategoryResponse">
+    <wsdl:part element="tns:mergeCategoryResponse" name="parameters"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="countCategory">
+    <wsdl:part element="tns:countCategory" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findCategoryById">
+    <wsdl:part element="tns:findCategoryById" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="findCategory">
+    <wsdl:part element="tns:findCategory" name="parameters"></wsdl:part>
+    <wsdl:part element="tns:metaData" name="metaData"></wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CategoryWebServiceImpl">
+    <wsdl:operation name="refreshCategory">
+      <wsdl:input message="tns:refreshCategory" name="refreshCategory"></wsdl:input>
+      <wsdl:output message="tns:refreshCategoryResponse" name="refreshCategoryResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="mergeCategory">
+      <wsdl:input message="tns:mergeCategory" name="mergeCategory"></wsdl:input>
+      <wsdl:output message="tns:mergeCategoryResponse" name="mergeCategoryResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="countCategory">
+      <wsdl:input message="tns:countCategory" name="countCategory"></wsdl:input>
+      <wsdl:output message="tns:countCategoryResponse" name="countCategoryResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findCategoryById">
+      <wsdl:input message="tns:findCategoryById" name="findCategoryById"></wsdl:input>
+      <wsdl:output message="tns:findCategoryByIdResponse" name="findCategoryByIdResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findCategory">
+      <wsdl:input message="tns:findCategory" name="findCategory"></wsdl:input>
+      <wsdl:output message="tns:findCategoryResponse" name="findCategoryResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeCategory">
+      <wsdl:input message="tns:removeCategory" name="removeCategory"></wsdl:input>
+      <wsdl:output message="tns:removeCategoryResponse" name="removeCategoryResponse"></wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="persistCategory">
+      <wsdl:input message="tns:persistCategory" name="persistCategory"></wsdl:input>
+      <wsdl:output message="tns:persistCategoryResponse" name="persistCategoryResponse"></wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CategoryWebServiceImplServiceSoapBinding" type="tns:CategoryWebServiceImpl">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="refreshCategory">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="refreshCategory">
+        <soap:header message="tns:refreshCategory" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="refreshCategoryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="mergeCategory">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="mergeCategory">
+        <soap:header message="tns:mergeCategory" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="mergeCategoryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="countCategory">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="countCategory">
+        <soap:header message="tns:countCategory" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="countCategoryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findCategoryById">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findCategoryById">
+        <soap:header message="tns:findCategoryById" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findCategoryByIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findCategory">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="findCategory">
+        <soap:header message="tns:findCategory" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="findCategoryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="removeCategory">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="removeCategory">
+        <soap:header message="tns:removeCategory" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="removeCategoryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="persistCategory">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="persistCategory">
+        <soap:header message="tns:persistCategory" part="metaData" use="literal"></soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="persistCategoryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CategoryWebServiceImplService">
+    <wsdl:port binding="tns:CategoryWebServiceImplServiceSoapBinding" name="CategoryWebServiceImplPort">
+      <soap:address location="http://localhost:8080/gnuob-soap/CategoryWebServiceImpl"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint></con:endpoints><con:operation id="e020baf9-7cd3-474c-8d62-ce7b9f0fae40" isOneWay="false" action="" name="countCategory" bindingOperationName="countCategory" type="Request-Response" outputName="countCategoryResponse" inputName="countCategory" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="161ed0a3-e45c-469e-bd9b-3b4d87f57dad" defaultOutgoingWss="" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:countCategory>
+         <!--Optional:-->
+         <category id="?" version="?">
+            <active>?</active>
+            <!--Optional:-->
+            <permission id="?" version="?">
+               <group>?</group>
+               <others>?</others>
+               <owner>?</owner>
+            </permission>
+            <!--Zero or more repetitions:-->
+            <contents id="?" version="?">
+               <active>?</active>
+               <!--Optional:-->
+               <permission id="?" version="?">
+                  <group>?</group>
+                  <others>?</others>
+                  <owner>?</owner>
+               </permission>
+               <content>cid:978980910435</content>
+               <format>?</format>
+               <name>?</name>
+            </contents>
+            <!--Optional:-->
+            <description>?</description>
+            <!--Optional:-->
+            <name>?</name>
+            <!--Optional:-->
+            <position>?</position>
+            <!--Zero or more repetitions:-->
+            <subCategories id="?" version="?">
+               <!--Zero or more repetitions:-->
+               <contents id="?" version="?">
+                  <active>?</active>
+                  <!--Optional:-->
+                  <permission id="?" version="?">
+                     <group>?</group>
+                     <others>?</others>
+                     <owner>?</owner>
+                  </permission>
+                  <content>cid:624509601494</content>
+                  <format>?</format>
+                  <name>?</name>
+               </contents>
+               <!--Optional:-->
+               <description>?</description>
+               <!--Optional:-->
+               <name>?</name>
+               <!--Zero or more repetitions:-->
+               <subCategories/>
+            </subCategories>
+         </category>
+      </gnu:countCategory>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/countCategory"/></con:call></con:operation><con:operation id="6c47881b-78bf-4e45-b605-41f5f8ad8765" isOneWay="false" action="" name="findCategory" bindingOperationName="findCategory" type="Request-Response" outputName="findCategoryResponse" inputName="findCategory" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="1885473d-bd8f-4a3b-923b-44e1ee7a4f37" defaultOutgoingWss="" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:findCategory>
+         <!--Optional:-->
+         <category id="?" version="?">
+            <active>?</active>
+            <!--Optional:-->
+            <permission id="?" version="?">
+               <group>?</group>
+               <others>?</others>
+               <owner>?</owner>
+            </permission>
+            <!--Zero or more repetitions:-->
+            <contents id="?" version="?">
+               <active>?</active>
+               <!--Optional:-->
+               <permission id="?" version="?">
+                  <group>?</group>
+                  <others>?</others>
+                  <owner>?</owner>
+               </permission>
+               <content>cid:139895760139</content>
+               <format>?</format>
+               <name>?</name>
+            </contents>
+            <!--Optional:-->
+            <description>?</description>
+            <!--Optional:-->
+            <name>?</name>
+            <!--Optional:-->
+            <position>?</position>
+            <!--Zero or more repetitions:-->
+            <subCategories id="?" version="?">
+               <!--Zero or more repetitions:-->
+               <contents id="?" version="?">
+                  <active>?</active>
+                  <!--Optional:-->
+                  <permission id="?" version="?">
+                     <group>?</group>
+                     <others>?</others>
+                     <owner>?</owner>
+                  </permission>
+                  <content>cid:82615387332</content>
+                  <format>?</format>
+                  <name>?</name>
+               </contents>
+               <!--Optional:-->
+               <description>?</description>
+               <!--Optional:-->
+               <name>?</name>
+               <!--Zero or more repetitions:-->
+               <subCategories/>
+            </subCategories>
+         </category>
+         <!--Optional:-->
+         <paging>
+            <first>?</first>
+            <max>?</max>
+         </paging>
+         <!--Optional:-->
+         <orderBy>?</orderBy>
+      </gnu:findCategory>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/findCategory"/></con:call></con:operation><con:operation id="93457ec8-1daa-4aaa-a810-f47642290e73" isOneWay="false" action="" name="findCategoryById" bindingOperationName="findCategoryById" type="Request-Response" outputName="findCategoryByIdResponse" inputName="findCategoryById" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="757976ed-8467-4d43-8ea2-c4330a92490d" defaultOutgoingWss="" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:findCategoryById>
+         <!--Optional:-->
+         <category id="?" version="?">
+            <active>?</active>
+            <!--Optional:-->
+            <permission id="?" version="?">
+               <group>?</group>
+               <others>?</others>
+               <owner>?</owner>
+            </permission>
+            <!--Zero or more repetitions:-->
+            <contents id="?" version="?">
+               <active>?</active>
+               <!--Optional:-->
+               <permission id="?" version="?">
+                  <group>?</group>
+                  <others>?</others>
+                  <owner>?</owner>
+               </permission>
+               <content>cid:354411062889</content>
+               <format>?</format>
+               <name>?</name>
+            </contents>
+            <!--Optional:-->
+            <description>?</description>
+            <!--Optional:-->
+            <name>?</name>
+            <!--Optional:-->
+            <position>?</position>
+            <!--Zero or more repetitions:-->
+            <subCategories id="?" version="?">
+               <!--Zero or more repetitions:-->
+               <contents id="?" version="?">
+                  <active>?</active>
+                  <!--Optional:-->
+                  <permission id="?" version="?">
+                     <group>?</group>
+                     <others>?</others>
+                     <owner>?</owner>
+                  </permission>
+                  <content>cid:998919993220</content>
+                  <format>?</format>
+                  <name>?</name>
+               </contents>
+               <!--Optional:-->
+               <description>?</description>
+               <!--Optional:-->
+               <name>?</name>
+               <!--Zero or more repetitions:-->
+               <subCategories/>
+            </subCategories>
+         </category>
+      </gnu:findCategoryById>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/findCategoryById"/></con:call></con:operation><con:operation id="3a950426-f686-427f-93c7-8c83aa13f340" isOneWay="false" action="" name="mergeCategory" bindingOperationName="mergeCategory" type="Request-Response" outputName="mergeCategoryResponse" inputName="mergeCategory" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="3326e180-1e5c-40ee-a08e-42b70dfcddd8" defaultOutgoingWss="" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:mergeCategory>
+         <!--Optional:-->
+         <category id="?" version="?">
+            <active>?</active>
+            <!--Optional:-->
+            <permission id="?" version="?">
+               <group>?</group>
+               <others>?</others>
+               <owner>?</owner>
+            </permission>
+            <!--Zero or more repetitions:-->
+            <contents id="?" version="?">
+               <active>?</active>
+               <!--Optional:-->
+               <permission id="?" version="?">
+                  <group>?</group>
+                  <others>?</others>
+                  <owner>?</owner>
+               </permission>
+               <content>cid:394507933748</content>
+               <format>?</format>
+               <name>?</name>
+            </contents>
+            <!--Optional:-->
+            <description>?</description>
+            <!--Optional:-->
+            <name>?</name>
+            <!--Optional:-->
+            <position>?</position>
+            <!--Zero or more repetitions:-->
+            <subCategories id="?" version="?">
+               <!--Zero or more repetitions:-->
+               <contents id="?" version="?">
+                  <active>?</active>
+                  <!--Optional:-->
+                  <permission id="?" version="?">
+                     <group>?</group>
+                     <others>?</others>
+                     <owner>?</owner>
+                  </permission>
+                  <content>cid:603427346360</content>
+                  <format>?</format>
+                  <name>?</name>
+               </contents>
+               <!--Optional:-->
+               <description>?</description>
+               <!--Optional:-->
+               <name>?</name>
+               <!--Zero or more repetitions:-->
+               <subCategories/>
+            </subCategories>
+         </category>
+      </gnu:mergeCategory>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/mergeCategory"/></con:call></con:operation><con:operation id="fcacc8bc-c31f-4c02-beb6-8be8db0e8113" isOneWay="false" action="" name="persistCategory" bindingOperationName="persistCategory" type="Request-Response" outputName="persistCategoryResponse" inputName="persistCategory" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="a3c34ebf-1955-4004-b070-0cd426f97cc3" defaultOutgoingWss="" name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>www.netbrasoft.com</site>
+         <user>administrator</user>
+         <password>administrator</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:persistCategory>
+         <!--Optional:-->
+         <category id="0" version="0">
+            <active>true</active>
+            <!--Optional:-->
+            <!--Zero or more repetitions:-->
+            <!--Optional:-->
+            <!--Optional:-->
+            <!--Optional:-->
+            <!--Zero or more repetitions:-->
+            <description>Test</description>
+            <name>Test</name>
+            <position>0</position>
+            <subCategories id="0" version="0">
+               <!--Zero or more repetitions:-->
+               <!--Optional:-->
+               <!--Optional:-->
+               <!--Zero or more repetitions:-->
+               <subCategories id="0" version="0">
+                  <name>Rinsne</name>
+                  <subCategories id="0" version="0">
+                     <description>Hannie</description>
+                     <name>Hannie</name>
+                  </subCategories>
+                  <description>Rinsne</description>
+               </subCategories>
+               <description>Ben</description>
+               <name>Ben</name>
+            </subCategories>
+            <subCategories id="0" version="0">
+               <description>PIm</description>
+               <name>Pim</name>
+            </subCategories>
+         </category>
+      </gnu:persistCategory>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/persistCategory"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="8d16beff-de9d-4dd1-86cd-5b5c99120d55" isOneWay="false" action="" name="refreshCategory" bindingOperationName="refreshCategory" type="Request-Response" outputName="refreshCategoryResponse" inputName="refreshCategory" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="18bbd240-6edf-492d-b53d-b722822d9b0f" defaultOutgoingWss="" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:refreshCategory>
+         <!--Optional:-->
+         <category id="?" version="?">
+            <active>?</active>
+            <!--Optional:-->
+            <permission id="?" version="?">
+               <group>?</group>
+               <others>?</others>
+               <owner>?</owner>
+            </permission>
+            <!--Zero or more repetitions:-->
+            <contents id="?" version="?">
+               <active>?</active>
+               <!--Optional:-->
+               <permission id="?" version="?">
+                  <group>?</group>
+                  <others>?</others>
+                  <owner>?</owner>
+               </permission>
+               <content>cid:495735358750</content>
+               <format>?</format>
+               <name>?</name>
+            </contents>
+            <!--Optional:-->
+            <description>?</description>
+            <!--Optional:-->
+            <name>?</name>
+            <!--Optional:-->
+            <position>?</position>
+            <!--Zero or more repetitions:-->
+            <subCategories id="?" version="?">
+               <!--Zero or more repetitions:-->
+               <contents id="?" version="?">
+                  <active>?</active>
+                  <!--Optional:-->
+                  <permission id="?" version="?">
+                     <group>?</group>
+                     <others>?</others>
+                     <owner>?</owner>
+                  </permission>
+                  <content>cid:559157661819</content>
+                  <format>?</format>
+                  <name>?</name>
+               </contents>
+               <!--Optional:-->
+               <description>?</description>
+               <!--Optional:-->
+               <name>?</name>
+               <!--Zero or more repetitions:-->
+               <subCategories/>
+            </subCategories>
+         </category>
+      </gnu:refreshCategory>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/refreshCategory"/></con:call></con:operation><con:operation id="0c541db8-3397-41ed-982b-4eab6fe923f1" isOneWay="false" action="" name="removeCategory" bindingOperationName="removeCategory" type="Request-Response" outputName="removeCategoryResponse" inputName="removeCategory" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="6b75e1ea-99bb-4a6e-8565-4e13e6121b6d" defaultOutgoingWss="" name="Request 1"><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:removeCategory>
+         <!--Optional:-->
+         <category id="?" version="?">
+            <active>?</active>
+            <!--Optional:-->
+            <permission id="?" version="?">
+               <group>?</group>
+               <others>?</others>
+               <owner>?</owner>
+            </permission>
+            <!--Zero or more repetitions:-->
+            <contents id="?" version="?">
+               <active>?</active>
+               <!--Optional:-->
+               <permission id="?" version="?">
+                  <group>?</group>
+                  <others>?</others>
+                  <owner>?</owner>
+               </permission>
+               <content>cid:1137539946528</content>
+               <format>?</format>
+               <name>?</name>
+            </contents>
+            <!--Optional:-->
+            <description>?</description>
+            <!--Optional:-->
+            <name>?</name>
+            <!--Optional:-->
+            <position>?</position>
+            <!--Zero or more repetitions:-->
+            <subCategories id="?" version="?">
+               <!--Zero or more repetitions:-->
+               <contents id="?" version="?">
+                  <active>?</active>
+                  <!--Optional:-->
+                  <permission id="?" version="?">
+                     <group>?</group>
+                     <others>?</others>
+                     <owner>?</owner>
+                  </permission>
+                  <content>cid:725376779484</content>
+                  <format>?</format>
+                  <name>?</name>
+               </contents>
+               <!--Optional:-->
+               <description>?</description>
+               <!--Optional:-->
+               <name>?</name>
+               <!--Zero or more repetitions:-->
+               <subCategories/>
+            </subCategories>
+         </category>
+      </gnu:removeCategory>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/removeCategory"/></con:call></con:operation></con:interface><con:testSuite id="b2d933c8-9b16-40a1-91ce-38829a47fe48" name="CategoryWebServiceImplServiceSoapBinding TestSuite"><con:settings/><con:runType>SEQUENTIAL</con:runType><con:testCase id="ad81359b-9243-4a07-8375-0f028d0b00fb" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="countCategory TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="79bab535-f3ae-42ca-b5c7-215f1cc9b51e" name="countCategory"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CategoryWebServiceImplServiceSoapBinding</con:interface><con:operation>countCategory</con:operation><con:request name="countCategory" id="e02933be-9ca0-4c2c-aa00-48d247968d80" defaultOutgoingWss="" outgoingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:countCategory>
+         <!--Optional:-->
+         <category id="?" version="?">
+            <active>?</active>
+            <!--Optional:-->
+            <permission id="?" version="?">
+               <group>?</group>
+               <others>?</others>
+               <owner>?</owner>
+            </permission>
+            <!--Zero or more repetitions:-->
+            <contents id="?" version="?">
+               <active>?</active>
+               <!--Optional:-->
+               <permission id="?" version="?">
+                  <group>?</group>
+                  <others>?</others>
+                  <owner>?</owner>
+               </permission>
+               <content>cid:935813148226</content>
+               <format>?</format>
+               <name>?</name>
+            </contents>
+            <!--Optional:-->
+            <description>?</description>
+            <!--Optional:-->
+            <name>?</name>
+            <!--Optional:-->
+            <position>?</position>
+            <!--Zero or more repetitions:-->
+            <subCategories id="?" version="?">
+               <!--Zero or more repetitions:-->
+               <contents id="?" version="?">
+                  <active>?</active>
+                  <!--Optional:-->
+                  <permission id="?" version="?">
+                     <group>?</group>
+                     <others>?</others>
+                     <owner>?</owner>
+                  </permission>
+                  <content>cid:214678656765</content>
+                  <format>?</format>
+                  <name>?</name>
+               </contents>
+               <!--Optional:-->
+               <description>?</description>
+               <!--Optional:-->
+               <name>?</name>
+               <!--Zero or more repetitions:-->
+               <subCategories/>
+            </subCategories>
+         </category>
+      </gnu:countCategory>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/countCategory" mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase id="9e2c4b0e-15dd-43b4-8b01-999ff468b988" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="findCategory TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="f37b88be-d4b9-4e72-be0a-2d782a592e9d" name="findCategory"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CategoryWebServiceImplServiceSoapBinding</con:interface><con:operation>findCategory</con:operation><con:request name="findCategory" id="3bd2c8b6-1d23-49a6-a534-afbe818a27b4" defaultOutgoingWss="" outgoingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Header>
+      <ns2:metaData xmlns:ns2="http://gnuob.netbrasoft.com/">
+         <site>www.netbrasoft.com</site>
+         <user>administrator</user>
+         <password>administrator</password>
+      </ns2:metaData>
+   </soap:Header>
+   <soap:Body>
+      <ns2:findCategory xmlns:ns2="http://gnuob.netbrasoft.com/">
+         <category id="0" version="0">
+            <active>true</active>
+         </category>
+         <paging>
+            <first>0</first>
+            <max>8</max>
+         </paging>
+         <orderBy>NONE</orderBy>
+      </ns2:findCategory>
+   </soap:Body>
+</soap:Envelope>]]></con:request><con:assertion type="MessageContentAssertion" id="3703ef16-eb99-475d-a7f6-5dccdaefc7bd" name="Message Content Assertion"><con:configuration xsi:type="con:MessageContentAssertion"><con:elements><con:xpath>declare namespace ns1='http://gnuob.netbrasoft.com/';
+//ns1:findCategoryResponse[1]/return[1]/@id</con:xpath><con:element>@id</con:element><con:type>XmlLong</con:type><con:operator>=</con:operator><con:enabled>true</con:enabled><con:expectedValue>12</con:expectedValue><con:hasValue>false</con:hasValue><con:numberType>true</con:numberType></con:elements><con:originalMessage><![CDATA[<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
+   <soap:Body>
+      <ns2:findCategoryResponse xmlns:ns2="http://gnuob.netbrasoft.com/">
+         <return id="12" version="0">
+            <active>true</active>
+            <permission id="12" version="0">
+               <group>READ_ACCESS</group>
+               <others>READ_ACCESS</others>
+               <owner>DELETE_ACCESS</owner>
+            </permission>
+            <description>Categoria de Lançamentos</description>
+            <name>Lançamentos</name>
+            <position>1</position>
+         </return>
+         <return id="13" version="0">
+            <active>true</active>
+            <permission id="13" version="0">
+               <group>READ_ACCESS</group>
+               <others>READ_ACCESS</others>
+               <owner>DELETE_ACCESS</owner>
+            </permission>
+            <description>Categoria de Promoções</description>
+            <name>Promoções</name>
+            <position>2</position>
+         </return>
+         <return id="14" version="0">
+            <active>true</active>
+            <permission id="14" version="0">
+               <group>READ_ACCESS</group>
+               <others>READ_ACCESS</others>
+               <owner>DELETE_ACCESS</owner>
+            </permission>
+            <description>Categoria de Roupas</description>
+            <name>Roupas</name>
+            <position>3</position>
+         </return>
+         <return id="15" version="0">
+            <active>true</active>
+            <permission id="15" version="0">
+               <group>READ_ACCESS</group>
+               <others>READ_ACCESS</others>
+               <owner>DELETE_ACCESS</owner>
+            </permission>
+            <description>Categoria de Acessórios</description>
+            <name>Acessórios</name>
+            <position>4</position>
+         </return>
+         <return id="16" version="0">
+            <active>true</active>
+            <permission id="16" version="0">
+               <group>READ_ACCESS</group>
+               <others>READ_ACCESS</others>
+               <owner>DELETE_ACCESS</owner>
+            </permission>
+            <description>Categoria de Revista</description>
+            <name>Revista</name>
+            <position>5</position>
+         </return>
+         <return id="17" version="0">
+            <active>true</active>
+            <permission id="17" version="0">
+               <group>READ_ACCESS</group>
+               <others>READ_ACCESS</others>
+               <owner>DELETE_ACCESS</owner>
+            </permission>
+            <description>Voltar para pagina Inicio</description>
+            <name>Inicio</name>
+            <position>0</position>
+         </return>
+         <return id="18" version="0">
+            <active>true</active>
+            <permission id="18" version="0">
+               <group>READ_ACCESS</group>
+               <others>READ_ACCESS</others>
+               <owner>DELETE_ACCESS</owner>
+            </permission>
+            <description>Pagina de contato</description>
+            <name>Contato</name>
+            <position>6</position>
+         </return>
+         <return id="19" version="0">
+            <active>true</active>
+            <permission id="19" version="0">
+               <group>READ_ACCESS</group>
+               <others>READ_ACCESS</others>
+               <owner>DELETE_ACCESS</owner>
+            </permission>
+            <description>Baby</description>
+            <name>Baby</name>
+            <position>0</position>
+            <subCategories id="1" version="0">
+               <description>HIGHLIGHTS</description>
+               <name>HIGHLIGHTS</name>
+               <subCategories id="2" version="0">
+                  <description>WANNAHAVE DAYS folder</description>
+                  <name>WANNAHAVE DAYS folder</name>
+               </subCategories>
+               <subCategories id="3" version="0">
+                  <description>Baby uitzetlijst</description>
+                  <name>Baby uitzetlijst</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="4" version="0">
+               <description>KLEDING</description>
+               <name>KLEDING</name>
+               <subCategories id="5" version="0">
+                  <description>Babykleding</description>
+                  <name>Babykleding</name>
+               </subCategories>
+               <subCategories id="6" version="0">
+                  <description>Positiekleding</description>
+                  <name>Positiekleding</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="7" version="0">
+               <description>LUIERS &amp; VERZORGING</description>
+               <name>LUIERS &amp; VERZORGING</name>
+               <subCategories id="8" version="0">
+                  <description>Luiers</description>
+                  <name>Luiers</name>
+               </subCategories>
+               <subCategories id="9" version="0">
+                  <description>Babydoekjes</description>
+                  <name>Babydoekjes</name>
+               </subCategories>
+               <subCategories id="10" version="0">
+                  <description>Verzorging</description>
+                  <name>Verzorging</name>
+               </subCategories>
+               <subCategories id="11" version="0">
+                  <description>In bad</description>
+                  <name>In bad</name>
+               </subCategories>
+               <subCategories id="12" version="0">
+                  <description>Gezondheid</description>
+                  <name>Gezondheid</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="13" version="0">
+               <description>ETEN &amp; DRINKEN</description>
+               <name>ETEN &amp; DRINKEN</name>
+               <subCategories id="14" version="0">
+                  <description>Babyvoeding</description>
+                  <name>Babyvoeding</name>
+               </subCategories>
+               <subCategories id="15" version="0">
+                  <description>Voedingsaccessoires</description>
+                  <name>Voedingsaccessoires</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="16" version="0">
+               <description>ONDERWEG</description>
+               <name>ONDERWEG</name>
+               <subCategories id="17" version="0">
+                  <description>Auto &amp; fiets</description>
+                  <name>Auto &amp; fiets</name>
+               </subCategories>
+               <subCategories id="18" version="0">
+                  <description>Kinderwagens &amp; buggy's</description>
+                  <name>Kinderwagens &amp; buggy's</name>
+               </subCategories>
+               <subCategories id="19" version="0">
+                  <description>Babydragers</description>
+                  <name>Babydragers</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="20" version="0">
+               <description>THUIS &amp; SLAPEN</description>
+               <name>THUIS &amp; SLAPEN</name>
+               <subCategories id="21" version="0">
+                  <description>Auto &amp; fiets</description>
+                  <name>Auto &amp; fiets</name>
+               </subCategories>
+               <subCategories id="22" version="0">
+                  <description>Babykamer</description>
+                  <name>Babykamer</name>
+               </subCategories>
+               <subCategories id="23" version="0">
+                  <description>Babyfoons &amp; veiligheid</description>
+                  <name>Babyfoons &amp; veiligheid</name>
+               </subCategories>
+               <subCategories id="24" version="0">
+                  <description>Boxen &amp; kinderstoelen</description>
+                  <name>Boxen &amp; kinderstoelen</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="25" version="0">
+               <description>SPEELGOED</description>
+               <name>SPEELGOED</name>
+               <subCategories id="26" version="0">
+                  <description>Baby &amp; peuterspeelgoed</description>
+                  <name>Baby &amp; peuterspeelgoed</name>
+               </subCategories>
+               <subCategories id="27" version="0">
+                  <description>Speelgoeds</description>
+                  <name>Speelgoed</name>
+               </subCategories>
+               <subCategories id="28" version="0">
+                  <description>Buitenspeelgoed</description>
+                  <name>Buitenspeelgoed</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="29" version="0">
+               <description>CADEAUS</description>
+               <name>CADEAUS</name>
+               <subCategories id="30" version="0">
+                  <description>Kraamcadeaus</description>
+                  <name>Kraamcadeaus</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="31" version="0">
+               <description>MERKEN</description>
+               <name>MERKEN</name>
+               <subCategories id="32" version="0">
+                  <description>Philips AVENT</description>
+                  <name>Philips AVENT</name>
+               </subCategories>
+               <subCategories id="33" version="0">
+                  <description>KipKep</description>
+                  <name>KipKep</name>
+               </subCategories>
+               <subCategories id="34" version="0">
+                  <description>Lodger</description>
+                  <name>Lodger</name>
+               </subCategories>
+               <subCategories id="35" version="0">
+                  <description>Maxi-Cosi</description>
+                  <name>Maxi-Cosi</name>
+               </subCategories>
+               <subCategories id="36" version="0">
+                  <description>Nutrilon</description>
+                  <name>Nutrilon</name>
+               </subCategories>
+               <subCategories id="37" version="0">
+                  <description>Olvarit</description>
+                  <name>Olvarit</name>
+               </subCategories>
+               <subCategories id="38" version="0">
+                  <description>Puckababy</description>
+                  <name>Puckababy</name>
+               </subCategories>
+               <subCategories id="39" version="0">
+                  <description>Zwitsal</description>
+                  <name>Zwitsal</name>
+               </subCategories>
+               <subCategories id="40" version="0">
+                  <description>Neutral</description>
+                  <name>Neutral</name>
+               </subCategories>
+               <subCategories id="41" version="0">
+                  <description>NUK</description>
+                  <name>NUK</name>
+               </subCategories>
+               <subCategories id="42" version="0">
+                  <description>Pampers</description>
+                  <name>Pampers</name>
+               </subCategories>
+               <subCategories id="43" version="0">
+                  <description>Alle merken</description>
+                  <name>Alle merken</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="44" version="0">
+               <description>INSPIRATIE</description>
+               <name>INSPIRATIE</name>
+               <subCategories id="45" version="0">
+                  <description>Betaalgemak</description>
+                  <name>Betaalgemak</name>
+               </subCategories>
+               <subCategories id="46" version="0">
+                  <description>Alles voor straks</description>
+                  <name>Alles voor straks</name>
+               </subCategories>
+               <subCategories id="47" version="0">
+                  <description>Baby uitzetlijst</description>
+                  <name>Baby uitzetlijst</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="48" version="0">
+               <description>SALE</description>
+               <name>SALE</name>
+            </subCategories>
+         </return>
+      </ns2:findCategoryResponse>
+   </soap:Body>
+</soap:Envelope>]]></con:originalMessage></con:configuration></con:assertion><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/findCategory" mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase id="340c9070-1595-4d5a-9d21-106fd4aca777" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="findCategoryById TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="a2c8dc4b-a6b1-475e-8bc9-5501541829fa" name="findCategoryById"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CategoryWebServiceImplServiceSoapBinding</con:interface><con:operation>findCategoryById</con:operation><con:request name="findCategoryById" id="3ae1160b-7053-4000-8964-74e75994c57b" defaultOutgoingWss="" outgoingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:findCategoryById>
+         <!--Optional:-->
+         <category id="?" version="?">
+            <active>?</active>
+            <!--Optional:-->
+            <permission id="?" version="?">
+               <group>?</group>
+               <others>?</others>
+               <owner>?</owner>
+            </permission>
+            <!--Zero or more repetitions:-->
+            <contents id="?" version="?">
+               <active>?</active>
+               <!--Optional:-->
+               <permission id="?" version="?">
+                  <group>?</group>
+                  <others>?</others>
+                  <owner>?</owner>
+               </permission>
+               <content>cid:1350844874467</content>
+               <format>?</format>
+               <name>?</name>
+            </contents>
+            <!--Optional:-->
+            <description>?</description>
+            <!--Optional:-->
+            <name>?</name>
+            <!--Optional:-->
+            <position>?</position>
+            <!--Zero or more repetitions:-->
+            <subCategories id="?" version="?">
+               <!--Zero or more repetitions:-->
+               <contents id="?" version="?">
+                  <active>?</active>
+                  <!--Optional:-->
+                  <permission id="?" version="?">
+                     <group>?</group>
+                     <others>?</others>
+                     <owner>?</owner>
+                  </permission>
+                  <content>cid:980527945896</content>
+                  <format>?</format>
+                  <name>?</name>
+               </contents>
+               <!--Optional:-->
+               <description>?</description>
+               <!--Optional:-->
+               <name>?</name>
+               <!--Zero or more repetitions:-->
+               <subCategories/>
+            </subCategories>
+         </category>
+      </gnu:findCategoryById>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/findCategoryById" mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase id="0b643278-d5bf-45cf-b5a8-cd61109c0c53" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="mergeCategory TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="9299e068-69cd-4a7f-9b72-6158383a8b44" name="mergeCategory"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CategoryWebServiceImplServiceSoapBinding</con:interface><con:operation>mergeCategory</con:operation><con:request name="mergeCategory" id="310b4c39-1cc0-4002-92a8-a3a25bd0cac2" defaultOutgoingWss="" outgoingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:mergeCategory>
+         <!--Optional:-->
+         <category id="?" version="?">
+            <active>?</active>
+            <!--Optional:-->
+            <permission id="?" version="?">
+               <group>?</group>
+               <others>?</others>
+               <owner>?</owner>
+            </permission>
+            <!--Zero or more repetitions:-->
+            <contents id="?" version="?">
+               <active>?</active>
+               <!--Optional:-->
+               <permission id="?" version="?">
+                  <group>?</group>
+                  <others>?</others>
+                  <owner>?</owner>
+               </permission>
+               <content>cid:255509540269</content>
+               <format>?</format>
+               <name>?</name>
+            </contents>
+            <!--Optional:-->
+            <description>?</description>
+            <!--Optional:-->
+            <name>?</name>
+            <!--Optional:-->
+            <position>?</position>
+            <!--Zero or more repetitions:-->
+            <subCategories id="?" version="?">
+               <!--Zero or more repetitions:-->
+               <contents id="?" version="?">
+                  <active>?</active>
+                  <!--Optional:-->
+                  <permission id="?" version="?">
+                     <group>?</group>
+                     <others>?</others>
+                     <owner>?</owner>
+                  </permission>
+                  <content>cid:1174480929188</content>
+                  <format>?</format>
+                  <name>?</name>
+               </contents>
+               <!--Optional:-->
+               <description>?</description>
+               <!--Optional:-->
+               <name>?</name>
+               <!--Zero or more repetitions:-->
+               <subCategories/>
+            </subCategories>
+         </category>
+      </gnu:mergeCategory>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/mergeCategory" mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase id="0fa6c1f4-6511-4650-a17e-5453c60da0d5" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="persistCategory TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="7184bc53-dc48-4589-a666-cc9ccf2123ec" name="persistCategory"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CategoryWebServiceImplServiceSoapBinding</con:interface><con:operation>persistCategory</con:operation><con:request name="persistCategory" id="d1a8f6c5-8ae5-4de4-8ddd-bebbcf928521" defaultOutgoingWss="" outgoingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>${#Project#administrator.site}</site>
+         <user>${#Project#administrator.username}</user>
+         <password>${#Project#administrator.password}</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:persistCategory>
+         <!--Optional:-->
+         <category id="0" version="0">
+            <active>true</active>
+            <!--Optional:-->
+            <!--Zero or more repetitions:-->
+            <!--Optional:-->
+            <!--Optional:-->
+            <!--Optional:-->
+            <!--Zero or more repetitions:-->
+            <description>Baby</description>
+            <name>Baby</name>
+            <position>0</position>
+            <subCategories id="0" version="0">
+               <!--Zero or more repetitions:-->
+               <!--Optional:-->
+               <!--Optional:-->
+               <!--Zero or more repetitions:-->
+               <subCategories id="0" version="0">
+                  <description>WANNAHAVE DAYS folder</description>
+                  <name>WANNAHAVE DAYS folder</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Baby uitzetlijst</description>
+                  <name>Baby uitzetlijst</name>
+               </subCategories>
+               <description>HIGHLIGHTS</description>
+               <name>HIGHLIGHTS</name>
+            </subCategories>
+            <subCategories id="0" version="0">
+               <description>KLEDING</description>
+               <name>KLEDING</name>
+               <subCategories id="0" version="0">
+                  <description>Babykleding</description>
+                  <name>Babykleding</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Positiekleding</description>
+                  <name>Positiekleding</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="0" version="0">
+               <description>LUIERS &amp; VERZORGING</description>
+               <name>LUIERS &amp; VERZORGING</name>
+               <subCategories id="0" version="0">
+                  <description>Luiers</description>
+                  <name>Luiers</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Babydoekjes</description>
+                  <name>Babydoekjes</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Verzorging</description>
+                  <name>Verzorging</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>In bad</description>
+                  <name>In bad</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Gezondheid</description>
+                  <name>Gezondheid</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="0" version="0">
+               <description>ETEN &amp; DRINKEN</description>
+               <name>ETEN &amp; DRINKEN</name>
+               <subCategories id="0" version="0">
+                  <description>Babyvoeding</description>
+                  <name>Babyvoeding</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Voedingsaccessoires</description>
+                  <name>Voedingsaccessoires</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="0" version="0">
+               <description>ONDERWEG</description>
+               <name>ONDERWEG</name>
+               <subCategories id="0" version="0">
+                  <description>Auto &amp; fiets</description>
+                  <name>Auto &amp; fiets</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Kinderwagens &amp; buggy's</description>
+                  <name>Kinderwagens &amp; buggy's</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Babydragers</description>
+                  <name>Babydragers</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="0" version="0">
+               <description>THUIS &amp; SLAPEN</description>
+               <name>THUIS &amp; SLAPEN</name>
+               <subCategories id="0" version="0">
+                  <description>Auto &amp; fiets</description>
+                  <name>Auto &amp; fiets</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Babykamer</description>
+                  <name>Babykamer</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Babyfoons &amp; veiligheid</description>
+                  <name>Babyfoons &amp; veiligheid</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Boxen &amp; kinderstoelen</description>
+                  <name>Boxen &amp; kinderstoelen</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="0" version="0">
+               <description>SPEELGOED</description>
+               <name>SPEELGOED</name>
+               <subCategories id="0" version="0">
+                  <description>Baby &amp; peuterspeelgoed</description>
+                  <name>Baby &amp; peuterspeelgoed</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Speelgoeds</description>
+                  <name>Speelgoed</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Buitenspeelgoed</description>
+                  <name>Buitenspeelgoed</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="0" version="0">
+               <description>CADEAUS</description>
+               <name>CADEAUS</name>
+               <subCategories id="0" version="0">
+                  <description>Kraamcadeaus</description>
+                  <name>Kraamcadeaus</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="0" version="0">
+               <description>MERKEN</description>
+               <name>MERKEN</name>
+               <subCategories id="0" version="0">
+                  <description>Philips AVENT</description>
+                  <name>Philips AVENT</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>KipKep</description>
+                  <name>KipKep</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Lodger</description>
+                  <name>Lodger</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Maxi-Cosi</description>
+                  <name>Maxi-Cosi</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Nutrilon</description>
+                  <name>Nutrilon</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Olvarit</description>
+                  <name>Olvarit</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Puckababy</description>
+                  <name>Puckababy</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Zwitsal</description>
+                  <name>Zwitsal</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Neutral</description>
+                  <name>Neutral</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>NUK</description>
+                  <name>NUK</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Pampers</description>
+                  <name>Pampers</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Alle merken</description>
+                  <name>Alle merken</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="0" version="0">
+               <description>INSPIRATIE</description>
+               <name>INSPIRATIE</name>
+               <subCategories id="0" version="0">
+                  <description>Betaalgemak</description>
+                  <name>Betaalgemak</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Alles voor straks</description>
+                  <name>Alles voor straks</name>
+               </subCategories>
+               <subCategories id="0" version="0">
+                  <description>Baby uitzetlijst</description>
+                  <name>Baby uitzetlijst</name>
+               </subCategories>
+            </subCategories>
+            <subCategories id="0" version="0">
+               <description>SALE</description>
+               <name>SALE</name>
+            </subCategories>
+         </category>
+      </gnu:persistCategory>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/persistCategory" mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase id="ff89ea91-3ad2-4a23-bdd5-7f7b9af2dcfe" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="refreshCategory TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="4ba3ee10-f27c-469f-8895-ca4681e1ceb4" name="refreshCategory"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CategoryWebServiceImplServiceSoapBinding</con:interface><con:operation>refreshCategory</con:operation><con:request name="refreshCategory" id="5e71330c-d5b9-4311-9eac-41f3ee8539ca" defaultOutgoingWss="" outgoingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:refreshCategory>
+         <!--Optional:-->
+         <category id="?" version="?">
+            <active>?</active>
+            <!--Optional:-->
+            <permission id="?" version="?">
+               <group>?</group>
+               <others>?</others>
+               <owner>?</owner>
+            </permission>
+            <!--Zero or more repetitions:-->
+            <contents id="?" version="?">
+               <active>?</active>
+               <!--Optional:-->
+               <permission id="?" version="?">
+                  <group>?</group>
+                  <others>?</others>
+                  <owner>?</owner>
+               </permission>
+               <content>cid:561012083307</content>
+               <format>?</format>
+               <name>?</name>
+            </contents>
+            <!--Optional:-->
+            <description>?</description>
+            <!--Optional:-->
+            <name>?</name>
+            <!--Optional:-->
+            <position>?</position>
+            <!--Zero or more repetitions:-->
+            <subCategories id="?" version="?">
+               <!--Zero or more repetitions:-->
+               <contents id="?" version="?">
+                  <active>?</active>
+                  <!--Optional:-->
+                  <permission id="?" version="?">
+                     <group>?</group>
+                     <others>?</others>
+                     <owner>?</owner>
+                  </permission>
+                  <content>cid:1259243632374</content>
+                  <format>?</format>
+                  <name>?</name>
+               </contents>
+               <!--Optional:-->
+               <description>?</description>
+               <!--Optional:-->
+               <name>?</name>
+               <!--Zero or more repetitions:-->
+               <subCategories/>
+            </subCategories>
+         </category>
+      </gnu:refreshCategory>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/refreshCategory" mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase id="7fb29495-7ed3-44da-b73b-184c6355e163" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="removeCategory TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="73813c54-8094-41a9-9339-75ce1ac4dce1" name="removeCategory"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>CategoryWebServiceImplServiceSoapBinding</con:interface><con:operation>removeCategory</con:operation><con:request name="removeCategory" id="f05ce5b9-0074-4285-b1cc-3e73f4d2b1b8" defaultOutgoingWss="" outgoingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+   <soapenv:Header>
+      <gnu:metaData>
+         <site>?</site>
+         <user>?</user>
+         <password>?</password>
+      </gnu:metaData>
+   </soapenv:Header>
+   <soapenv:Body>
+      <gnu:removeCategory>
+         <!--Optional:-->
+         <category id="?" version="?">
+            <active>?</active>
+            <!--Optional:-->
+            <permission id="?" version="?">
+               <group>?</group>
+               <others>?</others>
+               <owner>?</owner>
+            </permission>
+            <!--Zero or more repetitions:-->
+            <contents id="?" version="?">
+               <active>?</active>
+               <!--Optional:-->
+               <permission id="?" version="?">
+                  <group>?</group>
+                  <others>?</others>
+                  <owner>?</owner>
+               </permission>
+               <content>cid:503703471518</content>
+               <format>?</format>
+               <name>?</name>
+            </contents>
+            <!--Optional:-->
+            <description>?</description>
+            <!--Optional:-->
+            <name>?</name>
+            <!--Optional:-->
+            <position>?</position>
+            <!--Zero or more repetitions:-->
+            <subCategories id="?" version="?">
+               <!--Zero or more repetitions:-->
+               <contents id="?" version="?">
+                  <active>?</active>
+                  <!--Optional:-->
+                  <permission id="?" version="?">
+                     <group>?</group>
+                     <others>?</others>
+                     <owner>?</owner>
+                  </permission>
+                  <content>cid:1276008953325</content>
+                  <format>?</format>
+                  <name>?</name>
+               </contents>
+               <!--Optional:-->
+               <description>?</description>
+               <!--Optional:-->
+               <name>?</name>
+               <!--Zero or more repetitions:-->
+               <subCategories/>
+            </subCategories>
+         </category>
+      </gnu:removeCategory>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/removeCategory" mustUnderstand="NONE" version="200508"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:properties/><con:reportParameters/></con:testSuite><con:requirements/><con:properties><con:property><con:name>administrator.username</con:name></con:property><con:property><con:name>administrator.password</con:name></con:property><con:property><con:name>administrator.site</con:name></con:property></con:properties><con:wssContainer/><con:databaseConnectionContainer><con:databaseConnection><con:name>gnuob</con:name><con:driver>com.mysql.jdbc.Driver</con:driver><con:connectionString>jdbc:mysql://127.0.0.1:3306/netbrasoft?user=netbrasoft&amp;password=PASS_VALUE</con:connectionString><con:password>netbrasoft</con:password></con:databaseConnection></con:databaseConnectionContainer><con:oAuth2ProfileContainer/><con:reporting><con:xmlTemplates/><con:parameters/></con:reporting><con:environment name="development"><con:service type="SOAP" name="CategoryWebServiceImplServiceSoapBinding"><con:endpoint domain="" incomingWss="" outgoingWss="" password="" username="" wssTimeToLive="" wssType="">http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint></con:service><con:property><con:name>administrator.username</con:name><con:value>administrator</con:value></con:property><con:property><con:name>administrator.password</con:name><con:value>administrator</con:value></con:property><con:property><con:name>administrator.site</con:name><con:value>www.netbrasoft.com</con:value></con:property><con:databaseConnectionContainer><con:databaseConnection><con:name>gnuob</con:name><con:driver>com.mysql.jdbc.Driver</con:driver><con:connectionString>jdbc:mysql://127.0.0.1:3306/netbrasoft?user=netbrasoft&amp;password=PASS_VALUE</con:connectionString><con:password>netbrasoft</con:password></con:databaseConnection></con:databaseConnectionContainer></con:environment><con:authRepository/><con:loadUiTest name="LoadUITest 1" id="0fb262c3-35a0-49c5-a219-d3425ed47011"><con:settings><con:setting id="soapUIObjectSourceId">9e2c4b0e-15dd-43b4-8b01-999ff468b988</con:setting><con:setting id="soapUIObjectSourceType">soapUIObjectSourceType_TestCase</con:setting></con:settings><con1:loadui-project id="56c733a4-e38a-4492-91df-de5d90f5c3af" label="LoadUITest 1" xmlns:con1="http://eviware.com/loadui/config"><con1:properties><con1:property propagates="true" key="ModelItem.description" type="java.lang.String"/><con1:property propagates="true" key="CanvasItem.abortOnFinish" type="java.lang.Boolean">false</con1:property><con1:property propagates="true" key="ModelItem.saveReport" type="java.lang.Boolean">false</con1:property><con1:property propagates="true" key="ModelItem.reportFolder" type="java.lang.String"/><con1:property propagates="true" key="ModelItem.reportFormat" type="java.lang.String"/></con1:properties><con1:attributes><con1:property key="limits">Time=30;</con1:property></con1:attributes><con1:addons/><con1:scene label="DefaultLoadUITest" id="2b33774c-11fb-42b4-aefd-141884e17ac0" version="4"><con1:properties><con1:property propagates="true" key="ModelItem.description" type="java.lang.String"/><con1:property propagates="true" key="CanvasItem.abortOnFinish" type="java.lang.Boolean">false</con1:property><con1:property propagates="true" key="SceneItem.followProject" type="java.lang.Boolean">true</con1:property></con1:properties><con1:attributes><con1:property key="limits">Time=30;</con1:property></con1:attributes><con1:addons/><con1:component type="com.eviware.loadui.groovy.GroovyComponent" label="Fixed Rate 1" id="91f9c225-34fd-475b-b354-09d65471daff" category="generators"><con1:properties><con1:property propagates="true" key="ModelItem.description" type="java.lang.String"/><con1:property propagates="true" key="_script" type="java.lang.String">// 
+// Copyright 2014 SmartBear Software
+// 
+// Licensed under the EUPL, Version 1.1 or - as soon they will be approved by the European Commission - subsequent
+// versions of the EUPL (the "Licence");
+// You may not use this work except in compliance with the Licence.
+// You may obtain a copy of the Licence at:
+// 
+// http://ec.europa.eu/idabc/eupl
+// 
+// Unless required by applicable law or agreed to in writing, software distributed under the Licence is
+// distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
+// express or implied. See the Licence for the specific language governing permissions and limitations
+// under the Licence.
+// 
+
+/**
+ * Sends an empty message periodically, at a set rate
+ * 
+ * @id com.eviware.FixedRate
+ * @help http://www.loadui.org/Generators/fixed-rate-component.html
+ * @name Fixed Rate
+ * @category generators
+ * @nonBlocking true
+ */
+
+import java.util.concurrent.TimeUnit
+
+//Properties
+rate = createProperty( 'rate', Long, 10 ) { schedule() }
+unit = createProperty( 'unit', String, 'Sec' ) { schedule() }
+
+onReplace( stateProperty ) { value ->
+	if( value ) schedule()
+	else future?.cancel( true )
+}
+
+burstSize = createProperty( 'burstSize', Long, 1 )
+
+triggerBurst = { 
+	burstSize.value.times {
+		trigger() 
+	} 
+}
+
+future = null
+schedule = {
+	if( stateProperty.value ) {
+		long microsecondsPerUnit = unit.value == 'Sec' ? 1000000 : unit.value == 'Min' ? 60000000 : 3600000000
+		long delay = Math.max( 1, (long)(microsecondsPerUnit / rate.value ?: 1) )
+		future?.cancel( true )
+		future = scheduleAtFixedRate( triggerBurst, delay, delay, TimeUnit.MICROSECONDS )
+	}
+}
+
+onAction( "START" ) { schedule() }
+onAction( "STOP" ) { future?.cancel( true ) }
+
+//Layout
+layout { 
+	property( property:rate, label:'Rate', min:1 ) 
+	separator( vertical:true )
+	property( property:unit, label:'Unit', options:['Sec','Min','Hour'] )
+	separator( vertical:true )
+	box( widget:'display' ) {
+		node( label:'Rate', content: { "$rate.value / $unit.value" }, constraints:'wmin 75' )
+	}
+}
+
+//Compact Layout
+compactLayout {
+	box( widget:'display' ) {
+		node( label:'Rate', content: { "$rate.value / $unit.value" } )
+	}
+}
+
+//Settings
+settings( label: "General" ) {
+	property( property: burstSize, label: 'Burst size' ) 
+}
+
+if( running ) schedule()</con1:property><con1:property propagates="true" key="stateProperty" type="java.lang.Boolean">true</con1:property><con1:property propagates="true" key="rate" type="java.lang.Long">5</con1:property><con1:property propagates="true" key="unit" type="java.lang.String">Sec</con1:property><con1:property propagates="true" key="burstSize" type="java.lang.Long">1</con1:property></con1:properties><con1:attributes><con1:property key="com.eviware.loadui.api.model.ComponentItem@type">Fixed Rate</con1:property><con1:property key="_digest">dfce327311dea993be475b6233bf0270</con1:property><con1:property key="_id">com.eviware.FixedRate</con1:property><con1:property key="_classLoader">com.eviware.FixedRate</con1:property></con1:attributes><con1:addons/></con1:component><con1:component type="com.eviware.loadui.components.soapui.SoapUISamplerComponent" label="Ready API TestCase Runner 1" id="62056acf-da64-450f-83b5-308704cd9ae0" category="Runners"><con1:properties><con1:property propagates="true" key="ModelItem.description" type="java.lang.String"/><con1:property propagates="true" key="concurrentSamples" type="java.lang.Long">1000</con1:property><con1:property propagates="true" key="property_name_is_not_relevant_for_private_property" type="java.lang.Long">9223372036854775807</con1:property><con1:property propagates="true" key="maxQueueSize" type="java.lang.Long">1000</con1:property><con1:property propagates="true" key="countDiscarded" type="java.lang.Boolean">false</con1:property><con1:property propagates="true" key="disabledTestSteps" type="java.lang.String"/><con1:property propagates="true" key="_thinkTime" type="java.lang.Long">0</con1:property><con1:property propagates="true" key="ReadyApiTestCase" type="com.eviware.soapui.impl.wsdl.testcase.WsdlTestCase">9e2c4b0e-15dd-43b4-8b01-999ff468b988</con1:property><con1:property propagates="true" key="raiseError" type="java.lang.Boolean">true</con1:property><con1:property propagates="true" key="outputTestCaseProperties" type="java.lang.Boolean">true</con1:property><con1:property propagates="true" key="OutputLevel" type="java.lang.String">TestCase only</con1:property><con1:property propagates="true" key="closeConnectionsAfterRequest" type="java.lang.Boolean">false</con1:property><con1:property propagates="true" key="disableSoapuiAssertions" type="java.lang.Boolean">false</con1:property><con1:property propagates="true" key="forceShareDatasources" type="java.lang.Boolean">true</con1:property></con1:properties><con1:attributes><con1:property key="com.eviware.loadui.api.model.ComponentItem@type">Ready API TestCase Runner</con1:property></con1:attributes><con1:addons/></con1:component><con1:connection outputTerminalId="91f9c225-34fd-475b-b354-09d65471daff/triggerTerminal" inputTerminalId="62056acf-da64-450f-83b5-308704cd9ae0/triggerTerminal"/></con1:scene><con1:statistics><con1:page title="DefaultLoadUIStatisticPage"/></con1:statistics></con1:loadui-project></con:loadUiTest></con:soapui-project>

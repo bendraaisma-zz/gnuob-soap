@@ -26,66 +26,66 @@ import com.netbrasoft.gnuob.generic.security.Access;
 @XmlRootElement(name = Contract.ENTITY)
 public class Contract extends Access {
 
-    private static final long serialVersionUID = -2215842699700777956L;
-    protected static final String ENTITY = "Contract";
-    protected static final String TABLE = "GNUOB_CONTRACTS";
+   private static final long serialVersionUID = -2215842699700777956L;
+   protected static final String ENTITY = "Contract";
+   protected static final String TABLE = "GNUOB_CONTRACTS";
 
-    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH }, optional = false, fetch = FetchType.EAGER)
-    private Customer customer;
+   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH }, optional = false, fetch = FetchType.EAGER)
+   private Customer customer;
 
-    @OneToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER, mappedBy = "contract")
-    private Set<Order> orders = new HashSet<Order>();
+   @OneToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER, mappedBy = "contract")
+   private Set<Order> orders = new HashSet<Order>();
 
-    @OneToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER, mappedBy = "contract")
-    private Set<Offer> offers = new HashSet<Offer>();
+   @OneToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER, mappedBy = "contract")
+   private Set<Offer> offers = new HashSet<Offer>();
 
-    @Column(name = "CONTRACT_ID", nullable = false)
-    private String contractId;
+   @Column(name = "CONTRACT_ID", nullable = false)
+   private String contractId;
 
-    public Contract() {
-    }
+   public Contract() {
+   }
 
-    @XmlElement(name = "contractId", required = true)
-    public String getContractId() {
-        return contractId;
-    }
+   @XmlElement(name = "contractId", required = true)
+   public String getContractId() {
+      return contractId;
+   }
 
-    @XmlElement(name = "customer", required = true)
-    public Customer getCustomer() {
-        return customer;
-    }
+   @XmlElement(name = "customer", required = true)
+   public Customer getCustomer() {
+      return customer;
+   }
 
-    @XmlTransient
-    public Set<Offer> getOffers() {
-        return offers;
-    }
+   @XmlTransient
+   public Set<Offer> getOffers() {
+      return offers;
+   }
 
-    @XmlTransient
-    public Set<Order> getOrders() {
-        return orders;
-    }
+   @XmlTransient
+   public Set<Order> getOrders() {
+      return orders;
+   }
 
-    @PrePersist
-    public void prePersistContractId() {
-        if (contractId == null || "".equals(contractId.trim())) {
-            contractId = UUID.randomUUID().toString();
-        }
-    }
+   @PrePersist
+   public void prePersistContractId() {
+      if (contractId == null || "".equals(contractId.trim())) {
+         contractId = UUID.randomUUID().toString();
+      }
+   }
 
-    public void setContractId(String contractId) {
-        this.contractId = contractId;
-    }
+   public void setContractId(String contractId) {
+      this.contractId = contractId;
+   }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
+   public void setCustomer(Customer customer) {
+      this.customer = customer;
+   }
 
-    public void setOffers(Set<Offer> offers) {
-        this.offers = offers;
-    }
+   public void setOffers(Set<Offer> offers) {
+      this.offers = offers;
+   }
 
-    public void setOrders(Set<Order> orders) {
-        this.orders = orders;
-    }
+   public void setOrders(Set<Order> orders) {
+      this.orders = orders;
+   }
 
 }
