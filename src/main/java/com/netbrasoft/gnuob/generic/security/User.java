@@ -1,5 +1,6 @@
 package com.netbrasoft.gnuob.generic.security;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,10 +11,14 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 
 @Entity(name = User.ENTITY)
 @Table(name = User.TABLE)
@@ -22,6 +27,7 @@ public class User extends Access {
 
    private static final long serialVersionUID = 2439569681567208145L;
    protected static final String ENTITY = "User";
+
    protected static final String TABLE = "GNUOB_USERS";
 
    @ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
@@ -95,6 +101,14 @@ public class User extends Access {
       return sites;
    }
 
+   @PrePersist
+   @PreUpdate
+   protected void prePersistUpdateUser() {
+      if (!(password.length() == 62 && password.matches("^[0-9A-F]{16}:\\d{4}:[0-9A-F]{40}"))) {
+         throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't contain a valid password, verify that the given password is valid", name));
+      }
+   }
+
    public void setAccess(Rule access) {
       this.access = access;
    }
@@ -111,7 +125,7 @@ public class User extends Access {
       this.name = name;
    }
 
-   public void setPassword(String password) {
+   public void setPassword(String password) throws NoSuchAlgorithmException {
       this.password = password;
    }
 
