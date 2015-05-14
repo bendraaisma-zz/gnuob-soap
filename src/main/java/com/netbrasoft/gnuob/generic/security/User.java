@@ -1,6 +1,5 @@
 package com.netbrasoft.gnuob.generic.security;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,6 +18,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
+
+import de.rtner.security.auth.spi.SimplePBKDF2;
 
 @Entity(name = User.ENTITY)
 @Table(name = User.TABLE)
@@ -59,9 +60,8 @@ public class User extends Access {
 
    }
 
-   public User(String name, String password) {
+   public User(String name) {
       this.name = name;
-      this.password = password;
    }
 
    public Rule getAccess() {
@@ -125,8 +125,8 @@ public class User extends Access {
       this.name = name;
    }
 
-   public void setPassword(String password) throws NoSuchAlgorithmException {
-      this.password = password;
+   public void setPassword(String password) {
+      this.password = new SimplePBKDF2().deriveKeyFormatted(password);
    }
 
    public void setRole(String role) {

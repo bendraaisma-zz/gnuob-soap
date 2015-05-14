@@ -13,6 +13,8 @@ import com.netbrasoft.gnuob.generic.Parameter;
 import com.netbrasoft.gnuob.generic.Type;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
 
+import de.rtner.security.auth.spi.SimplePBKDF2;
+
 public class AccessControl<A extends Access, U extends User, S extends Site> {
 
    private class Subject {
@@ -53,8 +55,12 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
             }
 
             // Check user credentials
-            if (userServiceImpl.count((U) new User(metaData.getUser(), metaData.getPassword())) > 0) {
-               subject.user = userServiceImpl.find((U) new User(metaData.getUser(), metaData.getPassword()), new Paging(-1, -1), OrderBy.NONE).get(0);
+            if (userServiceImpl.count((U) new User(metaData.getUser())) > 0) {
+               subject.user = userServiceImpl.find((U) new User(metaData.getUser()), new Paging(-1, -1), OrderBy.NONE).get(0);
+
+               if (!new SimplePBKDF2().verifyKeyFormatted(subject.user.getPassword(), metaData.getPassword())) {
+                  throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access", metaData.getUser()));
+               }
             } else {
                throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access", metaData.getUser()));
             }
