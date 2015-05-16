@@ -1,5 +1,7 @@
 package com.netbrasoft.gnuob.generic.content;
 
+import java.util.Base64;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -20,7 +22,7 @@ public class Content extends Access {
    protected static final String TABLE = "GNUOB_CONTENTS";
 
    @Column(name = "POSITION")
-   private Integer position;
+   private Integer position = 0;
 
    @Column(name = "NAME", nullable = false)
    private String name;
@@ -34,7 +36,7 @@ public class Content extends Access {
    @XmlElement(name = "content", required = true)
    @XmlMimeType("application/octet-stream")
    public byte[] getData() {
-      return data;
+      return Base64.getDecoder().decode(data);
    }
 
    @XmlElement(name = "format", required = true)
@@ -53,7 +55,7 @@ public class Content extends Access {
    }
 
    public void setData(byte[] data) {
-      this.data = data;
+      this.data = Base64.getEncoder().encode(data);
    }
 
    public void setFormat(String format) {
