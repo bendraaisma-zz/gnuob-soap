@@ -85,6 +85,45 @@
 			<column name="contents_ID" type="NUMERIC" />
 			<column name="GNUOB_SUB_CATEGORIES_ID" type="NUMERIC" />
 		</loadData>
+		<loadData tableName="GNUOB_PRODUCTS" file="src/main/resources/liquibase/GNUOB_PRODUCTS.csv">
+			<column name="AMOUNT" type="NUMERIC" />
+			<column name="BESTSELLERS" type="NUMERIC" />
+			<column name="DESCRIPTION" type="STRING" />
+			<column name="DISCOUNT" type="NUMERIC" />
+			<column name="ITEM_HEIGHT" type="NUMERIC" />
+			<column name="ITEM_HEIGHT_UNIT" type="STRING" />
+			<column name="ITEM_LENGTH" type="NUMERIC" />
+			<column name="ITEM_LENGTH_UNIT" type="STRING" />
+			<column name="ITEM_URL" type="STRING" />
+			<column name="ITEM_WEIGHT" type="NUMERIC" />
+			<column name="ITEM_WEIGHT_UNIT" type="STRING" />
+			<column name="ITEM_WIDTH" type="NUMERIC" />
+			<column name="ITEM_WIDTH_UNIT" type="STRING" />
+			<column name="LATEST_COLLECTION" type="NUMERIC" />
+			<column name="NAME" type="STRING" />
+			<column name="NUMBER" type="STRING" />
+			<column name="RATING" type="NUMERIC" />
+			<column name="RECOMMENDED" type="NUMERIC" />
+			<column name="SHIPPING_COST" type="NUMERIC" />
+			<column name="TAX" type="NUMERIC" />
+			<column name="ID" type="NUMERIC" />
+			<column name="stock_ID" type="NUMERIC" />
+		</loadData>
+		<loadData tableName="GNUOB_STOCKS" file="src/main/resources/liquibase/GNUOB_STOCKS.csv">
+			<column name="ID" type="NUMERIC" />
+			<column name="VERSION" type="NUMERIC" />
+			<column name="MAX_QUANTITY" type="NUMERIC" />
+			<column name="MIN_QUANTITY" type="NUMERIC" />
+			<column name="QUANTITY" type="NUMERIC" />
+		</loadData>
+		<loadData tableName="GNUOB_PRODUCTS_GNUOB_CONTENTS" file="src/main/resources/liquibase/GNUOB_PRODUCTS_GNUOB_CONTENTS.csv">
+			<column name="GNUOB_PRODUCTS_ID" type="NUMERIC" />
+			<column name="contents_ID" type="NUMERIC" />
+		</loadData>
+		<loadData tableName="GNUOB_PRODUCTS_GNUOB_SUB_CATEGORIES" file="src/main/resources/liquibase/GNUOB_PRODUCTS_GNUOB_SUB_CATEGORIES.csv">
+			<column name="GNUOB_PRODUCTS_ID" type="NUMERIC" />
+			<column name="subCategories_ID" type="NUMERIC" />
+		</loadData>
 		<sql>SET FOREIGN_KEY_CHECKS = 1;</sql>
 		<rollback>
 			<sql>SET FOREIGN_KEY_CHECKS = 0;</sql>
