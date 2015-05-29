@@ -1,4 +1,4 @@
-activeProfiles=default, sonar, jboss-public-repository, mvnrepository
+activeProfiles=default, sonar, jboss-public-repository, mvnrepository, terracotta-repositories
 eclipse.preferences.version=1
 resolveWorkspaceProjects=true
 version=1

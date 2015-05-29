@@ -1,5 +1,5 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
-	<changeSet id="GNUOB test objecten version 0.0.2-SNAPSHOT" author="Bernard Arjan Draaisma" context="test">
+	<changeSet id="GNUOB test objecten version 0.0.2-SNAPSHOT" author="Bernard Arjan Draaisma" context="test" runOnChange="true">
 		<sql>SET FOREIGN_KEY_CHECKS = 0;</sql>
 		<loadData tableName="gnuob_permissions" file="src/main/resources/liquibase/GNUOB_PERMISSIONS.csv">
 			<column name="ID" type="NUMERIC" />

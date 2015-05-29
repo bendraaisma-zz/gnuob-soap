@@ -8,6 +8,7 @@ import javax.persistence.PersistenceContext;
 
 import org.hibernate.Filter;
 import org.hibernate.Session;
+
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @Stateless(name = "GenericTypeDaoImpl")

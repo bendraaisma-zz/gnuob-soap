@@ -15,6 +15,9 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import com.netbrasoft.gnuob.generic.content.Content;
 import com.netbrasoft.gnuob.generic.security.Access;
 
@@ -44,6 +47,7 @@ public class Category extends Access {
    @Column(name = "POSITION")
    private Integer position;
 
+   @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
    public Set<Content> getContents() {
       return contents;
    }

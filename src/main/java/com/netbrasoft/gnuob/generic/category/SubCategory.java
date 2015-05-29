@@ -18,6 +18,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import com.netbrasoft.gnuob.generic.Type;
 import com.netbrasoft.gnuob.generic.content.Content;
 
@@ -48,6 +51,7 @@ public class SubCategory extends Type {
    @Column(name = "POSITION")
    private Integer position;
 
+   @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
    public Set<Content> getContents() {
       return contents;
    }

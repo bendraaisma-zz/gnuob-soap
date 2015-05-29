@@ -527,66 +527,31 @@
          <orderBy>?</orderBy>
       </gnu:findCategory>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/findCategory"/></con:call></con:operation><con:operation id="93457ec8-1daa-4aaa-a810-f47642290e73" isOneWay="false" action="" name="findCategoryById" bindingOperationName="findCategoryById" type="Request-Response" outputName="findCategoryByIdResponse" inputName="findCategoryById" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="757976ed-8467-4d43-8ea2-c4330a92490d" defaultOutgoingWss="" name="Request 1" defaultIncomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://gnuob.netbrasoft.com/CategoryWebServiceImpl/findCategory"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation id="93457ec8-1daa-4aaa-a810-f47642290e73" isOneWay="false" action="" name="findCategoryById" bindingOperationName="findCategoryById" type="Request-Response" outputName="findCategoryByIdResponse" inputName="findCategoryById" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call id="757976ed-8467-4d43-8ea2-c4330a92490d" defaultOutgoingWss="" name="Request 1" defaultIncomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/CategoryWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
    <soapenv:Header>
       <gnu:metaData>
-         <site>?</site>
-         <user>?</user>
-         <password>?</password>
+         <site>www.netbrasoft.com</site>
+         <user>administrator</user>
+         <password>administrator</password>
       </gnu:metaData>
    </soapenv:Header>
    <soapenv:Body>
       <gnu:findCategoryById>
          <!--Optional:-->
-         <category id="?" version="?">
-            <active>?</active>
+         <category id="45" version="0">
+            <active/>
             <!--Optional:-->
-            <permission id="?" version="?">
-               <group>?</group>
-               <others>?</others>
-               <owner>?</owner>
-            </permission>
+            
             <!--Zero or more repetitions:-->
-            <contents id="?" version="?">
-               <active>?</active>
-               <!--Optional:-->
-               <permission id="?" version="?">
-                  <group>?</group>
-                  <others>?</others>
-                  <owner>?</owner>
-               </permission>
-               <content>cid:354411062889</content>
-               <format>?</format>
-               <name>?</name>
-            </contents>
+            
             <!--Optional:-->
-            <description>?</description>
+            
             <!--Optional:-->
-            <name>?</name>
+            
             <!--Optional:-->
-            <position>?</position>
+            
             <!--Zero or more repetitions:-->
-            <subCategories id="?" version="?">
-               <!--Zero or more repetitions:-->
-               <contents id="?" version="?">
-                  <active>?</active>
-                  <!--Optional:-->
-                  <permission id="?" version="?">
-                     <group>?</group>
-                     <others>?</others>
-                     <owner>?</owner>
-                  </permission>
-                  <content>cid:998919993220</content>
-                  <format>?</format>
-                  <name>?</name>
-               </contents>
-               <!--Optional:-->
-               <description>?</description>
-               <!--Optional:-->
-               <name>?</name>
-               <!--Zero or more repetitions:-->
-               <subCategories/>
-            </subCategories>
+            
          </category>
       </gnu:findCategoryById>
    </soapenv:Body>
@@ -2673,7 +2638,7 @@
          </contract>
       </gnu:countContract>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="http://gnuob.netbrasoft.com/ContractWebServiceImpl/countContract"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase id="d95aef42-e208-46b2-bb7c-7f7a579f453a" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="findContract TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="28810b79-feca-4a75-831b-14663d51eec5" name="findContract"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ContractWebServiceImplServiceSoapBinding</con:interface><con:operation>findContract</con:operation><con:request name="findContract" id="d66d1e6d-3e3e-44c5-9c6e-c5444290ed46" defaultOutgoingWss="" outgoingWss="" defaultIncomingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/ContractWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="http://gnuob.netbrasoft.com/ContractWebServiceImpl/countContract"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase id="d95aef42-e208-46b2-bb7c-7f7a579f453a" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="findContract TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="28810b79-feca-4a75-831b-14663d51eec5" name="findContract"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ContractWebServiceImplServiceSoapBinding</con:interface><con:operation>findContract</con:operation><con:request name="findContract" id="d66d1e6d-3e3e-44c5-9c6e-c5444290ed46" defaultOutgoingWss="" outgoingWss="" defaultIncomingWss="" incomingWss=""><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/ContractWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
    <soapenv:Header>
       <gnu:metaData>
          <site>?</site>
@@ -2694,7 +2659,7 @@
             </permission>
             <contractId>?</contractId>
             <customer id="?" version="?">
-               <active>?</active>
+               <address><cityName/><country/><number/><postalCode/><stateOrProvince/><street1/></address><active>?</active>
                <!--Optional:-->
                <permission id="?" version="?">
                   <group>?</group>
@@ -2762,7 +2727,7 @@
          <orderBy>?</orderBy>
       </gnu:findContract>
    </soapenv:Body>
-</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:wsaConfig action="http://gnuob.netbrasoft.com/ContractWebServiceImpl/findContract"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase id="0e029bfc-0ee7-46d9-8499-275a1d7158f5" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="findContractById TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="16320d23-25ac-4c8e-b1a9-5e2ad60aa6c8" name="findContractById"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ContractWebServiceImplServiceSoapBinding</con:interface><con:operation>findContractById</con:operation><con:request name="findContractById" id="9357579e-ccf7-4c97-9b0f-7d7beffe82d9" defaultOutgoingWss="" outgoingWss="" defaultIncomingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/ContractWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:wsaConfig action="http://gnuob.netbrasoft.com/ContractWebServiceImpl/findContract" mustUnderstand="NONE" version="200508"/><con:wsrmConfig version="1.2"/></con:request></con:config></con:testStep><con:properties/><con:reportParameters/></con:testCase><con:testCase id="0e029bfc-0ee7-46d9-8499-275a1d7158f5" failOnError="true" failTestCaseOnErrors="true" keepSession="false" maxResults="0" name="findContractById TestCase" searchProperties="true"><con:settings/><con:testStep type="request" id="16320d23-25ac-4c8e-b1a9-5e2ad60aa6c8" name="findContractById"><con:settings/><con:config xsi:type="con:RequestStep" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:interface>ContractWebServiceImplServiceSoapBinding</con:interface><con:operation>findContractById</con:operation><con:request name="findContractById" id="9357579e-ccf7-4c97-9b0f-7d7beffe82d9" defaultOutgoingWss="" outgoingWss="" defaultIncomingWss="" incomingWss=""><con:settings/><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/gnuob-soap/ContractWebServiceImpl</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:gnu="http://gnuob.netbrasoft.com/">
    <soapenv:Header>
       <gnu:metaData>
          <site>?</site>
