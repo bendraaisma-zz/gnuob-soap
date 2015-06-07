@@ -39,7 +39,7 @@ public class Contract extends Access {
    @OneToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER, mappedBy = "contract")
    private Set<Offer> offers = new HashSet<Offer>();
 
-   @Column(name = "CONTRACT_ID", nullable = false)
+   @Column(name = "CONTRACT_ID", nullable = false, unique = true)
    private String contractId;
 
    public Contract() {

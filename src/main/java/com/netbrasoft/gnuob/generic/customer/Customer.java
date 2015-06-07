@@ -41,7 +41,7 @@ public class Customer extends Access {
    @Column(name = "MIDDLE_NAME")
    private String middleName;
 
-   @Column(name = "DATE_OF_BIRTH", nullable = false)
+   @Column(name = "DATE_OF_BIRTH")
    private Date dateOfBirth;
 
    @Column(name = "PAYER_BUSINESS")
@@ -71,7 +71,7 @@ public class Customer extends Access {
    @Column(name = "TAX_ID")
    private String taxId;
 
-   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, optional = false)
+   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true)
    private Address address;
 
    public Customer() {

@@ -32,7 +32,7 @@ public class Address extends Type {
    @Column(name = "STREET2")
    private String street2;
 
-   @Column(name = "NUMBER", nullable = false)
+   @Column(name = "NUMBER")
    private String number;
 
    @Column(name = "COMPLEMENT")
@@ -178,5 +178,4 @@ public class Address extends Type {
    public void setStreet2(String street2) {
       this.street2 = street2;
    }
-
 }

@@ -162,6 +162,12 @@
 			<sql>SET FOREIGN_KEY_CHECKS = 1;</sql>
 		</rollback>
 	</changeSet>
+	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-61">
+		<addUniqueConstraint columnNames="CONTRACT_ID" constraintName="UK_CONTRACT_ID" deferrable="false" disabled="false" initiallyDeferred="false" tableName="gnuob_contracts" />
+		<rollback>
+			<dropUniqueConstraint tableName="gnuob_contracts" constraintName="UK_CONTRACT_ID"/>
+		</rollback>
+	</changeSet>
 </databaseChangeLog>
 
 

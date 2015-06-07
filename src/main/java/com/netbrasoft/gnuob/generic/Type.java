@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -53,6 +54,7 @@ public abstract class Type implements Serializable {
       return version;
    }
 
+   @PrePersist
    protected void prePersistType() {
       creation = new Timestamp(System.currentTimeMillis());
    }
