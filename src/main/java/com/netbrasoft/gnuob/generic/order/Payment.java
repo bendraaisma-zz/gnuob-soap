@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -16,6 +17,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import com.netbrasoft.gnuob.generic.Type;
 import com.netbrasoft.gnuob.generic.jaxb.JaxbDateAdapter;
 
+@Cacheable(value = false)
 @Entity(name = Payment.ENTITY)
 @Table(name = Payment.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

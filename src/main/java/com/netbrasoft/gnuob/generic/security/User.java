@@ -3,6 +3,7 @@ package com.netbrasoft.gnuob.generic.security;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +22,7 @@ import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 
 import de.rtner.security.auth.spi.SimplePBKDF2;
 
+@Cacheable(value = true)
 @Entity(name = User.ENTITY)
 @Table(name = User.TABLE)
 @XmlRootElement(name = User.ENTITY)

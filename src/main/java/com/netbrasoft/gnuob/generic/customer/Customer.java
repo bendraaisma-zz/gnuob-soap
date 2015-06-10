@@ -2,6 +2,7 @@ package com.netbrasoft.gnuob.generic.customer;
 
 import java.sql.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import com.netbrasoft.gnuob.generic.jaxb.JaxbDateAdapter;
 import com.netbrasoft.gnuob.generic.security.Access;
 
+@Cacheable(value = true)
 @Entity(name = Customer.ENTITY)
 @Table(name = Customer.TABLE)
 @XmlRootElement(name = Customer.ENTITY)

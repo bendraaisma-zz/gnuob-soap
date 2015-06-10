@@ -2,6 +2,7 @@ package com.netbrasoft.gnuob.generic.content;
 
 import java.util.Base64;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -12,6 +13,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.generic.security.Access;
 
+@Cacheable(value = true)
 @Entity(name = Content.ENTITY)
 @Table(name = Content.TABLE)
 @XmlRootElement(name = Content.ENTITY)

@@ -3,6 +3,7 @@ package com.netbrasoft.gnuob.generic.offer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -17,6 +18,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.netbrasoft.gnuob.generic.Type;
 import com.netbrasoft.gnuob.generic.product.Product;
 
+@Cacheable(value = false)
 @Entity(name = OfferRecord.ENTITY)
 @Table(name = OfferRecord.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

@@ -76,7 +76,7 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 
       criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 
-      List<T> list = criteria.list();
+      List<T> list = criteria.setCacheable(true).list();
 
       return list.isEmpty() ? null : list.iterator().next();
    }
@@ -115,7 +115,7 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 
          criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 
-         return criteria.list();
+         return criteria.setCacheable(true).list();
       }
    }
 
@@ -125,7 +125,7 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
       Session session = genericTypeDao.getDelegate();
 
       Criteria criteria = session.createCriteria(type.getClass());
-      criteria.add(Example.create(type).excludeProperty("creation").excludeProperty("modification").excludeProperty("active"));
+      criteria.add(Example.create(type).excludeProperty("creation").excludeProperty("modification"));
 
       for (Parameter p : param) {
          criteria.createCriteria(p.getName()).add((Criterion) p.getValue());
@@ -157,7 +157,7 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
       criteria.setProjection(projectionList);
       criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 
-      return criteria.list();
+      return criteria.setCacheable(true).list();
    }
 
    @Override

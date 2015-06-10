@@ -3,6 +3,7 @@ package com.netbrasoft.gnuob.generic;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +15,7 @@ import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 
+@Cacheable(value = false)
 @MappedSuperclass
 public abstract class Type implements Serializable {
 

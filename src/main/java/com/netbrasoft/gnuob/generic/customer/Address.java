@@ -1,5 +1,6 @@
 package com.netbrasoft.gnuob.generic.customer;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -10,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.netbrasoft.gnuob.generic.Type;
 
+@Cacheable(value = false)
 @Entity(name = Address.ENTITY)
 @Table(name = Address.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

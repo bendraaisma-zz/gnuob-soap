@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,6 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.security.Access;
 
+@Cacheable(value = false)
 @Entity(name = Offer.ENTITY)
 @Table(name = Offer.TABLE)
 @XmlRootElement(name = Offer.ENTITY)

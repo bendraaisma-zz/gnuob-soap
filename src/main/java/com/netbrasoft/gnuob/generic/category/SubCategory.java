@@ -3,6 +3,7 @@ package com.netbrasoft.gnuob.generic.category;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,6 +25,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import com.netbrasoft.gnuob.generic.Type;
 import com.netbrasoft.gnuob.generic.content.Content;
 
+@Cacheable(value = true)
 @Entity(name = SubCategory.ENTITY)
 @Table(name = SubCategory.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

@@ -1,5 +1,6 @@
 package com.netbrasoft.gnuob.generic.security;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,6 +20,7 @@ import org.hibernate.annotations.ParamDef;
 
 import com.netbrasoft.gnuob.generic.Type;
 
+@Cacheable(value = true)
 @Entity(name = Access.ENTITY)
 @Table(name = Access.TABLE)
 @Inheritance(strategy = InheritanceType.JOINED)

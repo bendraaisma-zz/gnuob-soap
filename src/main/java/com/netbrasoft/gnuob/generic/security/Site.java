@@ -1,11 +1,13 @@
 package com.netbrasoft.gnuob.generic.security;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+@Cacheable(value = true)
 @Table(name = Site.TABLE)
 @Entity(name = Site.ENTITY)
 @XmlRootElement(name = Site.ENTITY)

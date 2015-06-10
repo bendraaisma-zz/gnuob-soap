@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.netbrasoft.gnuob.generic.Type;
 import com.netbrasoft.gnuob.generic.customer.Address;
 
+@Cacheable(value = false)
 @Entity(name = Invoice.ENTITY)
 @Table(name = Invoice.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

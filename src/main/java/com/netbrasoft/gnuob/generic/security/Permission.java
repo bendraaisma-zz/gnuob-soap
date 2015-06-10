@@ -1,5 +1,6 @@
 package com.netbrasoft.gnuob.generic.security;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +13,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.netbrasoft.gnuob.generic.Type;
 
+@Cacheable(value = true)
 @Entity(name = Permission.ENTITY)
 @Table(name = Permission.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

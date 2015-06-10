@@ -2,6 +2,7 @@ package com.netbrasoft.gnuob.generic.product;
 
 import java.math.BigInteger;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.generic.Type;
 
+@Cacheable(value = false)
 @Entity(name = Stock.ENTITY)
 @Table(name = Stock.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
