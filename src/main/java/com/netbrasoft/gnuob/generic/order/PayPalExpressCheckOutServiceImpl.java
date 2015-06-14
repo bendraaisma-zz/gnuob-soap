@@ -3,6 +3,7 @@ package com.netbrasoft.gnuob.generic.order;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -93,7 +94,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       addressType.setAddressOwner(AddressOwnerCodeType.PAY_PAL);
       addressType.setAddressStatus(AddressStatusCodeType.NONE);
       addressType.setCityName(address.getCityName());
-      addressType.setCountry(Enum.valueOf(CountryCodeType.class, address.getCountry()));
+      addressType.setCountry(Enum.valueOf(CountryCodeType.class, address.getCountry().replace("_", "")));
       addressType.setCountryName(address.getCountryName());
       addressType.setExternalAddressID(String.valueOf(address.getId()));
       addressType.setInternationalName("International shipment address");
@@ -111,7 +112,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    private void doAddressType(Address address, AddressType addressType) {
       address.setCityName(addressType.getCityName());
       if (addressType.getCountry() != null) {
-         address.setCountry(addressType.getCountry().value());
+         address.setCountry("_" + addressType.getCountry().value());
       }
       address.setCountryName(addressType.getCountryName());
       address.setInternationalStateAndCity(addressType.getInternationalStateAndCity());
@@ -128,15 +129,18 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    }
 
    private BasicAmountType doBasicAmountType(BigDecimal value) {
-
-      if (value != null) {
-         BasicAmountType basicAmountType = new BasicAmountType();
-         basicAmountType.setCurrencyID(CurrencyCodeType.valueOf(CURRENCY_ID_PROPERTY));
-         basicAmountType.setValue(NumberFormat.getCurrencyInstance(Locale.US).format(value).replace("$", ""));
-         return basicAmountType;
+      try {
+         if (value != null) {
+            NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+            BasicAmountType basicAmountType = new BasicAmountType();
+            basicAmountType.setCurrencyID(CurrencyCodeType.valueOf(CURRENCY_ID_PROPERTY));
+            basicAmountType.setValue(numberFormat.parse(numberFormat.format(value)).toString());
+            return basicAmountType;
+         }
+         return null;
+      } catch (ParseException e) {
+         return null;
       }
-
-      return null;
    }
 
    @Override
@@ -354,7 +358,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       order.getContract().getCustomer().setLastName(payerInfo.getPayerName().getLastName());
       order.getContract().getCustomer().setSalutation(payerInfo.getPayerName().getSalutation());
       if (payerInfo.getPayerCountry() != null) {
-         order.getContract().getCustomer().getAddress().setCountry(payerInfo.getPayerCountry().value());
+         order.getContract().getCustomer().getAddress().setCountry("_" + payerInfo.getPayerCountry().value());
       }
       order.getContract().getCustomer().setPayerBusiness(payerInfo.getPayerBusiness());
       if (payerInfo.getTaxIdDetails() != null) {
@@ -406,7 +410,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       PaymentDetailsType paymentDetailsType = new PaymentDetailsType();
 
       // Total cost of the transaction to the buyer.
-      paymentDetailsType.setOrderTotal(doBasicAmountType(order.getOrderTotal().max(order.getMaxTotal())));
+      paymentDetailsType.setOrderTotal(doBasicAmountType(order.getOrderTotal()));
 
       // Sum of cost of all items in this order.
       paymentDetailsType.setItemTotal(doBasicAmountType(order.getItemTotal()));
@@ -415,7 +419,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       paymentDetailsType.setShippingTotal(doBasicAmountType(order.getShippingTotal()));
 
       // Shipping discount for this order
-      paymentDetailsType.setShippingDiscount(doBasicAmountType(order.getShippingDiscount()));
+      paymentDetailsType.setShippingDiscount(doBasicAmountType(order.getShippingDiscount().negate()));
 
       // Indicates whether insurance is available as an option the buyer can
       // choose on the PayPal Review page
@@ -473,7 +477,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       order.setItemTotal(doBasicAmountType(paymentDetailsType.getItemTotal()));
       order.setShippingTotal(doBasicAmountType(paymentDetailsType.getShippingTotal()));
       order.setInsuranceTotal(doBasicAmountType(paymentDetailsType.getInsuranceTotal()));
-      order.setShippingDiscount(doBasicAmountType(paymentDetailsType.getShippingDiscount()));
+      order.setShippingDiscount(doBasicAmountType(paymentDetailsType.getShippingDiscount()).negate());
       order.setInsuranceOptionOffered(new Boolean(paymentDetailsType.getInsuranceOptionOffered()));
       order.setHandlingTotal(doBasicAmountType(paymentDetailsType.getHandlingTotal()));
       order.setTaxTotal(doBasicAmountType(paymentDetailsType.getTaxTotal()));

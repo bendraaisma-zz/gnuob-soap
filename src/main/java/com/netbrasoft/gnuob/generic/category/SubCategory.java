@@ -47,7 +47,7 @@ public class SubCategory extends Type {
    @Column(name = "NAME", nullable = false)
    private String name;
 
-   @Column(name = "DESCRIPTION", nullable = false, columnDefinition = "TEXT")
+   @Column(name = "DESCRIPTION", nullable = false)
    private String description;
 
    @Column(name = "POSITION")

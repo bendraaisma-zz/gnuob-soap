@@ -55,7 +55,7 @@ public class User extends Access {
    @Column(name = "ROLE", nullable = false)
    private String role;
 
-   @Column(name = "DESCRIPTION", columnDefinition = "TEXT")
+   @Column(name = "DESCRIPTION")
    private String description;
 
    public User() {

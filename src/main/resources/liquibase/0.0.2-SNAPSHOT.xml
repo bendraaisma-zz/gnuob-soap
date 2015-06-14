@@ -165,7 +165,21 @@
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-61">
 		<addUniqueConstraint columnNames="CONTRACT_ID" constraintName="UK_CONTRACT_ID" deferrable="false" disabled="false" initiallyDeferred="false" tableName="gnuob_contracts" />
 		<rollback>
-			<dropUniqueConstraint tableName="gnuob_contracts" constraintName="UK_CONTRACT_ID"/>
+			<dropUniqueConstraint tableName="gnuob_contracts" constraintName="UK_CONTRACT_ID" />
+		</rollback>
+	</changeSet>
+	<changeSet id="Adding MAX_TOTAL column for orders" author="Bernard Arjan Draaisma">
+		<addColumn tableName="gnuob_orders">
+			<column name="MAX_TOTAL" type="DECIMAL(19, 2)" />
+		</addColumn>
+		<rollback>
+			<dropColumn tableName="gnuob_orders" columnName="MAX_TOTAL" />
+		</rollback>
+	</changeSet>
+	<changeSet id="Increase COUNTRY column for gnuob_addresses" author="Bernard Arjan Draaisma">
+		<modifyDataType tableName="gnuob_addresses" columnName="COUNTRY" newDataType="VARCHAR(20)" />
+		<rollback>
+			<modifyDataType tableName="gnuob_addresses" columnName="COUNTRY" newDataType="VARCHAR(2)" />
 		</rollback>
 	</changeSet>
 </databaseChangeLog>

@@ -20,7 +20,7 @@ public class Group extends Access {
    @Column(name = "NAME", nullable = false, unique = true)
    private String name;
 
-   @Column(name = "DESCRIPTION", columnDefinition = "TEXT")
+   @Column(name = "DESCRIPTION")
    private String description;
 
    public Group() {

@@ -30,7 +30,7 @@ public class Setting extends Access {
    @XmlElement(name = "value", required = true)
    private String value;
 
-   @Column(name = "DESCRIPTION", nullable = false, columnDefinition = "TEXT")
+   @Column(name = "DESCRIPTION", nullable = false)
    @XmlElement(name = "description")
    private String description;
 

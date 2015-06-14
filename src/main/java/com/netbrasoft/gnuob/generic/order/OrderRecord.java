@@ -35,7 +35,7 @@ public class OrderRecord extends Type {
    @Column(name = "AMOUNT", nullable = false)
    private BigDecimal amount;
 
-   @Column(name = "DESCRIPTION", columnDefinition = "TEXT")
+   @Column(name = "DESCRIPTION")
    private String description;
 
    @Column(name = "NUMBER", nullable = false)
@@ -89,7 +89,7 @@ public class OrderRecord extends Type {
    @XmlElement(name = "amount")
    public BigDecimal getAmount() {
       if (product != null && amount == null) {
-         amount = product.getAmount();
+         amount = product.getAmount().subtract(getDiscount());
       }
       return amount;
    }
@@ -105,7 +105,7 @@ public class OrderRecord extends Type {
    @XmlElement(name = "discount")
    public BigDecimal getDiscount() {
       if (product != null && discount == null) {
-         discount = product.getItemHeight();
+         discount = product.getDiscount();
       }
       return discount;
    }

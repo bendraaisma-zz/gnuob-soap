@@ -23,37 +23,37 @@
 			<column name="CREATION" type="datetime" />
 			<column name="MODIFICATION" type="datetime" />
 			<column name="VERSION" type="INT(10)" />
-			<column name="CITY_NAME" type="VARCHAR(255)">
+			<column name="CITY_NAME" type="VARCHAR(40)">
 				<constraints nullable="false" />
 			</column>
-			<column name="COMPLEMENT" type="VARCHAR(255)" />
-			<column name="COUNTRY" type="VARCHAR(255)">
+			<column name="COMPLEMENT" type="VARCHAR(40)" />
+			<column name="COUNTRY" type="VARCHAR(2)">
 				<constraints nullable="false" />
 			</column>
-			<column name="COUNTRY_NAME" type="VARCHAR(255)" />
-			<column name="DISTRICT" type="VARCHAR(255)" />
-			<column name="INTERNATIONAL_STATE_AND_CITY" type="VARCHAR(255)" />
-			<column name="INTERNATIONAL_STREET" type="VARCHAR(255)" />
-			<column name="NUMBER" type="VARCHAR(255)" />
-			<column name="PHONE" type="VARCHAR(255)" />
-			<column name="POSTAL_CODE" type="VARCHAR(255)">
+			<column name="COUNTRY_NAME" type="VARCHAR(40)" />
+			<column name="DISTRICT" type="VARCHAR(40)" />
+			<column name="INTERNATIONAL_STATE_AND_CITY" type="VARCHAR(80)" />
+			<column name="INTERNATIONAL_STREET" type="VARCHAR(40)" />
+			<column name="NUMBER" type="VARCHAR(10)" />
+			<column name="PHONE" type="VARCHAR(20)" />
+			<column name="POSTAL_CODE" type="VARCHAR(20)">
 				<constraints nullable="false" />
 			</column>
-			<column name="STATE_OR_PROVINCE" type="VARCHAR(255)">
+			<column name="STATE_OR_PROVINCE" type="VARCHAR(40)">
 				<constraints nullable="false" />
 			</column>
-			<column name="STREET1" type="VARCHAR(255)">
+			<column name="STREET1" type="VARCHAR(100)">
 				<constraints nullable="false" />
 			</column>
-			<column name="STREET2" type="VARCHAR(255)" />
+			<column name="STREET2" type="VARCHAR(100)" />
 		</createTable>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-3">
 		<createTable tableName="gnuob_categories">
-			<column name="DESCRIPTION" type="TEXT">
+			<column name="DESCRIPTION" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
-			<column name="NAME" type="VARCHAR(255)">
+			<column name="NAME" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
 			<column name="POSITION" type="INT(10)" />
@@ -87,10 +87,10 @@
 			<column name="CONTENT" type="MEDIUMBLOB">
 				<constraints nullable="false" />
 			</column>
-			<column name="FORMAT" type="VARCHAR(255)">
+			<column name="FORMAT" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
-			<column name="NAME" type="VARCHAR(255)">
+			<column name="NAME" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
 			<column name="POSITION" type="INT(10)" />
@@ -101,7 +101,7 @@
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-7">
 		<createTable tableName="gnuob_contracts">
-			<column name="CONTRACT_ID" type="VARCHAR(255)">
+			<column name="CONTRACT_ID" type="VARCHAR(127)">
 				<constraints nullable="false" />
 			</column>
 			<column name="ID" type="BIGINT(19)">
@@ -114,28 +114,28 @@
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-8">
 		<createTable tableName="gnuob_customers">
-			<column name="BUYER_EMAIL" type="VARCHAR(255)">
+			<column name="BUYER_EMAIL" type="VARCHAR(127)">
 				<constraints nullable="false" />
 			</column>
-			<column name="BUYER_MARKETING_EMAIL" type="VARCHAR(255)" />
-			<column name="CONTACT_PHONE" type="VARCHAR(255)" />
+			<column name="BUYER_MARKETING_EMAIL" type="VARCHAR(127)" />
+			<column name="CONTACT_PHONE" type="VARCHAR(20)" />
 			<column name="DATE_OF_BIRTH" type="date" />
-			<column name="FIRST_NAME" type="VARCHAR(255)">
+			<column name="FIRST_NAME" type="VARCHAR(64)">
 				<constraints nullable="false" />
 			</column>
-			<column name="FRIENDLY_NAME" type="VARCHAR(255)" />
-			<column name="LAST_NAME" type="VARCHAR(255)">
+			<column name="FRIENDLY_NAME" type="VARCHAR(128)" />
+			<column name="LAST_NAME" type="VARCHAR(64)">
 				<constraints nullable="false" />
 			</column>
-			<column name="MIDDLE_NAME" type="VARCHAR(255)" />
-			<column name="PAYER" type="VARCHAR(255)" />
-			<column name="PAYER_BUSINESS" type="VARCHAR(255)" />
-			<column name="PAYER_ID" type="VARCHAR(255)" />
-			<column name="PAYER_STATUS" type="VARCHAR(255)" />
-			<column name="SALUTATION" type="VARCHAR(255)" />
-			<column name="PREFIX" type="VARCHAR(255)" />
-			<column name="TAX_ID" type="VARCHAR(255)" />
-			<column name="TAX_ID_TYPE" type="VARCHAR(255)" />
+			<column name="MIDDLE_NAME" type="VARCHAR(64)" />
+			<column name="PAYER" type="VARCHAR(127)" />
+			<column name="PAYER_BUSINESS" type="VARCHAR(127)" />
+			<column name="PAYER_ID" type="VARCHAR(20)" />
+			<column name="PAYER_STATUS" type="VARCHAR(20)" />
+			<column name="SALUTATION" type="VARCHAR(20)" />
+			<column name="PREFIX" type="VARCHAR(20)" />
+			<column name="TAX_ID" type="VARCHAR(20)" />
+			<column name="TAX_ID_TYPE" type="VARCHAR(20)" />
 			<column name="ID" type="BIGINT(19)">
 				<constraints nullable="false" />
 			</column>
@@ -144,8 +144,8 @@
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-9">
 		<createTable tableName="gnuob_groups">
-			<column name="DESCRIPTION" type="TEXT" />
-			<column name="NAME" type="VARCHAR(255)">
+			<column name="DESCRIPTION" type="VARCHAR(128)" />
+			<column name="NAME" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
 			<column name="ID" type="BIGINT(19)">
@@ -161,7 +161,7 @@
 			<column name="CREATION" type="datetime" />
 			<column name="MODIFICATION" type="datetime" />
 			<column name="VERSION" type="INT(10)" />
-			<column name="INVOICE_ID" type="VARCHAR(255)">
+			<column name="INVOICE_ID" type="VARCHAR(127)">
 				<constraints nullable="false" />
 			</column>
 			<column name="address_ID" type="BIGINT(19)">
@@ -188,19 +188,19 @@
 			<column name="MODIFICATION" type="datetime" />
 			<column name="VERSION" type="INT(10)" />
 			<column name="AMOUNT" type="DECIMAL(19, 2)" />
-			<column name="DESCRIPTION" type="TEXT" />
+			<column name="DESCRIPTION" type="VARCHAR(128)" />
 			<column name="DISCOUNT" type="DECIMAL(19, 2)" />
 			<column name="ITEM_HEIGHT" type="DECIMAL(19, 2)" />
-			<column name="ITEM_HEIGHT_UNIT" type="VARCHAR(255)" />
+			<column name="ITEM_HEIGHT_UNIT" type="VARCHAR(20)" />
 			<column name="ITEM_LENGTH" type="DECIMAL(19, 2)" />
-			<column name="ITEM_LENGTH_UNIT" type="VARCHAR(255)" />
+			<column name="ITEM_LENGTH_UNIT" type="VARCHAR(20)" />
 			<column name="ITEM_URL" type="VARCHAR(255)" />
 			<column name="ITEM_WEIGHT" type="DECIMAL(19, 2)" />
-			<column name="ITEM_WEIGHT_UNIT" type="VARCHAR(255)" />
+			<column name="ITEM_WEIGHT_UNIT" type="VARCHAR(20)" />
 			<column name="ITEM_WIDTH" type="DECIMAL(19, 2)" />
-			<column name="ITEM_WIDTH_UNIT" type="VARCHAR(255)" />
-			<column name="NAME" type="VARCHAR(255)" />
-			<column name="NUMBER" type="VARCHAR(255)" />
+			<column name="ITEM_WIDTH_UNIT" type="VARCHAR(20)" />
+			<column name="NAME" type="VARCHAR(128)" />
+			<column name="NUMBER" type="VARCHAR(765)" />
 			<column name="QUANTITY" type="DECIMAL(19, 2)">
 				<constraints nullable="false" />
 			</column>
@@ -221,8 +221,8 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="ITEM_TOTAL" type="DECIMAL(19, 2)" />
-			<column name="OFFER_DESCRIPTION" type="TEXT" />
-			<column name="OFFER_ID" type="VARCHAR(255)">
+			<column name="OFFER_DESCRIPTION" type="VARCHAR(128)" />
+			<column name="OFFER_ID" type="VARCHAR(64)">
 				<constraints nullable="false" />
 			</column>
 			<column name="OFFER_TOTAL" type="DECIMAL(19, 2)" />
@@ -262,19 +262,19 @@
 			<column name="AMOUNT" type="DECIMAL(19, 2)">
 				<constraints nullable="false" />
 			</column>
-			<column name="DESCRIPTION" type="TEXT" />
+			<column name="DESCRIPTION" type="VARCHAR(128)" />
 			<column name="DISCOUNT" type="DECIMAL(19, 2)" />
 			<column name="ITEM_HEIGHT" type="DECIMAL(19, 2)" />
-			<column name="ITEM_HEIGHT_UNIT" type="VARCHAR(255)" />
+			<column name="ITEM_HEIGHT_UNIT" type="VARCHAR(20)" />
 			<column name="ITEM_LENGTH" type="DECIMAL(19, 2)" />
-			<column name="ITEM_LENGTH_UNIT" type="VARCHAR(255)" />
+			<column name="ITEM_LENGTH_UNIT" type="VARCHAR(20)" />
 			<column name="ITEM_URL" type="VARCHAR(255)" />
 			<column name="ITEM_WEIGHT" type="DECIMAL(19, 2)" />
-			<column name="ITEM_WEIGHT_UNIT" type="VARCHAR(255)" />
+			<column name="ITEM_WEIGHT_UNIT" type="VARCHAR(20)" />
 			<column name="ITEM_WIDTH" type="DECIMAL(19, 2)" />
-			<column name="ITEM_WIDTH_UNIT" type="VARCHAR(255)" />
-			<column name="NAME" type="VARCHAR(255)" />
-			<column name="NUMBER" type="VARCHAR(255)">
+			<column name="ITEM_WIDTH_UNIT" type="VARCHAR(20)" />
+			<column name="NAME" type="VARCHAR(128)" />
+			<column name="NUMBER" type="VARCHAR(765)">
 				<constraints nullable="false" />
 			</column>
 			<column name="QUANTITY" type="DECIMAL(19, 2)">
@@ -286,19 +286,19 @@
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-16">
 		<createTable tableName="gnuob_orders">
-			<column name="BILLING_AGREEMENT_ID" type="VARCHAR(255)" />
+			<column name="BILLING_AGREEMENT_ID" type="VARCHAR(20)" />
 			<column name="CHECKOUT_STATUS" type="VARCHAR(255)" />
-			<column name="CUSTOM" type="TEXT" />
+			<column name="CUSTOM" type="VARCHAR(255)" />
 			<column name="DISCOUNT_TOTAL" type="DECIMAL(19, 2)" />
 			<column name="EXTRA_AMOUNT" type="DECIMAL(19, 2)">
 				<constraints nullable="false" />
 			</column>
-			<column name="GIFT_MESSAGE" type="TEXT" />
+			<column name="GIFT_MESSAGE" type="VARCHAR(150)" />
 			<column name="GIFT_MESSAGE_ENABLE" type="BIT(1)" />
 			<column name="GIFT_RECEIPT_ENABLE" type="BIT(1)" />
 			<column name="GIFT_WRAP_AMOUNT" type="DECIMAL(19, 2)" />
 			<column name="GIFT_WRAP_ENABLE" type="BIT(1)" />
-			<column name="GIFT_WRAP_NAME" type="VARCHAR(255)" />
+			<column name="GIFT_WRAP_NAME" type="VARCHAR(25)" />
 			<column name="HANDLING_TOTAL" type="DECIMAL(19, 2)">
 				<constraints nullable="false" />
 			</column>
@@ -307,10 +307,10 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="ITEM_TOTAL" type="DECIMAL(19, 2)" />
-			<column name="NOTE" type="TEXT" />
-			<column name="NOTE_TEXT" type="TEXT" />
-			<column name="ORDER_DESCRIPTION" type="TEXT" />
-			<column name="ORDER_ID" type="VARCHAR(255)">
+			<column name="NOTE" type="VARCHAR(165)" />
+			<column name="NOTE_TEXT" type="VARCHAR(255)" />
+			<column name="ORDER_DESCRIPTION" type="VARCHAR(127)" />
+			<column name="ORDER_ID" type="VARCHAR(64)">
 				<constraints nullable="false" />
 			</column>
 			<column name="ORDER_TOTAL" type="DECIMAL(19, 2)" />
@@ -319,14 +319,12 @@
 			</column>
 			<column name="SHIPPING_TOTAL" type="DECIMAL(19, 2)" />
 			<column name="TAX_TOTAL" type="DECIMAL(19, 2)" />
-			<column name="TOKEN" type="VARCHAR(255)" />
-			<column name="TRANSACTION_ID" type="VARCHAR(255)" />
+			<column name="TOKEN" type="VARCHAR(40)" />
+			<column name="TRANSACTION_ID" type="VARCHAR(64)" />
 			<column name="ID" type="BIGINT(19)">
 				<constraints nullable="false" />
 			</column>
-			<column name="contract_ID" type="BIGINT(19)">
-				<constraints nullable="false" />
-			</column>
+			<column name="contract_ID" type="BIGINT(19)" />
 			<column name="invoice_ID" type="BIGINT(19)">
 				<constraints nullable="false" />
 			</column>
@@ -351,32 +349,32 @@
 			<column name="CREATION" type="datetime" />
 			<column name="MODIFICATION" type="datetime" />
 			<column name="VERSION" type="INT(10)" />
-			<column name="EXCHANGE_RATE" type="VARCHAR(255)" />
+			<column name="EXCHANGE_RATE" type="VARCHAR(17)" />
 			<column name="FEE_AMOUNT" type="DECIMAL(19, 2)" />
 			<column name="GROSS_AMOUNT" type="DECIMAL(19, 2)">
 				<constraints nullable="false" />
 			</column>
-			<column name="HOLD_DECISION" type="VARCHAR(255)" />
+			<column name="HOLD_DECISION" type="VARCHAR(20)" />
 			<column name="INSTALLMENT_COUNT" type="DECIMAL(19, 2)" />
 			<column name="PAYMENT_DATE" type="date" />
-			<column name="PAYMENT_REQUEST_ID" type="VARCHAR(255)" />
-			<column name="PAYMENT_STATUS" type="VARCHAR(255)">
+			<column name="PAYMENT_REQUEST_ID" type="VARCHAR(127)" />
+			<column name="PAYMENT_STATUS" type="VARCHAR(20)">
 				<constraints nullable="false" />
 			</column>
-			<column name="PAYMENT_TYPE" type="VARCHAR(255)">
+			<column name="PAYMENT_TYPE" type="VARCHAR(20)">
 				<constraints nullable="false" />
 			</column>
-			<column name="PENDING_REASON" type="VARCHAR(255)" />
-			<column name="PROTECTION_ELIGIBILITY_TYPE" type="VARCHAR(255)" />
-			<column name="REASON_CODE" type="VARCHAR(255)" />
+			<column name="PENDING_REASON" type="VARCHAR(20)" />
+			<column name="PROTECTION_ELIGIBILITY_TYPE" type="VARCHAR(20)" />
+			<column name="REASON_CODE" type="VARCHAR(20)" />
 			<column name="SETTLE_AMOUNT" type="DECIMAL(19, 2)" />
-			<column name="STORE_ID" type="VARCHAR(255)" />
+			<column name="STORE_ID" type="VARCHAR(20)" />
 			<column name="TAX_AMOUNT" type="DECIMAL(19, 2)" />
-			<column name="TERMINAL_ID" type="VARCHAR(255)" />
-			<column name="TRANSACTION_ID" type="VARCHAR(255)">
+			<column name="TERMINAL_ID" type="VARCHAR(20)" />
+			<column name="TRANSACTION_ID" type="VARCHAR(64)">
 				<constraints nullable="false" />
 			</column>
-			<column name="TRANSACTION_TYPE" type="VARCHAR(255)">
+			<column name="TRANSACTION_TYPE" type="VARCHAR(20)">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
@@ -389,13 +387,13 @@
 			<column name="CREATION" type="datetime" />
 			<column name="MODIFICATION" type="datetime" />
 			<column name="VERSION" type="INT(10)" />
-			<column name="GROUP" type="VARCHAR(255)">
+			<column name="GROUP" type="VARCHAR(127)">
 				<constraints nullable="false" />
 			</column>
-			<column name="OTHERS" type="VARCHAR(255)">
+			<column name="OTHERS" type="VARCHAR(127)">
 				<constraints nullable="false" />
 			</column>
-			<column name="OWNER" type="VARCHAR(255)">
+			<column name="OWNER" type="VARCHAR(127)">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
@@ -406,28 +404,28 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="BESTSELLERS" type="BIT(1)" />
-			<column name="DESCRIPTION" type="TEXT">
+			<column name="DESCRIPTION" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
 			<column name="DISCOUNT" type="DECIMAL(19, 2)">
 				<constraints nullable="false" />
 			</column>
 			<column name="ITEM_HEIGHT" type="DECIMAL(19, 2)" />
-			<column name="ITEM_HEIGHT_UNIT" type="VARCHAR(255)" />
+			<column name="ITEM_HEIGHT_UNIT" type="VARCHAR(20)" />
 			<column name="ITEM_LENGTH" type="DECIMAL(19, 2)" />
-			<column name="ITEM_LENGTH_UNIT" type="VARCHAR(255)" />
-			<column name="ITEM_URL" type="VARCHAR(255)" />
+			<column name="ITEM_LENGTH_UNIT" type="VARCHAR(20)" />
+			<column name="ITEM_URL" type="VARCHAR(20)" />
 			<column name="ITEM_WEIGHT" type="DECIMAL(19, 2)">
 				<constraints nullable="false" />
 			</column>
-			<column name="ITEM_WEIGHT_UNIT" type="VARCHAR(255)" />
+			<column name="ITEM_WEIGHT_UNIT" type="VARCHAR(20)" />
 			<column name="ITEM_WIDTH" type="DECIMAL(19, 2)" />
-			<column name="ITEM_WIDTH_UNIT" type="VARCHAR(255)" />
+			<column name="ITEM_WIDTH_UNIT" type="VARCHAR(20)" />
 			<column name="LATEST_COLLECTION" type="BIT(1)" />
-			<column name="NAME" type="VARCHAR(255)">
+			<column name="NAME" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
-			<column name="NUMBER" type="VARCHAR(255)">
+			<column name="NUMBER" type="VARCHAR(765)">
 				<constraints nullable="false" />
 			</column>
 			<column name="RATING" type="INT(10)" />
@@ -468,13 +466,13 @@
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-23">
 		<createTable tableName="gnuob_settings">
-			<column name="DESCRIPTION" type="TEXT">
+			<column name="DESCRIPTION" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
-			<column name="PROPERTY" type="VARCHAR(255)">
+			<column name="PROPERTY" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
-			<column name="VALUE" type="VARCHAR(255)">
+			<column name="VALUE" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
 			<column name="ID" type="BIGINT(19)">
@@ -490,7 +488,7 @@
 			<column name="CREATION" type="datetime" />
 			<column name="MODIFICATION" type="datetime" />
 			<column name="VERSION" type="INT(10)" />
-			<column name="SHIPMENT_TYPE" type="VARCHAR(255)" />
+			<column name="SHIPMENT_TYPE" type="VARCHAR(128)" />
 			<column name="address_ID" type="BIGINT(19)">
 				<constraints nullable="false" />
 			</column>
@@ -498,8 +496,8 @@
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-25">
 		<createTable tableName="gnuob_sites">
-			<column name="DESCRIPTION" type="TEXT" />
-			<column name="NAME" type="VARCHAR(255)">
+			<column name="DESCRIPTION" type="VARCHAR(128)" />
+			<column name="NAME" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
 			<column name="ID" type="BIGINT(19)">
@@ -534,10 +532,10 @@
 			<column name="CREATION" type="datetime" />
 			<column name="MODIFICATION" type="datetime" />
 			<column name="VERSION" type="INT(10)" />
-			<column name="DESCRIPTION" type="TEXT">
+			<column name="DESCRIPTION" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
-			<column name="NAME" type="VARCHAR(255)">
+			<column name="NAME" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
 			<column name="POSITION" type="INT(10)" />
@@ -565,17 +563,17 @@
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-30">
 		<createTable tableName="gnuob_users">
-			<column name="ACCESS" type="VARCHAR(255)">
+			<column name="ACCESS" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
-			<column name="DESCRIPTION" type="TEXT" />
-			<column name="NAME" type="VARCHAR(255)">
+			<column name="DESCRIPTION" type="VARCHAR(128)" />
+			<column name="NAME" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
-			<column name="PASSWORD" type="VARCHAR(255)">
+			<column name="PASSWORD" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
-			<column name="ROLE" type="VARCHAR(255)">
+			<column name="ROLE" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
 			<column name="ROOT" type="BIT(1)" />
@@ -687,9 +685,6 @@
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-60">
 		<addUniqueConstraint columnNames="contents_ID" constraintName="UK_b5iar01th4k7cog5quqfoyxnd" deferrable="false" disabled="false" initiallyDeferred="false" tableName="gnuob_sub_categories_gnuob_contents" />
-	</changeSet>
-	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-61">
-		<addUniqueConstraint columnNames="contract_ID" constraintName="UK_ba8pxif47k3np4cb3lc5qtb3k" deferrable="false" disabled="false" initiallyDeferred="false" tableName="gnuob_orders" />
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-62">
 		<addUniqueConstraint columnNames="stock_ID" constraintName="UK_c1t1by48kgdhqjmx7bu15djbl" deferrable="false" disabled="false" initiallyDeferred="false" tableName="gnuob_products" />

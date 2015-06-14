@@ -71,8 +71,6 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
       Criteria criteria = session.createCriteria(type.getClass());
 
       criteria.add(Restrictions.eq("id", id));
-      criteria.setFirstResult(0);
-      criteria.setMaxResults(1);
 
       criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 

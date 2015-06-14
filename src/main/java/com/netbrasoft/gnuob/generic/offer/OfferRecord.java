@@ -35,7 +35,7 @@ public class OfferRecord extends Type {
    @Column(name = "AMOUNT")
    private BigDecimal amount;
 
-   @Column(name = "DESCRIPTION", columnDefinition = "TEXT")
+   @Column(name = "DESCRIPTION")
    private String description;
 
    @Column(name = "NUMBER")
@@ -105,7 +105,7 @@ public class OfferRecord extends Type {
    @XmlElement(name = "discount")
    public BigDecimal getDiscount() {
       if (product != null && discount == null) {
-         discount = product.getItemHeight();
+         discount = product.getDiscount();
       }
       return discount;
    }
@@ -352,5 +352,4 @@ public class OfferRecord extends Type {
    public void setTax(BigDecimal tax) {
       this.tax = tax;
    }
-
 }

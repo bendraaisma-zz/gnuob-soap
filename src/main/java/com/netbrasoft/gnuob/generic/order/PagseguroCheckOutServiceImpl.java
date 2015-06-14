@@ -4,13 +4,17 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.ejb.Stateless;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
+
+import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
@@ -26,8 +30,6 @@ import br.com.uol.pagseguro.properties.PagSeguroConfig;
 import br.com.uol.pagseguro.service.TransactionSearchService;
 import br.com.uol.pagseguro.service.checkout.CheckoutService;
 
-import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
-
 @Stateless(name = "PagseguroCheckOutServiceImpl")
 public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutService<O> {
 
@@ -35,17 +37,14 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
    private static final String PAGSEGURO_EMAIL_PROPERTY = "pagseguro.email";
    private static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY = "pagseguro.production.token";
    private static final String PAGSEGURO_SANDBOX_TOKEN_PROPERTY = "pagseguro.sandbox.token";
-   private static final String PAGSEGURO_CURRENCY_PROPERTY = "pagseguro.currency.id";
    private static final String GNUOB_SITE_PROPERTY_VALUE = "https://www.netbrasoft.com";
    private static final String PAGSEGURO_EMAIL_PROPERTY_VALUE = "badraaisma@msn.com";
    private static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE = "NO_PRODUCTION_TOKEN";
    private static final String PAGSEGURO_SANDBOX_TOKEN_PROPERTY_VALUE = "007D4EDFF33042E79EC7B8039B5F7FCE";
-   private static final String PAGSEGURO_CURRENCY_PROPERTY_VALUE = "BRL";
    private static final String EMAIL_PROPERTY = System.getProperty(PAGSEGURO_EMAIL_PROPERTY, PAGSEGURO_EMAIL_PROPERTY_VALUE);
    private static final String PRODUCTION_TOKEN_PROPERTY = System.getProperty(PAGSEGURO_PRODUCTION_TOKEN_PROPERTY, PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE);
    private static final String SANDBOX_TOKEN_PROPERTY = System.getProperty(PAGSEGURO_SANDBOX_TOKEN_PROPERTY, PAGSEGURO_SANDBOX_TOKEN_PROPERTY_VALUE);
    private static final String NOTIFICATION_URL_PROPERTY = System.getProperty(GNUOB_SITE_PROPERTY, GNUOB_SITE_PROPERTY_VALUE);
-   private static final String CURRENCY_PROPERTY = System.getProperty(PAGSEGURO_CURRENCY_PROPERTY, PAGSEGURO_CURRENCY_PROPERTY_VALUE);
 
    public PagseguroCheckOutServiceImpl() {
       if (!PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE.equals(PRODUCTION_TOKEN_PROPERTY)) {
@@ -66,7 +65,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
       addressType.setCity(address.getCityName());
       addressType.setStreet(address.getStreet1());
       addressType.setComplement(address.getComplement());
-      addressType.setCountry(address.getCountry());
+      addressType.setCountry(address.getCountry().replace("_", ""));
       address.setDistrict(address.getDistrict());
       addressType.setNumber(address.getNumber());
       addressType.setPostalCode(address.getPostalCode());
@@ -75,7 +74,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
    }
 
    private void doAddress(com.netbrasoft.gnuob.generic.customer.Address address, Address addressType) {
-      address.setCountry(addressType.getCountry());
+      address.setCountry("_" + addressType.getCountry());
       address.setStateOrProvince(addressType.getState());
       address.setCityName(addressType.getCity());
       address.setPostalCode(addressType.getPostalCode());
@@ -90,7 +89,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
 
       // set checkout request fields.
       Checkout checkout = new Checkout();
-      checkout.setCurrency(Currency.valueOf(CURRENCY_PROPERTY));
+      checkout.setCurrency(Currency.valueOf(NumberFormat.getCurrencyInstance(Locale.getDefault()).getCurrency().getCurrencyCode()));
       checkout.setExtraAmount(order.getExtraAmount().setScale(2));
       checkout.setNotificationURL(NOTIFICATION_URL_PROPERTY);
       checkout.setRedirectURL(NOTIFICATION_URL_PROPERTY);
@@ -159,7 +158,6 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
       item.setQuantity(orderRecord.getQuantity().intValue());
       item.setShippingCost(orderRecord.getShippingCost());
       item.setWeight(orderRecord.getItemWeight().longValue());
-      item.setDescription(orderRecord.getDescription());
       return item;
    }
 

@@ -14,10 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.security.Access;
@@ -32,7 +30,7 @@ public class Order extends Access {
    protected static final String ENTITY = "Order";
    protected static final String TABLE = "GNUOB_ORDERS";
 
-   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, optional = false)
+   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
    private Contract contract;
 
    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -53,10 +51,10 @@ public class Order extends Access {
    @Column(name = "BILLING_AGREEMENT_ID")
    private String billingAgreementId;
 
-   @Column(name = "ORDER_DESCRIPTION", columnDefinition = "TEXT")
+   @Column(name = "ORDER_DESCRIPTION")
    private String orderDescription;
 
-   @Column(name = "NOTE_TEXT", columnDefinition = "TEXT")
+   @Column(name = "NOTE_TEXT")
    private String noteText;
 
    @Column(name = "TOKEN")
@@ -70,6 +68,9 @@ public class Order extends Access {
 
    @Column(name = "ITEM_TOTAL")
    private BigDecimal itemTotal;
+
+   @Column(name = "MAX_TOTAL")
+   private BigDecimal maxTotal;
 
    @Column(name = "TAX_TOTAL")
    private BigDecimal taxTotal;
@@ -92,16 +93,16 @@ public class Order extends Access {
    @Column(name = "INSURANCE_OPTION_OFFERED")
    private Boolean insuranceOptionOffered;
 
-   @Column(name = "CUSTOM", columnDefinition = "TEXT")
+   @Column(name = "CUSTOM")
    private String custom;
 
-   @Column(name = "NOTE", columnDefinition = "TEXT")
+   @Column(name = "NOTE")
    private String note;
 
    @Column(name = "CHECKOUT_STATUS")
    private String checkoutStatus;
 
-   @Column(name = "GIFT_MESSAGE", columnDefinition = "TEXT")
+   @Column(name = "GIFT_MESSAGE")
    private String giftMessage;
 
    @Column(name = "GIFT_RECEIPT_ENABLE")
@@ -157,6 +158,10 @@ public class Order extends Access {
 
    @XmlElement(name = "extraAmount", required = true)
    public BigDecimal getExtraAmount() {
+      if (extraAmount == null) {
+         extraAmount = getHandlingTotal().add(getTaxTotal()).add(getInsuranceTotal());
+      }
+
       return extraAmount;
    }
 
@@ -222,10 +227,13 @@ public class Order extends Access {
       return itemTotal;
    }
 
-   @XmlTransient
-   @Transient
+   @XmlElement(name = "maxTotal")
    public BigDecimal getMaxTotal() {
-      return getItemTotal().add(getTaxTotal()).add(handlingTotal).add(insuranceTotal).add(getShippingTotal()).add(shippingDiscount).add(extraAmount).add(getDiscountTotal());
+      if (maxTotal == null) {
+         maxTotal = getOrderTotal();
+      }
+
+      return maxTotal;
    }
 
    @XmlElement(name = "note")
@@ -251,7 +259,7 @@ public class Order extends Access {
    @XmlElement(name = "orderTotal")
    public BigDecimal getOrderTotal() {
       if (orderTotal == null) {
-         orderTotal = getItemTotal().add(getTaxTotal());
+         orderTotal = getItemTotal().add(getShippingTotal()).subtract(getShippingDiscount()).add(getExtraAmount());
       }
       return orderTotal;
    }
@@ -314,6 +322,8 @@ public class Order extends Access {
       getShippingTotal();
       getOrderTotal();
       getItemTotal();
+      getMaxTotal();
+      getDiscountTotal();
    }
 
    public void setBillingAgreementId(String billingAgreementId) {
@@ -382,6 +392,10 @@ public class Order extends Access {
 
    public void setItemTotal(BigDecimal itemTotal) {
       this.itemTotal = itemTotal;
+   }
+
+   public void setMaxTotal(BigDecimal maxTotal) {
+      this.maxTotal = maxTotal;
    }
 
    public void setNote(String note) {
