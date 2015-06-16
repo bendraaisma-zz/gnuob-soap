@@ -12,7 +12,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -34,6 +36,7 @@ public class Order extends Access {
    private Contract contract;
 
    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, fetch = FetchType.EAGER)
+   @OrderBy("position asc")
    private Set<OrderRecord> records = new HashSet<OrderRecord>();
 
    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true)
@@ -312,11 +315,23 @@ public class Order extends Access {
       return transactionId;
    }
 
+   private void positionRecords() {
+      int index = 0;
+
+      for (OrderRecord record : records) {
+         record.setPosition(Integer.valueOf(index++));
+      }
+   }
+
    @PrePersist
    protected void prePersistOrder() {
+      preUpdateType();
+
       if (orderId == null || "".equals(orderId.trim())) {
          orderId = UUID.randomUUID().toString();
       }
+
+      positionRecords();
 
       getTaxTotal();
       getShippingTotal();
@@ -324,6 +339,13 @@ public class Order extends Access {
       getItemTotal();
       getMaxTotal();
       getDiscountTotal();
+   }
+
+   @PreUpdate
+   protected void preUpdateOrder() {
+      preUpdateType();
+
+      positionRecords();
    }
 
    public void setBillingAgreementId(String billingAgreementId) {

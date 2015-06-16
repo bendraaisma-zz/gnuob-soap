@@ -139,7 +139,7 @@
 			<column name="ID" type="BIGINT(19)">
 				<constraints nullable="false" />
 			</column>
-			<column name="address_ID" type="BIGINT(19)"/>
+			<column name="address_ID" type="BIGINT(19)" />
 		</createTable>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-9">
@@ -236,9 +236,7 @@
 			<column name="ID" type="BIGINT(19)">
 				<constraints nullable="false" />
 			</column>
-			<column name="contract_ID" type="BIGINT(19)">
-				<constraints nullable="false" />
-			</column>
+			<column name="contract_ID" type="BIGINT(19)" />
 		</createTable>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-14">

@@ -45,6 +45,10 @@ public class Product extends Access {
    @OrderBy("position asc")
    private Set<Content> contents = new HashSet<Content>();
 
+   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+   @OrderBy("position asc")
+   private Set<Option> options = new HashSet<Option>();
+
    @Column(name = "NAME", nullable = false)
    private String name;
 
@@ -189,6 +193,10 @@ public class Product extends Access {
       return number;
    }
 
+   public Set<Option> getOptions() {
+      return options;
+   }
+
    @XmlElement(name = "rating")
    public Integer getRating() {
       return rating;
@@ -226,6 +234,14 @@ public class Product extends Access {
       }
    }
 
+   private void positionOptions() {
+      int position = 0;
+
+      for (Option option : options) {
+         option.setPosition(Integer.valueOf(position++));
+      }
+   }
+
    private void positionSubCategories() {
       int position = 0;
 
@@ -235,10 +251,21 @@ public class Product extends Access {
    }
 
    @PrePersist
-   @PreUpdate
-   protected void prePersistUpdateProduct() {
+   protected void prePersistProduct() {
+      prePersistType();
+
       positionSubCategories();
       positionContents();
+      positionOptions();
+   }
+
+   @PreUpdate
+   protected void preUpdateProduct() {
+      preUpdateType();
+
+      positionSubCategories();
+      positionContents();
+      positionOptions();
    }
 
    public void setAmount(BigDecimal amount) {
@@ -307,6 +334,10 @@ public class Product extends Access {
 
    public void setNumber(String number) {
       this.number = number;
+   }
+
+   public void setOptions(Set<Option> options) {
+      this.options = options;
    }
 
    public void setRating(Integer rating) {

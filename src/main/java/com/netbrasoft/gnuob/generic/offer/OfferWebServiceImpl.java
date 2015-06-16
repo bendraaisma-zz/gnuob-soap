@@ -9,10 +9,14 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import org.hibernate.criterion.Example;
+import org.hibernate.criterion.Restrictions;
+
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.GenericTypeWebService;
 import com.netbrasoft.gnuob.generic.OrderBy;
 import com.netbrasoft.gnuob.generic.Paging;
+import com.netbrasoft.gnuob.generic.Parameter;
 import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.customer.Customer;
 import com.netbrasoft.gnuob.generic.security.MetaData;
@@ -40,6 +44,9 @@ public class OfferWebServiceImpl<O extends Offer> implements GenericTypeWebServi
          if (offer.getContract() != null) {
             securedGenericCustomerService.read(metadata, offer.getContract().getCustomer());
             securedGenericContractService.read(metadata, offer.getContract());
+
+            Parameter parameter = new Parameter("contract", Restrictions.or(Example.create(offer.getContract())));
+            return securedGenericOfferService.count(metadata, offer, parameter);
          }
          return securedGenericOfferService.count(metadata, offer);
       } catch (Exception e) {
@@ -68,6 +75,9 @@ public class OfferWebServiceImpl<O extends Offer> implements GenericTypeWebServi
          if (offer.getContract() != null) {
             securedGenericCustomerService.read(metadata, offer.getContract().getCustomer());
             securedGenericContractService.read(metadata, offer.getContract());
+
+            Parameter parameter = new Parameter("contract", Restrictions.or(Example.create(offer.getContract())));
+            return securedGenericOfferService.find(metadata, offer, paging, orderBy, parameter);
          }
          return securedGenericOfferService.find(metadata, offer, paging, orderBy);
       } catch (Exception e) {

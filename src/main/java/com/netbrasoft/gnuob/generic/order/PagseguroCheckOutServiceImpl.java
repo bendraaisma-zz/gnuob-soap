@@ -33,18 +33,21 @@ import br.com.uol.pagseguro.service.checkout.CheckoutService;
 @Stateless(name = "PagseguroCheckOutServiceImpl")
 public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutService<O> {
 
-   private static final String GNUOB_SITE_PROPERTY = "gnuob.site";
+   private static final String GNUOB_SITE_NOTIFICATION_PROPERTY = "gnuob.site.notification";
+   private static final String GNUOB_SITE_REDIRECT_PROPERTY = "gnuob.site.redirect";
    private static final String PAGSEGURO_EMAIL_PROPERTY = "pagseguro.email";
    private static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY = "pagseguro.production.token";
    private static final String PAGSEGURO_SANDBOX_TOKEN_PROPERTY = "pagseguro.sandbox.token";
-   private static final String GNUOB_SITE_PROPERTY_VALUE = "https://www.netbrasoft.com";
+   private static final String GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE = "http://localhost:8080/notification.html";
+   private static final String GNUOB_SITE_REDIRECT_PROPERTY_VALUE = "http://localhost:8080/confirmation.html";
    private static final String PAGSEGURO_EMAIL_PROPERTY_VALUE = "badraaisma@msn.com";
    private static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE = "NO_PRODUCTION_TOKEN";
    private static final String PAGSEGURO_SANDBOX_TOKEN_PROPERTY_VALUE = "007D4EDFF33042E79EC7B8039B5F7FCE";
    private static final String EMAIL_PROPERTY = System.getProperty(PAGSEGURO_EMAIL_PROPERTY, PAGSEGURO_EMAIL_PROPERTY_VALUE);
    private static final String PRODUCTION_TOKEN_PROPERTY = System.getProperty(PAGSEGURO_PRODUCTION_TOKEN_PROPERTY, PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE);
    private static final String SANDBOX_TOKEN_PROPERTY = System.getProperty(PAGSEGURO_SANDBOX_TOKEN_PROPERTY, PAGSEGURO_SANDBOX_TOKEN_PROPERTY_VALUE);
-   private static final String NOTIFICATION_URL_PROPERTY = System.getProperty(GNUOB_SITE_PROPERTY, GNUOB_SITE_PROPERTY_VALUE);
+   private static final String NOTIFICATION_URL_PROPERTY = System.getProperty(GNUOB_SITE_NOTIFICATION_PROPERTY, GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE);
+   private static final String REDIRECT_URL_PROPERTY = System.getProperty(GNUOB_SITE_REDIRECT_PROPERTY, GNUOB_SITE_REDIRECT_PROPERTY_VALUE);
 
    public PagseguroCheckOutServiceImpl() {
       if (!PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE.equals(PRODUCTION_TOKEN_PROPERTY)) {
@@ -92,7 +95,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
       checkout.setCurrency(Currency.valueOf(NumberFormat.getCurrencyInstance(Locale.getDefault()).getCurrency().getCurrencyCode()));
       checkout.setExtraAmount(order.getExtraAmount().setScale(2));
       checkout.setNotificationURL(NOTIFICATION_URL_PROPERTY);
-      checkout.setRedirectURL(NOTIFICATION_URL_PROPERTY);
+      checkout.setRedirectURL(REDIRECT_URL_PROPERTY);
       checkout.setReference(order.getOrderId());
 
       // set checkout shipping request details field..

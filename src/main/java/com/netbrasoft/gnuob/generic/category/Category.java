@@ -35,7 +35,7 @@ public class Category extends Access {
    @Column(name = "NAME", nullable = false)
    private String name;
 
-   @Column(name = "DESCRIPTION", nullable = false)
+   @Column(name = "DESCRIPTION")
    private String description;
 
    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
@@ -90,8 +90,17 @@ public class Category extends Access {
    }
 
    @PrePersist
+   protected void prePersistCategory() {
+      prePersistType();
+
+      positionSubCategories();
+      positionContents();
+   }
+
    @PreUpdate
-   protected void prePersistUpdateCategory() {
+   protected void preUpdateCategory() {
+      preUpdateType();
+
       positionSubCategories();
       positionContents();
    }

@@ -94,8 +94,15 @@ public class SubCategory extends Type {
    }
 
    @PrePersist
+   protected void prePersistSubCategory() {
+      prePersistType();
+      positionSubCategories();
+      positionContents();
+   }
+
    @PreUpdate
-   protected void prePersistUpdateSubCategory() {
+   protected void preUpdateSubCategory() {
+      preUpdateType();
       positionSubCategories();
       positionContents();
    }

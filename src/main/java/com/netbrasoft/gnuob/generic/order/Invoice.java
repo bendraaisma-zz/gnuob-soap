@@ -13,7 +13,9 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -36,6 +38,7 @@ public class Invoice extends Type {
    private String invoiceId;
 
    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, fetch = FetchType.EAGER)
+   @OrderBy("position asc")
    private Set<Payment> payments = new HashSet<Payment>();
 
    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, optional = false)
@@ -59,11 +62,30 @@ public class Invoice extends Type {
       return payments;
    }
 
+   private void positionPayments() {
+      int index = 0;
+
+      for (Payment payment : payments) {
+         payment.setPosition(Integer.valueOf(index++));
+      }
+   }
+
    @PrePersist
-   public void prePersistInvoiceId() {
+   protected void prePersistInvoice() {
+      prePersistType();
+
       if (invoiceId == null || "".equals(invoiceId.trim())) {
          invoiceId = UUID.randomUUID().toString();
       }
+
+      positionPayments();
+   }
+
+   @PreUpdate
+   protected void preUpdateOrder() {
+      preUpdateType();
+
+      positionPayments();
    }
 
    public void setAddress(Address address) {
@@ -77,5 +99,4 @@ public class Invoice extends Type {
    public void setPayments(Set<Payment> payments) {
       this.payments = payments;
    }
-
 }

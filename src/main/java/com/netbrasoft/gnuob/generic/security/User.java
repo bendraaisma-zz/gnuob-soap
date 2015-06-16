@@ -104,8 +104,18 @@ public class User extends Access {
    }
 
    @PrePersist
+   protected void prePersistUser() {
+      prePersistType();
+
+      if (!(password.length() == 62 && password.matches("^[0-9A-F]{16}:\\d{4}:[0-9A-F]{40}"))) {
+         throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't contain a valid password, verify that the given password is valid", name));
+      }
+   }
+
    @PreUpdate
-   protected void prePersistUpdateUser() {
+   protected void preUpdateUser() {
+      preUpdateType();
+
       if (!(password.length() == 62 && password.matches("^[0-9A-F]{16}:\\d{4}:[0-9A-F]{40}"))) {
          throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't contain a valid password, verify that the given password is valid", name));
       }

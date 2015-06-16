@@ -24,10 +24,10 @@
 		<version.jboss.maven.plugin>7.4.Final</version.jboss.maven.plugin>
 		<version.springframework.plugin>4.1.0.RELEASE</version.springframework.plugin>
 		<version.surefire.plugin>2.10</version.surefire.plugin>
-		<version.org.apache.cxf>3.0.4</version.org.apache.cxf>
+		<version.org.apache.cxf>3.0.5</version.org.apache.cxf>
 		<version.javasimon>4.0.1</version.javasimon>
 		<version.PBKDF2>1.1.0</version.PBKDF2>
-		<version.picketbox>4.0.21.Final</version.picketbox>
+		<version.picketbox>4.9.2.Final</version.picketbox>
 
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -38,7 +38,7 @@
 			<dependency>
 				<groupId>org.wildfly.bom</groupId>
 				<artifactId>jboss-javaee-7.0-wildfly-with-tools</artifactId>
-				<version>9.0.0.CR1</version>
+				<version>9.0.0.CR2</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>

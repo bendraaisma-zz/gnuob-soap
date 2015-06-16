@@ -56,27 +56,30 @@ import ebay.apis.eblbasecomponents.UserIdPasswordType;
 @Stateless(name = "PayPalExpressCheckOutServiceImpl")
 public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckOutService<O> {
 
-   private static final String GNUOB_SITE_PROPERTY = "gnuob.site";
+   private static final String GNUOB_SITE_NOTIFICATION_PROPERTY = "gnuob.site.notification";
+   private static final String GNUOB_SITE_REDIRECT_PROPERTY = "gnuob.site.redirect";
+   private static final String GNUOB_SITE_CANCEL_PROPERTY = "gnuob.site.cancel";
    private static final String PAYPAL_SITE_PROPERTY = "paypal.site";
    private static final String PAYPAL_SUBJECT_PROPERTY = "paypal.subject";
    private static final String PAYPAL_SIGNATURE_PROPERTY = "paypal.signature";
    private static final String PAYPAL_PASSWORD_PROPERTY = "paypal.password";
    private static final String PAYPAL_USERNAME_PROPERTY = "paypal.username";
    private static final String PAYPAL_VERSION_PROPERTY = "paypal.version";
-   private static final String PAYPAL_CURRENCY_PROPERTY = "paypal.currency.id";
    private static final String PAYPAL_SERVICE_NUMBER_PROPERTY = "paypal.serviceNumber";
-   private static final String GNUOB_SITE_PROPERTY_VALUE = "https://www.netbrasoft.com";
+   private static final String GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE = "http://localhost:8080/notification.html";
+   private static final String GNUOB_SITE_REDIRECT_PROPERTY_VALUE = "http://localhost:8080/confirmation.html";
+   private static final String GNUOB_SITE_CANCEL_PROPERTY_VALUE = "http://localhost:8080/cancel.html";
    private static final String PAYPAL_SITE_PROPERTY_VALUE = "https://api-3t.sandbox.paypal.com/2.0/";
    private static final String PAYPAL_SUBJECT_PROPERTY_VALUE = "badraaisma@msn.com";
    private static final String PAYPAL_SIGNATURE_PROPERTY_VALUE = "AFcWxV21C7fd0v3bYYYRCpSSRl31A7mmuIDpb.xZccUUAyCy0P.XGaWg";
    private static final String PAYPAL_PASSWORD_PROPERTY_VALUE = "UU9AJQJYE2CAMP54";
    private static final String PAYPAL_USERNAME_PROPERTY_VALUE = "BR2GaGfg_api1.netbrasoft.com";
-   private static final String PAYPAL_VERSION_PROPERTY_VALUE = "119.0";
-   private static final String PAYPAL_CURRENCY_PROPERTY_VALUE = "BRL";
+   private static final String PAYPAL_VERSION_PROPERTY_VALUE = "121.0";
    private static final String PAYPAL_SERVICE_NUMBER_VALUE = "-";
    private static final String VERSION_PROPERTY = System.getProperty(PAYPAL_VERSION_PROPERTY, PAYPAL_VERSION_PROPERTY_VALUE);
-   private static final String CURRENCY_ID_PROPERTY = System.getProperty(PAYPAL_CURRENCY_PROPERTY, PAYPAL_CURRENCY_PROPERTY_VALUE);
-   private static final String NOTIFY_URL_PROPERTY = System.getProperty(GNUOB_SITE_PROPERTY, GNUOB_SITE_PROPERTY_VALUE);
+   private static final String NOTIFY_URL_PROPERTY = System.getProperty(GNUOB_SITE_NOTIFICATION_PROPERTY, GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE);
+   private static final String REDIRECT_URL_PROPERTY = System.getProperty(GNUOB_SITE_REDIRECT_PROPERTY, GNUOB_SITE_REDIRECT_PROPERTY_VALUE);
+   private static final String CANCEL_URL_PROPERTY = System.getProperty(GNUOB_SITE_CANCEL_PROPERTY, GNUOB_SITE_CANCEL_PROPERTY_VALUE);
    private static final String CUSTOMER_SERVICE_NUMBER_PROPERTY = System.getProperty(PAYPAL_SERVICE_NUMBER_PROPERTY, PAYPAL_SERVICE_NUMBER_VALUE);
    private static final String SUBJECT_PROPERTY = System.getProperty(PAYPAL_SUBJECT_PROPERTY, PAYPAL_SUBJECT_PROPERTY_VALUE);
    private static final String SIGNATURE_PROPERTY = System.getProperty(PAYPAL_SIGNATURE_PROPERTY, PAYPAL_SIGNATURE_PROPERTY_VALUE);
@@ -133,7 +136,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
          if (value != null) {
             NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
             BasicAmountType basicAmountType = new BasicAmountType();
-            basicAmountType.setCurrencyID(CurrencyCodeType.valueOf(CURRENCY_ID_PROPERTY));
+            basicAmountType.setCurrencyID(CurrencyCodeType.valueOf(NumberFormat.getCurrencyInstance(Locale.getDefault()).getCurrency().getCurrencyCode()));
             basicAmountType.setValue(numberFormat.parse(numberFormat.format(value)).toString());
             return basicAmountType;
          }
@@ -574,11 +577,11 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       // URL to which the buyer's browser is returned after choosing to pay
       // with
       // PayPal. For digital goods.
-      setExpressCheckoutRequestDetailsType.setReturnURL(NOTIFY_URL_PROPERTY);
+      setExpressCheckoutRequestDetailsType.setReturnURL(REDIRECT_URL_PROPERTY);
 
       // URL to which the buyer is returned if the buyer does not approve the
       // use of PayPal to pay you. For digital goods.
-      setExpressCheckoutRequestDetailsType.setCancelURL(NOTIFY_URL_PROPERTY);
+      setExpressCheckoutRequestDetailsType.setCancelURL(CANCEL_URL_PROPERTY);
 
       // Indicates whether or not you require the buyer's shipping address on
       // file with PayPal be a confirmed address.
@@ -627,7 +630,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       setExpressCheckoutRequestDetailsType.setBuyerEmail(order.getContract().getCustomer().getBuyerEmail());
 
       // Set brand name.
-      setExpressCheckoutRequestDetailsType.setBrandName(NOTIFY_URL_PROPERTY);
+      setExpressCheckoutRequestDetailsType.setBrandName("-");
 
       // Your own invoice or tracking number.
       setExpressCheckoutRequestDetailsType.setInvoiceID(order.getInvoice().getInvoiceId());

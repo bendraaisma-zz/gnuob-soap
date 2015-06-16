@@ -80,6 +80,12 @@ public class OrderRecord extends Type {
    @Column(name = "ITEM_URL")
    private String itemUrl;
 
+   @Column(name = "`OPTION`")
+   private String option;
+
+   @Column(name = "POSITION")
+   private Integer position;
+
    @Transient
    private Product product;
 
@@ -216,6 +222,16 @@ public class OrderRecord extends Type {
       return number;
    }
 
+   @XmlElement(name = "option")
+   public String getOption() {
+      return option;
+   }
+
+   @XmlTransient
+   public Integer getPosition() {
+      return position;
+   }
+
    public Product getProduct() {
       return product;
    }
@@ -261,6 +277,8 @@ public class OrderRecord extends Type {
 
    @PrePersist
    protected void prePersistOrderRecord() {
+
+      prePersistType();
 
       if (product != null) {
          name = name == null ? product.getName() : name;
@@ -335,6 +353,14 @@ public class OrderRecord extends Type {
 
    public void setNumber(String number) {
       this.number = number;
+   }
+
+   public void setOption(String option) {
+      this.option = option;
+   }
+
+   public void setPosition(Integer position) {
+      this.position = position;
    }
 
    public void setProduct(Product product) {
