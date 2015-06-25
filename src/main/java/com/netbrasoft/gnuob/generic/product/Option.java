@@ -54,6 +54,16 @@ public class Option extends Type {
       return disabled;
    }
 
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
    @XmlElement(name = "description")
    public void setDescription(String description) {
       this.description = description;

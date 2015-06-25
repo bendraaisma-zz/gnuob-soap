@@ -168,6 +168,16 @@ public class Customer extends Access {
       return taxIdType;
    }
 
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
    public void setAddress(Address address) {
       this.address = address;
    }

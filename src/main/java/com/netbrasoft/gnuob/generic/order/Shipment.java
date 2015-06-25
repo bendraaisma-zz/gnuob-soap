@@ -45,6 +45,16 @@ public class Shipment extends Type {
       return shipmentType;
    }
 
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
    public void setAddress(Address address) {
       this.address = address;
    }

@@ -11,7 +11,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -67,11 +66,16 @@ public class Contract extends Access {
       return orders;
    }
 
-   @PrePersist
-   public void prePersistContractId() {
+   @Override
+   public void prePersist() {
       if (contractId == null || "".equals(contractId.trim())) {
          contractId = UUID.randomUUID().toString();
       }
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
    }
 
    public void setContractId(String contractId) {

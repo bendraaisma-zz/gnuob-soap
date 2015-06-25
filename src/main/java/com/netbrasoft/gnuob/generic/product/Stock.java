@@ -59,6 +59,16 @@ public class Stock extends Type {
       return quantity;
    }
 
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
    public void setMaxQuantity(BigInteger maxQuantity) {
       this.maxQuantity = maxQuantity;
    }

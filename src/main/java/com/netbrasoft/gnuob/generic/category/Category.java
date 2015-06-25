@@ -10,8 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -89,18 +87,15 @@ public class Category extends Access {
       }
    }
 
-   @PrePersist
-   protected void prePersistCategory() {
-      prePersistType();
-
+   @Override
+   public void prePersist() {
       positionSubCategories();
       positionContents();
+
    }
 
-   @PreUpdate
-   protected void preUpdateCategory() {
-      preUpdateType();
-
+   @Override
+   public void preUpdate() {
       positionSubCategories();
       positionContents();
    }

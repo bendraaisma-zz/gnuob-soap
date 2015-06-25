@@ -51,6 +51,16 @@ public class Permission extends Type {
       return owner;
    }
 
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
    public void setGroup(Rule group) {
       this.group = group;
    }

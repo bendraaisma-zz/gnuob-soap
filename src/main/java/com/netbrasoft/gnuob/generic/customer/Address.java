@@ -129,6 +129,16 @@ public class Address extends Type {
       return street2;
    }
 
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
    public void setCityName(String cityName) {
       this.cityName = cityName;
    }

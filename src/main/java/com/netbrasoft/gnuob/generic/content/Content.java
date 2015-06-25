@@ -56,6 +56,16 @@ public class Content extends Access {
       return position;
    }
 
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
    public void setData(byte[] data) {
       this.data = Base64.getEncoder().encode(data);
    }

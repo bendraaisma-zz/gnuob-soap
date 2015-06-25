@@ -182,6 +182,16 @@ public class Payment extends Type {
       return transactionType;
    }
 
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
    public void setExchangeRate(String exchangeRate) {
       this.exchangeRate = exchangeRate;
    }

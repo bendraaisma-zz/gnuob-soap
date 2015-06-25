@@ -41,6 +41,16 @@ public class Site extends Access {
       return name;
    }
 
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
    public void setDescription(String description) {
       this.description = description;
    }

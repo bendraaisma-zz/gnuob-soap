@@ -14,8 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -250,19 +248,15 @@ public class Product extends Access {
       }
    }
 
-   @PrePersist
-   protected void prePersistProduct() {
-      prePersistType();
-
+   @Override
+   public void prePersist() {
       positionSubCategories();
       positionContents();
       positionOptions();
    }
 
-   @PreUpdate
-   protected void preUpdateProduct() {
-      preUpdateType();
-
+   @Override
+   public void preUpdate() {
       positionSubCategories();
       positionContents();
       positionOptions();

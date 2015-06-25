@@ -27,7 +27,7 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="COMPLEMENT" type="VARCHAR(40)" />
-			<column name="COUNTRY" type="VARCHAR(2)">
+			<column name="COUNTRY" type="VARCHAR(40)">
 				<constraints nullable="false" />
 			</column>
 			<column name="COUNTRY_NAME" type="VARCHAR(40)" />
@@ -119,7 +119,7 @@
 			</column>
 			<column name="BUYER_MARKETING_EMAIL" type="VARCHAR(127)" />
 			<column name="CONTACT_PHONE" type="VARCHAR(20)" />
-			<column name="DATE_OF_BIRTH" type="date" />
+			<column name="DATE_OF_BIRTH" type="DATE" />
 			<column name="FIRST_NAME" type="VARCHAR(64)">
 				<constraints nullable="false" />
 			</column>

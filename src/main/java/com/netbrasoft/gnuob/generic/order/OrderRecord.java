@@ -2,13 +2,14 @@ package com.netbrasoft.gnuob.generic.order;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
+import java.util.UUID;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
@@ -86,6 +87,12 @@ public class OrderRecord extends Type {
    @Column(name = "POSITION")
    private Integer position;
 
+   @Column(name = "DELIVERY_DATE")
+   private Date deliveryDate;
+
+   @Column(name = "ORDER_RECORD_ID", nullable = false)
+   private String orderRecordId;
+
    @Transient
    private Product product;
 
@@ -98,6 +105,11 @@ public class OrderRecord extends Type {
          amount = product.getAmount().subtract(getDiscount());
       }
       return amount;
+   }
+
+   @XmlElement(name = "deliveryDate")
+   public Date getDeliveryDate() {
+      return deliveryDate;
    }
 
    @XmlElement(name = "description")
@@ -227,6 +239,11 @@ public class OrderRecord extends Type {
       return option;
    }
 
+   @XmlElement(name = "orderRecordId")
+   public String getOrderRecordId() {
+      return orderRecordId;
+   }
+
    @XmlTransient
    public Integer getPosition() {
       return position;
@@ -275,10 +292,11 @@ public class OrderRecord extends Type {
       return BigDecimal.ZERO;
    }
 
-   @PrePersist
-   protected void prePersistOrderRecord() {
-
-      prePersistType();
+   @Override
+   public void prePersist() {
+      if (orderRecordId == null || "".equals(orderRecordId.trim())) {
+         orderRecordId = UUID.randomUUID().toString();
+      }
 
       if (product != null) {
          name = name == null ? product.getName() : name;
@@ -299,8 +317,17 @@ public class OrderRecord extends Type {
       }
    }
 
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
    public void setAmount(BigDecimal amount) {
       this.amount = amount;
+   }
+
+   public void setDeliveryDate(Date deliveryDate) {
+      this.deliveryDate = deliveryDate;
    }
 
    public void setDescription(String description) {
@@ -357,6 +384,10 @@ public class OrderRecord extends Type {
 
    public void setOption(String option) {
       this.option = option;
+   }
+
+   public void setOrderRecordId(String orderRecordId) {
+      this.orderRecordId = orderRecordId;
    }
 
    public void setPosition(Integer position) {

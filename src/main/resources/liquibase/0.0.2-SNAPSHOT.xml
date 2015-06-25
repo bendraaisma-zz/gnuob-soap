@@ -176,12 +176,6 @@
 			<dropColumn tableName="gnuob_orders" columnName="MAX_TOTAL" />
 		</rollback>
 	</changeSet>
-	<changeSet id="Increase COUNTRY column for gnuob_addresses" author="Bernard Arjan Draaisma">
-		<modifyDataType tableName="gnuob_addresses" columnName="COUNTRY" newDataType="VARCHAR(20)" />
-		<rollback>
-			<modifyDataType tableName="gnuob_addresses" columnName="COUNTRY" newDataType="VARCHAR(2)" />
-		</rollback>
-	</changeSet>
 	<changeSet id="Add GNUOB_OPTIONS table" author="Bernard Arjan Draaisma">
 		<createTable tableName="GNUOB_OPTIONS">
 			<column autoIncrement="true" name="ID" type="BIGINT(19)">
@@ -298,6 +292,32 @@
 		</addColumn>
 		<rollback>
 			<dropColumn tableName="gnuob_offers" columnName="MAX_TOTAL" />
+		</rollback>
+	</changeSet>
+	<changeSet id="Adding ORDER_DATE column for orders" author="Bernard Arjan Draaisma">
+		<addColumn tableName="gnuob_orders">
+			<column name="ORDER_DATE" type="DATE" />
+		</addColumn>
+		<rollback>
+			<dropColumn tableName="gnuob_orders" columnName="ORDER_DATE" />
+		</rollback>
+	</changeSet>
+	<changeSet id="Adding DELIVERY_DATE column for order records" author="Bernard Arjan Draaisma">
+		<addColumn tableName="gnuob_order_records">
+			<column name="DELIVERY_DATE" type="DATE" />
+		</addColumn>
+		<rollback>
+			<dropColumn tableName="gnuob_order_records" columnName="DELIVERY_DATE" />
+		</rollback>
+	</changeSet>
+	<changeSet id="Adding ORDER_RECORD_ID column for order records" author="Bernard Arjan Draaisma">
+		<addColumn tableName="gnuob_order_records">
+			<column name="ORDER_RECORD_ID" type="VARCHAR(64)">
+				<constraints nullable="false" />
+			</column>
+		</addColumn>
+		<rollback>
+			<dropColumn tableName="gnuob_order_records" columnName="ORDER_RECORD_ID" />
 		</rollback>
 	</changeSet>
 </databaseChangeLog>

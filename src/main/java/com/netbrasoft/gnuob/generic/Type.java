@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
@@ -56,14 +57,25 @@ public abstract class Type implements Serializable {
       return version;
    }
 
+   @Transient
+   public abstract void prePersist();
+
    @PrePersist
    protected void prePersistType() {
       creation = new Timestamp(System.currentTimeMillis());
+      prePersist();
    }
+
+   @Transient
+   public abstract void preUpdate();
 
    @PreUpdate
    protected void preUpdateType() {
       modification = new Timestamp(System.currentTimeMillis());
+      if (creation == null) {
+         creation = new Timestamp(System.currentTimeMillis());
+      }
+      preUpdate();
    }
 
    public void setCreation(Timestamp creation) {

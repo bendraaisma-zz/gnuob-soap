@@ -1,6 +1,8 @@
 package com.netbrasoft.gnuob.generic.order;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -13,8 +15,6 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -122,6 +122,9 @@ public class Order extends Access {
 
    @Column(name = "GIFT_WRAP_AMOUNT")
    private BigDecimal giftWrapAmount;
+
+   @Column(name = "ORDER_DATE")
+   private Date orderDate;
 
    public Order() {
 
@@ -249,6 +252,11 @@ public class Order extends Access {
       return noteText;
    }
 
+   @XmlElement(name = "orderDate")
+   public Date getOrderDate() {
+      return orderDate;
+   }
+
    @XmlElement(name = "orderDescription")
    public String getOrderDescription() {
       return orderDescription;
@@ -323,16 +331,17 @@ public class Order extends Access {
       }
    }
 
-   @PrePersist
-   protected void prePersistOrder() {
-      preUpdateType();
-
+   @Override
+   public void prePersist() {
       if (orderId == null || "".equals(orderId.trim())) {
          orderId = UUID.randomUUID().toString();
       }
 
-      positionRecords();
+      if (orderDate == null) {
+         orderDate = new Date();
+      }
 
+      positionRecords();
       getTaxTotal();
       getShippingTotal();
       getOrderTotal();
@@ -341,10 +350,8 @@ public class Order extends Access {
       getDiscountTotal();
    }
 
-   @PreUpdate
-   protected void preUpdateOrder() {
-      preUpdateType();
-
+   @Override
+   public void preUpdate() {
       positionRecords();
    }
 
@@ -426,6 +433,14 @@ public class Order extends Access {
 
    public void setNoteText(String noteText) {
       this.noteText = noteText;
+   }
+
+   public void setOrderDate(Date orderDate) {
+      this.orderDate = orderDate;
+   }
+
+   public void setOrderDate(Timestamp orderDate) {
+      this.orderDate = orderDate;
    }
 
    public void setOrderDescription(String orderDescription) {

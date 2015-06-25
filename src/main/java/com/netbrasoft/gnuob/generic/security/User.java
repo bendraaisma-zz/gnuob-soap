@@ -11,8 +11,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToMany;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -103,19 +101,15 @@ public class User extends Access {
       return sites;
    }
 
-   @PrePersist
-   protected void prePersistUser() {
-      prePersistType();
-
+   @Override
+   public void prePersist() {
       if (!(password.length() == 62 && password.matches("^[0-9A-F]{16}:\\d{4}:[0-9A-F]{40}"))) {
          throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't contain a valid password, verify that the given password is valid", name));
       }
    }
 
-   @PreUpdate
-   protected void preUpdateUser() {
-      preUpdateType();
-
+   @Override
+   public void preUpdate() {
       if (!(password.length() == 62 && password.matches("^[0-9A-F]{16}:\\d{4}:[0-9A-F]{40}"))) {
          throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't contain a valid password, verify that the given password is valid", name));
       }

@@ -14,8 +14,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -70,10 +68,8 @@ public class Invoice extends Type {
       }
    }
 
-   @PrePersist
-   protected void prePersistInvoice() {
-      prePersistType();
-
+   @Override
+   public void prePersist() {
       if (invoiceId == null || "".equals(invoiceId.trim())) {
          invoiceId = UUID.randomUUID().toString();
       }
@@ -81,10 +77,8 @@ public class Invoice extends Type {
       positionPayments();
    }
 
-   @PreUpdate
-   protected void preUpdateOrder() {
-      preUpdateType();
-
+   @Override
+   public void preUpdate() {
       positionPayments();
    }
 

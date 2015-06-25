@@ -12,8 +12,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -93,16 +91,14 @@ public class SubCategory extends Type {
       }
    }
 
-   @PrePersist
-   protected void prePersistSubCategory() {
-      prePersistType();
+   @Override
+   public void prePersist() {
       positionSubCategories();
       positionContents();
    }
 
-   @PreUpdate
-   protected void preUpdateSubCategory() {
-      preUpdateType();
+   @Override
+   public void preUpdate() {
       positionSubCategories();
       positionContents();
    }

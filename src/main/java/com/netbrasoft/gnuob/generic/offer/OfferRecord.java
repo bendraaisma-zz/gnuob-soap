@@ -8,7 +8,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
@@ -275,11 +274,8 @@ public class OfferRecord extends Type {
       return BigDecimal.ZERO;
    }
 
-   @PrePersist
-   protected void prePersistOrderRecord() {
-
-      prePersistType();
-
+   @Override
+   public void prePersist() {
       if (product != null) {
          name = name == null ? product.getName() : name;
          description = description == null ? product.getDescription() : description;
@@ -297,6 +293,11 @@ public class OfferRecord extends Type {
          itemHeightUnit = itemHeightUnit == null ? product.getItemLengthUnit() : itemHeightUnit;
          itemUrl = itemUrl == null ? product.getItemUrl() : itemUrl;
       }
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
    }
 
    public void setAmount(BigDecimal amount) {
