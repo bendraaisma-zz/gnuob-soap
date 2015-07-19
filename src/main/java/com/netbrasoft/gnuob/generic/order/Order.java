@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -47,6 +48,9 @@ public class Order extends Access {
 
    @Column(name = "ORDER_ID", nullable = false)
    private String orderId;
+
+   @Transient
+   private String notificationId;
 
    @Column(name = "TRANSACTION_ID")
    private String transactionId;
@@ -155,7 +159,7 @@ public class Order extends Access {
       if (discountTotal == null) {
          discountTotal = BigDecimal.ZERO;
 
-         for (OrderRecord orderRecord : records) {
+         for (final OrderRecord orderRecord : records) {
             discountTotal = discountTotal.add(orderRecord.getDiscountTotal());
          }
       }
@@ -226,7 +230,7 @@ public class Order extends Access {
       if (itemTotal == null) {
          itemTotal = BigDecimal.ZERO;
 
-         for (OrderRecord orderRecord : records) {
+         for (final OrderRecord orderRecord : records) {
             itemTotal = itemTotal.add(orderRecord.getItemTotal());
          }
       }
@@ -250,6 +254,11 @@ public class Order extends Access {
    @XmlElement(name = "noteText")
    public String getNoteText() {
       return noteText;
+   }
+
+   @XmlElement(name = "notificationId")
+   public String getNotificationId() {
+      return notificationId;
    }
 
    @XmlElement(name = "orderDate")
@@ -294,7 +303,7 @@ public class Order extends Access {
       if (shippingTotal == null) {
          shippingTotal = BigDecimal.ZERO;
 
-         for (OrderRecord orderRecord : records) {
+         for (final OrderRecord orderRecord : records) {
             shippingTotal = shippingTotal.add(orderRecord.getShippingTotal());
          }
       }
@@ -306,7 +315,7 @@ public class Order extends Access {
       if (taxTotal == null) {
          taxTotal = BigDecimal.ZERO;
 
-         for (OrderRecord orderRecord : records) {
+         for (final OrderRecord orderRecord : records) {
             taxTotal = taxTotal.add(orderRecord.getTaxTotal());
          }
       }
@@ -326,7 +335,7 @@ public class Order extends Access {
    private void positionRecords() {
       int index = 0;
 
-      for (OrderRecord record : records) {
+      for (final OrderRecord record : records) {
          record.setPosition(Integer.valueOf(index++));
       }
    }
@@ -433,6 +442,10 @@ public class Order extends Access {
 
    public void setNoteText(String noteText) {
       this.noteText = noteText;
+   }
+
+   public void setNotificationId(String notificationId) {
+      this.notificationId = notificationId;
    }
 
    public void setOrderDate(Date orderDate) {

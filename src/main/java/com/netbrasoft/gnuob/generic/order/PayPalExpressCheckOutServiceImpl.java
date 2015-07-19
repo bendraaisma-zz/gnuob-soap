@@ -91,7 +91,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    private PayPalAPIInterfaceService payPalAPIInterfaceService;
 
    private AddressType doAddress(Address address) {
-      AddressType addressType = new AddressType();
+      final AddressType addressType = new AddressType();
       addressType.setAddressID(String.valueOf(address.getId()));
       addressType.setAddressNormalizationStatus(AddressNormalizationStatusCodeType.NORMALIZED);
       addressType.setAddressOwner(AddressOwnerCodeType.PAY_PAL);
@@ -134,14 +134,14 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    private BasicAmountType doBasicAmountType(BigDecimal value) {
       try {
          if (value != null) {
-            NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
-            BasicAmountType basicAmountType = new BasicAmountType();
+            final NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+            final BasicAmountType basicAmountType = new BasicAmountType();
             basicAmountType.setCurrencyID(CurrencyCodeType.valueOf(NumberFormat.getCurrencyInstance(Locale.getDefault()).getCurrency().getCurrencyCode()));
             basicAmountType.setValue(numberFormat.parse(numberFormat.format(value)).toString());
             return basicAmountType;
          }
          return null;
-      } catch (ParseException e) {
+      } catch (final ParseException e) {
          return null;
       }
    }
@@ -150,8 +150,8 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    public void doCheckout(O order) {
 
       // SetExpressCheckout fields.
-      SetExpressCheckoutReq setExpressCheckoutReq = new SetExpressCheckoutReq();
-      SetExpressCheckoutRequestType setExpressCheckoutRequestType = new SetExpressCheckoutRequestType();
+      final SetExpressCheckoutReq setExpressCheckoutReq = new SetExpressCheckoutReq();
+      final SetExpressCheckoutRequestType setExpressCheckoutRequestType = new SetExpressCheckoutRequestType();
       setExpressCheckoutRequestType.setVersion(VERSION_PROPERTY);
 
       // SetExpressCheckout request fields.
@@ -161,7 +161,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       setExpressCheckoutReq.setSetExpressCheckoutRequest(setExpressCheckoutRequestType);
 
       // Do SetExpressCheckout call.
-      SetExpressCheckoutResponseType setExpressCheckoutResponseType = getPayPalAPIAAInterface().setExpressCheckout(setExpressCheckoutReq);
+      final SetExpressCheckoutResponseType setExpressCheckoutResponseType = getPayPalAPIAAInterface().setExpressCheckout(setExpressCheckoutReq);
 
       if (setExpressCheckoutResponseType.getAck() == AckCodeType.SUCCESS) {
          order.setToken(setExpressCheckoutResponseType.getToken());
@@ -174,8 +174,8 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    public void doCheckoutDetails(O order) {
 
       // GetExpressCheckoutDetails Response Fields
-      GetExpressCheckoutDetailsReq getExpressCheckoutDetailsReq = new GetExpressCheckoutDetailsReq();
-      GetExpressCheckoutDetailsRequestType getExpressCheckoutDetailsRequestType = new GetExpressCheckoutDetailsRequestType();
+      final GetExpressCheckoutDetailsReq getExpressCheckoutDetailsReq = new GetExpressCheckoutDetailsReq();
+      final GetExpressCheckoutDetailsRequestType getExpressCheckoutDetailsRequestType = new GetExpressCheckoutDetailsRequestType();
       getExpressCheckoutDetailsRequestType.setVersion(VERSION_PROPERTY);
 
       // The timestamped token value that was returned by SetExpressCheckout
@@ -186,11 +186,11 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       getExpressCheckoutDetailsReq.setGetExpressCheckoutDetailsRequest(getExpressCheckoutDetailsRequestType);
 
       // Do GetExpressCheckoutDetails call.
-      GetExpressCheckoutDetailsResponseType getExpressCheckoutDetailsResponseType = getPayPalAPIAAInterface().getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
+      final GetExpressCheckoutDetailsResponseType getExpressCheckoutDetailsResponseType = getPayPalAPIAAInterface().getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
 
       if (getExpressCheckoutDetailsResponseType.getAck() == AckCodeType.SUCCESS) {
 
-         GetExpressCheckoutDetailsResponseDetailsType getExpressCheckoutDetailsResponseDetailsType = getExpressCheckoutDetailsResponseType.getGetExpressCheckoutDetailsResponseDetails();
+         final GetExpressCheckoutDetailsResponseDetailsType getExpressCheckoutDetailsResponseDetailsType = getExpressCheckoutDetailsResponseType.getGetExpressCheckoutDetailsResponseDetails();
 
          // The timestamped token value that was returned by
          // SetExpressCheckout
@@ -252,8 +252,8 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    public void doCheckoutPayment(O order) {
 
       // Do Express Checkout Payment Request Fields
-      DoExpressCheckoutPaymentReq doExpressCheckoutPaymentReq = new DoExpressCheckoutPaymentReq();
-      DoExpressCheckoutPaymentRequestType doExpressCheckoutPaymentRequestType = new DoExpressCheckoutPaymentRequestType();
+      final DoExpressCheckoutPaymentReq doExpressCheckoutPaymentReq = new DoExpressCheckoutPaymentReq();
+      final DoExpressCheckoutPaymentRequestType doExpressCheckoutPaymentRequestType = new DoExpressCheckoutPaymentRequestType();
       doExpressCheckoutPaymentRequestType.setVersion(VERSION_PROPERTY);
 
       // Do Express Checkout Payment Request Fields.
@@ -263,11 +263,11 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       doExpressCheckoutPaymentReq.setDoExpressCheckoutPaymentRequest(doExpressCheckoutPaymentRequestType);
 
       // Do Express Checkout Payment call.
-      DoExpressCheckoutPaymentResponseType doExpressCheckoutPaymentResponseType = getPayPalAPIAAInterface().doExpressCheckoutPayment(doExpressCheckoutPaymentReq);
+      final DoExpressCheckoutPaymentResponseType doExpressCheckoutPaymentResponseType = getPayPalAPIAAInterface().doExpressCheckoutPayment(doExpressCheckoutPaymentReq);
 
       if (doExpressCheckoutPaymentResponseType.getAck() == AckCodeType.SUCCESS) {
 
-         DoExpressCheckoutPaymentResponseDetailsType doExpressCheckoutPaymentResponseDetailsType = doExpressCheckoutPaymentResponseType.getDoExpressCheckoutPaymentResponseDetails();
+         final DoExpressCheckoutPaymentResponseDetailsType doExpressCheckoutPaymentResponseDetailsType = doExpressCheckoutPaymentResponseType.getDoExpressCheckoutPaymentResponseDetails();
 
          // The timestamped token value that was returned by
          // SetExpressCheckout
@@ -275,7 +275,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
          order.setToken(doExpressCheckoutPaymentResponseDetailsType.getToken());
 
          // Information about the payment.
-         for (PaymentInfoType paymentInfoType : doExpressCheckoutPaymentResponseDetailsType.getPaymentInfo()) {
+         for (final PaymentInfoType paymentInfoType : doExpressCheckoutPaymentResponseDetailsType.getPaymentInfo()) {
             order.getInvoice().getPayments().add(doPaymentInfoType(paymentInfoType));
          }
 
@@ -294,7 +294,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    }
 
    private DoExpressCheckoutPaymentRequestDetailsType doExpressCheckoutPaymentRequestDetailsType(O order) {
-      DoExpressCheckoutPaymentRequestDetailsType doExpressCheckoutPaymentRequestDetailsType = new DoExpressCheckoutPaymentRequestDetailsType();
+      final DoExpressCheckoutPaymentRequestDetailsType doExpressCheckoutPaymentRequestDetailsType = new DoExpressCheckoutPaymentRequestDetailsType();
 
       // The timestamped token value that was returned in the
       // SetExpressCheckout
@@ -343,12 +343,17 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    private MeasureType doMesureType(String unit, BigDecimal value) {
 
       if (unit != null && !unit.trim().isEmpty() && value != null) {
-         MeasureType measureType = new MeasureType();
+         final MeasureType measureType = new MeasureType();
          measureType.setUnit(unit);
          measureType.setValue(value.doubleValue());
       }
 
       return null;
+   }
+
+   @Override
+   public O doNotification(O order) {
+      return order;
    }
 
    private void doPayerInfoType(O order, PayerInfoType payerInfo) {
@@ -376,7 +381,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    }
 
    private PaymentDetailsItemType doPaymentDetailsItemType(OrderRecord orderRecord) {
-      PaymentDetailsItemType paymentDetailsItemType = new PaymentDetailsItemType();
+      final PaymentDetailsItemType paymentDetailsItemType = new PaymentDetailsItemType();
 
       paymentDetailsItemType.setName(orderRecord.getName());
       paymentDetailsItemType.setDescription(orderRecord.getDescription());
@@ -410,7 +415,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    private PaymentDetailsType doPaymentDetailsType(O order) {
 
       // Information about the payment.
-      PaymentDetailsType paymentDetailsType = new PaymentDetailsType();
+      final PaymentDetailsType paymentDetailsType = new PaymentDetailsType();
 
       // Total cost of the transaction to the buyer.
       paymentDetailsType.setOrderTotal(doBasicAmountType(order.getOrderTotal()));
@@ -452,7 +457,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       }
 
       // Details about each individual item included in the order.
-      for (OrderRecord orderRecord : order.getRecords()) {
+      for (final OrderRecord orderRecord : order.getRecords()) {
          paymentDetailsType.getPaymentDetailsItem().add(doPaymentDetailsItemType(orderRecord));
       }
 
@@ -490,8 +495,8 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       doAddressType(order.getShipment().getAddress(), paymentDetailsType.getShipToAddress());
 
       // Details about each individual item included in the order.
-      for (PaymentDetailsItemType paymentDetailsItemType : paymentDetailsType.getPaymentDetailsItem()) {
-         for (OrderRecord orderRecord : order.getRecords()) {
+      for (final PaymentDetailsItemType paymentDetailsItemType : paymentDetailsType.getPaymentDetailsItem()) {
+         for (final OrderRecord orderRecord : order.getRecords()) {
             if (paymentDetailsItemType.getNumber() != null && paymentDetailsItemType.getNumber().equalsIgnoreCase(orderRecord.getNumber())) {
                doPaymentDetailsItemType(orderRecord, paymentDetailsItemType);
                break;
@@ -503,7 +508,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    }
 
    private Payment doPaymentInfoType(PaymentInfoType paymentInfoType) {
-      Payment payment = new Payment();
+      final Payment payment = new Payment();
 
       // Unique transaction ID of the payment.
       payment.setTransactionId(paymentInfoType.getTransactionID());
@@ -566,9 +571,15 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       return payment;
    }
 
+   @Override
+   public void doRefundTransaction(O order) {
+      // TODO Auto-generated method stub
+
+   }
+
    private SetExpressCheckoutRequestDetailsType doSetExpressCheckoutRequestsDetailsType(O order) {
       // SetExpressCheckout request fields.
-      SetExpressCheckoutRequestDetailsType setExpressCheckoutRequestDetailsType = new SetExpressCheckoutRequestDetailsType();
+      final SetExpressCheckoutRequestDetailsType setExpressCheckoutRequestDetailsType = new SetExpressCheckoutRequestDetailsType();
 
       // The expected maximum total amount of the complete order, including
       // shipping cost and tax charges.
@@ -637,6 +648,12 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       return setExpressCheckoutRequestDetailsType;
    }
 
+   @Override
+   public void doTransactionDetails(O order) {
+      // TODO Auto-generated method stub
+
+   }
+
    private String getParameterErrors(List<ErrorType> errors) {
 
       final class PayPalError extends ErrorType {
@@ -654,10 +671,10 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
          }
       }
 
-      StringBuilder stringBuilder = new StringBuilder();
+      final StringBuilder stringBuilder = new StringBuilder();
 
       PayPalError payPalError = null;
-      for (ErrorType errorType : errors) {
+      for (final ErrorType errorType : errors) {
          payPalError = new PayPalError(errorType);
          stringBuilder.append(payPalError.toString());
       }
@@ -666,22 +683,22 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    }
 
    private PayPalAPIAAInterface getPayPalAPIAAInterface() {
-      PayPalAPIAAInterface port = payPalAPIInterfaceService.getPayPalAPIAA();
+      final PayPalAPIAAInterface port = payPalAPIInterfaceService.getPayPalAPIAA();
 
-      UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
+      final UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
       userIdPasswordType.setUsername(USERNAME_PROPERTY);
       userIdPasswordType.setPassword(PASSWORD_PROPERTY);
       userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
       userIdPasswordType.setSubject(SUBJECT_PROPERTY);
 
-      CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
+      final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
       customSecurityHeaderType.setCredentials(userIdPasswordType);
 
-      List<Header> headers = new ArrayList<Header>();
+      final List<Header> headers = new ArrayList<Header>();
       try {
-         Header header = new Header(new QName("urn:ebay:api:PayPalAPI", "RequesterCredentials"), customSecurityHeaderType, new JAXBDataBinding(CustomSecurityHeaderType.class));
+         final Header header = new Header(new QName("urn:ebay:api:PayPalAPI", "RequesterCredentials"), customSecurityHeaderType, new JAXBDataBinding(CustomSecurityHeaderType.class));
          headers.add(header);
-      } catch (JAXBException e) {
+      } catch (final JAXBException e) {
          throw new GNUOpenBusinessServiceException("Exception from Paypal Express Requester Credentials, please try again.", e);
       }
 

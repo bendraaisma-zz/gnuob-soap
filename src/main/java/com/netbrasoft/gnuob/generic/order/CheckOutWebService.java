@@ -9,4 +9,10 @@ public interface CheckOutWebService<O extends Order> {
    O doCheckoutDetails(MetaData metadata, O order);
 
    O doCheckoutPayment(MetaData metadata, O order);
+
+   O doNotification(MetaData metadata, O order);
+
+   O doRefundTransaction(MetaData metadata, O order);
+
+   O doTransactionDetails(MetaData metadata, O order);
 }
