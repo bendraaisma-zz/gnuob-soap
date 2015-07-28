@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
@@ -18,6 +19,7 @@ import org.apache.cxf.headers.Header;
 import org.apache.cxf.jaxb.JAXBDataBinding;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
+import com.netbrasoft.gnuob.generic.GenericTypeService;
 import com.netbrasoft.gnuob.generic.customer.Address;
 
 import ebay.api.paypalapi.DoExpressCheckoutPaymentReq;
@@ -26,7 +28,11 @@ import ebay.api.paypalapi.DoExpressCheckoutPaymentResponseType;
 import ebay.api.paypalapi.GetExpressCheckoutDetailsReq;
 import ebay.api.paypalapi.GetExpressCheckoutDetailsRequestType;
 import ebay.api.paypalapi.GetExpressCheckoutDetailsResponseType;
+import ebay.api.paypalapi.GetTransactionDetailsReq;
+import ebay.api.paypalapi.GetTransactionDetailsRequestType;
+import ebay.api.paypalapi.GetTransactionDetailsResponseType;
 import ebay.api.paypalapi.PayPalAPIAAInterface;
+import ebay.api.paypalapi.PayPalAPIInterface;
 import ebay.api.paypalapi.PayPalAPIInterfaceService;
 import ebay.api.paypalapi.SetExpressCheckoutReq;
 import ebay.api.paypalapi.SetExpressCheckoutRequestType;
@@ -74,7 +80,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    private static final String PAYPAL_SIGNATURE_PROPERTY_VALUE = "AFcWxV21C7fd0v3bYYYRCpSSRl31A7mmuIDpb.xZccUUAyCy0P.XGaWg";
    private static final String PAYPAL_PASSWORD_PROPERTY_VALUE = "UU9AJQJYE2CAMP54";
    private static final String PAYPAL_USERNAME_PROPERTY_VALUE = "BR2GaGfg_api1.netbrasoft.com";
-   private static final String PAYPAL_VERSION_PROPERTY_VALUE = "121.0";
+   private static final String PAYPAL_VERSION_PROPERTY_VALUE = "124.0";
    private static final String PAYPAL_SERVICE_NUMBER_VALUE = "-";
    private static final String VERSION_PROPERTY = System.getProperty(PAYPAL_VERSION_PROPERTY, PAYPAL_VERSION_PROPERTY_VALUE);
    private static final String NOTIFY_URL_PROPERTY = System.getProperty(GNUOB_SITE_NOTIFICATION_PROPERTY, GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE);
@@ -90,6 +96,9 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    @WebServiceRef(wsdlLocation = "https://www.paypalobjects.com/wsdl/PayPalSvc.wsdl")
    private PayPalAPIInterfaceService payPalAPIInterfaceService;
 
+   @EJB(beanName = "GenericTypeServiceImpl")
+   private GenericTypeService<O> genericOrderService;
+
    private AddressType doAddress(Address address) {
       final AddressType addressType = new AddressType();
       addressType.setAddressID(String.valueOf(address.getId()));
@@ -97,7 +106,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       addressType.setAddressOwner(AddressOwnerCodeType.PAY_PAL);
       addressType.setAddressStatus(AddressStatusCodeType.NONE);
       addressType.setCityName(address.getCityName());
-      addressType.setCountry(Enum.valueOf(CountryCodeType.class, address.getCountry().replace("_", "")));
+      addressType.setCountry(Enum.valueOf(CountryCodeType.class, address.getCountry()));
       addressType.setCountryName(address.getCountryName());
       addressType.setExternalAddressID(String.valueOf(address.getId()));
       addressType.setInternationalName("International shipment address");
@@ -115,7 +124,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    private void doAddressType(Address address, AddressType addressType) {
       address.setCityName(addressType.getCityName());
       if (addressType.getCountry() != null) {
-         address.setCountry("_" + addressType.getCountry().value());
+         address.setCountry(addressType.getCountry().value());
       }
       address.setCountryName(addressType.getCountryName());
       address.setInternationalStateAndCity(addressType.getInternationalStateAndCity());
@@ -173,7 +182,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    @Override
    public void doCheckoutDetails(O order) {
 
-      // GetExpressCheckoutDetails Response Fields
+      // GetExpressCheckoutDetails Resquest Fields
       final GetExpressCheckoutDetailsReq getExpressCheckoutDetailsReq = new GetExpressCheckoutDetailsReq();
       final GetExpressCheckoutDetailsRequestType getExpressCheckoutDetailsRequestType = new GetExpressCheckoutDetailsRequestType();
       getExpressCheckoutDetailsRequestType.setVersion(VERSION_PROPERTY);
@@ -353,6 +362,27 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
 
    @Override
    public O doNotification(O order) {
+
+      // GetTransactionDetails Request Fields
+      final GetTransactionDetailsReq getTransactionDetailsReq = new GetTransactionDetailsReq();
+      final GetTransactionDetailsRequestType getTransactionDetailsRequestType = new GetTransactionDetailsRequestType();
+      getTransactionDetailsRequestType.setVersion(VERSION_PROPERTY);
+
+      // TransactionDetails request fields.
+      getTransactionDetailsRequestType.setTransactionID(order.getNotificationId());
+
+      getTransactionDetailsReq.setGetTransactionDetailsRequest(getTransactionDetailsRequestType);
+
+      // Do TransactionDetails call.
+      final GetTransactionDetailsResponseType getTransactionDetailsResponseType = getPayPalAPIInterface().getTransactionDetails(getTransactionDetailsReq);
+
+      if (getTransactionDetailsResponseType.getAck() == AckCodeType.SUCCESS) {
+
+
+      } else {
+         throw new GNUOpenBusinessServiceException("Exception from Paypal Express Checkout [errors=" + getParameterErrors(getTransactionDetailsResponseType.getErrors()) + "], please try again.");
+      }
+
       return order;
    }
 
@@ -366,7 +396,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       order.getContract().getCustomer().setLastName(payerInfo.getPayerName().getLastName());
       order.getContract().getCustomer().setSalutation(payerInfo.getPayerName().getSalutation());
       if (payerInfo.getPayerCountry() != null) {
-         order.getContract().getCustomer().getAddress().setCountry("_" + payerInfo.getPayerCountry().value());
+         order.getContract().getCustomer().getAddress().setCountry(payerInfo.getPayerCountry().value());
       }
       order.getContract().getCustomer().setPayerBusiness(payerInfo.getPayerBusiness());
       if (payerInfo.getTaxIdDetails() != null) {
@@ -684,6 +714,33 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
 
    private PayPalAPIAAInterface getPayPalAPIAAInterface() {
       final PayPalAPIAAInterface port = payPalAPIInterfaceService.getPayPalAPIAA();
+
+      final UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
+      userIdPasswordType.setUsername(USERNAME_PROPERTY);
+      userIdPasswordType.setPassword(PASSWORD_PROPERTY);
+      userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
+      userIdPasswordType.setSubject(SUBJECT_PROPERTY);
+
+      final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
+      customSecurityHeaderType.setCredentials(userIdPasswordType);
+
+      final List<Header> headers = new ArrayList<Header>();
+      try {
+         final Header header = new Header(new QName("urn:ebay:api:PayPalAPI", "RequesterCredentials"), customSecurityHeaderType, new JAXBDataBinding(CustomSecurityHeaderType.class));
+         headers.add(header);
+      } catch (final JAXBException e) {
+         throw new GNUOpenBusinessServiceException("Exception from Paypal Express Requester Credentials, please try again.", e);
+      }
+
+      ((BindingProvider) port).getRequestContext().put(Header.HEADER_LIST, headers);
+
+      ((BindingProvider) port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, SITE_PROPERTY);
+
+      return port;
+   }
+
+   private PayPalAPIInterface getPayPalAPIInterface() {
+      final PayPalAPIInterface port = payPalAPIInterfaceService.getPayPalAPI();
 
       final UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
       userIdPasswordType.setUsername(USERNAME_PROPERTY);

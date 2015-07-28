@@ -6,10 +6,13 @@ import java.util.Set;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
@@ -50,8 +53,11 @@ public class User extends Access {
    @Column(name = "PASSWORD", nullable = false)
    private String password;
 
+   @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+   @JoinTable(name = "GNUOB_ROLES", joinColumns = @JoinColumn(name = "GNUOB_USERS_ID"))
    @Column(name = "ROLE", nullable = false)
-   private String role;
+   @Enumerated(EnumType.STRING)
+   private Set<Role> roles;
 
    @Column(name = "DESCRIPTION")
    private String description;
@@ -87,9 +93,8 @@ public class User extends Access {
       return password;
    }
 
-   @XmlElement(name = "role", required = true)
-   public String getRole() {
-      return role;
+   public Set<Role> getRoles() {
+      return roles;
    }
 
    @XmlTransient
@@ -135,8 +140,12 @@ public class User extends Access {
       this.password = new SimplePBKDF2().deriveKeyFormatted(password);
    }
 
-   public void setRole(String role) {
-      this.role = role;
+   public void setRoles(Set<Role> roles) {
+      this.roles = roles;
+   }
+
+   public void setRoot(Boolean root) {
+      this.root = root;
    }
 
    public void setSites(Set<Site> sites) {

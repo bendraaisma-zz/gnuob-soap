@@ -77,7 +77,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
       addressType.setCity(address.getCityName());
       addressType.setStreet(address.getStreet1());
       addressType.setComplement(address.getComplement());
-      addressType.setCountry(address.getCountry().replace("_", ""));
+      addressType.setCountry(address.getCountry());
       address.setDistrict(address.getDistrict());
       addressType.setNumber(address.getNumber());
       addressType.setPostalCode(address.getPostalCode());
@@ -86,7 +86,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
    }
 
    private void doAddress(com.netbrasoft.gnuob.generic.customer.Address address, Address addressType) {
-      address.setCountry("_" + addressType.getCountry());
+      address.setCountry(addressType.getCountry());
       address.setStateOrProvince(addressType.getState());
       address.setCityName(addressType.getCity());
       address.setPostalCode(addressType.getPostalCode());
@@ -200,6 +200,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
          order.setOrderId(transaction.getReference());
 
          final Iterator<O> iterator = genericOrderService.find(order, new Paging(0, 1), OrderBy.NONE).iterator();
+
          if (iterator.hasNext()) {
             order = iterator.next();
 
@@ -323,7 +324,26 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
 
    @Override
    public void doTransactionDetails(O order) {
-      // TODO Auto-generated method stub
+      try {
+         final Transaction transaction = searchByOrderTransactionId(order);
+
+         // Information about the payer.
+         doSender(order, transaction.getSender());
+
+         // Information about the payment.
+         doPaymentDetails(order, transaction);
+
+         // Information about the payment.
+         order.getInvoice().getPayments().add(doPaymentInfo(transaction));
+
+         // Status of the checkout session. If payment is completed, the
+         // transaction identification number of the resulting transaction is
+         // returned.
+         order.setCheckoutStatus(transaction.getStatus().name());
+
+      } catch (final PagSeguroServiceException e) {
+         throw new GNUOpenBusinessServiceException("Exception from Pagseguro Transaction Details, please try again.", e);
+      }
    }
 
    private Transaction searchByOrderNotificationCode(O order) throws PagSeguroServiceException {

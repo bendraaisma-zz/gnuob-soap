@@ -571,9 +571,6 @@
 			<column name="PASSWORD" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
-			<column name="ROLE" type="VARCHAR(128)">
-				<constraints nullable="false" />
-			</column>
 			<column name="ROOT" type="BIT(1)" />
 			<column name="ID" type="BIGINT(19)">
 				<constraints nullable="false" />
@@ -596,6 +593,16 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="sites_ID" type="BIGINT(19)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-32-1">
+		<createTable tableName="gnuob_roles">
+			<column name="GNUOB_USERS_ID" type="BIGINT(19)">
+				<constraints nullable="false" />
+			</column>
+			<column name="ROLE" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
@@ -665,6 +672,9 @@
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-54">
 		<addPrimaryKey columnNames="GNUOB_USERS_ID, sites_ID" constraintName="PRIMARY" tableName="gnuob_users_gnuob_sites" />
+	</changeSet>
+	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-54-1">
+		<addPrimaryKey columnNames="GNUOB_USERS_ID, ROLE" constraintName="PRIMARY" tableName="gnuob_roles" />
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-55">
 		<addUniqueConstraint columnNames="records_ID" constraintName="UK_1xs08b7sr5jkw8qtr58xppgoh" deferrable="false" disabled="false" initiallyDeferred="false" tableName="gnuob_offers_gnuob_offer_records" />
