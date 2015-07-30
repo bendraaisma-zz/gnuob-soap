@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
-	<changeSet id="GNUOB amaristore objecten" author="Bernard Arjan Draaisma" context="amaristore" runOnChange="false">
+	<changeSet id="GNUOB black-falcon objecten" author="Bernard Arjan Draaisma" context="black-falcon" runOnChange="false">
 		<sql>SET FOREIGN_KEY_CHECKS = 0;</sql>
-		<loadData tableName="gnuob_permissions" file="src/main/resources/liquibase/amaristore/GNUOB_PERMISSIONS.csv">
+		<loadData tableName="gnuob_permissions" file="src/main/resources/liquibase/black-falcon/GNUOB_PERMISSIONS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="VERSION" type="NUMERIC" />
 			<column name="OWNER" type="STRING" />
 			<column name="GROUP" type="STRING" />
 			<column name="OTHERS" type="STRING" />
 		</loadData>
-		<loadData tableName="gnuob_access" file="src/main/resources/liquibase/amaristore/GNUOB_ACCESS.csv">
+		<loadData tableName="gnuob_access" file="src/main/resources/liquibase/black-falcon/GNUOB_ACCESS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="VERSION" type="NUMERIC" />
 			<column name="ACTIVE" type="BOOLEAN" />
@@ -18,7 +18,7 @@
 			<column name="site_ID" type="NUMERIC" />
 			<column name="owner_ID" type="NUMERIC" />
 		</loadData>
-		<loadData tableName="gnuob_users" file="src/main/resources/liquibase/amaristore/GNUOB_USERS.csv">
+		<loadData tableName="gnuob_users" file="src/main/resources/liquibase/black-falcon/GNUOB_USERS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="NAME" type="STRING" />
@@ -26,32 +26,32 @@
 			<column name="ACCESS" type="STRING" />
 			<column name="ROOT" type="BOOLEAN" />
 		</loadData>
-		<loadData tableName="gnuob_groups" file="src/main/resources/liquibase/amaristore/GNUOB_GROUPS.csv">
+		<loadData tableName="gnuob_groups" file="src/main/resources/liquibase/black-falcon/GNUOB_GROUPS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="NAME" type="STRING" />
 			<column name="RULE" type="STRING" />
 		</loadData>
-		<loadData tableName="gnuob_sites" file="src/main/resources/liquibase/amaristore/GNUOB_SITES.csv">
+		<loadData tableName="gnuob_sites" file="src/main/resources/liquibase/black-falcon/GNUOB_SITES.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="NAME" type="STRING" />
 		</loadData>
-		<loadData tableName="gnuob_users_gnuob_sites" file="src/main/resources/liquibase/amaristore/GNUOB_USERS_GNUOB_SITES.csv">
+		<loadData tableName="gnuob_users_gnuob_sites" file="src/main/resources/liquibase/black-falcon/GNUOB_USERS_GNUOB_SITES.csv">
 			<column name="sites_ID" type="NUMERIC" />
 			<column name="GNUOB_USERS_ID" type="NUMERIC" />
 		</loadData>
-		<loadData tableName="gnuob_users_gnuob_groups" file="src/main/resources/liquibase/amaristore/GNUOB_USERS_GNUOB_GROUPS.csv">
+		<loadData tableName="gnuob_users_gnuob_groups" file="src/main/resources/liquibase/black-falcon/GNUOB_USERS_GNUOB_GROUPS.csv">
 			<column name="groups_ID" type="NUMERIC" />
 			<column name="GNUOB_USERS_ID" type="NUMERIC" />
 		</loadData>
-		<loadData tableName="gnuob_settings" file="src/main/resources/liquibase/amaristore/GNUOB_SETTINGS.csv">
+		<loadData tableName="gnuob_settings" file="src/main/resources/liquibase/black-falcon/GNUOB_SETTINGS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="VALUE" type="STRING" />
 			<column name="PROPERTY" type="STRING" />
 			<column name="DESCRIPTION" type="STRING" />
 		</loadData>
-		<loadData tableName="gnuob_roles" file="src/main/resources/liquibase/amaristore/GNUOB_ROLES.csv">
+		<loadData tableName="gnuob_roles" file="src/main/resources/liquibase/black-falcon/GNUOB_ROLES.csv">
 			<column name="GNUOB_USERS_ID" type="NUMERIC" />
 			<column name="ROLE" type="STRING" />
 		</loadData>

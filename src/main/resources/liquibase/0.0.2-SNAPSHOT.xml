@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
-	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-61">
-		<addUniqueConstraint columnNames="CONTRACT_ID" constraintName="UK_CONTRACT_ID" deferrable="false" disabled="false" initiallyDeferred="false" tableName="gnuob_contracts" />
-		<rollback>
-			<dropUniqueConstraint tableName="gnuob_contracts" constraintName="UK_CONTRACT_ID" />
-		</rollback>
-	</changeSet>
 	<changeSet id="Adding MAX_TOTAL column for orders" author="Bernard Arjan Draaisma">
 		<addColumn tableName="gnuob_orders">
 			<column name="MAX_TOTAL" type="DECIMAL(19, 2)" />

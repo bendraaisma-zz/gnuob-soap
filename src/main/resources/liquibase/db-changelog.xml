@@ -3,4 +3,6 @@
 	<include file="0.0.2-SNAPSHOT.xml" relativeToChangelogFile="true" />
 	<include file="test/test.xml" relativeToChangelogFile="true" />
 	<include file="amaristore/amaristore.xml" relativeToChangelogFile="true" />
+	<include file="black-falcon/black-falcon.xml" relativeToChangelogFile="true" />
+	<include file="ribelli/ribelli.xml" relativeToChangelogFile="true" />
 </databaseChangeLog>
