@@ -1,5 +1,7 @@
 package com.netbrasoft.gnuob.generic.order;
 
+import java.util.Iterator;
+
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -8,6 +10,8 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
+import com.netbrasoft.gnuob.generic.OrderBy;
+import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.customer.Customer;
 import com.netbrasoft.gnuob.generic.security.MetaData;
@@ -35,9 +39,10 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
    @WebMethod(operationName = "doCheckout")
    public O doCheckout(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
-         checkOutService.doCheckout(order);
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
          securedGenericContractService.update(metadata, order.getContract());
+         securedGenericOrderService.update(metadata, order);
+         checkOutService.doCheckout(order);
          securedGenericOrderService.merge(metadata, order);
          return order;
       } catch (final Exception e) {
@@ -49,9 +54,10 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
    @WebMethod(operationName = "doCheckoutDetails")
    public O doCheckoutDetails(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
-         checkOutService.doCheckoutDetails(order);
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
          securedGenericContractService.update(metadata, order.getContract());
+         securedGenericOrderService.update(metadata, order);
+         checkOutService.doCheckoutDetails(order);
          securedGenericOrderService.merge(metadata, order);
          return order;
       } catch (final Exception e) {
@@ -63,9 +69,10 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
    @WebMethod(operationName = "doCheckoutPayment")
    public O doCheckoutPayment(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
-         checkOutService.doCheckoutPayment(order);
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
          securedGenericContractService.update(metadata, order.getContract());
+         securedGenericOrderService.update(metadata, order);
+         checkOutService.doCheckoutPayment(order);
          securedGenericOrderService.merge(metadata, order);
          return order;
       } catch (final Exception e) {
@@ -78,10 +85,30 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
    public O doNotification(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
          order = checkOutService.doNotification(order);
-         securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
-         securedGenericContractService.update(metadata, order.getContract());
-         securedGenericOrderService.merge(metadata, order);
-         return order;
+
+         final String transactionId = order.getTransactionId();
+
+         order.setActive(true);
+         order.setTransactionId(null);
+         order.setNotificationId(null);
+
+         final Iterator<O> iterator = securedGenericOrderService.find(metadata, order, new Paging(0, 1), OrderBy.NONE).iterator();
+
+         if(iterator.hasNext()) {
+            order = iterator.next();
+            order.setTransactionId(transactionId);
+
+            securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
+            securedGenericContractService.update(metadata, order.getContract());
+            securedGenericOrderService.update(metadata, order);
+            checkOutService.doTransactionDetails(order);
+            securedGenericOrderService.merge(metadata, order);
+
+            return order;
+         }
+         else {
+            throw new GNUOpenBusinessServiceException("Exception from Pagseguro Notification, no order found for the given notification code.");
+         }
       } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
@@ -91,9 +118,10 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
    @WebMethod(operationName = "doRefundTransaction")
    public O doRefundTransaction(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
-         checkOutService.doRefundTransaction(order);
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
          securedGenericContractService.update(metadata, order.getContract());
+         securedGenericOrderService.update(metadata, order);
+         checkOutService.doRefundTransaction(order);
          securedGenericOrderService.merge(metadata, order);
          return order;
       } catch (final Exception e) {
@@ -105,9 +133,10 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
    @WebMethod(operationName = "doTransactionDetails")
    public O doTransactionDetails(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
-         checkOutService.doTransactionDetails(order);
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
          securedGenericContractService.update(metadata, order.getContract());
+         securedGenericOrderService.update(metadata, order);
+         checkOutService.doTransactionDetails(order);
          securedGenericOrderService.merge(metadata, order);
          return order;
       } catch (final Exception e) {

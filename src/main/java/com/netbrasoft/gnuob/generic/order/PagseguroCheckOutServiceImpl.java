@@ -6,20 +6,15 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
-import com.netbrasoft.gnuob.generic.GenericTypeService;
-import com.netbrasoft.gnuob.generic.OrderBy;
-import com.netbrasoft.gnuob.generic.Paging;
 
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
@@ -44,7 +39,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
    private static final String PAGSEGURO_EMAIL_PROPERTY = "pagseguro.email";
    private static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY = "pagseguro.production.token";
    private static final String PAGSEGURO_SANDBOX_TOKEN_PROPERTY = "pagseguro.sandbox.token";
-   private static final String GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE = "http://localhost:8080/notification.html";
+   private static final String GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE = "http://D978BB10.cm-3-1c.dynamic.ziggo.nl/pagseguro_notifications";
    private static final String GNUOB_SITE_REDIRECT_PROPERTY_VALUE = "http://localhost:8080/confirmation.html";
    private static final String PAGSEGURO_EMAIL_PROPERTY_VALUE = "badraaisma@msn.com";
    private static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE = "NO_PRODUCTION_TOKEN";
@@ -54,9 +49,6 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
    private static final String SANDBOX_TOKEN_PROPERTY = System.getProperty(PAGSEGURO_SANDBOX_TOKEN_PROPERTY, PAGSEGURO_SANDBOX_TOKEN_PROPERTY_VALUE);
    private static final String NOTIFICATION_URL_PROPERTY = System.getProperty(GNUOB_SITE_NOTIFICATION_PROPERTY, GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE);
    private static final String REDIRECT_URL_PROPERTY = System.getProperty(GNUOB_SITE_REDIRECT_PROPERTY, GNUOB_SITE_REDIRECT_PROPERTY_VALUE);
-
-   @EJB(beanName = "GenericTypeServiceImpl")
-   private GenericTypeService<O> genericOrderService;
 
    public PagseguroCheckOutServiceImpl() {
       if (!PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE.equals(PRODUCTION_TOKEN_PROPERTY)) {
@@ -196,32 +188,11 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
       try {
          final Transaction transaction = searchByOrderNotificationCode(order);
 
-         order.setActive(true);
+         // Information about the order and transaction.
+         order.setTransactionId(transaction.getCode());
          order.setOrderId(transaction.getReference());
 
-         final Iterator<O> iterator = genericOrderService.find(order, new Paging(0, 1), OrderBy.NONE).iterator();
-
-         if (iterator.hasNext()) {
-            order = iterator.next();
-
-            // Information about the payer.
-            doSender(order, transaction.getSender());
-
-            // Information about the payment.
-            doPaymentDetails(order, transaction);
-
-            // Information about the payment.
-            order.getInvoice().getPayments().add(doPaymentInfo(transaction));
-
-            // Status of the checkout session. If payment is completed, the
-            // transaction identification number of the resulting transaction is
-            // returned.
-            order.setCheckoutStatus(transaction.getStatus().name());
-
-            return order;
-         } else {
-            throw new GNUOpenBusinessServiceException("Exception from Pagseguro Notification, no order found for the given notificaton code.");
-         }
+         return order;
       } catch (final PagSeguroServiceException e) {
          throw new GNUOpenBusinessServiceException("Exception from Pagseguro Notification, please try again.", e);
       }

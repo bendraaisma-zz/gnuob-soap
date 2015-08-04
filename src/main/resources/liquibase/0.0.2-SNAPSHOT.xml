@@ -130,6 +130,9 @@
 			<dropColumn tableName="gnuob_order_records" columnName="ORDER_RECORD_ID" />
 		</rollback>
 	</changeSet>
+	<changeSet author="Bernard Arjan Draaisma" id="0.0.2-SNAPSHOT">
+		<tagDatabase tag="0.0.2-SNAPSHOT" />
+	</changeSet>
 </databaseChangeLog>
 
 
