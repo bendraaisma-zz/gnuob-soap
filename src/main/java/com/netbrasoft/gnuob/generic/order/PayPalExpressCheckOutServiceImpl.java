@@ -3,10 +3,12 @@ package com.netbrasoft.gnuob.generic.order;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
@@ -17,6 +19,7 @@ import org.apache.cxf.headers.Header;
 import org.apache.cxf.jaxb.JAXBDataBinding;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
+import com.netbrasoft.gnuob.generic.GenericTypeService;
 import com.netbrasoft.gnuob.generic.customer.Address;
 
 import ebay.api.paypalapi.DoExpressCheckoutPaymentReq;
@@ -25,7 +28,11 @@ import ebay.api.paypalapi.DoExpressCheckoutPaymentResponseType;
 import ebay.api.paypalapi.GetExpressCheckoutDetailsReq;
 import ebay.api.paypalapi.GetExpressCheckoutDetailsRequestType;
 import ebay.api.paypalapi.GetExpressCheckoutDetailsResponseType;
+import ebay.api.paypalapi.GetTransactionDetailsReq;
+import ebay.api.paypalapi.GetTransactionDetailsRequestType;
+import ebay.api.paypalapi.GetTransactionDetailsResponseType;
 import ebay.api.paypalapi.PayPalAPIAAInterface;
+import ebay.api.paypalapi.PayPalAPIInterface;
 import ebay.api.paypalapi.PayPalAPIInterfaceService;
 import ebay.api.paypalapi.SetExpressCheckoutReq;
 import ebay.api.paypalapi.SetExpressCheckoutRequestType;
@@ -55,46 +62,45 @@ import ebay.apis.eblbasecomponents.UserIdPasswordType;
 @Stateless(name = "PayPalExpressCheckOutServiceImpl")
 public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckOutService<O> {
 
-   private static final String GNUOB_SITE_PROPERTY = "gnuob.site";
+   private static final String GNUOB_SITE_NOTIFICATION_PROPERTY = "gnuob.site.notification";
+   private static final String GNUOB_SITE_REDIRECT_PROPERTY = "gnuob.site.redirect";
+   private static final String GNUOB_SITE_CANCEL_PROPERTY = "gnuob.site.cancel";
    private static final String PAYPAL_SITE_PROPERTY = "paypal.site";
    private static final String PAYPAL_SUBJECT_PROPERTY = "paypal.subject";
    private static final String PAYPAL_SIGNATURE_PROPERTY = "paypal.signature";
    private static final String PAYPAL_PASSWORD_PROPERTY = "paypal.password";
    private static final String PAYPAL_USERNAME_PROPERTY = "paypal.username";
    private static final String PAYPAL_VERSION_PROPERTY = "paypal.version";
-   private static final String PAYPAL_CURRENCY_PROPERTY = "paypal.currency.id";
    private static final String PAYPAL_SERVICE_NUMBER_PROPERTY = "paypal.serviceNumber";
-   private static final String GNUOB_SITE_PROPERTY_VALUE = "https://www.netbrasoft.com";
+   private static final String GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE = "http://localhost:8080/notification.html";
+   private static final String GNUOB_SITE_REDIRECT_PROPERTY_VALUE = "http://localhost:8080/confirmation.html";
+   private static final String GNUOB_SITE_CANCEL_PROPERTY_VALUE = "http://localhost:8080/cancel.html";
    private static final String PAYPAL_SITE_PROPERTY_VALUE = "https://api-3t.sandbox.paypal.com/2.0/";
    private static final String PAYPAL_SUBJECT_PROPERTY_VALUE = "badraaisma@msn.com";
    private static final String PAYPAL_SIGNATURE_PROPERTY_VALUE = "AFcWxV21C7fd0v3bYYYRCpSSRl31A7mmuIDpb.xZccUUAyCy0P.XGaWg";
    private static final String PAYPAL_PASSWORD_PROPERTY_VALUE = "UU9AJQJYE2CAMP54";
    private static final String PAYPAL_USERNAME_PROPERTY_VALUE = "BR2GaGfg_api1.netbrasoft.com";
-   private static final String PAYPAL_VERSION_PROPERTY_VALUE = "119.0";
-   private static final String PAYPAL_CURRENCY_PROPERTY_VALUE = "BRL";
+   private static final String PAYPAL_VERSION_PROPERTY_VALUE = "124.0";
    private static final String PAYPAL_SERVICE_NUMBER_VALUE = "-";
-   private static final String VERSION_PROPERTY = System.getProperty(PAYPAL_VERSION_PROPERTY,
-         PAYPAL_VERSION_PROPERTY_VALUE);
-   private static final String CURRENCY_ID_PROPERTY = System.getProperty(PAYPAL_CURRENCY_PROPERTY,
-         PAYPAL_CURRENCY_PROPERTY_VALUE);
-   private static final String NOTIFY_URL_PROPERTY = System.getProperty(GNUOB_SITE_PROPERTY, GNUOB_SITE_PROPERTY_VALUE);
-   private static final String CUSTOMER_SERVICE_NUMBER_PROPERTY = System.getProperty(PAYPAL_SERVICE_NUMBER_PROPERTY,
-         PAYPAL_SERVICE_NUMBER_VALUE);
-   private static final String SUBJECT_PROPERTY = System.getProperty(PAYPAL_SUBJECT_PROPERTY,
-         PAYPAL_SUBJECT_PROPERTY_VALUE);
-   private static final String SIGNATURE_PROPERTY = System.getProperty(PAYPAL_SIGNATURE_PROPERTY,
-         PAYPAL_SIGNATURE_PROPERTY_VALUE);
-   private static final String PASSWORD_PROPERTY = System.getProperty(PAYPAL_PASSWORD_PROPERTY,
-         PAYPAL_PASSWORD_PROPERTY_VALUE);
-   private static final String USERNAME_PROPERTY = System.getProperty(PAYPAL_USERNAME_PROPERTY,
-         PAYPAL_USERNAME_PROPERTY_VALUE);
+   private static final String VERSION_PROPERTY = System.getProperty(PAYPAL_VERSION_PROPERTY, PAYPAL_VERSION_PROPERTY_VALUE);
+   private static final String NOTIFY_URL_PROPERTY = System.getProperty(GNUOB_SITE_NOTIFICATION_PROPERTY, GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE);
+   private static final String REDIRECT_URL_PROPERTY = System.getProperty(GNUOB_SITE_REDIRECT_PROPERTY, GNUOB_SITE_REDIRECT_PROPERTY_VALUE);
+   private static final String CANCEL_URL_PROPERTY = System.getProperty(GNUOB_SITE_CANCEL_PROPERTY, GNUOB_SITE_CANCEL_PROPERTY_VALUE);
+   private static final String CUSTOMER_SERVICE_NUMBER_PROPERTY = System.getProperty(PAYPAL_SERVICE_NUMBER_PROPERTY, PAYPAL_SERVICE_NUMBER_VALUE);
+   private static final String SUBJECT_PROPERTY = System.getProperty(PAYPAL_SUBJECT_PROPERTY, PAYPAL_SUBJECT_PROPERTY_VALUE);
+   private static final String SIGNATURE_PROPERTY = System.getProperty(PAYPAL_SIGNATURE_PROPERTY, PAYPAL_SIGNATURE_PROPERTY_VALUE);
+   private static final String PASSWORD_PROPERTY = System.getProperty(PAYPAL_PASSWORD_PROPERTY, PAYPAL_PASSWORD_PROPERTY_VALUE);
+   private static final String USERNAME_PROPERTY = System.getProperty(PAYPAL_USERNAME_PROPERTY, PAYPAL_USERNAME_PROPERTY_VALUE);
    private static final String SITE_PROPERTY = System.getProperty(PAYPAL_SITE_PROPERTY, PAYPAL_SITE_PROPERTY_VALUE);
 
    @WebServiceRef(wsdlLocation = "https://www.paypalobjects.com/wsdl/PayPalSvc.wsdl")
    private PayPalAPIInterfaceService payPalAPIInterfaceService;
 
+   @EJB(beanName = "GenericTypeServiceImpl")
+   private GenericTypeService<O> genericOrderService;
+
    private AddressType doAddress(Address address) {
-      AddressType addressType = new AddressType();
+      final AddressType addressType = new AddressType();
       addressType.setAddressID(String.valueOf(address.getId()));
       addressType.setAddressNormalizationStatus(AddressNormalizationStatusCodeType.NORMALIZED);
       addressType.setAddressOwner(AddressOwnerCodeType.PAY_PAL);
@@ -135,23 +141,26 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    }
 
    private BasicAmountType doBasicAmountType(BigDecimal value) {
-
-      if (value != null) {
-         BasicAmountType basicAmountType = new BasicAmountType();
-         basicAmountType.setCurrencyID(CurrencyCodeType.valueOf(CURRENCY_ID_PROPERTY));
-         basicAmountType.setValue(NumberFormat.getCurrencyInstance(Locale.US).format(value).replace("$", ""));
-         return basicAmountType;
+      try {
+         if (value != null) {
+            final NumberFormat numberFormat = NumberFormat.getInstance(Locale.US);
+            final BasicAmountType basicAmountType = new BasicAmountType();
+            basicAmountType.setCurrencyID(CurrencyCodeType.valueOf(NumberFormat.getCurrencyInstance(Locale.getDefault()).getCurrency().getCurrencyCode()));
+            basicAmountType.setValue(numberFormat.parse(numberFormat.format(value)).toString());
+            return basicAmountType;
+         }
+         return null;
+      } catch (final ParseException e) {
+         return null;
       }
-
-      return null;
    }
 
    @Override
    public void doCheckout(O order) {
 
       // SetExpressCheckout fields.
-      SetExpressCheckoutReq setExpressCheckoutReq = new SetExpressCheckoutReq();
-      SetExpressCheckoutRequestType setExpressCheckoutRequestType = new SetExpressCheckoutRequestType();
+      final SetExpressCheckoutReq setExpressCheckoutReq = new SetExpressCheckoutReq();
+      final SetExpressCheckoutRequestType setExpressCheckoutRequestType = new SetExpressCheckoutRequestType();
       setExpressCheckoutRequestType.setVersion(VERSION_PROPERTY);
 
       // SetExpressCheckout request fields.
@@ -161,23 +170,21 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       setExpressCheckoutReq.setSetExpressCheckoutRequest(setExpressCheckoutRequestType);
 
       // Do SetExpressCheckout call.
-      SetExpressCheckoutResponseType setExpressCheckoutResponseType = getPayPalAPIAAInterface().setExpressCheckout(
-            setExpressCheckoutReq);
+      final SetExpressCheckoutResponseType setExpressCheckoutResponseType = getPayPalAPIAAInterface().setExpressCheckout(setExpressCheckoutReq);
 
       if (setExpressCheckoutResponseType.getAck() == AckCodeType.SUCCESS) {
          order.setToken(setExpressCheckoutResponseType.getToken());
       } else {
-         throw new GNUOpenBusinessServiceException("Exception from Paypal Express Checkout [errors="
-               + getParameterErrors(setExpressCheckoutResponseType.getErrors()) + "], please try again.");
+         throw new GNUOpenBusinessServiceException("Exception from Paypal Express Checkout [errors=" + getParameterErrors(setExpressCheckoutResponseType.getErrors()) + "], please try again.");
       }
    }
 
    @Override
    public void doCheckoutDetails(O order) {
 
-      // GetExpressCheckoutDetails Response Fields
-      GetExpressCheckoutDetailsReq getExpressCheckoutDetailsReq = new GetExpressCheckoutDetailsReq();
-      GetExpressCheckoutDetailsRequestType getExpressCheckoutDetailsRequestType = new GetExpressCheckoutDetailsRequestType();
+      // GetExpressCheckoutDetails Resquest Fields
+      final GetExpressCheckoutDetailsReq getExpressCheckoutDetailsReq = new GetExpressCheckoutDetailsReq();
+      final GetExpressCheckoutDetailsRequestType getExpressCheckoutDetailsRequestType = new GetExpressCheckoutDetailsRequestType();
       getExpressCheckoutDetailsRequestType.setVersion(VERSION_PROPERTY);
 
       // The timestamped token value that was returned by SetExpressCheckout
@@ -188,13 +195,11 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       getExpressCheckoutDetailsReq.setGetExpressCheckoutDetailsRequest(getExpressCheckoutDetailsRequestType);
 
       // Do GetExpressCheckoutDetails call.
-      GetExpressCheckoutDetailsResponseType getExpressCheckoutDetailsResponseType = getPayPalAPIAAInterface()
-            .getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
+      final GetExpressCheckoutDetailsResponseType getExpressCheckoutDetailsResponseType = getPayPalAPIAAInterface().getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
 
       if (getExpressCheckoutDetailsResponseType.getAck() == AckCodeType.SUCCESS) {
 
-         GetExpressCheckoutDetailsResponseDetailsType getExpressCheckoutDetailsResponseDetailsType = getExpressCheckoutDetailsResponseType
-               .getGetExpressCheckoutDetailsResponseDetails();
+         final GetExpressCheckoutDetailsResponseDetailsType getExpressCheckoutDetailsResponseDetailsType = getExpressCheckoutDetailsResponseType.getGetExpressCheckoutDetailsResponseDetails();
 
          // The timestamped token value that was returned by
          // SetExpressCheckout
@@ -214,8 +219,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
          order.getInvoice().setInvoiceId(getExpressCheckoutDetailsResponseDetailsType.getInvoiceID());
 
          // Buyer's contact phone number.
-         order.getContract().getCustomer()
-               .setContactPhone(getExpressCheckoutDetailsResponseDetailsType.getContactPhone());
+         order.getContract().getCustomer().setContactPhone(getExpressCheckoutDetailsResponseDetailsType.getContactPhone());
 
          // Information about the payment.
          doPaymentDetailsTypes(order, getExpressCheckoutDetailsResponseDetailsType.getPaymentDetails().get(0));
@@ -243,15 +247,13 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
 
          // Buyer's email address if the buyer provided it on the PayPal
          // pages.
-         order.getContract().getCustomer()
-               .setBuyerMarketingEmail(getExpressCheckoutDetailsResponseDetailsType.getBuyerMarketingEmail());
+         order.getContract().getCustomer().setBuyerMarketingEmail(getExpressCheckoutDetailsResponseDetailsType.getBuyerMarketingEmail());
 
          // Survey response the buyer selects on the PayPal pages.
 
          // Payment request information for each bucket in the cart.
       } else {
-         throw new GNUOpenBusinessServiceException("Exception from Paypal Express Checkout Details [errors="
-               + getParameterErrors(getExpressCheckoutDetailsResponseType.getErrors()) + "], please try again.");
+         throw new GNUOpenBusinessServiceException("Exception from Paypal Express Checkout Details [errors=" + getParameterErrors(getExpressCheckoutDetailsResponseType.getErrors()) + "], please try again.");
       }
    }
 
@@ -259,25 +261,22 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    public void doCheckoutPayment(O order) {
 
       // Do Express Checkout Payment Request Fields
-      DoExpressCheckoutPaymentReq doExpressCheckoutPaymentReq = new DoExpressCheckoutPaymentReq();
-      DoExpressCheckoutPaymentRequestType doExpressCheckoutPaymentRequestType = new DoExpressCheckoutPaymentRequestType();
+      final DoExpressCheckoutPaymentReq doExpressCheckoutPaymentReq = new DoExpressCheckoutPaymentReq();
+      final DoExpressCheckoutPaymentRequestType doExpressCheckoutPaymentRequestType = new DoExpressCheckoutPaymentRequestType();
       doExpressCheckoutPaymentRequestType.setVersion(VERSION_PROPERTY);
 
       // Do Express Checkout Payment Request Fields.
-      doExpressCheckoutPaymentRequestType
-            .setDoExpressCheckoutPaymentRequestDetails(doExpressCheckoutPaymentRequestDetailsType(order));
+      doExpressCheckoutPaymentRequestType.setDoExpressCheckoutPaymentRequestDetails(doExpressCheckoutPaymentRequestDetailsType(order));
 
       // Do Express Checkout Payment Fields.
       doExpressCheckoutPaymentReq.setDoExpressCheckoutPaymentRequest(doExpressCheckoutPaymentRequestType);
 
       // Do Express Checkout Payment call.
-      DoExpressCheckoutPaymentResponseType doExpressCheckoutPaymentResponseType = getPayPalAPIAAInterface()
-            .doExpressCheckoutPayment(doExpressCheckoutPaymentReq);
+      final DoExpressCheckoutPaymentResponseType doExpressCheckoutPaymentResponseType = getPayPalAPIAAInterface().doExpressCheckoutPayment(doExpressCheckoutPaymentReq);
 
       if (doExpressCheckoutPaymentResponseType.getAck() == AckCodeType.SUCCESS) {
 
-         DoExpressCheckoutPaymentResponseDetailsType doExpressCheckoutPaymentResponseDetailsType = doExpressCheckoutPaymentResponseType
-               .getDoExpressCheckoutPaymentResponseDetails();
+         final DoExpressCheckoutPaymentResponseDetailsType doExpressCheckoutPaymentResponseDetailsType = doExpressCheckoutPaymentResponseType.getDoExpressCheckoutPaymentResponseDetails();
 
          // The timestamped token value that was returned by
          // SetExpressCheckout
@@ -285,7 +284,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
          order.setToken(doExpressCheckoutPaymentResponseDetailsType.getToken());
 
          // Information about the payment.
-         for (PaymentInfoType paymentInfoType : doExpressCheckoutPaymentResponseDetailsType.getPaymentInfo()) {
+         for (final PaymentInfoType paymentInfoType : doExpressCheckoutPaymentResponseDetailsType.getPaymentInfo()) {
             order.getInvoice().getPayments().add(doPaymentInfoType(paymentInfoType));
          }
 
@@ -299,13 +298,12 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
          // transaction.
          order.setBillingAgreementId(doExpressCheckoutPaymentResponseDetailsType.getBillingAgreementID());
       } else {
-         throw new GNUOpenBusinessServiceException("Exception from Paypal Express Checkout [errors="
-               + getParameterErrors(doExpressCheckoutPaymentResponseType.getErrors()) + "], please try again.");
+         throw new GNUOpenBusinessServiceException("Exception from Paypal Express Checkout [errors=" + getParameterErrors(doExpressCheckoutPaymentResponseType.getErrors()) + "], please try again.");
       }
    }
 
    private DoExpressCheckoutPaymentRequestDetailsType doExpressCheckoutPaymentRequestDetailsType(O order) {
-      DoExpressCheckoutPaymentRequestDetailsType doExpressCheckoutPaymentRequestDetailsType = new DoExpressCheckoutPaymentRequestDetailsType();
+      final DoExpressCheckoutPaymentRequestDetailsType doExpressCheckoutPaymentRequestDetailsType = new DoExpressCheckoutPaymentRequestDetailsType();
 
       // The timestamped token value that was returned in the
       // SetExpressCheckout
@@ -343,24 +341,49 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       }
 
       // The buyer email address opted in by the buyer on the PayPal pages.
-      doExpressCheckoutPaymentRequestDetailsType.setBuyerMarketingEmail(order.getContract().getCustomer()
-            .getBuyerMarketingEmail());
+      doExpressCheckoutPaymentRequestDetailsType.setBuyerMarketingEmail(order.getContract().getCustomer().getBuyerMarketingEmail());
       return doExpressCheckoutPaymentRequestDetailsType;
    }
 
    private BigDecimal doMesureType(MeasureType measureType) {
-      return measureType == null ? null : new BigDecimal(measureType.getValue());
+      return measureType == null ? null : BigDecimal.valueOf(measureType.getValue());
    }
 
    private MeasureType doMesureType(String unit, BigDecimal value) {
 
       if (unit != null && !unit.trim().isEmpty() && value != null) {
-         MeasureType measureType = new MeasureType();
+         final MeasureType measureType = new MeasureType();
          measureType.setUnit(unit);
          measureType.setValue(value.doubleValue());
       }
 
       return null;
+   }
+
+   @Override
+   public O doNotification(O order) {
+
+      // GetTransactionDetails Request Fields
+      final GetTransactionDetailsReq getTransactionDetailsReq = new GetTransactionDetailsReq();
+      final GetTransactionDetailsRequestType getTransactionDetailsRequestType = new GetTransactionDetailsRequestType();
+      getTransactionDetailsRequestType.setVersion(VERSION_PROPERTY);
+
+      // TransactionDetails request fields.
+      getTransactionDetailsRequestType.setTransactionID(order.getNotificationId());
+
+      getTransactionDetailsReq.setGetTransactionDetailsRequest(getTransactionDetailsRequestType);
+
+      // Do TransactionDetails call.
+      final GetTransactionDetailsResponseType getTransactionDetailsResponseType = getPayPalAPIInterface().getTransactionDetails(getTransactionDetailsReq);
+
+      if (getTransactionDetailsResponseType.getAck() == AckCodeType.SUCCESS) {
+
+
+      } else {
+         throw new GNUOpenBusinessServiceException("Exception from Paypal Express Checkout [errors=" + getParameterErrors(getTransactionDetailsResponseType.getErrors()) + "], please try again.");
+      }
+
+      return order;
    }
 
    private void doPayerInfoType(O order, PayerInfoType payerInfo) {
@@ -388,7 +411,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    }
 
    private PaymentDetailsItemType doPaymentDetailsItemType(OrderRecord orderRecord) {
-      PaymentDetailsItemType paymentDetailsItemType = new PaymentDetailsItemType();
+      final PaymentDetailsItemType paymentDetailsItemType = new PaymentDetailsItemType();
 
       paymentDetailsItemType.setName(orderRecord.getName());
       paymentDetailsItemType.setDescription(orderRecord.getDescription());
@@ -422,10 +445,10 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    private PaymentDetailsType doPaymentDetailsType(O order) {
 
       // Information about the payment.
-      PaymentDetailsType paymentDetailsType = new PaymentDetailsType();
+      final PaymentDetailsType paymentDetailsType = new PaymentDetailsType();
 
       // Total cost of the transaction to the buyer.
-      paymentDetailsType.setOrderTotal(doBasicAmountType(order.getOrderTotal().max(order.getMaxTotal())));
+      paymentDetailsType.setOrderTotal(doBasicAmountType(order.getOrderTotal()));
 
       // Sum of cost of all items in this order.
       paymentDetailsType.setItemTotal(doBasicAmountType(order.getItemTotal()));
@@ -434,7 +457,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       paymentDetailsType.setShippingTotal(doBasicAmountType(order.getShippingTotal()));
 
       // Shipping discount for this order
-      paymentDetailsType.setShippingDiscount(doBasicAmountType(order.getShippingDiscount()));
+      paymentDetailsType.setShippingDiscount(doBasicAmountType(order.getShippingDiscount().negate()));
 
       // Indicates whether insurance is available as an option the buyer can
       // choose on the PayPal Review page
@@ -464,7 +487,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       }
 
       // Details about each individual item included in the order.
-      for (OrderRecord orderRecord : order.getRecords()) {
+      for (final OrderRecord orderRecord : order.getRecords()) {
          paymentDetailsType.getPaymentDetailsItem().add(doPaymentDetailsItemType(orderRecord));
       }
 
@@ -492,7 +515,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       order.setItemTotal(doBasicAmountType(paymentDetailsType.getItemTotal()));
       order.setShippingTotal(doBasicAmountType(paymentDetailsType.getShippingTotal()));
       order.setInsuranceTotal(doBasicAmountType(paymentDetailsType.getInsuranceTotal()));
-      order.setShippingDiscount(doBasicAmountType(paymentDetailsType.getShippingDiscount()));
+      order.setShippingDiscount(doBasicAmountType(paymentDetailsType.getShippingDiscount()).negate());
       order.setInsuranceOptionOffered(new Boolean(paymentDetailsType.getInsuranceOptionOffered()));
       order.setHandlingTotal(doBasicAmountType(paymentDetailsType.getHandlingTotal()));
       order.setTaxTotal(doBasicAmountType(paymentDetailsType.getTaxTotal()));
@@ -502,10 +525,9 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       doAddressType(order.getShipment().getAddress(), paymentDetailsType.getShipToAddress());
 
       // Details about each individual item included in the order.
-      for (PaymentDetailsItemType paymentDetailsItemType : paymentDetailsType.getPaymentDetailsItem()) {
-         for (OrderRecord orderRecord : order.getRecords()) {
-            if (paymentDetailsItemType.getNumber() != null
-                  && paymentDetailsItemType.getNumber().equalsIgnoreCase(orderRecord.getNumber())) {
+      for (final PaymentDetailsItemType paymentDetailsItemType : paymentDetailsType.getPaymentDetailsItem()) {
+         for (final OrderRecord orderRecord : order.getRecords()) {
+            if (paymentDetailsItemType.getNumber() != null && paymentDetailsItemType.getNumber().equalsIgnoreCase(orderRecord.getNumber())) {
                doPaymentDetailsItemType(orderRecord, paymentDetailsItemType);
                break;
             }
@@ -516,7 +538,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    }
 
    private Payment doPaymentInfoType(PaymentInfoType paymentInfoType) {
-      Payment payment = new Payment();
+      final Payment payment = new Payment();
 
       // Unique transaction ID of the payment.
       payment.setTransactionId(paymentInfoType.getTransactionID());
@@ -579,9 +601,15 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       return payment;
    }
 
+   @Override
+   public void doRefundTransaction(O order) {
+      // TODO Auto-generated method stub
+
+   }
+
    private SetExpressCheckoutRequestDetailsType doSetExpressCheckoutRequestsDetailsType(O order) {
       // SetExpressCheckout request fields.
-      SetExpressCheckoutRequestDetailsType setExpressCheckoutRequestDetailsType = new SetExpressCheckoutRequestDetailsType();
+      final SetExpressCheckoutRequestDetailsType setExpressCheckoutRequestDetailsType = new SetExpressCheckoutRequestDetailsType();
 
       // The expected maximum total amount of the complete order, including
       // shipping cost and tax charges.
@@ -590,11 +618,11 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       // URL to which the buyer's browser is returned after choosing to pay
       // with
       // PayPal. For digital goods.
-      setExpressCheckoutRequestDetailsType.setReturnURL(NOTIFY_URL_PROPERTY);
+      setExpressCheckoutRequestDetailsType.setReturnURL(REDIRECT_URL_PROPERTY);
 
       // URL to which the buyer is returned if the buyer does not approve the
       // use of PayPal to pay you. For digital goods.
-      setExpressCheckoutRequestDetailsType.setCancelURL(NOTIFY_URL_PROPERTY);
+      setExpressCheckoutRequestDetailsType.setCancelURL(CANCEL_URL_PROPERTY);
 
       // Indicates whether or not you require the buyer's shipping address on
       // file with PayPal be a confirmed address.
@@ -643,11 +671,17 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       setExpressCheckoutRequestDetailsType.setBuyerEmail(order.getContract().getCustomer().getBuyerEmail());
 
       // Set brand name.
-      setExpressCheckoutRequestDetailsType.setBrandName(NOTIFY_URL_PROPERTY);
+      setExpressCheckoutRequestDetailsType.setBrandName("-");
 
       // Your own invoice or tracking number.
       setExpressCheckoutRequestDetailsType.setInvoiceID(order.getInvoice().getInvoiceId());
       return setExpressCheckoutRequestDetailsType;
+   }
+
+   @Override
+   public void doTransactionDetails(O order) {
+      // TODO Auto-generated method stub
+
    }
 
    private String getParameterErrors(List<ErrorType> errors) {
@@ -663,15 +697,14 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
 
          @Override
          public String toString() {
-            return "{errorCode=" + getErrorCode() + " longMessage=" + getLongMessage() + " severityCode="
-                  + getSeverityCode().value() + " shortMessage=" + getShortMessage() + "}";
+            return "{errorCode=" + getErrorCode() + " longMessage=" + getLongMessage() + " severityCode=" + getSeverityCode().value() + " shortMessage=" + getShortMessage() + "}";
          }
       }
 
-      StringBuilder stringBuilder = new StringBuilder();
+      final StringBuilder stringBuilder = new StringBuilder();
 
       PayPalError payPalError = null;
-      for (ErrorType errorType : errors) {
+      for (final ErrorType errorType : errors) {
          payPalError = new PayPalError(errorType);
          stringBuilder.append(payPalError.toString());
       }
@@ -680,25 +713,50 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    }
 
    private PayPalAPIAAInterface getPayPalAPIAAInterface() {
-      PayPalAPIAAInterface port = payPalAPIInterfaceService.getPayPalAPIAA();
+      final PayPalAPIAAInterface port = payPalAPIInterfaceService.getPayPalAPIAA();
 
-      UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
+      final UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
       userIdPasswordType.setUsername(USERNAME_PROPERTY);
       userIdPasswordType.setPassword(PASSWORD_PROPERTY);
       userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
       userIdPasswordType.setSubject(SUBJECT_PROPERTY);
 
-      CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
+      final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
       customSecurityHeaderType.setCredentials(userIdPasswordType);
 
-      List<Header> headers = new ArrayList<Header>();
+      final List<Header> headers = new ArrayList<Header>();
       try {
-         Header header = new Header(new QName("urn:ebay:api:PayPalAPI", "RequesterCredentials"),
-               customSecurityHeaderType, new JAXBDataBinding(CustomSecurityHeaderType.class));
+         final Header header = new Header(new QName("urn:ebay:api:PayPalAPI", "RequesterCredentials"), customSecurityHeaderType, new JAXBDataBinding(CustomSecurityHeaderType.class));
          headers.add(header);
-      } catch (JAXBException e) {
-         throw new GNUOpenBusinessServiceException(
-               "Exception from Paypal Express Requester Credentials, please try again.", e);
+      } catch (final JAXBException e) {
+         throw new GNUOpenBusinessServiceException("Exception from Paypal Express Requester Credentials, please try again.", e);
+      }
+
+      ((BindingProvider) port).getRequestContext().put(Header.HEADER_LIST, headers);
+
+      ((BindingProvider) port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, SITE_PROPERTY);
+
+      return port;
+   }
+
+   private PayPalAPIInterface getPayPalAPIInterface() {
+      final PayPalAPIInterface port = payPalAPIInterfaceService.getPayPalAPI();
+
+      final UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
+      userIdPasswordType.setUsername(USERNAME_PROPERTY);
+      userIdPasswordType.setPassword(PASSWORD_PROPERTY);
+      userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
+      userIdPasswordType.setSubject(SUBJECT_PROPERTY);
+
+      final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
+      customSecurityHeaderType.setCredentials(userIdPasswordType);
+
+      final List<Header> headers = new ArrayList<Header>();
+      try {
+         final Header header = new Header(new QName("urn:ebay:api:PayPalAPI", "RequesterCredentials"), customSecurityHeaderType, new JAXBDataBinding(CustomSecurityHeaderType.class));
+         headers.add(header);
+      } catch (final JAXBException e) {
+         throw new GNUOpenBusinessServiceException("Exception from Paypal Express Requester Credentials, please try again.", e);
       }
 
       ((BindingProvider) port).getRequestContext().put(Header.HEADER_LIST, headers);

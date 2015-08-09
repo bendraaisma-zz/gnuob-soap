@@ -1,0 +1,10 @@
+language: java
+jdk: oraclejdk8
+deploy:
+  provider: releases
+  api_key:
+    secure: AZ1cSGGZlk3ci9kvcMUBlRvP8Vo/1MbNuKA9CzaJhRCdVSOM1J8wdxUuLdZ38qOxOe5wdXB7HD8AB90VWl8eTRb4W7LF/BsuPpozxmlbePhPMWwvH9Ph0SQKuhZUk2+z9O3Vx/9dfDB7iW+XKyErqs/fZCPXsEaXiJruIqphPKlfIsJRTrglQboZNCl8wHogajENdkgSwUtef6otDtWdDSZBl0PFYEjszNBzr7WqQ97/pJEyAin2/GFg4qfSuNTVXXQ9+Q6idOTiEOqq8tsl0v3z4gnIlDzK5aFNiv1v4gcFDKhWS8XruQdtMsDB3ww7J2caxMFwMaDAKpzHkb9RfqIIxhUkWGFMEci/qcWZfoqxerSVrRNTyvYluEOKsForXxIR8vtWV50owq87KXTsYyCyK5xlQ5ZLOWfYwtOnlBELaAVghd0mRQ0e4vSi4UQ3Wa2AOm/EVYMONAuX9M5HDNsKN6JRDl9nkjI8PicCNicyDnRCjM+G84y4vhsLzPlzDNxWzX+iWcOQv8iFtdLBU2vo83fjcm7FD1KIG0Cx6T1AeAxc/58lMHVYd0PHtCvJ2h3TqPyK8Te5VF01kIfpuZCoLPsbnFnzS/M8U4WoKWa+fVp/5QlpAcOwsC9uZPDK3CHXGNoS290854qYUchxaM9ptpDabAdIfqToc58v7V4=
+  file: target/gnuob-soap.war
+  skip_cleanup: true
+  on:
+    tags: true

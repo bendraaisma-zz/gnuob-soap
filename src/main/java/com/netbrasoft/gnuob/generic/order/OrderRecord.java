@@ -2,12 +2,14 @@ package com.netbrasoft.gnuob.generic.order;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Date;
+import java.util.UUID;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
@@ -17,6 +19,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.netbrasoft.gnuob.generic.Type;
 import com.netbrasoft.gnuob.generic.product.Product;
 
+@Cacheable(value = false)
 @Entity(name = OrderRecord.ENTITY)
 @Table(name = OrderRecord.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -33,7 +36,7 @@ public class OrderRecord extends Type {
    @Column(name = "AMOUNT", nullable = false)
    private BigDecimal amount;
 
-   @Column(name = "DESCRIPTION", columnDefinition = "TEXT")
+   @Column(name = "DESCRIPTION")
    private String description;
 
    @Column(name = "NUMBER", nullable = false)
@@ -78,6 +81,18 @@ public class OrderRecord extends Type {
    @Column(name = "ITEM_URL")
    private String itemUrl;
 
+   @Column(name = "`OPTION`")
+   private String option;
+
+   @Column(name = "POSITION")
+   private Integer position;
+
+   @Column(name = "DELIVERY_DATE")
+   private Date deliveryDate;
+
+   @Column(name = "ORDER_RECORD_ID", nullable = false)
+   private String orderRecordId;
+
    @Transient
    private Product product;
 
@@ -87,9 +102,14 @@ public class OrderRecord extends Type {
    @XmlElement(name = "amount")
    public BigDecimal getAmount() {
       if (product != null && amount == null) {
-         amount = product.getAmount();
+         amount = product.getAmount().subtract(getDiscount());
       }
       return amount;
+   }
+
+   @XmlElement(name = "deliveryDate")
+   public Date getDeliveryDate() {
+      return deliveryDate;
    }
 
    @XmlElement(name = "description")
@@ -103,7 +123,7 @@ public class OrderRecord extends Type {
    @XmlElement(name = "discount")
    public BigDecimal getDiscount() {
       if (product != null && discount == null) {
-         discount = product.getItemHeight();
+         discount = product.getDiscount();
       }
       return discount;
    }
@@ -214,6 +234,21 @@ public class OrderRecord extends Type {
       return number;
    }
 
+   @XmlElement(name = "option")
+   public String getOption() {
+      return option;
+   }
+
+   @XmlElement(name = "orderRecordId")
+   public String getOrderRecordId() {
+      return orderRecordId;
+   }
+
+   @XmlTransient
+   public Integer getPosition() {
+      return position;
+   }
+
    public Product getProduct() {
       return product;
    }
@@ -257,8 +292,11 @@ public class OrderRecord extends Type {
       return BigDecimal.ZERO;
    }
 
-   @PrePersist
-   protected void prePersistOrderRecord() {
+   @Override
+   public void prePersist() {
+      if (orderRecordId == null || "".equals(orderRecordId.trim())) {
+         orderRecordId = UUID.randomUUID().toString();
+      }
 
       if (product != null) {
          name = name == null ? product.getName() : name;
@@ -279,8 +317,17 @@ public class OrderRecord extends Type {
       }
    }
 
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
    public void setAmount(BigDecimal amount) {
       this.amount = amount;
+   }
+
+   public void setDeliveryDate(Date deliveryDate) {
+      this.deliveryDate = deliveryDate;
    }
 
    public void setDescription(String description) {
@@ -333,6 +380,18 @@ public class OrderRecord extends Type {
 
    public void setNumber(String number) {
       this.number = number;
+   }
+
+   public void setOption(String option) {
+      this.option = option;
+   }
+
+   public void setOrderRecordId(String orderRecordId) {
+      this.orderRecordId = orderRecordId;
+   }
+
+   public void setPosition(Integer position) {
+      this.position = position;
    }
 
    public void setProduct(Product product) {

@@ -1,5 +1,0 @@
-"ID","DESCRIPTION","NAME","PASSWORD","ACCESS","ROOT","ROLE"
-"2","Administrator","administrator","administrator","DELETE_ACCESS","true","Administrator"
-"5","Manager","manager","manager","UPDATE_ACCESS","false","Manager"
-"7","Employee","employee","employee","CREATE_ACCESS","false","Employee"
-"9","Guest","guest","guest","READ_ACCESS","false","Guest"

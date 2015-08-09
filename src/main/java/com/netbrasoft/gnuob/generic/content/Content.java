@@ -1,5 +1,8 @@
 package com.netbrasoft.gnuob.generic.content;
 
+import java.util.Base64;
+
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,6 +13,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.generic.security.Access;
 
+@Cacheable(value = true)
 @Entity(name = Content.ENTITY)
 @Table(name = Content.TABLE)
 @XmlRootElement(name = Content.ENTITY)
@@ -20,7 +24,7 @@ public class Content extends Access {
    protected static final String TABLE = "GNUOB_CONTENTS";
 
    @Column(name = "POSITION")
-   private Integer position;
+   private Integer position = 0;
 
    @Column(name = "NAME", nullable = false)
    private String name;
@@ -29,12 +33,12 @@ public class Content extends Access {
    private String format;
 
    @Column(name = "CONTENT", columnDefinition = "MEDIUMBLOB", nullable = false)
-   private byte[] content;
+   private byte[] data;
 
    @XmlElement(name = "content", required = true)
    @XmlMimeType("application/octet-stream")
-   public byte[] getContent() {
-      return content;
+   public byte[] getData() {
+      return Base64.getDecoder().decode(data);
    }
 
    @XmlElement(name = "format", required = true)
@@ -52,8 +56,18 @@ public class Content extends Access {
       return position;
    }
 
-   public void setContent(byte[] content) {
-      this.content = content;
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
+   public void setData(byte[] data) {
+      this.data = Base64.getEncoder().encode(data);
    }
 
    public void setFormat(String format) {

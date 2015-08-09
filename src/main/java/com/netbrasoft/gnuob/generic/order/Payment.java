@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -11,11 +12,13 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.netbrasoft.gnuob.generic.Type;
 import com.netbrasoft.gnuob.generic.jaxb.JaxbDateAdapter;
 
+@Cacheable(value = false)
 @Entity(name = Payment.ENTITY)
 @Table(name = Payment.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -80,6 +83,9 @@ public class Payment extends Type {
    @Column(name = "INSTALLMENT_COUNT")
    private BigInteger installmentCount;
 
+   @Column(name = "POSITION")
+   private Integer position;
+
    @XmlElement(name = "exchangeRate")
    public String getExchangeRate() {
       return exchangeRate;
@@ -131,6 +137,11 @@ public class Payment extends Type {
       return pendingReason;
    }
 
+   @XmlTransient
+   public Integer getPosition() {
+      return position;
+   }
+
    @XmlElement(name = "protectionEligibilityType")
    public String getProtectionEligibilityType() {
       return protectionEligibilityType;
@@ -171,6 +182,16 @@ public class Payment extends Type {
       return transactionType;
    }
 
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
    public void setExchangeRate(String exchangeRate) {
       this.exchangeRate = exchangeRate;
    }
@@ -209,6 +230,10 @@ public class Payment extends Type {
 
    public void setPendingReason(String pendingReason) {
       this.pendingReason = pendingReason;
+   }
+
+   public void setPosition(Integer position) {
+      this.position = position;
    }
 
    public void setProtectionEligibilityType(String protectionEligibilityType) {

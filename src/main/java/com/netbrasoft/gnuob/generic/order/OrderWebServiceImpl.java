@@ -9,19 +9,23 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import org.hibernate.criterion.Example;
+import org.hibernate.criterion.Restrictions;
+
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.GenericTypeWebService;
 import com.netbrasoft.gnuob.generic.OrderBy;
 import com.netbrasoft.gnuob.generic.Paging;
+import com.netbrasoft.gnuob.generic.Parameter;
 import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.customer.Customer;
 import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
-import com.netbrasoft.gnuob.monitor.SimonInterceptor;
+import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
 @Stateless(name = "OrderWebServiceImpl")
-@Interceptors(value = { SimonInterceptor.class })
+@Interceptors(value = { AppSimonInterceptor.class })
 public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebService<O> {
 
    @EJB(beanName = "SecuredGenericTypeServiceImpl")
@@ -40,6 +44,9 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
          if (order.getContract() != null) {
             securedGenericCustomerService.read(metadata, order.getContract().getCustomer());
             securedGenericContractService.read(metadata, order.getContract());
+
+            Parameter parameter = new Parameter("contract", Restrictions.or(Example.create(order.getContract())));
+            return securedGenericOrderService.count(metadata, order, parameter);
          }
          return securedGenericOrderService.count(metadata, order);
       } catch (Exception e) {
@@ -63,13 +70,14 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
 
    @Override
    @WebMethod(operationName = "findOrder")
-   public List<O> find(@WebParam(name = "metaData", header = true) MetaData metadata,
-         @WebParam(name = "order") O order, @WebParam(name = "paging") Paging paging,
-         @WebParam(name = "orderBy") OrderBy orderBy) {
+   public List<O> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
       try {
          if (order.getContract() != null) {
             securedGenericCustomerService.read(metadata, order.getContract().getCustomer());
             securedGenericContractService.read(metadata, order.getContract());
+
+            Parameter parameter = new Parameter("contract", Restrictions.or(Example.create(order.getContract())));
+            return securedGenericOrderService.find(metadata, order, paging, orderBy, parameter);
          }
          return securedGenericOrderService.find(metadata, order, paging, orderBy);
       } catch (Exception e) {

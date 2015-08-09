@@ -3,6 +3,7 @@ package com.netbrasoft.gnuob.generic.category;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,16 +12,18 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 import com.netbrasoft.gnuob.generic.Type;
 import com.netbrasoft.gnuob.generic.content.Content;
 
+@Cacheable(value = true)
 @Entity(name = SubCategory.ENTITY)
 @Table(name = SubCategory.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -42,12 +45,13 @@ public class SubCategory extends Type {
    @Column(name = "NAME", nullable = false)
    private String name;
 
-   @Column(name = "DESCRIPTION", nullable = false, columnDefinition = "TEXT")
+   @Column(name = "DESCRIPTION", nullable = false)
    private String description;
 
    @Column(name = "POSITION")
    private Integer position;
 
+   @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
    public Set<Content> getContents() {
       return contents;
    }
@@ -72,24 +76,29 @@ public class SubCategory extends Type {
    }
 
    private void positionContents() {
-      int position = 0;
+      int index = 0;
 
       for (Content content : contents) {
-         content.setPosition(Integer.valueOf(position++));
+         content.setPosition(Integer.valueOf(index++));
       }
    }
 
    private void positionSubCategories() {
-      int position = 0;
+      int index = 0;
 
       for (SubCategory subCategory : subCategories) {
-         subCategory.setPosition(Integer.valueOf(position++));
+         subCategory.setPosition(Integer.valueOf(index++));
       }
    }
 
-   @PrePersist
-   @PreUpdate
-   protected void prePersistUpdateSubCategory() {
+   @Override
+   public void prePersist() {
+      positionSubCategories();
+      positionContents();
+   }
+
+   @Override
+   public void preUpdate() {
       positionSubCategories();
       positionContents();
    }

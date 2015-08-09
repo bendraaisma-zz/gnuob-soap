@@ -4,13 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -21,6 +21,7 @@ import com.netbrasoft.gnuob.generic.offer.Offer;
 import com.netbrasoft.gnuob.generic.order.Order;
 import com.netbrasoft.gnuob.generic.security.Access;
 
+@Cacheable(value = true)
 @Entity(name = Contract.ENTITY)
 @Table(name = Contract.TABLE)
 @XmlRootElement(name = Contract.ENTITY)
@@ -39,7 +40,7 @@ public class Contract extends Access {
    @OneToMany(cascade = { CascadeType.REFRESH }, fetch = FetchType.EAGER, mappedBy = "contract")
    private Set<Offer> offers = new HashSet<Offer>();
 
-   @Column(name = "CONTRACT_ID", nullable = false)
+   @Column(name = "CONTRACT_ID", nullable = false, unique = true)
    private String contractId;
 
    public Contract() {
@@ -65,11 +66,16 @@ public class Contract extends Access {
       return orders;
    }
 
-   @PrePersist
-   public void prePersistContractId() {
+   @Override
+   public void prePersist() {
       if (contractId == null || "".equals(contractId.trim())) {
          contractId = UUID.randomUUID().toString();
       }
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
    }
 
    public void setContractId(String contractId) {

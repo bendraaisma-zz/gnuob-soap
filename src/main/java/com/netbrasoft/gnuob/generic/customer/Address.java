@@ -1,5 +1,6 @@
 package com.netbrasoft.gnuob.generic.customer;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
@@ -10,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.netbrasoft.gnuob.generic.Type;
 
+@Cacheable(value = false)
 @Entity(name = Address.ENTITY)
 @Table(name = Address.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -32,7 +34,7 @@ public class Address extends Type {
    @Column(name = "STREET2")
    private String street2;
 
-   @Column(name = "NUMBER", nullable = false)
+   @Column(name = "NUMBER")
    private String number;
 
    @Column(name = "COMPLEMENT")
@@ -127,6 +129,16 @@ public class Address extends Type {
       return street2;
    }
 
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
+   }
+
    public void setCityName(String cityName) {
       this.cityName = cityName;
    }
@@ -178,5 +190,4 @@ public class Address extends Type {
    public void setStreet2(String street2) {
       this.street2 = street2;
    }
-
 }

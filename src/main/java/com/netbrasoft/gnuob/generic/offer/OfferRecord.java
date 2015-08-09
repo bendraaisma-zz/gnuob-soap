@@ -3,11 +3,11 @@ package com.netbrasoft.gnuob.generic.offer;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.netbrasoft.gnuob.generic.Type;
 import com.netbrasoft.gnuob.generic.product.Product;
 
+@Cacheable(value = false)
 @Entity(name = OfferRecord.ENTITY)
 @Table(name = OfferRecord.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -33,7 +34,7 @@ public class OfferRecord extends Type {
    @Column(name = "AMOUNT")
    private BigDecimal amount;
 
-   @Column(name = "DESCRIPTION", columnDefinition = "TEXT")
+   @Column(name = "DESCRIPTION")
    private String description;
 
    @Column(name = "NUMBER")
@@ -78,6 +79,12 @@ public class OfferRecord extends Type {
    @Column(name = "ITEM_URL")
    private String itemUrl;
 
+   @Column(name = "`OPTION`")
+   private String option;
+
+   @Column(name = "POSITION")
+   private Integer position;
+
    @Transient
    private Product product;
 
@@ -87,7 +94,7 @@ public class OfferRecord extends Type {
    @XmlElement(name = "amount")
    public BigDecimal getAmount() {
       if (product != null && amount == null) {
-         amount = product.getAmount();
+         amount = product.getAmount().subtract(getDiscount());
       }
       return amount;
    }
@@ -103,7 +110,7 @@ public class OfferRecord extends Type {
    @XmlElement(name = "discount")
    public BigDecimal getDiscount() {
       if (product != null && discount == null) {
-         discount = product.getItemHeight();
+         discount = product.getDiscount();
       }
       return discount;
    }
@@ -214,6 +221,16 @@ public class OfferRecord extends Type {
       return number;
    }
 
+   @XmlElement(name = "option")
+   public String getOption() {
+      return option;
+   }
+
+   @XmlTransient
+   public Integer getPosition() {
+      return position;
+   }
+
    public Product getProduct() {
       return product;
    }
@@ -257,9 +274,8 @@ public class OfferRecord extends Type {
       return BigDecimal.ZERO;
    }
 
-   @PrePersist
-   protected void prePersistOrderRecord() {
-
+   @Override
+   public void prePersist() {
       if (product != null) {
          name = name == null ? product.getName() : name;
          description = description == null ? product.getDescription() : description;
@@ -277,6 +293,11 @@ public class OfferRecord extends Type {
          itemHeightUnit = itemHeightUnit == null ? product.getItemLengthUnit() : itemHeightUnit;
          itemUrl = itemUrl == null ? product.getItemUrl() : itemUrl;
       }
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
    }
 
    public void setAmount(BigDecimal amount) {
@@ -335,6 +356,14 @@ public class OfferRecord extends Type {
       this.number = number;
    }
 
+   public void setOption(String option) {
+      this.option = option;
+   }
+
+   public void setPosition(Integer position) {
+      this.position = position;
+   }
+
    public void setProduct(Product product) {
       this.product = product;
    }
@@ -350,5 +379,4 @@ public class OfferRecord extends Type {
    public void setTax(BigDecimal tax) {
       this.tax = tax;
    }
-
 }

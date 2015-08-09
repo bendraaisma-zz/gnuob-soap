@@ -1,5 +1,6 @@
 package com.netbrasoft.gnuob.generic.setting;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,6 +11,7 @@ import javax.xml.bind.annotation.XmlType;
 
 import com.netbrasoft.gnuob.generic.security.Access;
 
+@Cacheable(value = true)
 @Entity(name = Setting.ENTITY)
 @Table(name = Setting.TABLE)
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -28,7 +30,7 @@ public class Setting extends Access {
    @XmlElement(name = "value", required = true)
    private String value;
 
-   @Column(name = "DESCRIPTION", nullable = false, columnDefinition = "TEXT")
+   @Column(name = "DESCRIPTION", nullable = false)
    @XmlElement(name = "description")
    private String description;
 
@@ -42,6 +44,16 @@ public class Setting extends Access {
 
    public String getValue() {
       return value;
+   }
+
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
    }
 
    public void setDescription(String description) {

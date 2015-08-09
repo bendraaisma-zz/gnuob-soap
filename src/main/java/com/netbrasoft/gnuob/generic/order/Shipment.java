@@ -1,5 +1,6 @@
 package com.netbrasoft.gnuob.generic.order;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +14,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import com.netbrasoft.gnuob.generic.Type;
 import com.netbrasoft.gnuob.generic.customer.Address;
 
+@Cacheable(value = false)
 @Entity(name = Shipment.ENTITY)
 @Table(name = Shipment.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -41,6 +43,16 @@ public class Shipment extends Type {
    @XmlElement(name = "shipmentType")
    public String getShipmentType() {
       return shipmentType;
+   }
+
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
    }
 
    public void setAddress(Address address) {

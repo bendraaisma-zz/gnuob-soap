@@ -7,4 +7,10 @@ public interface CheckOutService<O extends Order> {
    void doCheckoutDetails(O order);
 
    void doCheckoutPayment(O order);
+
+   O doNotification(O order);
+
+   void doRefundTransaction(O order);
+
+   void doTransactionDetails(O order);
 }

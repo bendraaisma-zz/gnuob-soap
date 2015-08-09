@@ -5,22 +5,22 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.PrePersist;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.security.Access;
 
+@Cacheable(value = false)
 @Entity(name = Offer.ENTITY)
 @Table(name = Offer.TABLE)
 @XmlRootElement(name = Offer.ENTITY)
@@ -30,16 +30,17 @@ public class Offer extends Access {
    protected static final String ENTITY = "Offer";
    protected static final String TABLE = "GNUOB_OFFERS";
 
-   @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, optional = false)
+   @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
    private Contract contract;
 
    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, fetch = FetchType.EAGER)
+   @OrderBy("position asc")
    private Set<OfferRecord> records = new HashSet<OfferRecord>();
 
    @Column(name = "OFFER_ID", nullable = false)
    private String offerId;
 
-   @Column(name = "OFFER_DESCRIPTION", columnDefinition = "TEXT")
+   @Column(name = "OFFER_DESCRIPTION")
    private String offerDescription;
 
    @Column(name = "OFFER_TOTAL")
@@ -53,6 +54,9 @@ public class Offer extends Access {
 
    @Column(name = "TAX_TOTAL")
    private BigDecimal taxTotal;
+
+   @Column(name = "MAX_TOTAL")
+   private BigDecimal maxTotal;
 
    @Column(name = "HANDLING_TOTAL", nullable = false)
    private BigDecimal handlingTotal;
@@ -92,6 +96,10 @@ public class Offer extends Access {
 
    @XmlElement(name = "extraAmount", required = true)
    public BigDecimal getExtraAmount() {
+      if (extraAmount == null) {
+         extraAmount = getHandlingTotal().add(getTaxTotal()).add(getInsuranceTotal());
+      }
+
       return extraAmount;
    }
 
@@ -117,11 +125,13 @@ public class Offer extends Access {
       return itemTotal;
    }
 
-   @XmlTransient
-   @Transient
+   @XmlElement(name = "maxTotal")
    public BigDecimal getMaxTotal() {
-      return getItemTotal().add(getTaxTotal()).add(handlingTotal).add(insuranceTotal).add(getShippingTotal())
-            .add(shippingDiscount).add(extraAmount).add(getDiscountTotal());
+      if (maxTotal == null) {
+         maxTotal = getOfferTotal();
+      }
+
+      return maxTotal;
    }
 
    @XmlElement(name = "offerDescription")
@@ -137,7 +147,7 @@ public class Offer extends Access {
    @XmlElement(name = "offerTotal")
    public BigDecimal getOfferTotal() {
       if (offerTotal == null) {
-         offerTotal = getItemTotal().add(getTaxTotal());
+         offerTotal = getItemTotal().add(getShippingTotal()).subtract(getShippingDiscount()).add(getExtraAmount());
       }
 
       return offerTotal;
@@ -180,16 +190,33 @@ public class Offer extends Access {
       this.offerId = offerId;
    }
 
-   @PrePersist
-   public void prePersistOffer() {
+   private void positionRecords() {
+      int index = 0;
+
+      for (OfferRecord record : records) {
+         record.setPosition(Integer.valueOf(index++));
+      }
+   }
+
+   @Override
+   public void prePersist() {
       if (offerId == null || "".equals(offerId.trim())) {
          offerId = UUID.randomUUID().toString();
       }
+
+      positionRecords();
 
       getTaxTotal();
       getShippingTotal();
       getOfferTotal();
       getItemTotal();
+      getMaxTotal();
+      getDiscountTotal();
+   }
+
+   @Override
+   public void preUpdate() {
+      positionRecords();
    }
 
    public void setContract(Contract contract) {
@@ -214,6 +241,10 @@ public class Offer extends Access {
 
    public void setItemTotal(BigDecimal itemTotal) {
       this.itemTotal = itemTotal;
+   }
+
+   public void setMaxTotal(BigDecimal maxTotal) {
+      this.maxTotal = maxTotal;
    }
 
    public void setOfferDescription(String offerDescription) {

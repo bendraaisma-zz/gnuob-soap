@@ -22,11 +22,11 @@ import com.netbrasoft.gnuob.generic.Parameter;
 import com.netbrasoft.gnuob.generic.content.Content;
 import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
-import com.netbrasoft.gnuob.monitor.SimonInterceptor;
+import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
 @Stateless(name = "CategoryWebServiceImpl")
-@Interceptors(value = { SimonInterceptor.class })
+@Interceptors(value = { AppSimonInterceptor.class })
 public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWebService<C> {
 
    @EJB(beanName = "SecuredGenericTypeServiceImpl")
@@ -41,8 +41,7 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
       try {
          if (!type.getSubCategories().isEmpty()) {
             List<Example> examples = getSubCategoryExamples(type.getSubCategories());
-            Parameter parameter = Parameter.getInstance("subCategories",
-                  Restrictions.or(examples.toArray(new Example[examples.size()])));
+            Parameter parameter = new Parameter("subCategories", Restrictions.or(examples.toArray(new Example[examples.size()])));
             return securedGenericCategoryService.count(metadata, type, parameter);
          }
          return securedGenericCategoryService.count(metadata, type);
@@ -63,14 +62,11 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
 
    @Override
    @WebMethod(operationName = "findCategory")
-   public List<C> find(@WebParam(name = "metaData", header = true) MetaData metadata,
-         @WebParam(name = "category") C type, @WebParam(name = "paging") Paging paging,
-         @WebParam(name = "orderBy") OrderBy orderBy) {
+   public List<C> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "category") C type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
       try {
          if (!type.getSubCategories().isEmpty()) {
             List<Example> examples = getSubCategoryExamples(type.getSubCategories());
-            Parameter parameter = Parameter.getInstance("subCategories",
-                  Restrictions.or(examples.toArray(new Example[examples.size()])));
+            Parameter parameter = new Parameter("subCategories", Restrictions.or(examples.toArray(new Example[examples.size()])));
             return securedGenericCategoryService.find(metadata, type, paging, orderBy, parameter);
          }
          return securedGenericCategoryService.find(metadata, type, paging, orderBy);

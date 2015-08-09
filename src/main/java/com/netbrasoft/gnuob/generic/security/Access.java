@@ -1,5 +1,6 @@
 package com.netbrasoft.gnuob.generic.security;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,29 +20,33 @@ import org.hibernate.annotations.ParamDef;
 
 import com.netbrasoft.gnuob.generic.Type;
 
+@Cacheable(value = true)
 @Entity(name = Access.ENTITY)
 @Table(name = Access.TABLE)
 @Inheritance(strategy = InheritanceType.JOINED)
 // @formatter:off
 @FilterDefs({ @FilterDef(name = Access.NFQ1, parameters = @ParamDef(name = "userId", type = "long")),
-      @FilterDef(name = Access.NFQ2, parameters = @ParamDef(name = "siteId", type = "long")) })
+   @FilterDef(name = Access.NFQ2, parameters = @ParamDef(name = "siteId", type = "long")) })
 @Filters({
-      @Filter(
-      // Select based on user ownership.
-      name = Access.NFQ1, condition = "((owner_ID = (SELECT GNUOB_USERS.ID FROM GNUOB_USERS "
-            + " WHERE GNUOB_USERS.ID = :userId) "
-            + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
-            + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OWNER != 'NONE_ACCESS')) "
-            // Or select based on group ownership.
-            + " OR (group_ID IN(SELECT GNUOB_GROUPS.ID FROM GNUOB_GROUPS " + "	INNER JOIN GNUOB_USERS_GNUOB_GROUPS "
-            + "	ON GNUOB_GROUPS.ID = GNUOB_USERS_GNUOB_GROUPS.groups_ID " + "	INNER JOIN GNUOB_USERS "
-            + "	ON GNUOB_USERS_GNUOB_GROUPS.GNUOB_USERS_ID = GNUOB_USERS.ID " + " AND GNUOB_USERS.ID = :userId) "
-            + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
-            + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.GROUP != 'NONE_ACCESS')) "
-            // Or select based on other ownership.
-            + " OR (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
-            + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OTHERS != 'NONE_ACCESS')) "),
-      @Filter(name = Access.NFQ2, condition = "site_ID = :siteId") })
+   @Filter(
+         // Select based on user ownership.
+         name = Access.NFQ1, condition = "((owner_ID = (SELECT GNUOB_USERS.ID FROM GNUOB_USERS "
+               + " WHERE GNUOB_USERS.ID = :userId) "
+               + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
+               + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OWNER != 'NONE_ACCESS')) "
+               // Or select based on group ownership.
+               + " OR (group_ID IN(SELECT GNUOB_GROUPS.ID FROM GNUOB_GROUPS "
+               + "	INNER JOIN GNUOB_USERS_GNUOB_GROUPS "
+               + "	ON GNUOB_GROUPS.ID = GNUOB_USERS_GNUOB_GROUPS.groups_ID "
+               + "	INNER JOIN GNUOB_USERS "
+               + "	ON GNUOB_USERS_GNUOB_GROUPS.GNUOB_USERS_ID = GNUOB_USERS.ID "
+               + " AND GNUOB_USERS.ID = :userId) "
+               + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
+               + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.GROUP != 'NONE_ACCESS')) "
+               // Or select based on other ownership.
+               + " OR (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
+               + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OTHERS != 'NONE_ACCESS')) "),
+               @Filter(name = Access.NFQ2, condition = "site_ID = :siteId") })
 // @formatter:on
 public abstract class Access extends Type {
 

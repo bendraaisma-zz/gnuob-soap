@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,8 +14,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
-import javax.persistence.PrePersist;
-import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -23,6 +22,7 @@ import com.netbrasoft.gnuob.generic.category.SubCategory;
 import com.netbrasoft.gnuob.generic.content.Content;
 import com.netbrasoft.gnuob.generic.security.Access;
 
+@Cacheable(value = true)
 @Entity(name = Product.ENTITY)
 @Table(name = Product.TABLE)
 @XmlRootElement(name = Product.ENTITY)
@@ -43,10 +43,14 @@ public class Product extends Access {
    @OrderBy("position asc")
    private Set<Content> contents = new HashSet<Content>();
 
+   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+   @OrderBy("position asc")
+   private Set<Option> options = new HashSet<Option>();
+
    @Column(name = "NAME", nullable = false)
    private String name;
 
-   @Column(name = "DESCRIPTION", nullable = false, columnDefinition = "TEXT")
+   @Column(name = "DESCRIPTION", nullable = false)
    private String description;
 
    @Column(name = "NUMBER", nullable = false)
@@ -187,6 +191,10 @@ public class Product extends Access {
       return number;
    }
 
+   public Set<Option> getOptions() {
+      return options;
+   }
+
    @XmlElement(name = "rating")
    public Integer getRating() {
       return rating;
@@ -224,6 +232,14 @@ public class Product extends Access {
       }
    }
 
+   private void positionOptions() {
+      int position = 0;
+
+      for (Option option : options) {
+         option.setPosition(Integer.valueOf(position++));
+      }
+   }
+
    private void positionSubCategories() {
       int position = 0;
 
@@ -232,11 +248,18 @@ public class Product extends Access {
       }
    }
 
-   @PrePersist
-   @PreUpdate
-   protected void prePersistUpdateProduct() {
+   @Override
+   public void prePersist() {
       positionSubCategories();
       positionContents();
+      positionOptions();
+   }
+
+   @Override
+   public void preUpdate() {
+      positionSubCategories();
+      positionContents();
+      positionOptions();
    }
 
    public void setAmount(BigDecimal amount) {
@@ -305,6 +328,10 @@ public class Product extends Access {
 
    public void setNumber(String number) {
       this.number = number;
+   }
+
+   public void setOptions(Set<Option> options) {
+      this.options = options;
    }
 
    public void setRating(Integer rating) {

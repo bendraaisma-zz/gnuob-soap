@@ -2,6 +2,7 @@ package com.netbrasoft.gnuob.generic.product;
 
 import java.math.BigInteger;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.generic.Type;
 
+@Cacheable(value = false)
 @Entity(name = Stock.ENTITY)
 @Table(name = Stock.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -55,6 +57,16 @@ public class Stock extends Type {
    @XmlElement(name = "quantity", required = true)
    public BigInteger getQuantity() {
       return quantity;
+   }
+
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
    }
 
    public void setMaxQuantity(BigInteger maxQuantity) {

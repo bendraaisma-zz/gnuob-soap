@@ -5,17 +5,16 @@ import java.util.List;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 
-import com.netbrasoft.gnuob.monitor.SimonInterceptor;
-
 import com.netbrasoft.gnuob.generic.GenericTypeServiceImpl;
 import com.netbrasoft.gnuob.generic.OrderBy;
 import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.generic.Parameter;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
+import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @Stateless(name = "SecuredGenericTypeServiceImpl")
-@Interceptors(value = { AccessControl.class, SimonInterceptor.class })
-public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T> implements SecuredGenericTypeService<T> {
+@Interceptors(value = { AccessControl.class, AppSimonInterceptor.class })
+public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T>implements SecuredGenericTypeService<T> {
 
    @Override
    @OperationAccess(operation = Operation.READ)
@@ -26,13 +25,13 @@ public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T> 
    @Override
    @OperationAccess(operation = Operation.CREATE)
    public void create(MetaData metadata, T type) {
-
+      // Method is used by access control to test if type can be created.
    }
 
    @Override
    @OperationAccess(operation = Operation.DELETE)
    public void delete(MetaData metadata, T type) {
-
+      // Method is used by access control to test if type can be deleted.
    }
 
    @Override
@@ -62,7 +61,7 @@ public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T> 
    @Override
    @OperationAccess(operation = Operation.READ)
    public void read(MetaData metadata, T type) {
-
+      // Method is used by access control to test if type is readable.
    }
 
    @Override
@@ -80,6 +79,6 @@ public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T> 
    @Override
    @OperationAccess(operation = Operation.UPDATE)
    public void update(MetaData metadata, T type) {
-
+      // Method is used by access control to test if type is updatable.
    }
 }

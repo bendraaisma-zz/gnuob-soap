@@ -13,7 +13,6 @@ import javax.jws.WebService;
 
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
-import com.netbrasoft.gnuob.monitor.SimonInterceptor;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.GenericTypeWebService;
@@ -24,10 +23,11 @@ import com.netbrasoft.gnuob.generic.category.SubCategory;
 import com.netbrasoft.gnuob.generic.content.Content;
 import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
+import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
 @Stateless(name = "ProductWebServiceImpl")
-@Interceptors(value = { SimonInterceptor.class })
+@Interceptors(value = { AppSimonInterceptor.class })
 public class ProductWebServiceImpl<P extends Product> implements GenericTypeWebService<P> {
 
    @EJB(beanName = "SecuredGenericTypeServiceImpl")
@@ -42,8 +42,7 @@ public class ProductWebServiceImpl<P extends Product> implements GenericTypeWebS
       try {
          if (!type.getSubCategories().isEmpty()) {
             List<Example> examples = getSubCategoryExamples(type.getSubCategories());
-            Parameter parameter = Parameter.getInstance("subCategories",
-                  Restrictions.or(examples.toArray(new Example[examples.size()])));
+            Parameter parameter = new Parameter("subCategories", Restrictions.or(examples.toArray(new Example[examples.size()])));
             return securedGenericProductService.count(metadata, type, parameter);
          }
          return securedGenericProductService.count(metadata, type);
@@ -64,14 +63,11 @@ public class ProductWebServiceImpl<P extends Product> implements GenericTypeWebS
 
    @Override
    @WebMethod(operationName = "findProduct")
-   public List<P> find(@WebParam(name = "metaData", header = true) MetaData metadata,
-         @WebParam(name = "product") P type, @WebParam(name = "paging") Paging paging,
-         @WebParam(name = "orderBy") OrderBy orderBy) {
+   public List<P> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "product") P type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
       try {
          if (!type.getSubCategories().isEmpty()) {
             List<Example> examples = getSubCategoryExamples(type.getSubCategories());
-            Parameter parameter = Parameter.getInstance("subCategories",
-                  Restrictions.or(examples.toArray(new Example[examples.size()])));
+            Parameter parameter = new Parameter("subCategories", Restrictions.or(examples.toArray(new Example[examples.size()])));
             return securedGenericProductService.find(metadata, type, paging, orderBy, parameter);
          }
          return securedGenericProductService.find(metadata, type, paging, orderBy);

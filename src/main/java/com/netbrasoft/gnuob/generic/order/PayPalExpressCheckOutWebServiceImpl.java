@@ -7,17 +7,16 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
-import com.netbrasoft.gnuob.monitor.SimonInterceptor;
-
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.customer.Customer;
 import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
+import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
 @Stateless(name = "PayPalExpressCheckOutWebServiceImpl")
-@Interceptors(value = { SimonInterceptor.class })
+@Interceptors(value = { AppSimonInterceptor.class })
 public class PayPalExpressCheckOutWebServiceImpl<O extends Order> implements CheckOutWebService<O> {
 
    @EJB(beanName = "PayPalExpressCheckOutServiceImpl")
@@ -41,37 +40,77 @@ public class PayPalExpressCheckOutWebServiceImpl<O extends Order> implements Che
          securedGenericContractService.update(metadata, order.getContract());
          securedGenericOrderService.merge(metadata, order);
          return order;
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
 
    @Override
    @WebMethod(operationName = "doCheckoutDetails")
-   public O doCheckoutDetails(@WebParam(name = "metaData", header = true) MetaData metadata,
-         @WebParam(name = "order") O order) {
+   public O doCheckoutDetails(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
          checkOutService.doCheckoutDetails(order);
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
          securedGenericContractService.update(metadata, order.getContract());
          securedGenericOrderService.merge(metadata, order);
          return order;
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
 
    @Override
    @WebMethod(operationName = "doCheckoutPayment")
-   public O doCheckoutPayment(@WebParam(name = "metaData", header = true) MetaData metadata,
-         @WebParam(name = "order") O order) {
+   public O doCheckoutPayment(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
          checkOutService.doCheckoutPayment(order);
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
          securedGenericContractService.update(metadata, order.getContract());
          securedGenericOrderService.merge(metadata, order);
          return order;
-      } catch (Exception e) {
+      } catch (final Exception e) {
+         throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+      }
+   }
+
+   @Override
+   @WebMethod(operationName = "doNotification")
+   public O doNotification(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
+      try {
+         checkOutService.doNotification(order);
+         securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
+         securedGenericContractService.update(metadata, order.getContract());
+         securedGenericOrderService.merge(metadata, order);
+         return order;
+      } catch (final Exception e) {
+         throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+      }
+   }
+
+   @Override
+   @WebMethod(operationName = "doRefundTransaction")
+   public O doRefundTransaction(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
+      try {
+         checkOutService.doRefundTransaction(order);
+         securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
+         securedGenericContractService.update(metadata, order.getContract());
+         securedGenericOrderService.merge(metadata, order);
+         return order;
+      } catch (final Exception e) {
+         throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+      }
+   }
+
+   @Override
+   @WebMethod(operationName = "doTransactionDetails")
+   public O doTransactionDetails(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
+      try {
+         checkOutService.doTransactionDetails(order);
+         securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
+         securedGenericContractService.update(metadata, order.getContract());
+         securedGenericOrderService.merge(metadata, order);
+         return order;
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }

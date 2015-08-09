@@ -9,7 +9,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
-import com.netbrasoft.gnuob.monitor.SimonInterceptor;
+import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.GenericTypeWebService;
@@ -18,7 +18,7 @@ import com.netbrasoft.gnuob.generic.Paging;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
 @Stateless(name = "SiteWebServiceImpl")
-@Interceptors(value = { SimonInterceptor.class })
+@Interceptors(value = { AppSimonInterceptor.class })
 public class SiteWebServiceImpl<S extends Site> implements GenericTypeWebService<S> {
 
    @EJB(beanName = "SecuredGenericTypeServiceImpl")
@@ -46,8 +46,7 @@ public class SiteWebServiceImpl<S extends Site> implements GenericTypeWebService
 
    @Override
    @WebMethod(operationName = "findSite")
-   public List<S> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "site") S type,
-         @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
+   public List<S> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "site") S type, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
       try {
          return securedGenericSiteService.find(metadata, type, paging, orderBy);
       } catch (Exception e) {

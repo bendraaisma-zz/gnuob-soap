@@ -2,10 +2,6 @@ package com.netbrasoft.gnuob.generic;
 
 public final class Parameter {
 
-   public static Parameter getInstance(String name, Object value) {
-      return new Parameter(name, value);
-   }
-
    private final String name;
    private final Object value;
 

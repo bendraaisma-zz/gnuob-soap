@@ -6,10 +6,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "Paging")
 public final class Paging {
 
-   public static Paging getInstance(int first, int max) {
-      return new Paging(first, max);
-   }
-
    private int first;
 
    private int max;

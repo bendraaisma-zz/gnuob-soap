@@ -20,10 +20,10 @@ import org.hibernate.criterion.Restrictions;
 
 import com.netbrasoft.gnuob.generic.security.OperationAccess;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
-import com.netbrasoft.gnuob.monitor.SimonInterceptor;
+import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @Stateless(name = "GenericTypeServiceImpl")
-@Interceptors(value = { SimonInterceptor.class })
+@Interceptors(value = { AppSimonInterceptor.class })
 public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 
    @EJB(beanName = "GenericTypeDaoImpl")
@@ -48,7 +48,7 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
       criteria.setProjection(Projections.rowCount());
       criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 
-      return ((Long) criteria.uniqueResult());
+      return (long) criteria.uniqueResult();
    }
 
    @Override
@@ -71,12 +71,10 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
       Criteria criteria = session.createCriteria(type.getClass());
 
       criteria.add(Restrictions.eq("id", id));
-      criteria.setFirstResult(0);
-      criteria.setMaxResults(1);
 
       criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 
-      List<T> list = criteria.list();
+      List<T> list = criteria.setCacheable(true).list();
 
       return list.isEmpty() ? null : list.iterator().next();
    }
@@ -115,7 +113,7 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 
          criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 
-         return criteria.list();
+         return criteria.setCacheable(true).list();
       }
    }
 
@@ -157,7 +155,7 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
       criteria.setProjection(projectionList);
       criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 
-      return criteria.list();
+      return criteria.setCacheable(true).list();
    }
 
    @Override

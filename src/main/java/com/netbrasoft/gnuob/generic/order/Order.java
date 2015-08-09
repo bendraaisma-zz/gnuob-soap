@@ -1,26 +1,29 @@
 package com.netbrasoft.gnuob.generic.order;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrePersist;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.security.Access;
 
+@Cacheable(value = false)
 @Entity(name = Order.ENTITY)
 @Table(name = Order.TABLE)
 @XmlRootElement(name = Order.ENTITY)
@@ -30,10 +33,11 @@ public class Order extends Access {
    protected static final String ENTITY = "Order";
    protected static final String TABLE = "GNUOB_ORDERS";
 
-   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, optional = false)
+   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
    private Contract contract;
 
    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, fetch = FetchType.EAGER)
+   @OrderBy("position asc")
    private Set<OrderRecord> records = new HashSet<OrderRecord>();
 
    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true)
@@ -45,16 +49,19 @@ public class Order extends Access {
    @Column(name = "ORDER_ID", nullable = false)
    private String orderId;
 
+   @Transient
+   private String notificationId;
+
    @Column(name = "TRANSACTION_ID")
    private String transactionId;
 
    @Column(name = "BILLING_AGREEMENT_ID")
    private String billingAgreementId;
 
-   @Column(name = "ORDER_DESCRIPTION", columnDefinition = "TEXT")
+   @Column(name = "ORDER_DESCRIPTION")
    private String orderDescription;
 
-   @Column(name = "NOTE_TEXT", columnDefinition = "TEXT")
+   @Column(name = "NOTE_TEXT")
    private String noteText;
 
    @Column(name = "TOKEN")
@@ -68,6 +75,9 @@ public class Order extends Access {
 
    @Column(name = "ITEM_TOTAL")
    private BigDecimal itemTotal;
+
+   @Column(name = "MAX_TOTAL")
+   private BigDecimal maxTotal;
 
    @Column(name = "TAX_TOTAL")
    private BigDecimal taxTotal;
@@ -90,16 +100,16 @@ public class Order extends Access {
    @Column(name = "INSURANCE_OPTION_OFFERED")
    private Boolean insuranceOptionOffered;
 
-   @Column(name = "CUSTOM", columnDefinition = "TEXT")
+   @Column(name = "CUSTOM")
    private String custom;
 
-   @Column(name = "NOTE", columnDefinition = "TEXT")
+   @Column(name = "NOTE")
    private String note;
 
    @Column(name = "CHECKOUT_STATUS")
    private String checkoutStatus;
 
-   @Column(name = "GIFT_MESSAGE", columnDefinition = "TEXT")
+   @Column(name = "GIFT_MESSAGE")
    private String giftMessage;
 
    @Column(name = "GIFT_RECEIPT_ENABLE")
@@ -116,6 +126,9 @@ public class Order extends Access {
 
    @Column(name = "GIFT_WRAP_AMOUNT")
    private BigDecimal giftWrapAmount;
+
+   @Column(name = "ORDER_DATE")
+   private Date orderDate;
 
    public Order() {
 
@@ -146,7 +159,7 @@ public class Order extends Access {
       if (discountTotal == null) {
          discountTotal = BigDecimal.ZERO;
 
-         for (OrderRecord orderRecord : records) {
+         for (final OrderRecord orderRecord : records) {
             discountTotal = discountTotal.add(orderRecord.getDiscountTotal());
          }
       }
@@ -155,6 +168,10 @@ public class Order extends Access {
 
    @XmlElement(name = "extraAmount", required = true)
    public BigDecimal getExtraAmount() {
+      if (extraAmount == null) {
+         extraAmount = getHandlingTotal().add(getTaxTotal()).add(getInsuranceTotal());
+      }
+
       return extraAmount;
    }
 
@@ -213,18 +230,20 @@ public class Order extends Access {
       if (itemTotal == null) {
          itemTotal = BigDecimal.ZERO;
 
-         for (OrderRecord orderRecord : records) {
+         for (final OrderRecord orderRecord : records) {
             itemTotal = itemTotal.add(orderRecord.getItemTotal());
          }
       }
       return itemTotal;
    }
 
-   @XmlTransient
-   @Transient
+   @XmlElement(name = "maxTotal")
    public BigDecimal getMaxTotal() {
-      return getItemTotal().add(getTaxTotal()).add(handlingTotal).add(insuranceTotal).add(getShippingTotal())
-            .add(shippingDiscount).add(extraAmount).add(getDiscountTotal());
+      if (maxTotal == null) {
+         maxTotal = getOrderTotal();
+      }
+
+      return maxTotal;
    }
 
    @XmlElement(name = "note")
@@ -235,6 +254,16 @@ public class Order extends Access {
    @XmlElement(name = "noteText")
    public String getNoteText() {
       return noteText;
+   }
+
+   @XmlElement(name = "notificationId")
+   public String getNotificationId() {
+      return notificationId;
+   }
+
+   @XmlElement(name = "orderDate")
+   public Date getOrderDate() {
+      return orderDate;
    }
 
    @XmlElement(name = "orderDescription")
@@ -250,7 +279,7 @@ public class Order extends Access {
    @XmlElement(name = "orderTotal")
    public BigDecimal getOrderTotal() {
       if (orderTotal == null) {
-         orderTotal = getItemTotal().add(getTaxTotal());
+         orderTotal = getItemTotal().add(getShippingTotal()).subtract(getShippingDiscount()).add(getExtraAmount());
       }
       return orderTotal;
    }
@@ -274,7 +303,7 @@ public class Order extends Access {
       if (shippingTotal == null) {
          shippingTotal = BigDecimal.ZERO;
 
-         for (OrderRecord orderRecord : records) {
+         for (final OrderRecord orderRecord : records) {
             shippingTotal = shippingTotal.add(orderRecord.getShippingTotal());
          }
       }
@@ -286,7 +315,7 @@ public class Order extends Access {
       if (taxTotal == null) {
          taxTotal = BigDecimal.ZERO;
 
-         for (OrderRecord orderRecord : records) {
+         for (final OrderRecord orderRecord : records) {
             taxTotal = taxTotal.add(orderRecord.getTaxTotal());
          }
       }
@@ -303,16 +332,36 @@ public class Order extends Access {
       return transactionId;
    }
 
-   @PrePersist
-   protected void prePersistOrder() {
+   private void positionRecords() {
+      int index = 0;
+
+      for (final OrderRecord record : records) {
+         record.setPosition(Integer.valueOf(index++));
+      }
+   }
+
+   @Override
+   public void prePersist() {
       if (orderId == null || "".equals(orderId.trim())) {
          orderId = UUID.randomUUID().toString();
       }
 
+      if (orderDate == null) {
+         orderDate = new Date();
+      }
+
+      positionRecords();
       getTaxTotal();
       getShippingTotal();
       getOrderTotal();
       getItemTotal();
+      getMaxTotal();
+      getDiscountTotal();
+   }
+
+   @Override
+   public void preUpdate() {
+      positionRecords();
    }
 
    public void setBillingAgreementId(String billingAgreementId) {
@@ -383,12 +432,28 @@ public class Order extends Access {
       this.itemTotal = itemTotal;
    }
 
+   public void setMaxTotal(BigDecimal maxTotal) {
+      this.maxTotal = maxTotal;
+   }
+
    public void setNote(String note) {
       this.note = note;
    }
 
    public void setNoteText(String noteText) {
       this.noteText = noteText;
+   }
+
+   public void setNotificationId(String notificationId) {
+      this.notificationId = notificationId;
+   }
+
+   public void setOrderDate(Date orderDate) {
+      this.orderDate = orderDate;
+   }
+
+   public void setOrderDate(Timestamp orderDate) {
+      this.orderDate = orderDate;
    }
 
    public void setOrderDescription(String orderDescription) {

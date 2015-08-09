@@ -2,6 +2,7 @@ package com.netbrasoft.gnuob.generic.customer;
 
 import java.sql.Date;
 
+import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import com.netbrasoft.gnuob.generic.jaxb.JaxbDateAdapter;
 import com.netbrasoft.gnuob.generic.security.Access;
 
+@Cacheable(value = true)
 @Entity(name = Customer.ENTITY)
 @Table(name = Customer.TABLE)
 @XmlRootElement(name = Customer.ENTITY)
@@ -41,7 +43,7 @@ public class Customer extends Access {
    @Column(name = "MIDDLE_NAME")
    private String middleName;
 
-   @Column(name = "DATE_OF_BIRTH", nullable = false)
+   @Column(name = "DATE_OF_BIRTH")
    private Date dateOfBirth;
 
    @Column(name = "PAYER_BUSINESS")
@@ -71,13 +73,13 @@ public class Customer extends Access {
    @Column(name = "TAX_ID")
    private String taxId;
 
-   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, optional = false)
+   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true)
    private Address address;
 
    public Customer() {
    }
 
-   @XmlElement(name = "adress", required = true)
+   @XmlElement(name = "address", required = true)
    public Address getAddress() {
       return address;
    }
@@ -111,7 +113,7 @@ public class Customer extends Access {
    @XmlElement(name = "friendlyName")
    public String getFriendlyName() {
       if (friendlyName == null) {
-         friendlyName = this.firstName + " " + this.middleName == null ? "" : this.middleName + " " + this.lastName;
+         friendlyName = this.firstName + " " + (this.middleName == null ? "" : this.middleName) + " " + this.lastName;
       }
       return friendlyName;
    }
@@ -164,6 +166,16 @@ public class Customer extends Access {
    @XmlElement(name = "taxIdType")
    public String getTaxIdType() {
       return taxIdType;
+   }
+
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
    }
 
    public void setAddress(Address address) {

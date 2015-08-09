@@ -1,11 +1,13 @@
 package com.netbrasoft.gnuob.generic.security;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+@Cacheable(value = true)
 @Table(name = Site.TABLE)
 @Entity(name = Site.ENTITY)
 @XmlRootElement(name = Site.ENTITY)
@@ -18,7 +20,7 @@ public class Site extends Access {
    @Column(name = "NAME", nullable = false, unique = true)
    private String name;
 
-   @Column(name = "DESCRIPTION", columnDefinition = "TEXT")
+   @Column(name = "DESCRIPTION")
    private String description;
 
    public Site() {
@@ -37,6 +39,16 @@ public class Site extends Access {
    @XmlElement(name = "name", required = true)
    public String getName() {
       return name;
+   }
+
+   @Override
+   public void prePersist() {
+      return;
+   }
+
+   @Override
+   public void preUpdate() {
+      return;
    }
 
    public void setDescription(String description) {
