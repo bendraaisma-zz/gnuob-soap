@@ -166,6 +166,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
    }
 
    private void doItem(OrderRecord orderRecord, Item item) {
+      // TODO: BD not update but check if equal.
       orderRecord.setDescription(item.getDescription());
       orderRecord.setAmount(item.getAmount());
       orderRecord.setQuantity(BigInteger.valueOf(item.getQuantity()));
@@ -199,6 +200,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
    }
 
    private void doPaymentDetails(O order, Transaction transaction) {
+      // TODO: BD not update but check if equal.
       order.setTransactionId(transaction.getCode());
       order.setOrderId(transaction.getReference());
       order.setDiscountTotal(transaction.getDiscountAmount());
@@ -270,6 +272,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
    }
 
    private void doSender(O order, Sender sender) {
+      // TODO: BD not update but check if equal.
       order.getContract().getCustomer().setBuyerEmail(sender.getEmail());
       order.getContract().getCustomer().setFriendlyName(sender.getName());
       order.getContract().getCustomer().setContactPhone(sender.getPhone().toString());
