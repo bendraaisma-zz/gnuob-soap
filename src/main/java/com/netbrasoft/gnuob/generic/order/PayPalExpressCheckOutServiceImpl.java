@@ -60,9 +60,6 @@ import ebay.apis.eblbasecomponents.UserIdPasswordType;
 @Stateless(name = "PayPalExpressCheckOutServiceImpl")
 public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckOutService<O> {
 
-   private static final String GNUOB_SITE_NOTIFICATION_PROPERTY = "gnuob.site.notification";
-   private static final String GNUOB_SITE_REDIRECT_PROPERTY = "gnuob.site.redirect";
-   private static final String GNUOB_SITE_CANCEL_PROPERTY = "gnuob.site.cancel";
    private static final String PAYPAL_SITE_PROPERTY = "paypal.site";
    private static final String PAYPAL_SUBJECT_PROPERTY = "paypal.subject";
    private static final String PAYPAL_SIGNATURE_PROPERTY = "paypal.signature";
@@ -70,7 +67,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    private static final String PAYPAL_USERNAME_PROPERTY = "paypal.username";
    private static final String PAYPAL_VERSION_PROPERTY = "paypal.version";
    private static final String PAYPAL_SERVICE_NUMBER_PROPERTY = "paypal.serviceNumber";
-   private static final String GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE = "http://D978BB10.cm-3-1c.dynamic.ziggo.nl/paypal_notifications";
+   private static final String GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE = "http://localhost:8080/paypal_notifications";
    private static final String GNUOB_SITE_REDIRECT_PROPERTY_VALUE = "http://localhost:8080/confirmation.html";
    private static final String GNUOB_SITE_CANCEL_PROPERTY_VALUE = "http://localhost:8080/cancel.html";
    private static final String PAYPAL_SITE_PROPERTY_VALUE = "https://api-3t.sandbox.paypal.com/2.0/";
@@ -81,9 +78,6 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    private static final String PAYPAL_VERSION_PROPERTY_VALUE = "124.0";
    private static final String PAYPAL_SERVICE_NUMBER_VALUE = "-";
    private static final String VERSION_PROPERTY = System.getProperty(PAYPAL_VERSION_PROPERTY, PAYPAL_VERSION_PROPERTY_VALUE);
-   private static final String NOTIFY_URL_PROPERTY = System.getProperty(GNUOB_SITE_NOTIFICATION_PROPERTY, GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE);
-   private static final String REDIRECT_URL_PROPERTY = System.getProperty(GNUOB_SITE_REDIRECT_PROPERTY, GNUOB_SITE_REDIRECT_PROPERTY_VALUE);
-   private static final String CANCEL_URL_PROPERTY = System.getProperty(GNUOB_SITE_CANCEL_PROPERTY, GNUOB_SITE_CANCEL_PROPERTY_VALUE);
    private static final String CUSTOMER_SERVICE_NUMBER_PROPERTY = System.getProperty(PAYPAL_SERVICE_NUMBER_PROPERTY, PAYPAL_SERVICE_NUMBER_VALUE);
    private static final String SUBJECT_PROPERTY = System.getProperty(PAYPAL_SUBJECT_PROPERTY, PAYPAL_SUBJECT_PROPERTY_VALUE);
    private static final String SIGNATURE_PROPERTY = System.getProperty(PAYPAL_SIGNATURE_PROPERTY, PAYPAL_SIGNATURE_PROPERTY_VALUE);
@@ -487,7 +481,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
 
       // Your URL for receiving Instant Payment Notification (IPN) about this
       // transaction.
-      paymentDetailsType.setNotifyURL(NOTIFY_URL_PROPERTY);
+      paymentDetailsType.setNotifyURL(System.getProperty("gnuob." + order.getSite().getName() + ".paypal.notification", GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE));
 
       // Address to which the order is shipped.
       if (order.getShipment() != null) {
@@ -627,11 +621,11 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       // URL to which the buyer's browser is returned after choosing to pay
       // with
       // PayPal. For digital goods.
-      setExpressCheckoutRequestDetailsType.setReturnURL(REDIRECT_URL_PROPERTY);
+      setExpressCheckoutRequestDetailsType.setReturnURL(System.getProperty("gnuob." + order.getSite().getName() + ".paypal.redirect", GNUOB_SITE_REDIRECT_PROPERTY_VALUE));
 
       // URL to which the buyer is returned if the buyer does not approve the
       // use of PayPal to pay you. For digital goods.
-      setExpressCheckoutRequestDetailsType.setCancelURL(CANCEL_URL_PROPERTY);
+      setExpressCheckoutRequestDetailsType.setCancelURL(System.getProperty("gnuob." + order.getSite().getName() + ".paypal.cancel", GNUOB_SITE_CANCEL_PROPERTY_VALUE));
 
       // Indicates whether or not you require the buyer's shipping address on
       // file with PayPal be a confirmed address.
