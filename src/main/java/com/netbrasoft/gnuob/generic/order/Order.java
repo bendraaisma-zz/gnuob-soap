@@ -133,9 +133,6 @@ public class Order extends Access {
    @Column(name = "CHECKOUT")
    private String checkout;
 
-   @Column(name = "HOST", nullable = false)
-   private String host;
-
    public Order() {
 
    }
@@ -219,11 +216,6 @@ public class Order extends Access {
    @XmlElement(name = "handlingTotal", required = true)
    public BigDecimal getHandlingTotal() {
       return handlingTotal;
-   }
-
-   @XmlElement(name = "host", required = true)
-   public String getHost() {
-      return host;
    }
 
    @XmlElement(name = "insuranceOptionOffered")
@@ -442,10 +434,6 @@ public class Order extends Access {
 
    public void setHandlingTotal(BigDecimal handlingTotal) {
       this.handlingTotal = handlingTotal;
-   }
-
-   public void setHost(String host) {
-      this.host = host;
    }
 
    public void setInsuranceOptionOffered(Boolean insuranceOptionOffered) {
