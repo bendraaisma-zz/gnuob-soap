@@ -1,6 +1,7 @@
 package com.netbrasoft.gnuob.generic.order;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Date;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -54,6 +55,9 @@ import ebay.apis.eblbasecomponents.PayerInfoType;
 import ebay.apis.eblbasecomponents.PaymentDetailsItemType;
 import ebay.apis.eblbasecomponents.PaymentDetailsType;
 import ebay.apis.eblbasecomponents.PaymentInfoType;
+import ebay.apis.eblbasecomponents.PaymentItemInfoType;
+import ebay.apis.eblbasecomponents.PaymentItemType;
+import ebay.apis.eblbasecomponents.PaymentTransactionType;
 import ebay.apis.eblbasecomponents.SetExpressCheckoutRequestDetailsType;
 import ebay.apis.eblbasecomponents.UserIdPasswordType;
 
@@ -61,7 +65,6 @@ import ebay.apis.eblbasecomponents.UserIdPasswordType;
 public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckOutService<O> {
 
    private static final String PAYPAL_SITE_PROPERTY = "paypal.site";
-   private static final String PAYPAL_SUBJECT_PROPERTY = "paypal.subject";
    private static final String PAYPAL_SIGNATURE_PROPERTY = "paypal.signature";
    private static final String PAYPAL_PASSWORD_PROPERTY = "paypal.password";
    private static final String PAYPAL_USERNAME_PROPERTY = "paypal.username";
@@ -71,15 +74,13 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    private static final String GNUOB_SITE_REDIRECT_PROPERTY_VALUE = "http://localhost:8080/confirmation.html";
    private static final String GNUOB_SITE_CANCEL_PROPERTY_VALUE = "http://localhost:8080/cancel.html";
    private static final String PAYPAL_SITE_PROPERTY_VALUE = "https://api-3t.sandbox.paypal.com/2.0/";
-   private static final String PAYPAL_SUBJECT_PROPERTY_VALUE = "badraaisma@msn.com";
    private static final String PAYPAL_SIGNATURE_PROPERTY_VALUE = "AFcWxV21C7fd0v3bYYYRCpSSRl31A7mmuIDpb.xZccUUAyCy0P.XGaWg";
    private static final String PAYPAL_PASSWORD_PROPERTY_VALUE = "UU9AJQJYE2CAMP54";
    private static final String PAYPAL_USERNAME_PROPERTY_VALUE = "BR2GaGfg_api1.netbrasoft.com";
-   private static final String PAYPAL_VERSION_PROPERTY_VALUE = "124.0";
+   private static final String PAYPAL_VERSION_PROPERTY_VALUE = "121.0";
    private static final String PAYPAL_SERVICE_NUMBER_VALUE = "-";
    private static final String VERSION_PROPERTY = System.getProperty(PAYPAL_VERSION_PROPERTY, PAYPAL_VERSION_PROPERTY_VALUE);
    private static final String CUSTOMER_SERVICE_NUMBER_PROPERTY = System.getProperty(PAYPAL_SERVICE_NUMBER_PROPERTY, PAYPAL_SERVICE_NUMBER_VALUE);
-   private static final String SUBJECT_PROPERTY = System.getProperty(PAYPAL_SUBJECT_PROPERTY, PAYPAL_SUBJECT_PROPERTY_VALUE);
    private static final String SIGNATURE_PROPERTY = System.getProperty(PAYPAL_SIGNATURE_PROPERTY, PAYPAL_SIGNATURE_PROPERTY_VALUE);
    private static final String PASSWORD_PROPERTY = System.getProperty(PAYPAL_PASSWORD_PROPERTY, PAYPAL_PASSWORD_PROPERTY_VALUE);
    private static final String USERNAME_PROPERTY = System.getProperty(PAYPAL_USERNAME_PROPERTY, PAYPAL_USERNAME_PROPERTY_VALUE);
@@ -126,7 +127,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    }
 
    private BigDecimal doBasicAmountType(BasicAmountType basicAmountType) {
-      return basicAmountType == null ? null : new BigDecimal(basicAmountType.getValue());
+      return basicAmountType == null ? BigDecimal.ZERO : new BigDecimal(basicAmountType.getValue());
    }
 
    private BasicAmountType doBasicAmountType(BigDecimal value) {
@@ -547,7 +548,11 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       payment.setTransactionId(paymentInfoType.getTransactionID());
 
       // Type of transaction.
-      payment.setTransactionType(paymentInfoType.getTransactionType().value());
+      if (paymentInfoType.getTransactionType() != null) {
+         payment.setTransactionType(paymentInfoType.getTransactionType().value());
+      } else {
+         payment.setTransactionType("");
+      }
 
       // Indicates whether the payment is instant or delayed.
       payment.setPaymentType(paymentInfoType.getPaymentType().value());
@@ -602,6 +607,29 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       payment.setPaymentRequestId(paymentInfoType.getPaymentRequestID());
 
       return payment;
+   }
+
+   private void doPaymentItemInfo(O order, PaymentItemInfoType paymentItemInfo) {
+
+      order.getInvoice().setInvoiceId(paymentItemInfo.getInvoiceID());
+      order.setCustom(paymentItemInfo.getCustom());
+
+      // Details about each individual item included in the order.
+      for (final PaymentItemType paymentItemType : paymentItemInfo.getPaymentItem()) {
+         for (final OrderRecord orderRecord : order.getRecords()) {
+            if (paymentItemType.getNumber() != null && paymentItemType.getNumber().equalsIgnoreCase(orderRecord.getNumber())) {
+               doPaymentItemType(orderRecord, paymentItemType);
+               break;
+            }
+         }
+      }
+   }
+
+   private void doPaymentItemType(OrderRecord orderRecord, PaymentItemType paymentItemType) {
+      orderRecord.setName(paymentItemType.getName());
+      orderRecord.setAmount(doBasicAmountType(paymentItemType.getAmount()));
+      orderRecord.setNumber(paymentItemType.getNumber());
+      orderRecord.setQuantity(BigInteger.valueOf(Integer.valueOf(paymentItemType.getQuantity())));
    }
 
    @Override
@@ -683,8 +711,36 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
 
    @Override
    public void doTransactionDetails(O order) {
-      // TODO Auto-generated method stub
+      // GetTransactionDetails Request Fields
+      final GetTransactionDetailsReq getTransactionDetailsReq = new GetTransactionDetailsReq();
+      final GetTransactionDetailsRequestType getTransactionDetailsRequestType = new GetTransactionDetailsRequestType();
+      getTransactionDetailsRequestType.setVersion(VERSION_PROPERTY);
 
+      // TransactionDetails request fields.F
+      getTransactionDetailsRequestType.setTransactionID(order.getTransactionId());
+
+      getTransactionDetailsReq.setGetTransactionDetailsRequest(getTransactionDetailsRequestType);
+
+      // Do TransactionDetails call.
+      final GetTransactionDetailsResponseType getTransactionDetailsResponseType = getPayPalAPIInterface().getTransactionDetails(getTransactionDetailsReq);
+
+      if (getTransactionDetailsResponseType.getAck() == AckCodeType.SUCCESS) {
+
+         final PaymentTransactionType paymentTransactionType = getTransactionDetailsResponseType.getPaymentTransactionDetails();
+
+         // Information about the payer.
+         // TODO: BD not update but check if equal.
+         doPayerInfoType(order, paymentTransactionType.getPayerInfo());
+
+         // Information about the payment.
+         order.getInvoice().getPayments().add(doPaymentInfoType(paymentTransactionType.getPaymentInfo()));
+
+         // Payment Item Info Type Fields
+         // TODO: BD not update but check if equal.
+         doPaymentItemInfo(order, paymentTransactionType.getPaymentItemInfo());
+      } else {
+         throw new GNUOpenBusinessServiceException("Exception from Paypal Express Checkout [errors=" + getParameterErrors(getTransactionDetailsResponseType.getErrors()) + "], please try again.");
+      }
    }
 
    private String getParameterErrors(List<ErrorType> errors) {
@@ -722,7 +778,6 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       userIdPasswordType.setUsername(USERNAME_PROPERTY);
       userIdPasswordType.setPassword(PASSWORD_PROPERTY);
       userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
-      userIdPasswordType.setSubject(SUBJECT_PROPERTY);
 
       final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
       customSecurityHeaderType.setCredentials(userIdPasswordType);
@@ -749,7 +804,6 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       userIdPasswordType.setUsername(USERNAME_PROPERTY);
       userIdPasswordType.setPassword(PASSWORD_PROPERTY);
       userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
-      userIdPasswordType.setSubject(SUBJECT_PROPERTY);
 
       final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
       customSecurityHeaderType.setCredentials(userIdPasswordType);

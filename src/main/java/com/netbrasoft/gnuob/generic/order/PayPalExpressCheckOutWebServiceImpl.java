@@ -101,7 +101,7 @@ public class PayPalExpressCheckOutWebServiceImpl<O extends Order> implements Che
             securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
             securedGenericContractService.update(metadata, order.getContract());
             securedGenericOrderService.update(metadata, order);
-            checkOutService.doNotification(order);
+            checkOutService.doTransactionDetails(order);
             securedGenericOrderService.merge(metadata, order);
          } else {
             throw new GNUOpenBusinessServiceException("Exception from PayPal Notification, no order found for the given notification code.");

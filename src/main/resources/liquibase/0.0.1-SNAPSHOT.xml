@@ -363,7 +363,7 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="PENDING_REASON" type="VARCHAR(20)" />
-			<column name="PROTECTION_ELIGIBILITY_TYPE" type="VARCHAR(20)" />
+			<column name="PROTECTION_ELIGIBILITY_TYPE" type="VARCHAR(128)" />
 			<column name="REASON_CODE" type="VARCHAR(20)" />
 			<column name="SETTLE_AMOUNT" type="DECIMAL(19, 2)" />
 			<column name="STORE_ID" type="VARCHAR(20)" />

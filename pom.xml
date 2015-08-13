@@ -77,9 +77,9 @@
 		<dependency>
 			<groupId>com.paypal</groupId>
 			<artifactId>paypal-service</artifactId>
-			<version>124.0</version>
+			<version>121.0</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/paypal-service-124.0.jar</systemPath>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/paypal-service-121.0.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>pagseguro-api</groupId>
