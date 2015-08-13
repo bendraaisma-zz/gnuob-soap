@@ -229,7 +229,7 @@ public class OrderRecord extends Type {
    @XmlElement(name = "number")
    public String getNumber() {
       if (product != null && number == null) {
-         number = product.getNumber();
+         number = product.getNumber() + "-" + UUID.randomUUID().toString();
       }
       return number;
    }
@@ -302,7 +302,7 @@ public class OrderRecord extends Type {
          name = name == null ? product.getName() : name;
          description = description == null ? product.getDescription() : description;
          amount = amount == null ? product.getAmount() : amount;
-         number = number == null ? product.getNumber() : number;
+         number = number == null ? product.getNumber() + "-" + UUID.randomUUID().toString() : number;
          tax = tax == null ? product.getTax() : tax;
          shippingCost = shippingCost == null ? product.getShippingCost() : shippingCost;
          itemWeight = itemWeight == null ? product.getItemWeight() : itemWeight;
