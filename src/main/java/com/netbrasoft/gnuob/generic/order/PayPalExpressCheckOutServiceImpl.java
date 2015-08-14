@@ -15,8 +15,12 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.WebServiceRef;
 
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.jaxb.JAXBDataBinding;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.customer.Address;
@@ -773,11 +777,20 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
 
    private PayPalAPIAAInterface getPayPalAPIAAInterface() {
       final PayPalAPIAAInterface port = payPalAPIInterfaceService.getPayPalAPIAA();
-
+      final Client client = ClientProxy.getClient(port);
+      final HTTPConduit http = (HTTPConduit) client.getConduit();
+      final HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
       final UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
+
       userIdPasswordType.setUsername(USERNAME_PROPERTY);
       userIdPasswordType.setPassword(PASSWORD_PROPERTY);
       userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
+
+      httpClientPolicy.setConnectionTimeout(36000);
+      httpClientPolicy.setAllowChunking(false);
+      httpClientPolicy.setReceiveTimeout(32000);
+
+      http.setClient(httpClientPolicy);
 
       final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
       customSecurityHeaderType.setCredentials(userIdPasswordType);
@@ -799,11 +812,20 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
 
    private PayPalAPIInterface getPayPalAPIInterface() {
       final PayPalAPIInterface port = payPalAPIInterfaceService.getPayPalAPI();
-
+      final Client client = ClientProxy.getClient(port);
+      final HTTPConduit http = (HTTPConduit) client.getConduit();
+      final HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
       final UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
+
       userIdPasswordType.setUsername(USERNAME_PROPERTY);
       userIdPasswordType.setPassword(PASSWORD_PROPERTY);
       userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
+
+      httpClientPolicy.setConnectionTimeout(36000);
+      httpClientPolicy.setAllowChunking(false);
+      httpClientPolicy.setReceiveTimeout(32000);
+
+      http.setClient(httpClientPolicy);
 
       final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
       customSecurityHeaderType.setCredentials(userIdPasswordType);
@@ -815,6 +837,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       } catch (final JAXBException e) {
          throw new GNUOpenBusinessServiceException("Exception from Paypal Express Requester Credentials, please try again.", e);
       }
+
 
       ((BindingProvider) port).getRequestContext().put(Header.HEADER_LIST, headers);
 
