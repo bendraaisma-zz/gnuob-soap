@@ -130,6 +130,9 @@ public class Order extends Access {
    @Column(name = "ORDER_DATE")
    private Date orderDate;
 
+   @Column(name = "CHECKOUT")
+   private String checkout;
+
    public Order() {
 
    }
@@ -137,6 +140,11 @@ public class Order extends Access {
    @XmlElement(name = "billingAgreementId")
    public String getBillingAgreementId() {
       return billingAgreementId;
+   }
+
+   @XmlElement(name = "checkout")
+   public String getCheckout() {
+      return checkout;
    }
 
    @XmlElement(name = "checkoutStatus")
@@ -346,8 +354,16 @@ public class Order extends Access {
          orderId = UUID.randomUUID().toString();
       }
 
+      if (custom == null || "".equals(custom.trim())) {
+         custom = UUID.randomUUID().toString();
+      }
+
       if (orderDate == null) {
          orderDate = new Date();
+      }
+
+      if(checkoutStatus == null) {
+         checkoutStatus = "PENDING";
       }
 
       positionRecords();
@@ -366,6 +382,10 @@ public class Order extends Access {
 
    public void setBillingAgreementId(String billingAgreementId) {
       this.billingAgreementId = billingAgreementId;
+   }
+
+   public void setCheckout(String checkout) {
+      this.checkout = checkout;
    }
 
    public void setCheckoutStatus(String checkoutStatus) {

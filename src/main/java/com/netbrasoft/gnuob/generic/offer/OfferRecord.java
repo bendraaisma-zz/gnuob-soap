@@ -2,6 +2,7 @@ package com.netbrasoft.gnuob.generic.offer;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.UUID;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -38,7 +39,10 @@ public class OfferRecord extends Type {
    private String description;
 
    @Column(name = "NUMBER")
-   private String number;
+   private String number = UUID.randomUUID().toString();
+
+   @Column(name = "PRODUCT_NUMBER", nullable = false)
+   private String productNumber;
 
    @Column(name = "TAX")
    private BigDecimal tax;
@@ -215,9 +219,6 @@ public class OfferRecord extends Type {
 
    @XmlElement(name = "number")
    public String getNumber() {
-      if (product != null && number == null) {
-         number = product.getNumber();
-      }
       return number;
    }
 
@@ -233,6 +234,14 @@ public class OfferRecord extends Type {
 
    public Product getProduct() {
       return product;
+   }
+
+   @XmlElement(name = "productNumber")
+   public String getProductNumber() {
+      if (product != null && productNumber == null) {
+         productNumber = product.getNumber();
+      }
+      return productNumber;
    }
 
    @XmlElement(name = "quantity", required = true)
@@ -280,7 +289,7 @@ public class OfferRecord extends Type {
          name = name == null ? product.getName() : name;
          description = description == null ? product.getDescription() : description;
          amount = amount == null ? product.getAmount() : amount;
-         number = number == null ? product.getNumber() : number;
+         productNumber = productNumber == null ? product.getNumber() : productNumber;
          tax = tax == null ? product.getTax() : tax;
          shippingCost = shippingCost == null ? product.getShippingCost() : shippingCost;
          itemWeight = itemWeight == null ? product.getItemWeight() : itemWeight;
@@ -366,6 +375,10 @@ public class OfferRecord extends Type {
 
    public void setProduct(Product product) {
       this.product = product;
+   }
+
+   public void setProductNumber(String productNumber) {
+      this.productNumber = productNumber;
    }
 
    public void setQuantity(BigInteger quantity) {

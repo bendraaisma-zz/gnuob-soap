@@ -7,7 +7,6 @@ import javax.persistence.LockModeType;
 
 import org.javasimon.SimonManager;
 import org.javasimon.Split;
-import org.javasimon.Stopwatch;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.GenericTypeService;
@@ -41,17 +40,17 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
    @SuppressWarnings("unchecked")
    private Subject authenticateSubject(InvocationContext ctx) throws GNUOpenBusinessServiceException {
 
-      Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.authenticateSubject").start();
-      
-      Subject subject = new Subject();
+      final Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.authenticateSubject").start();
 
-      for (Object parameter : ctx.getParameters()) {
+      final Subject subject = new Subject();
+
+      for (final Object parameter : ctx.getParameters()) {
 
          // Parameter is instance of MetaData?
          if (parameter instanceof MetaData) {
 
             // Cast parameter to a meta data object.
-            MetaData metaData = (MetaData) parameter;
+            final MetaData metaData = (MetaData) parameter;
 
             // Check site credentials
             if (siteServiceImpl.count((S) new Site(metaData.getSite())) > 0) {
@@ -87,11 +86,11 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
    }
 
    private Object createOperationAccess(Subject subject, InvocationContext ctx) {
-      
-      Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.createOperationAccess").start();
-      
+
+      final Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.createOperationAccess").start();
+
       // Checks if the method contains a access, or type object as parameter
-      for (Object parameter : ctx.getParameters()) {
+      for (final Object parameter : ctx.getParameters()) {
 
          // Check if user has create access.
          if (!subject.user.getAccess().getOperations().contains(Operation.CREATE)) {
@@ -102,7 +101,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
          // Parameter is instance of Access?
          if (parameter instanceof Access) {
 
-            Access access = (Access) parameter;
+            final Access access = (Access) parameter;
 
             access.setGroup(subject.user.getGroup());
             access.setSite(subject.site);
@@ -124,18 +123,18 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
       try {
          split.stop();
          return ctx.proceed();
-      } catch (Exception e) {
+      } catch (final Exception e) {
          split.stop();
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
 
    private Object deleteOperationAccess(Subject subject, InvocationContext ctx) {
-      
-      Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.deleteOperationAccess").start();
+
+      final Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.deleteOperationAccess").start();
 
       // Checks if the method contains a access, or type object as parameter
-      for (Object parameter : ctx.getParameters()) {
+      for (final Object parameter : ctx.getParameters()) {
 
          // Check if user has delete access.
          if (!subject.user.getAccess().getOperations().contains(Operation.DELETE)) {
@@ -147,9 +146,10 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
          if (parameter instanceof Access) {
 
             // Cast parameter to a access object and get id.
-            long accessId = ((Access) parameter).getId();
+            final long accessId = ((Access) parameter).getId();
 
             @SuppressWarnings("unchecked")
+            final
             Access access = accessTypeService.find((A) parameter, accessId, LockModeType.NONE);
 
             // If access object is in database?
@@ -158,7 +158,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
                boolean userOwnership = false;
                boolean groupOwnership = false;
                boolean othersOwnership = false;
-               boolean rootOwnership = subject.user.getRoot() == null ? false : subject.user.getRoot();
+               final boolean rootOwnership = subject.user.getRoot() == null ? false : subject.user.getRoot();
 
                // User of access object is owner and has a delete
                // access?
@@ -168,7 +168,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
 
                   // Check if it has delete access based on
                   // groups ownership.
-                  for (Group group : subject.user.getGroups()) {
+                  for (final Group group : subject.user.getGroups()) {
 
                      if (access.getGroup() != null && access.getGroup().equals(group) && access.getPermission() != null && access.getPermission().getGroup().getOperations().contains(Operation.DELETE)) {
                         groupOwnership = true;
@@ -208,7 +208,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
       try {
          split.stop();
          return ctx.proceed();
-      } catch (Exception e) {
+      } catch (final Exception e) {
          split.stop();
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
@@ -226,8 +226,8 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
 
    @AroundInvoke
    public Object intercept(InvocationContext ctx) {
-      
-      OperationAccess operationAccess = ctx.getMethod().getAnnotation(OperationAccess.class);
+
+      final OperationAccess operationAccess = ctx.getMethod().getAnnotation(OperationAccess.class);
 
       if (operationAccess != null) {
 
@@ -251,15 +251,15 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
    private Object noneOperationAccess(InvocationContext ctx) {
       try {
          return ctx.proceed();
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
 
    private Object readOperationAccess(Subject subject, InvocationContext ctx) {
 
-      Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.readOperationAccess").start();
-      
+      final Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.readOperationAccess").start();
+
       // Check if user has read access.
       if (!subject.user.getAccess().getOperations().contains(Operation.READ)) {
          split.stop();
@@ -271,7 +271,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
 
       try {
          proceed = ctx.proceed();
-      } catch (Exception e) {
+      } catch (final Exception e) {
          split.stop();
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
@@ -283,11 +283,11 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
    }
 
    private Object updateOperationAccess(Subject subject, InvocationContext ctx) {
-      
-      Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.updateOperationAccess").start();
+
+      final Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.updateOperationAccess").start();
 
       // Checks if the method contains a access object as parameter
-      for (Object parameter : ctx.getParameters()) {
+      for (final Object parameter : ctx.getParameters()) {
 
          // Parameter is instance of Access?
          if (parameter instanceof Access) {
@@ -299,9 +299,10 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
             }
 
             // Cast parameter to a access object and get id.
-            long accessId = ((Access) parameter).getId();
+            final long accessId = ((Access) parameter).getId();
 
             @SuppressWarnings("unchecked")
+            final
             Access access = accessTypeService.find((A) parameter, accessId, LockModeType.NONE);
 
             // If access object is in database?
@@ -310,7 +311,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
                boolean userOwnership = false;
                boolean groupOwnership = false;
                boolean othersOwnership = false;
-               boolean rootOwnership = subject.user.getRoot() == null ? false : subject.user.getRoot();
+               final boolean rootOwnership = subject.user.getRoot() == null ? false : subject.user.getRoot();
 
                // User of access object is owner and has a update
                // access?
@@ -320,7 +321,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
 
                   // Check if it has update access based on
                   // groups ownership.
-                  for (Group group : subject.user.getGroups()) {
+                  for (final Group group : subject.user.getGroups()) {
 
                      if (access.getGroup() != null && access.getGroup().equals(group) && access.getPermission() != null && access.getPermission().getGroup().getOperations().contains(Operation.UPDATE)) {
                         groupOwnership = true;
@@ -361,7 +362,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
       try {
          split.stop();
          return ctx.proceed();
-      } catch (Exception e) {
+      } catch (final Exception e) {
          split.stop();
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }

@@ -2,9 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.netbrasoft.gnuob</groupId>
+	<groupId>com.netbrasoft</groupId>
 	<artifactId>gnuob-soap</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>GNU Open Business Platform</name>
 	<description>GNU Open Business Platform is a open source business framework</description>
@@ -77,9 +77,9 @@
 		<dependency>
 			<groupId>com.paypal</groupId>
 			<artifactId>paypal-service</artifactId>
-			<version>124.0</version>
+			<version>121.0</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/paypal-service-124.0.jar</systemPath>
+			<systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/paypal-service-121.0.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>pagseguro-api</groupId>
