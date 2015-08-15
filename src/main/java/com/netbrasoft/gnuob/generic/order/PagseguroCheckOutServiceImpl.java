@@ -269,7 +269,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
 
    private void doSender(O order, Sender sender) {
       // TODO: BD not update but check if equal.
-      order.getContract().getCustomer().setBuyerEmail(sender.getEmail());
+      order.getContract().getCustomer().setPayer(sender.getEmail());
       order.getContract().getCustomer().setFriendlyName(sender.getName());
       order.getContract().getCustomer().setContactPhone(sender.getPhone().toString());
    }
