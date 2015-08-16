@@ -29,16 +29,16 @@ public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
 
    @Override
    public void disableFilter(String filterName) {
-      Session session = getDelegate();
+      final Session session = getDelegate();
       session.disableFilter(filterName);
    }
 
    @Override
    public void enableFilter(String fiterName, Parameter... param) {
-      Session session = getDelegate();
-      Filter filter = session.enableFilter(fiterName);
+      final Session session = getDelegate();
+      final Filter filter = session.enableFilter(fiterName);
 
-      for (Parameter p : param) {
+      for (final Parameter p : param) {
          filter.setParameter(p.getName(), p.getValue());
       }
    }
@@ -56,7 +56,7 @@ public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
 
    @Override
    public Session getDelegate() {
-      return ((Session) entityManager.getDelegate());
+      return (Session) entityManager.getDelegate();
    }
 
    @Override

@@ -227,7 +227,7 @@ public class Product extends Access {
    private void positionContents() {
       int position = 0;
 
-      for (Content content : contents) {
+      for (final Content content : contents) {
          content.setPosition(Integer.valueOf(position++));
       }
    }
@@ -235,7 +235,7 @@ public class Product extends Access {
    private void positionOptions() {
       int position = 0;
 
-      for (Option option : options) {
+      for (final Option option : options) {
          option.setPosition(Integer.valueOf(position++));
       }
    }
@@ -243,7 +243,7 @@ public class Product extends Access {
    private void positionSubCategories() {
       int position = 0;
 
-      for (SubCategory subCategory : subCategories) {
+      for (final SubCategory subCategory : subCategories) {
          subCategory.setPosition(Integer.valueOf(position++));
       }
    }
