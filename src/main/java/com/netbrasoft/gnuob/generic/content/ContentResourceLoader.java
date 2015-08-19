@@ -4,9 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Iterator;
-import java.util.Properties;
 
-import javax.naming.Context;
 import javax.naming.InitialContext;
 
 import org.apache.commons.collections.ExtendedProperties;
@@ -27,16 +25,10 @@ public class ContentResourceLoader<C extends Content> extends ResourceLoader {
 
    @SuppressWarnings("unchecked")
    public ContentResourceLoader() {
-      if (securedGenericContentService == null) {
-         try {
-            final Properties jndiProps = new Properties();
-            jndiProps.put(Context.URL_PKG_PREFIXES, "org.jboss.ejb.client.naming");
-            // create a context passing these properties
-            final Context ctx = new InitialContext(jndiProps);
-            securedGenericContentService = (SecuredGenericTypeService<C>) ctx.lookup("java:module/SecuredGenericTypeServiceImpl");
-         } catch (final Exception e) {
-            throw new RuntimeException("ContentResourceLoader not properly initialized. No SecuredGenericTypeService was identified.", e);
-         }
+      try {
+         securedGenericContentService = (SecuredGenericTypeService<C>) InitialContext.doLookup("java:module/SecuredGenericTypeServiceImpl");
+      } catch (final Exception e) {
+         throw new RuntimeException("ContentResourceLoader not properly initialized. No SecuredGenericTypeService was identified.", e);
       }
    }
 
@@ -52,7 +44,7 @@ public class ContentResourceLoader<C extends Content> extends ResourceLoader {
       if (iterator.hasNext()) {
          return iterator.next().getModification().getTime();
       } else {
-         throw new ResourceNotFoundException("DataSourceResourceLoader: could not find resource '" + resource.getName() + "'");
+         throw new ResourceNotFoundException("ContentResourceLoader: could not find resource '" + resource.getName() + "'");
       }
    }
 
@@ -68,15 +60,15 @@ public class ContentResourceLoader<C extends Content> extends ResourceLoader {
       if (iterator.hasNext()) {
          return new BufferedInputStream(new ByteArrayInputStream(iterator.next().getData()));
       } else {
-         throw new ResourceNotFoundException("DataSourceResourceLoader: could not find resource '" + source + "'");
+         throw new ResourceNotFoundException("ContentResourceLoader: could not find resource '" + source + "'");
       }
    }
 
    @Override
    public void init(ExtendedProperties configuration) {
-      metaData.setUser("guest");
-      metaData.setPassword("guest");
-      metaData.setSite("localhost");
+      metaData.setUser(configuration.getString("user"));
+      metaData.setPassword(configuration.getString("password"));
+      metaData.setSite(configuration.getString("site"));
    }
 
    @Override

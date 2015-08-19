@@ -14,10 +14,12 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.velocity.context.Context;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.netbrasoft.gnuob.generic.content.Content;
+import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 import com.netbrasoft.gnuob.generic.security.Access;
 
 @Cacheable(value = true)
@@ -47,6 +49,11 @@ public class Category extends Access {
    @Column(name = "POSITION")
    private Integer position;
 
+   @Override
+   public Context accept(ContextVisitor visitor) {
+      return visitor.visit(this);
+   }
+
    @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
    public Set<Content> getContents() {
       return contents;
@@ -74,7 +81,7 @@ public class Category extends Access {
    private void positionContents() {
       int index = 0;
 
-      for (Content content : contents) {
+      for (final Content content : contents) {
          content.setPosition(Integer.valueOf(index++));
       }
    }
@@ -82,7 +89,7 @@ public class Category extends Access {
    private void positionSubCategories() {
       int index = 0;
 
-      for (SubCategory subCategory : subCategories) {
+      for (final SubCategory subCategory : subCategories) {
          subCategory.setPosition(Integer.valueOf(index++));
       }
    }

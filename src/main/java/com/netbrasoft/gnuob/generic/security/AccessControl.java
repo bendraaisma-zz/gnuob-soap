@@ -149,8 +149,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
             final long accessId = ((Access) parameter).getId();
 
             @SuppressWarnings("unchecked")
-            final
-            Access access = accessTypeService.find((A) parameter, accessId, LockModeType.NONE);
+            final Access access = accessTypeService.find((A) parameter, accessId, LockModeType.NONE);
 
             // If access object is in database?
             if (access != null) {
@@ -302,8 +301,7 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
             final long accessId = ((Access) parameter).getId();
 
             @SuppressWarnings("unchecked")
-            final
-            Access access = accessTypeService.find((A) parameter, accessId, LockModeType.NONE);
+            final Access access = accessTypeService.find((A) parameter, accessId, LockModeType.NONE);
 
             // If access object is in database?
             if (access != null) {

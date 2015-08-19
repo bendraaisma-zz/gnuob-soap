@@ -9,6 +9,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
+import org.apache.velocity.context.Context;
+
+import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 import com.netbrasoft.gnuob.generic.security.Access;
 
 @Cacheable(value = true)
@@ -33,6 +36,11 @@ public class Setting extends Access {
    @Column(name = "DESCRIPTION", nullable = false)
    @XmlElement(name = "description")
    private String description;
+
+   @Override
+   public Context accept(ContextVisitor visitor) {
+      return visitor.visit(this);
+   }
 
    public String getDescription() {
       return description;

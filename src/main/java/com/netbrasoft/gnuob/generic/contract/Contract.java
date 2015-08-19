@@ -16,6 +16,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.velocity.context.Context;
+
+import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 import com.netbrasoft.gnuob.generic.customer.Customer;
 import com.netbrasoft.gnuob.generic.offer.Offer;
 import com.netbrasoft.gnuob.generic.order.Order;
@@ -44,6 +47,11 @@ public class Contract extends Access {
    private String contractId;
 
    public Contract() {
+   }
+
+   @Override
+   public Context accept(ContextVisitor visitor) {
+      return visitor.visit(this);
    }
 
    @XmlElement(name = "contractId", required = true)

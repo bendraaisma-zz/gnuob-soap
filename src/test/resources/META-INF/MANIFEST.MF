@@ -3,12 +3,10 @@ Archiver-Version: Plexus Archiver
 Created-By: Apache Maven
 Built-By: bernard
 Build-Jdk: 1.8.0_51
-Specification-Title: GNU Open Business Platform Simple Object Access P
- rotocol
+Specification-Title: GNU Open Business Platform Simple Object Access Protocol
 Specification-Version: 0.0.4-SNAPSHOT
 Specification-Vendor: Netbrasoft
-Implementation-Title: GNU Open Business Platform Simple Object Access 
- Protocol
+Implementation-Title: GNU Open Business Platform Simple Object Access Protocol
 Implementation-Version: 0.0.4-SNAPSHOT
 Implementation-Vendor-Id: com.netbrasoft
 Implementation-Vendor: Netbrasoft

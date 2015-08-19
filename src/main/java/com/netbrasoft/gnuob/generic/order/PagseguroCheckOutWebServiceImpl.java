@@ -12,6 +12,9 @@ import javax.jws.WebService;
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.OrderBy;
 import com.netbrasoft.gnuob.generic.Paging;
+import com.netbrasoft.gnuob.generic.content.mail.Mail;
+import com.netbrasoft.gnuob.generic.content.mail.MailAction;
+import com.netbrasoft.gnuob.generic.content.mail.MailControl;
 import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.customer.Customer;
 import com.netbrasoft.gnuob.generic.security.MetaData;
@@ -20,7 +23,7 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
 @Stateless(name = "PagseguroCheckOutWebServiceImpl")
-@Interceptors(value = { AppSimonInterceptor.class })
+@Interceptors(value = { AppSimonInterceptor.class, MailControl.class })
 public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOutWebService<O> {
 
    @EJB(beanName = "PagseguroCheckOutServiceImpl")
@@ -37,6 +40,7 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
 
    @Override
    @WebMethod(operationName = "doCheckout")
+   @MailAction(operation = Mail.NO_MAIL)
    public O doCheckout(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
@@ -52,6 +56,7 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
 
    @Override
    @WebMethod(operationName = "doCheckoutDetails")
+   @MailAction(operation = Mail.NO_MAIL)
    public O doCheckoutDetails(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
@@ -67,6 +72,7 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
 
    @Override
    @WebMethod(operationName = "doCheckoutPayment")
+   @MailAction(operation = Mail.CONFIRMATION_NEW_ORDER_MAIL)
    public O doCheckoutPayment(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
@@ -82,6 +88,7 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
 
    @Override
    @WebMethod(operationName = "doNotification")
+   @MailAction(operation = Mail.NO_MAIL)
    public O doNotification(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
          order = checkOutService.doNotification(order);
@@ -116,6 +123,7 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
 
    @Override
    @WebMethod(operationName = "doRefundTransaction")
+   @MailAction(operation = Mail.NO_MAIL)
    public O doRefundTransaction(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
@@ -131,6 +139,7 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
 
    @Override
    @WebMethod(operationName = "doTransactionDetails")
+   @MailAction(operation = Mail.NO_MAIL)
    public O doTransactionDetails(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
       try {
          securedGenericCustomerService.update(metadata, order.getContract().getCustomer());

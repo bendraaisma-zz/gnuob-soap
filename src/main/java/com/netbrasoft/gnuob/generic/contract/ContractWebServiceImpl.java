@@ -13,6 +13,8 @@ import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.GenericTypeWebService;
 import com.netbrasoft.gnuob.generic.OrderBy;
 import com.netbrasoft.gnuob.generic.Paging;
+import com.netbrasoft.gnuob.generic.content.mail.Mail;
+import com.netbrasoft.gnuob.generic.content.mail.MailAction;
 import com.netbrasoft.gnuob.generic.customer.Customer;
 import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
@@ -35,7 +37,7 @@ public class ContractWebServiceImpl<C extends Contract> implements GenericTypeWe
       try {
          securedGenericCustomerService.read(metadata, contract.getCustomer());
          return securedGenericContractService.count(metadata, contract);
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
@@ -46,7 +48,7 @@ public class ContractWebServiceImpl<C extends Contract> implements GenericTypeWe
       try {
          securedGenericCustomerService.read(metadata, contract.getCustomer());
          return securedGenericContractService.find(metadata, contract, contract.getId());
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
@@ -57,7 +59,7 @@ public class ContractWebServiceImpl<C extends Contract> implements GenericTypeWe
       try {
          securedGenericCustomerService.read(metadata, contract.getCustomer());
          return securedGenericContractService.find(metadata, contract, paging, orderBy);
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
@@ -69,19 +71,20 @@ public class ContractWebServiceImpl<C extends Contract> implements GenericTypeWe
          securedGenericCustomerService.update(metadata, contract.getCustomer());
          securedGenericContractService.merge(metadata, contract);
          return contract;
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
 
    @Override
    @WebMethod(operationName = "persistContract")
+   @MailAction(operation = Mail.WELCOME_NEW_CUSTOMER_MAIL)
    public C persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract) {
       try {
          securedGenericCustomerService.persist(metadata, contract.getCustomer());
          securedGenericContractService.persist(metadata, contract);
          return contract;
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
@@ -92,7 +95,7 @@ public class ContractWebServiceImpl<C extends Contract> implements GenericTypeWe
       try {
          securedGenericCustomerService.read(metadata, contract.getCustomer());
          return securedGenericContractService.refresh(metadata, contract, contract.getId());
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
@@ -103,7 +106,7 @@ public class ContractWebServiceImpl<C extends Contract> implements GenericTypeWe
       try {
          securedGenericCustomerService.delete(metadata, contract.getCustomer());
          securedGenericContractService.remove(metadata, contract);
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }

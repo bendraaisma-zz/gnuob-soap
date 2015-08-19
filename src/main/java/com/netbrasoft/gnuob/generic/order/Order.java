@@ -20,6 +20,9 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.velocity.context.Context;
+
+import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.security.Access;
 
@@ -135,6 +138,11 @@ public class Order extends Access {
 
    public Order() {
 
+   }
+
+   @Override
+   public Context accept(ContextVisitor visitor) {
+      return visitor.visit(this);
    }
 
    @XmlElement(name = "billingAgreementId")
@@ -362,7 +370,7 @@ public class Order extends Access {
          orderDate = new Date();
       }
 
-      if(checkoutStatus == null) {
+      if (checkoutStatus == null) {
          checkoutStatus = "PENDING";
       }
 

@@ -11,6 +11,9 @@ import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.velocity.context.Context;
+
+import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 import com.netbrasoft.gnuob.generic.security.Access;
 
 @Cacheable(value = true)
@@ -34,6 +37,11 @@ public class Content extends Access {
 
    @Column(name = "CONTENT", columnDefinition = "MEDIUMBLOB", nullable = false)
    private byte[] data;
+
+   @Override
+   public Context accept(ContextVisitor visitor) {
+      return visitor.visit(this);
+   }
 
    @XmlElement(name = "content", required = true)
    @XmlMimeType("application/octet-stream")

@@ -17,6 +17,9 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.velocity.context.Context;
+
+import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.security.Access;
 
@@ -77,6 +80,11 @@ public class Offer extends Access {
 
    }
 
+   @Override
+   public Context accept(ContextVisitor visitor) {
+      return visitor.visit(this);
+   }
+
    @XmlElement(name = "contract", required = true)
    public Contract getContract() {
       return contract;
@@ -87,7 +95,7 @@ public class Offer extends Access {
       if (discountTotal == null) {
          discountTotal = BigDecimal.ZERO;
 
-         for (OfferRecord offerRecord : records) {
+         for (final OfferRecord offerRecord : records) {
             discountTotal = discountTotal.add(offerRecord.getDiscountTotal());
          }
       }
@@ -118,7 +126,7 @@ public class Offer extends Access {
       if (itemTotal == null) {
          itemTotal = BigDecimal.ZERO;
 
-         for (OfferRecord offerRecord : records) {
+         for (final OfferRecord offerRecord : records) {
             itemTotal = itemTotal.add(offerRecord.getItemTotal());
          }
       }
@@ -167,7 +175,7 @@ public class Offer extends Access {
       if (shippingTotal == null) {
          shippingTotal = BigDecimal.ZERO;
 
-         for (OfferRecord offerRecord : records) {
+         for (final OfferRecord offerRecord : records) {
             shippingTotal = shippingTotal.add(offerRecord.getShippingTotal());
          }
       }
@@ -179,7 +187,7 @@ public class Offer extends Access {
       if (taxTotal == null) {
          taxTotal = BigDecimal.ZERO;
 
-         for (OfferRecord offerRecord : records) {
+         for (final OfferRecord offerRecord : records) {
             taxTotal = taxTotal.add(offerRecord.getTaxTotal());
          }
       }
@@ -193,7 +201,7 @@ public class Offer extends Access {
    private void positionRecords() {
       int index = 0;
 
-      for (OfferRecord record : records) {
+      for (final OfferRecord record : records) {
          record.setPosition(Integer.valueOf(index++));
       }
    }

@@ -19,7 +19,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.velocity.context.Context;
+
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
+import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 
 import de.rtner.security.auth.spi.SimplePBKDF2;
 
@@ -68,6 +71,11 @@ public class User extends Access {
 
    public User(String name) {
       this.name = name;
+   }
+
+   @Override
+   public Context accept(ContextVisitor visitor) {
+      return visitor.visit(this);
    }
 
    public Rule getAccess() {

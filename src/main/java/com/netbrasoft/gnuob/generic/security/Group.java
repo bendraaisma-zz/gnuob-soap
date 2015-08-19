@@ -7,6 +7,10 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.velocity.context.Context;
+
+import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
+
 @Cacheable(value = true)
 @Entity(name = Group.ENTITY)
 @Table(name = Group.TABLE)
@@ -25,6 +29,11 @@ public class Group extends Access {
 
    public Group() {
 
+   }
+
+   @Override
+   public Context accept(ContextVisitor visitor) {
+      return visitor.visit(this);
    }
 
    @XmlElement(name = "description")

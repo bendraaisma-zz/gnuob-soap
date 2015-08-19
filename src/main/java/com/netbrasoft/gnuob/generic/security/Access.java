@@ -19,6 +19,7 @@ import org.hibernate.annotations.Filters;
 import org.hibernate.annotations.ParamDef;
 
 import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.content.contexts.ContextElement;
 
 @Cacheable(value = true)
 @Entity(name = Access.ENTITY)
@@ -48,7 +49,7 @@ import com.netbrasoft.gnuob.generic.Type;
                + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OTHERS != 'NONE_ACCESS')) "),
                @Filter(name = Access.NFQ2, condition = "site_ID = :siteId") })
 // @formatter:on
-public abstract class Access extends Type {
+public abstract class Access extends Type implements ContextElement {
 
    private static final long serialVersionUID = 6374088000216811805L;
    protected static final String ENTITY = "Access";

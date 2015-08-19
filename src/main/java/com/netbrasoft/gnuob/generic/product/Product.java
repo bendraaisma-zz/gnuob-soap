@@ -18,8 +18,11 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.velocity.context.Context;
+
 import com.netbrasoft.gnuob.generic.category.SubCategory;
 import com.netbrasoft.gnuob.generic.content.Content;
+import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 import com.netbrasoft.gnuob.generic.security.Access;
 
 @Cacheable(value = true)
@@ -106,6 +109,11 @@ public class Product extends Access {
 
    @Column(name = "LATEST_COLLECTION")
    private Boolean latestCollection;
+
+   @Override
+   public Context accept(ContextVisitor visitor) {
+      return visitor.visit(this);
+   }
 
    @XmlElement(name = "amount", required = true)
    public BigDecimal getAmount() {

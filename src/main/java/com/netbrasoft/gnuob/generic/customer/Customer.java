@@ -12,6 +12,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.apache.velocity.context.Context;
+
+import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 import com.netbrasoft.gnuob.generic.jaxb.JaxbDateAdapter;
 import com.netbrasoft.gnuob.generic.security.Access;
 
@@ -77,6 +80,11 @@ public class Customer extends Access {
    private Address address;
 
    public Customer() {
+   }
+
+   @Override
+   public Context accept(ContextVisitor visitor) {
+      return visitor.visit(this);
    }
 
    @XmlElement(name = "address", required = true)
