@@ -45,11 +45,11 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
             securedGenericCustomerService.read(metadata, order.getContract().getCustomer());
             securedGenericContractService.read(metadata, order.getContract());
 
-            Parameter parameter = new Parameter("contract", Restrictions.or(Example.create(order.getContract())));
+            final Parameter parameter = new Parameter("contract", Restrictions.or(Example.create(order.getContract())));
             return securedGenericOrderService.count(metadata, order, parameter);
          }
          return securedGenericOrderService.count(metadata, order);
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
@@ -63,7 +63,7 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
             securedGenericContractService.read(metadata, order.getContract());
          }
          return securedGenericOrderService.find(metadata, order, order.getId());
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
@@ -76,11 +76,11 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
             securedGenericCustomerService.read(metadata, order.getContract().getCustomer());
             securedGenericContractService.read(metadata, order.getContract());
 
-            Parameter parameter = new Parameter("contract", Restrictions.or(Example.create(order.getContract())));
+            final Parameter parameter = new Parameter("contract", Restrictions.or(Example.create(order.getContract())));
             return securedGenericOrderService.find(metadata, order, paging, orderBy, parameter);
          }
          return securedGenericOrderService.find(metadata, order, paging, orderBy);
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
@@ -95,7 +95,7 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
          }
          securedGenericOrderService.merge(metadata, order);
          return order;
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
@@ -110,7 +110,7 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
          }
          securedGenericOrderService.persist(metadata, order);
          return order;
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
@@ -124,7 +124,7 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
             securedGenericContractService.read(metadata, order.getContract());
          }
          return securedGenericOrderService.refresh(metadata, order, order.getId());
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
@@ -138,9 +138,8 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
             securedGenericContractService.delete(metadata, order.getContract());
          }
          securedGenericOrderService.remove(metadata, order);
-      } catch (Exception e) {
+      } catch (final Exception e) {
          throw new GNUOpenBusinessServiceException(e.getMessage(), e);
       }
    }
-
 }

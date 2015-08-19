@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: bernard
+Build-Jdk: 1.8.0_51
+Specification-Title: GNU Open Business Platform Simple Object Access P
+ rotocol
+Specification-Version: 0.0.4-SNAPSHOT
+Specification-Vendor: Netbrasoft
+Implementation-Title: GNU Open Business Platform Simple Object Access 
+ Protocol
+Implementation-Version: 0.0.4-SNAPSHOT
+Implementation-Vendor-Id: com.netbrasoft
+Implementation-Vendor: Netbrasoft
+dependencies: org.apache.cxf services,org.apache.cxf.impl,org.apache.velocity,org.apache.commons.collections
+mode: development
+url: https://github.com/bendraaisma/gnuob-soap

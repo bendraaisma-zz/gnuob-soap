@@ -18,6 +18,13 @@
 		</license>
 	</licenses>
 
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<version.war.plugin>2.1.1</version.war.plugin>
@@ -28,6 +35,8 @@
 		<version.javasimon>4.0.1</version.javasimon>
 		<version.PBKDF2>1.1.1</version.PBKDF2>
 		<version.picketbox>4.9.2.Final</version.picketbox>
+		<version.mockito-all>1.9.5</version.mockito-all>
+		<version.graphene-webdriver>2.0.3.Final</version.graphene-webdriver>
 
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
@@ -70,6 +79,22 @@
 			<groupId>org.jboss.spec.javax.interceptor</groupId>
 			<artifactId>jboss-interceptors-api_1.2_spec</artifactId>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.graphene</groupId>
+			<artifactId>graphene-webdriver</artifactId>
+			<type>pom</type>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.arquillian.junit</groupId>
+			<artifactId>arquillian-junit-container</artifactId>
+			<scope>test</scope>
 		</dependency>
 
 		<!-- UTILS -->
@@ -148,7 +173,7 @@
 						<manifestEntries>
 							<mode>development</mode>
 							<url>${project.url}</url>
-							<dependencies>org.apache.cxf services,org.apache.cxf.impl</dependencies>
+							<dependencies>org.apache.cxf services, org.apache.cxf.impl, org.apache.velocity, org.apache.commons.collections</dependencies>
 						</manifestEntries>
 						<manifest>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -207,6 +232,19 @@
 					</plugin>
 				</plugins>
 			</build>
+		</profile>
+		<profile>
+			<!-- An optional Arquillian testing profile that executes tests in your JBoss EAP instance -->
+			<!-- This profile will start a new JBoss EAP instance, and execute the test, shutting it down when done -->
+			<!-- Run with: mvn clean test -Parq-jbossas-managed -->
+			<id>arq-jbossas-managed</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.wildfly.arquillian</groupId>
+					<artifactId>wildfly-arquillian-container-remote</artifactId>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
 		</profile>
 	</profiles>
 

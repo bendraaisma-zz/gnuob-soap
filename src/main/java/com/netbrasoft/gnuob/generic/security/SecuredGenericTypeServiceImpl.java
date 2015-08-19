@@ -12,7 +12,7 @@ import com.netbrasoft.gnuob.generic.Parameter;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
-@Stateless(name = "SecuredGenericTypeServiceImpl")
+@Stateless(name = "SecuredGenericTypeServiceImpl", mappedName = "SecuredGenericTypeServiceImpl")
 @Interceptors(value = { AccessControl.class, AppSimonInterceptor.class })
 public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T>implements SecuredGenericTypeService<T> {
 
