@@ -1,6 +1,7 @@
 package com.netbrasoft.gnuob.generic.content.mail;
 
 import java.io.StringWriter;
+import java.util.Date;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
@@ -100,6 +101,7 @@ public class MailControl<A extends Access> {
                   final Template bodyTemplate = ve.getTemplate(body.getTemplate());
                   final Message message = new MimeMessage(session);
                   final Address from = new InternetAddress(System.getProperty("gnuob." + metadata.getSite() + ".email"));
+                  // TODO BD: get email from customer object using a email adress template.
                   final Address[] to = new InternetAddress[] {new InternetAddress("bendraaisma@gmail.com") };
 
                   subjectTemplate.merge(((ContextElement) access).accept(contextVisitor), subjectWriter);
@@ -107,7 +109,7 @@ public class MailControl<A extends Access> {
 
                   message.setFrom(from);
                   message.setRecipients(Message.RecipientType.TO, to);
-                  message.setSentDate(new java.util.Date());
+                  message.setSentDate(new Date());
                   message.setSubject(subjectWriter.toString());
                   message.setContent(bodyWriter.toString(), "text/html;charset=UTF-8");
                   Transport.send(message);

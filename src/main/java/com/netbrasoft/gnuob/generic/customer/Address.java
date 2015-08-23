@@ -99,7 +99,7 @@ public class Address extends Type {
       return internationalStreet;
    }
 
-   @XmlElement(name = "number", required = true)
+   @XmlElement(name = "number")
    public String getNumber() {
       return number;
    }

@@ -1,6 +1,6 @@
 package com.netbrasoft.gnuob.generic.customer;
 
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -10,12 +10,10 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.apache.velocity.context.Context;
 
 import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
-import com.netbrasoft.gnuob.generic.jaxb.JaxbDateAdapter;
 import com.netbrasoft.gnuob.generic.security.Access;
 
 @Cacheable(value = true)
@@ -37,7 +35,7 @@ public class Customer extends Access {
    @Column(name = "FRIENDLY_NAME")
    private String friendlyName;
 
-   @Column(name = "PREFIX")
+   @Column(name = "SUFFIX")
    private String suffix;
 
    @Column(name = "LAST_NAME", nullable = false)
@@ -108,7 +106,6 @@ public class Customer extends Access {
    }
 
    @XmlElement(name = "dateOfBirth", required = true)
-   @XmlJavaTypeAdapter(JaxbDateAdapter.class)
    public Date getDateOfBirth() {
       return dateOfBirth;
    }

@@ -133,7 +133,7 @@
 			<column name="PAYER_ID" type="VARCHAR(20)" />
 			<column name="PAYER_STATUS" type="VARCHAR(20)" />
 			<column name="SALUTATION" type="VARCHAR(20)" />
-			<column name="PREFIX" type="VARCHAR(20)" />
+			<column name="SUFFIX" type="VARCHAR(20)" />
 			<column name="TAX_ID" type="VARCHAR(20)" />
 			<column name="TAX_ID_TYPE" type="VARCHAR(20)" />
 			<column name="ID" type="BIGINT(19)">

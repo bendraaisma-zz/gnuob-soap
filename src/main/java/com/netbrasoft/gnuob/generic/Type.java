@@ -63,6 +63,7 @@ public abstract class Type implements Serializable {
    @PrePersist
    protected void prePersistType() {
       creation = new Timestamp(System.currentTimeMillis());
+      modification = new Timestamp(System.currentTimeMillis());
       prePersist();
    }
 
@@ -72,9 +73,6 @@ public abstract class Type implements Serializable {
    @PreUpdate
    protected void preUpdateType() {
       modification = new Timestamp(System.currentTimeMillis());
-      if (creation == null) {
-         creation = new Timestamp(System.currentTimeMillis());
-      }
       preUpdate();
    }
 

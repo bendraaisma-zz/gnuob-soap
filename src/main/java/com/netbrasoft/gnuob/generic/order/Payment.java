@@ -2,7 +2,7 @@ package com.netbrasoft.gnuob.generic.order;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.sql.Date;
+import java.util.Date;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -13,10 +13,8 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import com.netbrasoft.gnuob.generic.Type;
-import com.netbrasoft.gnuob.generic.jaxb.JaxbDateAdapter;
 
 @Cacheable(value = false)
 @Entity(name = Payment.ENTITY)
@@ -112,7 +110,6 @@ public class Payment extends Type {
    }
 
    @XmlElement(name = "paymentDate")
-   @XmlJavaTypeAdapter(JaxbDateAdapter.class)
    public Date getPaymentDate() {
       return paymentDate;
    }

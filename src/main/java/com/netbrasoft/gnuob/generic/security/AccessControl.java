@@ -108,7 +108,11 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
             access.setOwner(subject.user);
 
             if (access.getPermission() == null) {
+               // Give access object same permission as creator.
                access.setPermission(new com.netbrasoft.gnuob.generic.security.Permission());
+               access.getPermission().setOwner(subject.user.getPermission().getOwner());
+               access.getPermission().setGroup(subject.user.getPermission().getGroup());
+               access.getPermission().setOthers(subject.user.getPermission().getOthers());
             }
          } else {
             // Parameter is instance of Type?
@@ -186,6 +190,8 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
                   ((Access) parameter).setPermission(access.getPermission());
                   ((Access) parameter).setSite(access.getSite());
                   ((Access) parameter).setOwner(access.getOwner());
+                  ((Access) parameter).setCreation(access.getCreation());
+                  ((Access) parameter).setModification(access.getModification());
                } else {
                   split.stop();
                   throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access to delete this entity object, verify that the given user has access", subject.user.getName()));
@@ -338,6 +344,8 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
                   ((Access) parameter).setPermission(access.getPermission());
                   ((Access) parameter).setSite(access.getSite());
                   ((Access) parameter).setOwner(access.getOwner());
+                  ((Access) parameter).setCreation(access.getCreation());
+                  ((Access) parameter).setModification(access.getModification());
                } else {
                   split.stop();
                   throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access to update this entity object, verify that the given user has access", subject.user.getName()));

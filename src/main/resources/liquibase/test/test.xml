@@ -37,15 +37,17 @@
 		<delete tableName="GNUOB_OPTIONS" />
 		<delete tableName="GNUOB_PRODUCTS_GNUOB_OPTIONS" />
 		<delete tableName="GNUOB_ROLES" />
-		<loadData tableName="gnuob_permissions" file="src/main/resources/liquibase/test/GNUOB_PERMISSIONS.csv">
+		<loadData tableName="GNUOB_PERMISSIONS" file="src/main/resources/liquibase/test/GNUOB_PERMISSIONS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="VERSION" type="NUMERIC" />
 			<column name="OWNER" type="STRING" />
 			<column name="GROUP" type="STRING" />
 			<column name="OTHERS" type="STRING" />
 		</loadData>
-		<loadData tableName="gnuob_access" file="src/main/resources/liquibase/test/GNUOB_ACCESS.csv">
+		<loadData tableName="GNUOB_ACCESS" file="src/main/resources/liquibase/test/GNUOB_ACCESS.csv">
 			<column name="ID" type="NUMERIC" />
+			<column name="CREATION" type="DATETIME" />
+			<column name="MODIFICATION" type="DATETIME" />
 			<column name="VERSION" type="NUMERIC" />
 			<column name="ACTIVE" type="BOOLEAN" />
 			<column name="group_ID" type="NUMERIC" />
@@ -53,7 +55,7 @@
 			<column name="site_ID" type="NUMERIC" />
 			<column name="owner_ID" type="NUMERIC" />
 		</loadData>
-		<loadData tableName="gnuob_users" file="src/main/resources/liquibase/test/GNUOB_USERS.csv">
+		<loadData tableName="GNUOB_USERS" file="src/main/resources/liquibase/test/GNUOB_USERS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="NAME" type="STRING" />
@@ -61,31 +63,31 @@
 			<column name="ACCESS" type="STRING" />
 			<column name="ROOT" type="BOOLEAN" />
 		</loadData>
-		<loadData tableName="gnuob_groups" file="src/main/resources/liquibase/test/GNUOB_GROUPS.csv">
+		<loadData tableName="GNUOB_GROUPS" file="src/main/resources/liquibase/test/GNUOB_GROUPS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="NAME" type="STRING" />
 			<column name="RULE" type="STRING" />
 		</loadData>
-		<loadData tableName="gnuob_sites" file="src/main/resources/liquibase/test/GNUOB_SITES.csv">
+		<loadData tableName="GNUOB_SITES" file="src/main/resources/liquibase/test/GNUOB_SITES.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="NAME" type="STRING" />
 		</loadData>
-		<loadData tableName="gnuob_categories" file="src/main/resources/liquibase/test/GNUOB_CATEGORIES.csv">
+		<loadData tableName="GNUOB_CATEGORIES" file="src/main/resources/liquibase/test/GNUOB_CATEGORIES.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="NAME" type="STRING" />
 		</loadData>
-		<loadData tableName="gnuob_users_gnuob_sites" file="src/main/resources/liquibase/test/GNUOB_USERS_GNUOB_SITES.csv">
+		<loadData tableName="GNUOB_USERS_GNUOB_SITES" file="src/main/resources/liquibase/test/GNUOB_USERS_GNUOB_SITES.csv">
 			<column name="sites_ID" type="NUMERIC" />
 			<column name="GNUOB_USERS_ID" type="NUMERIC" />
 		</loadData>
-		<loadData tableName="gnuob_users_gnuob_groups" file="src/main/resources/liquibase/test/GNUOB_USERS_GNUOB_GROUPS.csv">
+		<loadData tableName="GNUOB_USERS_GNUOB_GROUPS" file="src/main/resources/liquibase/test/GNUOB_USERS_GNUOB_GROUPS.csv">
 			<column name="groups_ID" type="NUMERIC" />
 			<column name="GNUOB_USERS_ID" type="NUMERIC" />
 		</loadData>
-		<loadData tableName="gnuob_settings" file="src/main/resources/liquibase/test/GNUOB_SETTINGS.csv">
+		<loadData tableName="GNUOB_SETTINGS" file="src/main/resources/liquibase/test/GNUOB_SETTINGS.csv">
 			<column name="ID" type="NUMERIC" />
 			<column name="DESCRIPTION" type="STRING" />
 			<column name="VALUE" type="STRING" />
@@ -172,7 +174,7 @@
 			<column name="GNUOB_PRODUCTS_ID" type="NUMERIC" />
 			<column name="options_ID" type="NUMERIC" />
 		</loadData>
-		<loadData tableName="gnuob_roles" file="src/main/resources/liquibase/test/GNUOB_ROLES.csv">
+		<loadData tableName="GNUOB_ROLES" file="src/main/resources/liquibase/test/GNUOB_ROLES.csv">
 			<column name="GNUOB_USERS_ID" type="NUMERIC" />
 			<column name="ROLE" type="STRING" />
 		</loadData>
