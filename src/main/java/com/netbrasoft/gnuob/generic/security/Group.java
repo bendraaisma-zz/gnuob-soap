@@ -18,6 +18,7 @@ import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 public class Group extends Access {
 
    private static final long serialVersionUID = -3688942214897329995L;
+
    protected static final String ENTITY = "Group";
    protected static final String TABLE = "GNUOB_GROUPS";
 

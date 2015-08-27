@@ -18,6 +18,7 @@ import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 public class Site extends Access {
 
    private static final long serialVersionUID = 985676314568291633L;
+
    protected static final String ENTITY = "Site";
    protected static final String TABLE = "GNUOB_SITES";
 

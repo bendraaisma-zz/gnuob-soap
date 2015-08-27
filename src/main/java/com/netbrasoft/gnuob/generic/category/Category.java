@@ -8,6 +8,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -40,10 +42,12 @@ public class Category extends Access {
 
    @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
    @OrderBy("position asc")
+   @JoinTable(name = "gnuob_categories_gnuob_sub_categories", joinColumns = { @JoinColumn(name = "GNUOB_CATEGORIES_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "subCategories_ID", referencedColumnName = "ID") })
    private Set<SubCategory> subCategories = new LinkedHashSet<SubCategory>();
 
-   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
    @OrderBy("position asc")
+   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+   @JoinTable(name = "gnuob_categories_gnuob_contents", joinColumns = { @JoinColumn(name = "GNUOB_CATEGORIES_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "contents_ID", referencedColumnName = "ID") })
    private Set<Content> contents = new LinkedHashSet<Content>();
 
    @Column(name = "POSITION")

@@ -33,14 +33,16 @@ import de.rtner.security.auth.spi.SimplePBKDF2;
 public class User extends Access {
 
    private static final long serialVersionUID = 2439569681567208145L;
-   protected static final String ENTITY = "User";
 
+   protected static final String ENTITY = "User";
    protected static final String TABLE = "GNUOB_USERS";
 
    @ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
+   @JoinTable(name = "gnuob_users_gnuob_sites", joinColumns = { @JoinColumn(name = "GNUOB_USERS_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "sites_ID", referencedColumnName = "ID") })
    private Set<Site> sites = new HashSet<Site>();
 
    @ManyToMany(cascade = { CascadeType.PERSIST }, fetch = FetchType.EAGER)
+   @JoinTable(name = "gnuob_users_gnuob_groups", joinColumns = { @JoinColumn(name = "GNUOB_USERS_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "groups_ID", referencedColumnName = "ID") })
    private Set<Group> groups = new HashSet<Group>();
 
    @Column(name = "ROOT")
@@ -57,7 +59,7 @@ public class User extends Access {
    private String password;
 
    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-   @JoinTable(name = "GNUOB_ROLES", joinColumns = @JoinColumn(name = "GNUOB_USERS_ID"))
+   @JoinTable(name = "GNUOB_ROLES", joinColumns = @JoinColumn(name = "GNUOB_USERS_ID") )
    @Column(name = "ROLE", nullable = false)
    @Enumerated(EnumType.STRING)
    private Set<Role> roles;

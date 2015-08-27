@@ -10,6 +10,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -35,19 +37,22 @@ public class Product extends Access {
    protected static final String ENTITY = "Product";
    protected static final String TABLE = "GNUOB_PRODUCTS";
 
-   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
    @OrderBy("position asc")
+   @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+   @JoinTable(name = "gnuob_products_gnuob_sub_categories", joinColumns = { @JoinColumn(name = "GNUOB_PRODUCTS_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "subCategories_ID", referencedColumnName = "ID") })
    private Set<SubCategory> subCategories = new LinkedHashSet<SubCategory>();
 
    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, optional = false)
    private Stock stock;
 
-   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
    @OrderBy("position asc")
+   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+   @JoinTable(name = "gnuob_products_gnuob_contents", joinColumns = { @JoinColumn(name = "GNUOB_PRODUCTS_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "contents_ID", referencedColumnName = "ID") })
    private Set<Content> contents = new HashSet<Content>();
 
-   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
    @OrderBy("position asc")
+   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+   @JoinTable(name = "gnuob_products_gnuob_options", joinColumns = { @JoinColumn(name = "GNUOB_PRODUCTS_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "options_ID", referencedColumnName = "ID") })
    private Set<Option> options = new HashSet<Option>();
 
    @Column(name = "NAME", nullable = false)

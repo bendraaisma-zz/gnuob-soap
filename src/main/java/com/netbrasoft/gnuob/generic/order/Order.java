@@ -12,6 +12,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -39,8 +41,9 @@ public class Order extends Access {
    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
    private Contract contract;
 
-   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, fetch = FetchType.EAGER)
    @OrderBy("position asc")
+   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, fetch = FetchType.EAGER)
+   @JoinTable(name = "gnuob_orders_gnuob_order_records", joinColumns = { @JoinColumn(name = "GNUOB_ORDERS_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "records_ID", referencedColumnName = "ID") })
    private Set<OrderRecord> records = new HashSet<OrderRecord>();
 
    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true)

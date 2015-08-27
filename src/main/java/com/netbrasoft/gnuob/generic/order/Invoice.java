@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -35,8 +37,9 @@ public class Invoice extends Type {
    @Column(name = "INVOICE_ID", nullable = false)
    private String invoiceId;
 
-   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, fetch = FetchType.EAGER)
    @OrderBy("position asc")
+   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, fetch = FetchType.EAGER)
+   @JoinTable(name = "gnuob_invoices_gnuob_payments", joinColumns = { @JoinColumn(name = "GNUOB_INVOICES_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "payments_ID", referencedColumnName = "ID") })
    private Set<Payment> payments = new HashSet<Payment>();
 
    @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, optional = false)
@@ -63,7 +66,7 @@ public class Invoice extends Type {
    private void positionPayments() {
       int index = 0;
 
-      for (Payment payment : payments) {
+      for (final Payment payment : payments) {
          payment.setPosition(Integer.valueOf(index++));
       }
    }

@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
@@ -34,12 +36,14 @@ public class SubCategory extends Type {
    protected static final String ENTITY = "SubCategory";
    protected static final String TABLE = "GNUOB_SUB_CATEGORIES";
 
-   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
    @OrderBy("position asc")
+   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+   @JoinTable(name = "gnuob_sub_categories_gnuob_sub_categories", joinColumns = { @JoinColumn(name = "GNUOB_SUB_CATEGORIES_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "subCategories_ID", referencedColumnName = "ID") })
    private Set<SubCategory> subCategories = new LinkedHashSet<SubCategory>();
 
-   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
    @OrderBy("position asc")
+   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
+   @JoinTable(name = "gnuob_sub_categories_gnuob_contents", joinColumns = { @JoinColumn(name = "GNUOB_SUB_CATEGORIES_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "contents_ID", referencedColumnName = "ID") })
    private Set<Content> contents = new LinkedHashSet<Content>();
 
    @Column(name = "NAME", nullable = false)
@@ -78,7 +82,7 @@ public class SubCategory extends Type {
    private void positionContents() {
       int index = 0;
 
-      for (Content content : contents) {
+      for (final Content content : contents) {
          content.setPosition(Integer.valueOf(index++));
       }
    }
@@ -86,7 +90,7 @@ public class SubCategory extends Type {
    private void positionSubCategories() {
       int index = 0;
 
-      for (SubCategory subCategory : subCategories) {
+      for (final SubCategory subCategory : subCategories) {
          subCategory.setPosition(Integer.valueOf(index++));
       }
    }
