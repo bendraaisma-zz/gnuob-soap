@@ -423,7 +423,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       paymentDetailsItemType.setName(orderRecord.getName());
       paymentDetailsItemType.setDescription(orderRecord.getDescription());
       paymentDetailsItemType.setAmount(doBasicAmountType(orderRecord.getAmount()));
-      paymentDetailsItemType.setNumber(orderRecord.getNumber());
+      paymentDetailsItemType.setNumber(orderRecord.getOrderRecordId());
       paymentDetailsItemType.setQuantity(orderRecord.getQuantity());
       paymentDetailsItemType.setTax(doBasicAmountType(orderRecord.getTax()));
       paymentDetailsItemType.setItemWeight(doMesureType(orderRecord.getItemWeightUnit(), orderRecord.getItemWeight()));
@@ -439,7 +439,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       orderRecord.setName(paymentDetailsItemType.getName());
       orderRecord.setDescription(paymentDetailsItemType.getDescription());
       orderRecord.setAmount(doBasicAmountType(paymentDetailsItemType.getAmount()));
-      orderRecord.setNumber(paymentDetailsItemType.getNumber());
+      orderRecord.setOrderRecordId(paymentDetailsItemType.getNumber());
       orderRecord.setQuantity(paymentDetailsItemType.getQuantity());
       orderRecord.setTax(doBasicAmountType(paymentDetailsItemType.getTax()));
       orderRecord.setItemWeight(doMesureType(paymentDetailsItemType.getItemWeight()));
@@ -535,7 +535,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       // Details about each individual item included in the order.
       for (final PaymentDetailsItemType paymentDetailsItemType : paymentDetailsType.getPaymentDetailsItem()) {
          for (final OrderRecord orderRecord : order.getRecords()) {
-            if (paymentDetailsItemType.getNumber() != null && paymentDetailsItemType.getNumber().equalsIgnoreCase(orderRecord.getNumber())) {
+            if (paymentDetailsItemType.getNumber() != null && paymentDetailsItemType.getNumber().equalsIgnoreCase(orderRecord.getOrderRecordId())) {
                doPaymentDetailsItemType(orderRecord, paymentDetailsItemType);
                break;
             }
@@ -621,7 +621,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
       // Details about each individual item included in the order.
       for (final PaymentItemType paymentItemType : paymentItemInfo.getPaymentItem()) {
          for (final OrderRecord orderRecord : order.getRecords()) {
-            if (paymentItemType.getNumber() != null && paymentItemType.getNumber().equalsIgnoreCase(orderRecord.getNumber())) {
+            if (paymentItemType.getNumber() != null && paymentItemType.getNumber().equalsIgnoreCase(orderRecord.getOrderRecordId())) {
                doPaymentItemType(orderRecord, paymentItemType);
                break;
             }
@@ -632,7 +632,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
    private void doPaymentItemType(OrderRecord orderRecord, PaymentItemType paymentItemType) {
       orderRecord.setName(paymentItemType.getName());
       orderRecord.setAmount(doBasicAmountType(paymentItemType.getAmount()));
-      orderRecord.setNumber(paymentItemType.getNumber());
+      orderRecord.setOrderRecordId(paymentItemType.getNumber());
       orderRecord.setQuantity(BigInteger.valueOf(Integer.valueOf(paymentItemType.getQuantity())));
    }
 

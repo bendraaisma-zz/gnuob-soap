@@ -38,9 +38,6 @@ public class OfferRecord extends Type {
    @Column(name = "DESCRIPTION")
    private String description;
 
-   @Column(name = "NUMBER")
-   private String number = UUID.randomUUID().toString();
-
    @Column(name = "PRODUCT_NUMBER", nullable = false)
    private String productNumber;
 
@@ -88,6 +85,9 @@ public class OfferRecord extends Type {
 
    @Column(name = "POSITION")
    private Integer position;
+
+   @Column(name = "OFFER_RECORD_ID", nullable = false)
+   private String offerRecordId = UUID.randomUUID().toString();
 
    @Transient
    private Product product;
@@ -217,9 +217,9 @@ public class OfferRecord extends Type {
       return name;
    }
 
-   @XmlElement(name = "number")
-   public String getNumber() {
-      return number;
+   @XmlElement(name = "offerRecordId")
+   public String getOfferRecordId() {
+      return offerRecordId;
    }
 
    @XmlElement(name = "option")
@@ -285,6 +285,10 @@ public class OfferRecord extends Type {
 
    @Override
    public void prePersist() {
+      if (offerRecordId == null || "".equals(offerRecordId.trim())) {
+         offerRecordId = UUID.randomUUID().toString();
+      }
+
       if (product != null) {
          name = name == null ? product.getName() : name;
          description = description == null ? product.getDescription() : description;
@@ -306,7 +310,9 @@ public class OfferRecord extends Type {
 
    @Override
    public void preUpdate() {
-      return;
+      if (offerRecordId == null || "".equals(offerRecordId.trim())) {
+         offerRecordId = UUID.randomUUID().toString();
+      }
    }
 
    public void setAmount(BigDecimal amount) {
@@ -361,8 +367,8 @@ public class OfferRecord extends Type {
       this.name = name;
    }
 
-   public void setNumber(String number) {
-      this.number = number;
+   public void setOfferRecordId(String offerRecordId) {
+      this.offerRecordId = offerRecordId;
    }
 
    public void setOption(String option) {

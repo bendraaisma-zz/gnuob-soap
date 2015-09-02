@@ -68,7 +68,7 @@ public class Category extends Access {
       return description;
    }
 
-   @XmlElement(name = "name")
+   @XmlElement(name = "name", required=true)
    public String getName() {
       return name;
    }

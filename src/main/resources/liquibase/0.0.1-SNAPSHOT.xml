@@ -187,7 +187,9 @@
 			<column name="CREATION" type="datetime" />
 			<column name="MODIFICATION" type="datetime" />
 			<column name="VERSION" type="INT(10)" />
-			<column name="AMOUNT" type="DECIMAL(19, 2)" />
+			<column name="AMOUNT" type="DECIMAL(19, 2)">
+				<constraints nullable="false" />
+			</column>
 			<column name="DESCRIPTION" type="VARCHAR(128)" />
 			<column name="DISCOUNT" type="DECIMAL(19, 2)" />
 			<column name="ITEM_HEIGHT" type="DECIMAL(19, 2)" />
@@ -200,7 +202,6 @@
 			<column name="ITEM_WIDTH" type="DECIMAL(19, 2)" />
 			<column name="ITEM_WIDTH_UNIT" type="VARCHAR(20)" />
 			<column name="NAME" type="VARCHAR(128)" />
-			<column name="NUMBER" type="VARCHAR(765)" />
 			<column name="QUANTITY" type="DECIMAL(19, 2)">
 				<constraints nullable="false" />
 			</column>
@@ -272,9 +273,6 @@
 			<column name="ITEM_WIDTH" type="DECIMAL(19, 2)" />
 			<column name="ITEM_WIDTH_UNIT" type="VARCHAR(20)" />
 			<column name="NAME" type="VARCHAR(128)" />
-			<column name="NUMBER" type="VARCHAR(765)">
-				<constraints nullable="false" />
-			</column>
 			<column name="QUANTITY" type="DECIMAL(19, 2)">
 				<constraints nullable="false" />
 			</column>
@@ -423,7 +421,7 @@
 			<column name="NAME" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
-			<column name="NUMBER" type="VARCHAR(765)">
+			<column name="NUMBER" type="VARCHAR(64)">
 				<constraints nullable="false" />
 			</column>
 			<column name="RATING" type="INT(10)" />

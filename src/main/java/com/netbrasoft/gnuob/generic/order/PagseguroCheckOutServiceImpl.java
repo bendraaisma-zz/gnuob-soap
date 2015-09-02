@@ -154,7 +154,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
       final Item item = new Item();
       item.setAmount(orderRecord.getAmount().setScale(2));
       item.setDescription(orderRecord.getDescription());
-      item.setId(orderRecord.getNumber());
+      item.setId(orderRecord.getOrderRecordId());
       item.setQuantity(orderRecord.getQuantity().intValue());
       item.setShippingCost(orderRecord.getShippingCost());
       item.setWeight(orderRecord.getItemWeight().longValue());
@@ -206,7 +206,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
       // Details about each individual item included in the order.
       for (final Item item : transaction.getItems()) {
          for (final OrderRecord orderRecord : order.getRecords()) {
-            if (item.getId() == orderRecord.getNumber()) {
+            if (item.getId() == orderRecord.getOrderRecordId()) {
                doItem(orderRecord, item);
                break;
             }

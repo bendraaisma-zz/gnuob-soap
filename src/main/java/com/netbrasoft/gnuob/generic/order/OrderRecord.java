@@ -39,9 +39,6 @@ public class OrderRecord extends Type {
    @Column(name = "DESCRIPTION")
    private String description;
 
-   @Column(name = "NUMBER", nullable = false)
-   private String number = UUID.randomUUID().toString();
-
    @Column(name = "PRODUCT_NUMBER", nullable = false)
    private String productNumber;
 
@@ -94,7 +91,7 @@ public class OrderRecord extends Type {
    private Date deliveryDate;
 
    @Column(name = "ORDER_RECORD_ID", nullable = false)
-   private String orderRecordId;
+   private String orderRecordId = UUID.randomUUID().toString();
 
    @Transient
    private Product product;
@@ -229,11 +226,6 @@ public class OrderRecord extends Type {
       return name;
    }
 
-   @XmlElement(name = "number")
-   public String getNumber() {
-      return number;
-   }
-
    @XmlElement(name = "option")
    public String getOption() {
       return option;
@@ -327,7 +319,9 @@ public class OrderRecord extends Type {
 
    @Override
    public void preUpdate() {
-      return;
+      if (orderRecordId == null || "".equals(orderRecordId.trim())) {
+         orderRecordId = UUID.randomUUID().toString();
+      }
    }
 
    public void setAmount(BigDecimal amount) {
@@ -384,10 +378,6 @@ public class OrderRecord extends Type {
 
    public void setName(String name) {
       this.name = name;
-   }
-
-   public void setNumber(String number) {
-      this.number = number;
    }
 
    public void setOption(String option) {
