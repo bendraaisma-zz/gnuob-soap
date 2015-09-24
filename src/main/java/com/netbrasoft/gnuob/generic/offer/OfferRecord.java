@@ -2,13 +2,21 @@ package com.netbrasoft.gnuob.generic.offer;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
@@ -16,6 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.product.Option;
 import com.netbrasoft.gnuob.generic.product.Product;
 
 @Cacheable(value = false)
@@ -88,6 +97,11 @@ public class OfferRecord extends Type {
 
    @Column(name = "OFFER_RECORD_ID", nullable = false)
    private String offerRecordId = UUID.randomUUID().toString();
+
+   @OrderBy("position asc")
+   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
+   @JoinTable(name = "gnuob_offer_records_gnuob_options", joinColumns = { @JoinColumn(name = "GNUOB_OFFER_RECORDS_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "options_ID", referencedColumnName = "ID") })
+   private Set<Option> options = new HashSet<Option>();
 
    @Transient
    private Product product;
@@ -225,6 +239,10 @@ public class OfferRecord extends Type {
    @XmlElement(name = "option")
    public String getOption() {
       return option;
+   }
+
+   public Set<Option> getOptions() {
+      return options;
    }
 
    @XmlTransient
@@ -373,6 +391,10 @@ public class OfferRecord extends Type {
 
    public void setOption(String option) {
       this.option = option;
+   }
+
+   public void setOptions(Set<Option> options) {
+      this.options = options;
    }
 
    public void setPosition(Integer position) {

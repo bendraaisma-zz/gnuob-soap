@@ -1,35 +1,27 @@
 package com.netbrasoft.gnuob.generic.product;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import com.netbrasoft.gnuob.generic.Type;
 
 @Cacheable(value = false)
-@Entity(name = Option.ENTITY)
-@Table(name = Option.TABLE)
+@Entity(name = SubOption.ENTITY)
+@Table(name = SubOption.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@XmlRootElement(name = Option.ENTITY)
-public class Option extends Type {
+@XmlRootElement(name = SubOption.ENTITY)
+public class SubOption extends Type {
 
 	private static final long serialVersionUID = -4350389615614303733L;
-	protected static final String ENTITY = "Option";
-	protected static final String TABLE = "GNUOB_OPTIONS";
+	protected static final String ENTITY = "SubOption";
+	protected static final String TABLE = "GNUOB_SUB_OPTIONS";
 
 	@Column(name = "POSITION")
 	private Integer position = 0;
@@ -43,23 +35,14 @@ public class Option extends Type {
 	@Column(name = "DISABLED", nullable = false)
 	private boolean disabled;
 
-	@OrderBy("position asc")
-	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
-	@JoinTable(name = "gnuob_options_gnuob_sub_options", joinColumns = { @JoinColumn(name = "GNUOB_OPTIONS_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "sub_options_ID", referencedColumnName = "ID") })
-	private Set<SubOption> subOptions = new HashSet<SubOption>();
-
 	@XmlElement(name = "description")
 	public String getDescription() {
 		return description;
 	}
 
-	@XmlElement(name = "position")
+	@XmlTransient
 	public Integer getPosition() {
 		return position;
-	}
-
-	public Set<SubOption> getSubOptions() {
-		return subOptions;
 	}
 
 	@XmlElement(name = "value", required = true)
@@ -72,22 +55,14 @@ public class Option extends Type {
 		return disabled;
 	}
 
-	private void positionSubOptions() {
-		int position = 0;
-
-		for (final SubOption subOption : subOptions) {
-			subOption.setPosition(Integer.valueOf(position++));
-		}
-	}
-
 	@Override
 	public void prePersist() {
-		positionSubOptions();
+
 	}
 
 	@Override
 	public void preUpdate() {
-		positionSubOptions();
+
 	}
 
 	public void setDescription(String description) {
@@ -100,10 +75,6 @@ public class Option extends Type {
 
 	public void setPosition(Integer position) {
 		this.position = position;
-	}
-
-	public void setSubOptions(Set<SubOption> subOptions) {
-		this.subOptions = subOptions;
 	}
 
 	public void setValue(String value) {

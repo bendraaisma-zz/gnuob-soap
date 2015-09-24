@@ -178,6 +178,18 @@
 			<column name="GNUOB_USERS_ID" type="NUMERIC" />
 			<column name="ROLE" type="STRING" />
 		</loadData>
+		<loadData tableName="GNUOB_SUB_OPTIONS" file="src/main/resources/liquibase/test/GNUOB_SUB_OPTIONS.csv">
+			<column name="ID" type="NUMERIC" />
+			<column name="VERSION" type="NUMERIC" />
+			<column name="VALUE" type="STRING" />
+			<column name="DESCRIPTION" type="STRING" />
+			<column name="DISABLED" type="BOOLEAN" />
+			<column name="POSITION" type="NUMERIC" />
+		</loadData>
+		<loadData tableName="GNUOB_OPTIONS_GNUOB_SUB_OPTIONS" file="src/main/resources/liquibase/test/GNUOB_OPTIONS_GNUOB_SUB_OPTIONS.csv">
+			<column name="GNUOB_OPTIONS_ID" type="NUMERIC" />
+			<column name="sub_options_ID" type="NUMERIC" />
+		</loadData>
 		<sql>SET FOREIGN_KEY_CHECKS = 1;</sql>
 		<rollback>
 			<sql>SET FOREIGN_KEY_CHECKS = 0;</sql>
@@ -216,6 +228,8 @@
 			<delete tableName="GNUOB_OPTIONS" />
 			<delete tableName="GNUOB_PRODUCTS_GNUOB_OPTIONS" />
 			<delete tableName="GNUOB_ROLES" />
+			<delete tableName="GNUOB_SUB_OPTIONS" />
+			<delete tableName="GNUOB_OPTIONS_GNUOB_SUB_OPTIONS" />
 			<sql>SET FOREIGN_KEY_CHECKS = 1;</sql>
 		</rollback>
 	</changeSet>
