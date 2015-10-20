@@ -17,37 +17,37 @@ import com.netbrasoft.gnuob.soap.utils.Utils;
 @RunWith(Arquillian.class)
 public class ContentResourceLoaderTest {
 
-   @Deployment(testable = true)
-   public static Archive<?> createDeployment() {
-      return Utils.createDeployment();
-   }
+  @Deployment(testable = true)
+  public static Archive<?> createDeployment() {
+    return Utils.createDeployment();
+  }
 
-   VelocityEngine ve;
+  VelocityEngine ve;
 
-   @Before
-   public void testBefore() {
-      ve = new VelocityEngine("/home/bernard/Projects/gnuob/gnuob-soap/src/main/resources/velocity.properties");
+  @Before
+  public void testBefore() {
+    ve = new VelocityEngine("/home/bernard/Projects/gnuob/gnuob-soap/src/main/resources/velocity.properties");
 
-      ve.addProperty("resource.loader", "content");
-      ve.addProperty("content.resource.loader.class", "com.netbrasoft.gnuob.generic.content.ContentResourceLoader");
-      ve.addProperty("content.resource.loader.description", "Velocity Content Resource Loader");
-      ve.addProperty("content.resource.loader.cache", "false");
-      ve.addProperty("content.resource.loader.modificationCheckInterval", "60");
-      ve.addProperty("content.resource.loader.user", "guest");
-      ve.addProperty("content.resource.loader.password", "guest");
-      ve.addProperty("content.resource.loader.site", "localhost");
-      ve.init();
-   }
+    ve.addProperty("resource.loader", "content");
+    ve.addProperty("content.resource.loader.class", "com.netbrasoft.gnuob.generic.content.ContentResourceLoader");
+    ve.addProperty("content.resource.loader.description", "Velocity Content Resource Loader");
+    ve.addProperty("content.resource.loader.cache", "false");
+    ve.addProperty("content.resource.loader.modificationCheckInterval", "60");
+    ve.addProperty("content.resource.loader.user", "guest");
+    ve.addProperty("content.resource.loader.password", "guest");
+    ve.addProperty("content.resource.loader.site", "localhost");
+    ve.init();
+  }
 
-   @Test
-   public void testEmailContentTemplate() {
-      final Template template = ve.getTemplate("mytemplate.vm");
+  @Test
+  public void testEmailContentTemplate() {
+    final Template template = ve.getTemplate("mytemplate.vm");
 
-      final VelocityContext context = new VelocityContext();
+    final VelocityContext context = new VelocityContext();
 
-      context.put("name", new String("Velocity"));
-      final StringWriter sw = new StringWriter();
+    context.put("name", new String("Velocity"));
+    final StringWriter sw = new StringWriter();
 
-      template.merge(context, sw);
-   }
+    template.merge(context, sw);
+  }
 }

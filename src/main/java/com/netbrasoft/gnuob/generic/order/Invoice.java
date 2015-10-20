@@ -30,70 +30,70 @@ import com.netbrasoft.gnuob.generic.customer.Address;
 @XmlRootElement(name = Invoice.ENTITY)
 public class Invoice extends Type {
 
-   private static final long serialVersionUID = 5609152324488531802L;
-   protected static final String ENTITY = "Invoice";
-   protected static final String TABLE = "GNUOB_INVOICES";
+  private static final long serialVersionUID = 5609152324488531802L;
+  protected static final String ENTITY = "Invoice";
+  protected static final String TABLE = "GNUOB_INVOICES";
 
-   @Column(name = "INVOICE_ID", nullable = false)
-   private String invoiceId;
+  @Column(name = "INVOICE_ID", nullable = false)
+  private String invoiceId;
 
-   @OrderBy("position asc")
-   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, fetch = FetchType.EAGER)
-   @JoinTable(name = "gnuob_invoices_gnuob_payments", joinColumns = { @JoinColumn(name = "GNUOB_INVOICES_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "payments_ID", referencedColumnName = "ID") })
-   private Set<Payment> payments = new HashSet<Payment>();
+  @OrderBy("position asc")
+  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true, fetch = FetchType.EAGER)
+  @JoinTable(name = "gnuob_invoices_gnuob_payments", joinColumns = {@JoinColumn(name = "GNUOB_INVOICES_ID", referencedColumnName = "ID")},
+      inverseJoinColumns = {@JoinColumn(name = "payments_ID", referencedColumnName = "ID")})
+  private Set<Payment> payments = new HashSet<Payment>();
 
-   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, optional = false)
-   private Address address;
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true, optional = false)
+  private Address address;
 
-   public Invoice() {
-   }
+  public Invoice() {}
 
-   @XmlElement(name = "address", required = true)
-   public Address getAddress() {
-      return address;
-   }
+  @XmlElement(name = "address", required = true)
+  public Address getAddress() {
+    return address;
+  }
 
-   @XmlElement(name = "invoiceId")
-   public String getInvoiceId() {
-      return invoiceId;
-   }
+  @XmlElement(name = "invoiceId")
+  public String getInvoiceId() {
+    return invoiceId;
+  }
 
-   @XmlElement(name = "payments")
-   public Set<Payment> getPayments() {
-      return payments;
-   }
+  @XmlElement(name = "payments")
+  public Set<Payment> getPayments() {
+    return payments;
+  }
 
-   private void positionPayments() {
-      int index = 0;
+  private void positionPayments() {
+    int index = 0;
 
-      for (final Payment payment : payments) {
-         payment.setPosition(Integer.valueOf(index++));
-      }
-   }
+    for (final Payment payment : payments) {
+      payment.setPosition(Integer.valueOf(index++));
+    }
+  }
 
-   @Override
-   public void prePersist() {
-      if (invoiceId == null || "".equals(invoiceId.trim())) {
-         invoiceId = UUID.randomUUID().toString();
-      }
+  @Override
+  public void prePersist() {
+    if (invoiceId == null || "".equals(invoiceId.trim())) {
+      invoiceId = UUID.randomUUID().toString();
+    }
 
-      positionPayments();
-   }
+    positionPayments();
+  }
 
-   @Override
-   public void preUpdate() {
-      positionPayments();
-   }
+  @Override
+  public void preUpdate() {
+    positionPayments();
+  }
 
-   public void setAddress(Address address) {
-      this.address = address;
-   }
+  public void setAddress(Address address) {
+    this.address = address;
+  }
 
-   public void setInvoiceId(String invoiceId) {
-      this.invoiceId = invoiceId;
-   }
+  public void setInvoiceId(String invoiceId) {
+    this.invoiceId = invoiceId;
+  }
 
-   public void setPayments(Set<Payment> payments) {
-      this.payments = payments;
-   }
+  public void setPayments(Set<Payment> payments) {
+    this.payments = payments;
+  }
 }

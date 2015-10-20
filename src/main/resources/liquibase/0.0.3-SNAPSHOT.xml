@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 	<changeSet id="Add SUB_GNUOB_OPTIONS table" author="Bernard Arjan Draaisma">
 		<createTable tableName="GNUOB_SUB_OPTIONS">
 			<column autoIncrement="true" name="ID" type="BIGINT(19)">
@@ -11,7 +13,9 @@
 			<column name="VALUE" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
-			<column name="DESCRIPTION" type="VARCHAR(128)" />
+			<column name="DESCRIPTION" type="VARCHAR(128)">
+				<constraints nullable="false" />
+			</column>
 			<column name="DISABLED" type="BIT(1)" />
 			<column name="POSITION" type="INT(10)" />
 		</createTable>
@@ -52,7 +56,8 @@
 			<dropTable tableName="gnuob_options_gnuob_sub_options" />
 		</rollback>
 	</changeSet>
-	<changeSet id="Add gnuob_offer_records_gnuob_options table" author="Bernard Arjan Draaisma">
+	<changeSet id="Add gnuob_offer_records_gnuob_options table"
+		author="Bernard Arjan Draaisma">
 		<createTable tableName="gnuob_offer_records_gnuob_options">
 			<column name="GNUOB_OFFER_RECORDS_ID" type="BIGINT(19)">
 				<constraints nullable="false" />
@@ -65,7 +70,8 @@
 			<dropTable tableName="gnuob_offer_records_gnuob_options" />
 		</rollback>
 	</changeSet>
-	<changeSet id="Add gnuob_order_records_gnuob_options table" author="Bernard Arjan Draaisma">
+	<changeSet id="Add gnuob_order_records_gnuob_options table"
+		author="Bernard Arjan Draaisma">
 		<createTable tableName="gnuob_order_records_gnuob_options">
 			<column name="GNUOB_ORDER_RECORDS_ID" type="BIGINT(19)">
 				<constraints nullable="false" />
@@ -79,76 +85,120 @@
 		</rollback>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="gnuob_offer_records_gnuob_options_primary">
-		<addPrimaryKey columnNames="GNUOB_OFFER_RECORDS_ID, options_ID" constraintName="PRIMARY" tableName="gnuob_offer_records_gnuob_options" />
+		<addPrimaryKey columnNames="GNUOB_OFFER_RECORDS_ID, options_ID"
+			constraintName="PRIMARY" tableName="gnuob_offer_records_gnuob_options" />
 		<rollback>
 			<dropPrimaryKey tableName="gnuob_offer_records_gnuob_options" />
 		</rollback>
 	</changeSet>
-	<changeSet author="Bernard Arjan Draaisma" id="UK options_ID for gnuob_offer_records_gnuob_options">
-		<addUniqueConstraint columnNames="options_ID" constraintName="UK_gnuob_offer_records_gnuob_options" deferrable="false" disabled="false" initiallyDeferred="false" tableName="gnuob_offer_records_gnuob_options" />
+	<changeSet author="Bernard Arjan Draaisma"
+		id="UK options_ID for gnuob_offer_records_gnuob_options">
+		<addUniqueConstraint columnNames="options_ID"
+			constraintName="UK_gnuob_offer_records_gnuob_options" deferrable="false"
+			disabled="false" initiallyDeferred="false"
+			tableName="gnuob_offer_records_gnuob_options" />
 		<rollback>
-			<dropUniqueConstraint tableName="gnuob_offer_records_gnuob_options" constraintName="UK_gnuob_offer_records_gnuob_options" />
+			<dropUniqueConstraint tableName="gnuob_offer_records_gnuob_options"
+				constraintName="UK_gnuob_offer_records_gnuob_options" />
 		</rollback>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="FK options_ID_2 for gnuob_options">
-		<addForeignKeyConstraint baseColumnNames="options_ID" baseTableName="gnuob_offer_records_gnuob_options" constraintName="FK_gnuob_options_id_gnuob_options_2" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_options" />
+		<addForeignKeyConstraint baseColumnNames="options_ID"
+			baseTableName="gnuob_offer_records_gnuob_options" constraintName="FK_gnuob_options_id_gnuob_options_2"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_options" />
 		<rollback>
-			<dropForeignKeyConstraint baseTableName="gnuob_offer_records_gnuob_options" constraintName="FK_gnuob_options_id_gnuob_options_2" />
+			<dropForeignKeyConstraint baseTableName="gnuob_offer_records_gnuob_options"
+				constraintName="FK_gnuob_options_id_gnuob_options_2" />
 		</rollback>
 	</changeSet>
-	<changeSet author="Bernard Arjan Draaisma" id="FK GNUOB_OFFER_RECORDS_ID for gnuob_offer_records">
-		<addForeignKeyConstraint baseColumnNames="GNUOB_OFFER_RECORDS_ID" baseTableName="gnuob_offer_records_gnuob_options" constraintName="FK_gnuob_offer_records_id_gnuob_offer_records" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_offer_records" />
+	<changeSet author="Bernard Arjan Draaisma"
+		id="FK GNUOB_OFFER_RECORDS_ID for gnuob_offer_records">
+		<addForeignKeyConstraint baseColumnNames="GNUOB_OFFER_RECORDS_ID"
+			baseTableName="gnuob_offer_records_gnuob_options" constraintName="FK_gnuob_offer_records_id_gnuob_offer_records"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_offer_records" />
 		<rollback>
-			<dropForeignKeyConstraint baseTableName="gnuob_offer_records_gnuob_options" constraintName="FK_gnuob_offer_records_id_gnuob_offer_records" />
+			<dropForeignKeyConstraint baseTableName="gnuob_offer_records_gnuob_options"
+				constraintName="FK_gnuob_offer_records_id_gnuob_offer_records" />
 		</rollback>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="gnuob_order_records_gnuob_options_primary">
-		<addPrimaryKey columnNames="GNUOB_ORDER_RECORDS_ID, options_ID" constraintName="PRIMARY" tableName="gnuob_order_records_gnuob_options" />
+		<addPrimaryKey columnNames="GNUOB_ORDER_RECORDS_ID, options_ID"
+			constraintName="PRIMARY" tableName="gnuob_order_records_gnuob_options" />
 		<rollback>
 			<dropPrimaryKey tableName="gnuob_order_records_gnuob_options" />
 		</rollback>
 	</changeSet>
-	<changeSet author="Bernard Arjan Draaisma" id="UK options_ID for gnuob_order_records_gnuob_options">
-		<addUniqueConstraint columnNames="options_ID" constraintName="UK_gnuob_order_records_gnuob_options" deferrable="false" disabled="false" initiallyDeferred="false" tableName="gnuob_order_records_gnuob_options" />
+	<changeSet author="Bernard Arjan Draaisma"
+		id="UK options_ID for gnuob_order_records_gnuob_options">
+		<addUniqueConstraint columnNames="options_ID"
+			constraintName="UK_gnuob_order_records_gnuob_options" deferrable="false"
+			disabled="false" initiallyDeferred="false"
+			tableName="gnuob_order_records_gnuob_options" />
 		<rollback>
-			<dropUniqueConstraint tableName="gnuob_order_records_gnuob_options" constraintName="UK_gnuob_order_records_gnuob_options" />
+			<dropUniqueConstraint tableName="gnuob_order_records_gnuob_options"
+				constraintName="UK_gnuob_order_records_gnuob_options" />
 		</rollback>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="FK options_ID_3 for gnuob_options">
-		<addForeignKeyConstraint baseColumnNames="options_ID" baseTableName="gnuob_order_records_gnuob_options" constraintName="FK_gnuob_options_id_gnuob_options_3" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_options" />
+		<addForeignKeyConstraint baseColumnNames="options_ID"
+			baseTableName="gnuob_order_records_gnuob_options" constraintName="FK_gnuob_options_id_gnuob_options_3"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_options" />
 		<rollback>
-			<dropForeignKeyConstraint baseTableName="gnuob_order_records_gnuob_options" constraintName="FK_gnuob_options_id_gnuob_options_3" />
+			<dropForeignKeyConstraint baseTableName="gnuob_order_records_gnuob_options"
+				constraintName="FK_gnuob_options_id_gnuob_options_3" />
 		</rollback>
 	</changeSet>
-	<changeSet author="Bernard Arjan Draaisma" id="FK GNUOB_ORDER_RECORDS_ID for gnuob_order_records">
-		<addForeignKeyConstraint baseColumnNames="GNUOB_ORDER_RECORDS_ID" baseTableName="gnuob_order_records_gnuob_options" constraintName="FK_gnuob_order_records_id_gnuob_order_records" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_order_records" />
+	<changeSet author="Bernard Arjan Draaisma"
+		id="FK GNUOB_ORDER_RECORDS_ID for gnuob_order_records">
+		<addForeignKeyConstraint baseColumnNames="GNUOB_ORDER_RECORDS_ID"
+			baseTableName="gnuob_order_records_gnuob_options" constraintName="FK_gnuob_order_records_id_gnuob_order_records"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_order_records" />
 		<rollback>
-			<dropForeignKeyConstraint baseTableName="gnuob_order_records_gnuob_options" constraintName="FK_gnuob_order_records_id_gnuob_order_records" />
+			<dropForeignKeyConstraint baseTableName="gnuob_order_records_gnuob_options"
+				constraintName="FK_gnuob_order_records_id_gnuob_order_records" />
 		</rollback>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="gnuob_options_gnuob_sub_options_primary">
-		<addPrimaryKey columnNames="GNUOB_OPTIONS_ID, sub_options_ID" constraintName="PRIMARY" tableName="gnuob_options_gnuob_sub_options" />
+		<addPrimaryKey columnNames="GNUOB_OPTIONS_ID, sub_options_ID"
+			constraintName="PRIMARY" tableName="gnuob_options_gnuob_sub_options" />
 		<rollback>
 			<dropPrimaryKey tableName="gnuob_options_gnuob_sub_options" />
 		</rollback>
 	</changeSet>
-	<changeSet author="Bernard Arjan Draaisma" id="UK options_ID for gnuob_options_gnuob_sub_options">
-		<addUniqueConstraint columnNames="sub_options_ID" constraintName="UK_gnuob_options_gnuob_sub_options" deferrable="false" disabled="false" initiallyDeferred="false" tableName="gnuob_options_gnuob_sub_options" />
+	<changeSet author="Bernard Arjan Draaisma"
+		id="UK options_ID for gnuob_options_gnuob_sub_options">
+		<addUniqueConstraint columnNames="sub_options_ID"
+			constraintName="UK_gnuob_options_gnuob_sub_options" deferrable="false"
+			disabled="false" initiallyDeferred="false" tableName="gnuob_options_gnuob_sub_options" />
 		<rollback>
-			<dropUniqueConstraint tableName="gnuob_options_gnuob_sub_options" constraintName="UK_gnuob_options_gnuob_sub_options" />
+			<dropUniqueConstraint tableName="gnuob_options_gnuob_sub_options"
+				constraintName="UK_gnuob_options_gnuob_sub_options" />
 		</rollback>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="FK options_ID for gnuob_sub_options">
-		<addForeignKeyConstraint baseColumnNames="sub_options_ID" baseTableName="gnuob_options_gnuob_sub_options" constraintName="FK_options_id_gnuob_sub_options" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_sub_options" />
+		<addForeignKeyConstraint baseColumnNames="sub_options_ID"
+			baseTableName="gnuob_options_gnuob_sub_options" constraintName="FK_options_id_gnuob_sub_options"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_sub_options" />
 		<rollback>
-			<dropForeignKeyConstraint baseTableName="gnuob_options_gnuob_sub_options" constraintName="FK_options_id_gnuob_sub_options" />
+			<dropForeignKeyConstraint baseTableName="gnuob_options_gnuob_sub_options"
+				constraintName="FK_options_id_gnuob_sub_options" />
 		</rollback>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="1415447276727-119">
-		<addForeignKeyConstraint baseColumnNames="GNUOB_OPTIONS_ID" baseTableName="gnuob_options_gnuob_sub_options" constraintName="FK_gnuob_options_ID_gnuob_sub_options" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_options" />
+		<addForeignKeyConstraint baseColumnNames="GNUOB_OPTIONS_ID"
+			baseTableName="gnuob_options_gnuob_sub_options" constraintName="FK_gnuob_options_ID_gnuob_sub_options"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_options" />
 		<rollback>
-			<dropForeignKeyConstraint baseTableName="gnuob_options_gnuob_sub_options" constraintName="FK_gnuob_options_id_gnuob_sub_options" />
+			<dropForeignKeyConstraint baseTableName="gnuob_options_gnuob_sub_options"
+				constraintName="FK_gnuob_options_id_gnuob_sub_options" />
 		</rollback>
 	</changeSet>
-	<!-- <changeSet author="Bernard Arjan Draaisma" id="0.0.3-SNAPSHOT"> <tagDatabase tag="0.0.3-SNAPSHOT" /> </changeSet> -->
+	<!-- <changeSet author="Bernard Arjan Draaisma" id="0.0.3-SNAPSHOT"> <tagDatabase 
+		tag="0.0.3-SNAPSHOT" /> </changeSet> -->
 </databaseChangeLog>

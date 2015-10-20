@@ -22,93 +22,94 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
 @Stateless(name = "ContractWebServiceImpl")
-@Interceptors(value = { AppSimonInterceptor.class })
+@Interceptors(value = {AppSimonInterceptor.class})
 public class ContractWebServiceImpl<C extends Contract> implements GenericTypeWebService<C> {
 
-   @EJB(beanName = "SecuredGenericTypeServiceImpl")
-   private SecuredGenericTypeService<C> securedGenericContractService;
+  @EJB(beanName = "SecuredGenericTypeServiceImpl")
+  private SecuredGenericTypeService<C> securedGenericContractService;
 
-   @EJB(beanName = "SecuredGenericTypeServiceImpl")
-   private SecuredGenericTypeService<Customer> securedGenericCustomerService;
+  @EJB(beanName = "SecuredGenericTypeServiceImpl")
+  private SecuredGenericTypeService<Customer> securedGenericCustomerService;
 
-   @Override
-   @WebMethod(operationName = "countContract")
-   public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract) {
-      try {
-         securedGenericCustomerService.read(metadata, contract.getCustomer());
-         return securedGenericContractService.count(metadata, contract);
-      } catch (final Exception e) {
-         throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-      }
-   }
+  @Override
+  @WebMethod(operationName = "countContract")
+  public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract) {
+    try {
+      securedGenericCustomerService.read(metadata, contract.getCustomer());
+      return securedGenericContractService.count(metadata, contract);
+    } catch (final Exception e) {
+      throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    }
+  }
 
-   @Override
-   @WebMethod(operationName = "findContractById")
-   public C find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract) {
-      try {
-         securedGenericCustomerService.read(metadata, contract.getCustomer());
-         return securedGenericContractService.find(metadata, contract, contract.getId());
-      } catch (final Exception e) {
-         throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-      }
-   }
+  @Override
+  @WebMethod(operationName = "findContractById")
+  public C find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract) {
+    try {
+      securedGenericCustomerService.read(metadata, contract.getCustomer());
+      return securedGenericContractService.find(metadata, contract, contract.getId());
+    } catch (final Exception e) {
+      throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    }
+  }
 
-   @Override
-   @WebMethod(operationName = "findContract")
-   public List<C> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract, @WebParam(name = "paging") Paging paging, @WebParam(name = "orderBy") OrderBy orderBy) {
-      try {
-         securedGenericCustomerService.read(metadata, contract.getCustomer());
-         return securedGenericContractService.find(metadata, contract, paging, orderBy);
-      } catch (final Exception e) {
-         throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-      }
-   }
+  @Override
+  @WebMethod(operationName = "findContract")
+  public List<C> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract, @WebParam(name = "paging") Paging paging,
+      @WebParam(name = "orderBy") OrderBy orderBy) {
+    try {
+      securedGenericCustomerService.read(metadata, contract.getCustomer());
+      return securedGenericContractService.find(metadata, contract, paging, orderBy);
+    } catch (final Exception e) {
+      throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    }
+  }
 
-   @Override
-   @WebMethod(operationName = "mergeContract")
-   public C merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract) {
-      try {
-         securedGenericCustomerService.update(metadata, contract.getCustomer());
-         securedGenericContractService.merge(metadata, contract);
-         return contract;
-      } catch (final Exception e) {
-         throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-      }
-   }
+  @Override
+  @WebMethod(operationName = "mergeContract")
+  public C merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract) {
+    try {
+      securedGenericCustomerService.update(metadata, contract.getCustomer());
+      securedGenericContractService.merge(metadata, contract);
+      return contract;
+    } catch (final Exception e) {
+      throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    }
+  }
 
-   @Override
-   @WebMethod(operationName = "persistContract")
-   @MailAction(operation = Mail.WELCOME_NEW_CUSTOMER_MAIL)
-   public C persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract) {
-      try {
-         securedGenericCustomerService.persist(metadata, contract.getCustomer());
-         securedGenericContractService.persist(metadata, contract);
-         return contract;
-      } catch (final Exception e) {
-         throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-      }
-   }
+  @Override
+  @WebMethod(operationName = "persistContract")
+  @MailAction(operation = Mail.WELCOME_NEW_CUSTOMER_MAIL)
+  public C persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract) {
+    try {
+      securedGenericCustomerService.persist(metadata, contract.getCustomer());
+      securedGenericContractService.persist(metadata, contract);
+      return contract;
+    } catch (final Exception e) {
+      throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    }
+  }
 
-   @Override
-   @WebMethod(operationName = "refreshContract")
-   public C refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract) {
-      try {
-         securedGenericCustomerService.read(metadata, contract.getCustomer());
-         return securedGenericContractService.refresh(metadata, contract, contract.getId());
-      } catch (final Exception e) {
-         throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-      }
-   }
+  @Override
+  @WebMethod(operationName = "refreshContract")
+  public C refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract) {
+    try {
+      securedGenericCustomerService.read(metadata, contract.getCustomer());
+      return securedGenericContractService.refresh(metadata, contract, contract.getId());
+    } catch (final Exception e) {
+      throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    }
+  }
 
-   @Override
-   @WebMethod(operationName = "removeContract")
-   public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract) {
-      try {
-         securedGenericCustomerService.delete(metadata, contract.getCustomer());
-         securedGenericContractService.remove(metadata, contract);
-      } catch (final Exception e) {
-         throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-      }
-   }
+  @Override
+  @WebMethod(operationName = "removeContract")
+  public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "contract") C contract) {
+    try {
+      securedGenericCustomerService.delete(metadata, contract.getCustomer());
+      securedGenericContractService.remove(metadata, contract);
+    } catch (final Exception e) {
+      throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    }
+  }
 
 }

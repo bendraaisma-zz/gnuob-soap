@@ -27,86 +27,87 @@ import com.netbrasoft.gnuob.generic.Type;
 @XmlRootElement(name = Option.ENTITY)
 public class Option extends Type {
 
-	private static final long serialVersionUID = -4350389615614303733L;
-	protected static final String ENTITY = "Option";
-	protected static final String TABLE = "GNUOB_OPTIONS";
+  private static final long serialVersionUID = -4350389615614303733L;
+  protected static final String ENTITY = "Option";
+  protected static final String TABLE = "GNUOB_OPTIONS";
 
-	@Column(name = "POSITION")
-	private Integer position = 0;
+  @Column(name = "POSITION")
+  private Integer position = 0;
 
-	@Column(name = "VALUE", nullable = false)
-	private String value;
+  @Column(name = "VALUE", nullable = false)
+  private String value;
 
-	@Column(name = "DESCRIPTION")
-	private String description;
+  @Column(name = "DESCRIPTION", nullable = false)
+  private String description;
 
-	@Column(name = "DISABLED", nullable = false)
-	private boolean disabled;
+  @Column(name = "DISABLED", nullable = false)
+  private boolean disabled;
 
-	@OrderBy("position asc")
-	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, fetch = FetchType.EAGER)
-	@JoinTable(name = "gnuob_options_gnuob_sub_options", joinColumns = { @JoinColumn(name = "GNUOB_OPTIONS_ID", referencedColumnName = "ID") }, inverseJoinColumns = { @JoinColumn(name = "sub_options_ID", referencedColumnName = "ID") })
-	private Set<SubOption> subOptions = new HashSet<SubOption>();
+  @OrderBy("position asc")
+  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+  @JoinTable(name = "gnuob_options_gnuob_sub_options", joinColumns = {@JoinColumn(name = "GNUOB_OPTIONS_ID", referencedColumnName = "ID")},
+      inverseJoinColumns = {@JoinColumn(name = "sub_options_ID", referencedColumnName = "ID")})
+  private Set<SubOption> subOptions = new HashSet<SubOption>();
 
-	@XmlElement(name = "description")
-	public String getDescription() {
-		return description;
-	}
+  @XmlElement(name = "description", required = true)
+  public String getDescription() {
+    return description;
+  }
 
-	@XmlElement(name = "position")
-	public Integer getPosition() {
-		return position;
-	}
+  @XmlElement(name = "position")
+  public Integer getPosition() {
+    return position;
+  }
 
-	public Set<SubOption> getSubOptions() {
-		return subOptions;
-	}
+  public Set<SubOption> getSubOptions() {
+    return subOptions;
+  }
 
-	@XmlElement(name = "value", required = true)
-	public String getValue() {
-		return value;
-	}
+  @XmlElement(name = "value", required = true)
+  public String getValue() {
+    return value;
+  }
 
-	@XmlElement(name = "disabled", required = true)
-	public boolean isDisabled() {
-		return disabled;
-	}
+  @XmlElement(name = "disabled", required = true)
+  public boolean isDisabled() {
+    return disabled;
+  }
 
-	private void positionSubOptions() {
-		int position = 0;
+  private void positionSubOptions() {
+    int position = 0;
 
-		for (final SubOption subOption : subOptions) {
-			subOption.setPosition(Integer.valueOf(position++));
-		}
-	}
+    for (final SubOption subOption : subOptions) {
+      subOption.setPosition(Integer.valueOf(position++));
+    }
+  }
 
-	@Override
-	public void prePersist() {
-		positionSubOptions();
-	}
+  @Override
+  public void prePersist() {
+    positionSubOptions();
+  }
 
-	@Override
-	public void preUpdate() {
-		positionSubOptions();
-	}
+  @Override
+  public void preUpdate() {
+    positionSubOptions();
+  }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
+  public void setDisabled(boolean disabled) {
+    this.disabled = disabled;
+  }
 
-	public void setPosition(Integer position) {
-		this.position = position;
-	}
+  public void setPosition(Integer position) {
+    this.position = position;
+  }
 
-	public void setSubOptions(Set<SubOption> subOptions) {
-		this.subOptions = subOptions;
-	}
+  public void setSubOptions(Set<SubOption> subOptions) {
+    this.subOptions = subOptions;
+  }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+  public void setValue(String value) {
+    this.value = value;
+  }
 }

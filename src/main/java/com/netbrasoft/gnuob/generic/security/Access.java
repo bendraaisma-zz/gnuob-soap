@@ -26,94 +26,89 @@ import com.netbrasoft.gnuob.generic.content.contexts.ContextElement;
 @Table(name = Access.TABLE)
 @Inheritance(strategy = InheritanceType.JOINED)
 // @formatter:off
-@FilterDefs({ @FilterDef(name = Access.NFQ1, parameters = @ParamDef(name = "userId", type = "long")),
-   @FilterDef(name = Access.NFQ2, parameters = @ParamDef(name = "siteId", type = "long")) })
-@Filters({
-   @Filter(
-         // Select based on user ownership.
-         name = Access.NFQ1, condition = "((owner_ID = (SELECT GNUOB_USERS.ID FROM GNUOB_USERS "
-               + " WHERE GNUOB_USERS.ID = :userId) "
-               + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
-               + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OWNER != 'NONE_ACCESS')) "
-               // Or select based on group ownership.
-               + " OR (group_ID IN(SELECT GNUOB_GROUPS.ID FROM GNUOB_GROUPS "
-               + "	INNER JOIN GNUOB_USERS_GNUOB_GROUPS "
-               + "	ON GNUOB_GROUPS.ID = GNUOB_USERS_GNUOB_GROUPS.groups_ID "
-               + "	INNER JOIN GNUOB_USERS "
-               + "	ON GNUOB_USERS_GNUOB_GROUPS.GNUOB_USERS_ID = GNUOB_USERS.ID "
-               + " AND GNUOB_USERS.ID = :userId) "
-               + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
-               + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.GROUP != 'NONE_ACCESS')) "
-               // Or select based on other ownership.
-               + " OR (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
-               + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OTHERS != 'NONE_ACCESS')) "),
-               @Filter(name = Access.NFQ2, condition = "site_ID = :siteId") })
+@FilterDefs({@FilterDef(name = Access.NFQ1, parameters = @ParamDef(name = "userId", type = "long") ),
+    @FilterDef(name = Access.NFQ2, parameters = @ParamDef(name = "siteId", type = "long") )})
+@Filters({@Filter(
+    // Select based on user ownership.
+    name = Access.NFQ1, condition = "((owner_ID = (SELECT GNUOB_USERS.ID FROM GNUOB_USERS " + " WHERE GNUOB_USERS.ID = :userId) "
+        + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS " + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OWNER != 'NONE_ACCESS')) "
+        // Or select based on group ownership.
+        + " OR (group_ID IN(SELECT GNUOB_GROUPS.ID FROM GNUOB_GROUPS " + "	INNER JOIN GNUOB_USERS_GNUOB_GROUPS "
+        + "	ON GNUOB_GROUPS.ID = GNUOB_USERS_GNUOB_GROUPS.groups_ID " + "	INNER JOIN GNUOB_USERS " + "	ON GNUOB_USERS_GNUOB_GROUPS.GNUOB_USERS_ID = GNUOB_USERS.ID "
+        + " AND GNUOB_USERS.ID = :userId) " + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
+        + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.GROUP != 'NONE_ACCESS')) "
+        // Or select based on other ownership.
+        + " OR (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS " + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OTHERS != 'NONE_ACCESS')) "),
+    @Filter(name = Access.NFQ2, condition = "site_ID = :siteId")})
 // @formatter:on
 public abstract class Access extends Type implements ContextElement {
 
-   private static final long serialVersionUID = 6374088000216811805L;
-   protected static final String ENTITY = "Access";
-   public static final String TABLE = "GNUOB_ACCESS";
+  private static final long serialVersionUID = 6374088000216811805L;
 
-   public static final String NFQ1 = "filterByUserIdOrGroupIdsOrOtherIds";
-   public static final String NFQ2 = "filterBySiteId";
+  protected static final String ENTITY = "Access";
 
-   @ManyToOne(cascade = { CascadeType.PERSIST }, optional = false)
-   private Site site;
+  public static final String TABLE = "GNUOB_ACCESS";
 
-   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, optional = false)
-   private Permission permission;
+  public static final String NFQ1 = "filterByUserIdOrGroupIdsOrOtherIds";
 
-   @ManyToOne(cascade = { CascadeType.PERSIST }, optional = false)
-   private User owner;
+  public static final String NFQ2 = "filterBySiteId";
 
-   @ManyToOne(cascade = { CascadeType.PERSIST }, optional = false)
-   private Group group;
+  @ManyToOne(cascade = {CascadeType.PERSIST}, optional = false)
+  private Site site;
 
-   @Column(name = "ACTIVE", nullable = false)
-   private Boolean active = true;
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, optional = false)
+  private Permission permission;
 
-   @XmlElement(name = "active", required = true)
-   public Boolean getActive() {
-      return active;
-   }
+  @ManyToOne(cascade = {CascadeType.PERSIST}, optional = false)
+  private User owner;
 
-   @XmlTransient
-   public Group getGroup() {
-      return group;
-   }
+  @ManyToOne(cascade = {CascadeType.PERSIST}, optional = false)
+  private Group group;
 
-   @XmlTransient
-   public User getOwner() {
-      return owner;
-   }
+  @Column(name = "ACTIVE", nullable = false)
+  private Boolean active = true;
 
-   public Permission getPermission() {
-      return permission;
-   }
+  @XmlElement(name = "active", required = true, defaultValue = "true")
+  public Boolean getActive() {
+    return active;
+  }
 
-   @XmlTransient
-   public Site getSite() {
-      return site;
-   }
+  @XmlTransient
+  public Group getGroup() {
+    return group;
+  }
 
-   public void setActive(Boolean active) {
-      this.active = active;
-   }
+  @XmlTransient
+  public User getOwner() {
+    return owner;
+  }
 
-   public void setGroup(Group group) {
-      this.group = group;
-   }
+  public Permission getPermission() {
+    return permission;
+  }
 
-   public void setOwner(User owner) {
-      this.owner = owner;
-   }
+  @XmlTransient
+  public Site getSite() {
+    return site;
+  }
 
-   public void setPermission(Permission permission) {
-      this.permission = permission;
-   }
+  public void setActive(Boolean active) {
+    this.active = active;
+  }
 
-   public void setSite(Site site) {
-      this.site = site;
-   }
+  public void setGroup(Group group) {
+    this.group = group;
+  }
+
+  public void setOwner(User owner) {
+    this.owner = owner;
+  }
+
+  public void setPermission(Permission permission) {
+    this.permission = permission;
+  }
+
+  public void setSite(Site site) {
+    this.site = site;
+  }
 }

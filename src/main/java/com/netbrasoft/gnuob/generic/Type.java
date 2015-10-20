@@ -20,75 +20,75 @@ import javax.xml.bind.annotation.XmlTransient;
 @MappedSuperclass
 public abstract class Type implements Serializable {
 
-   private static final long serialVersionUID = 7895247154381678321L;
+  private static final long serialVersionUID = 7895247154381678321L;
 
-   @Id
-   @GeneratedValue(strategy = GenerationType.IDENTITY)
-   @Column(name = "ID")
-   private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "ID")
+  private long id;
 
-   @Version
-   @Column(name = "VERSION")
-   private int version;
+  @Version
+  @Column(name = "VERSION")
+  private int version;
 
-   @Column(name = "CREATION")
-   private Timestamp creation;
+  @Column(name = "CREATION")
+  private Timestamp creation;
 
-   @Column(name = "MODIFICATION")
-   private Timestamp modification;
+  @Column(name = "MODIFICATION")
+  private Timestamp modification;
 
-   @XmlTransient
-   public Timestamp getCreation() {
-      return creation;
-   }
+  @XmlTransient
+  public Timestamp getCreation() {
+    return creation;
+  }
 
-   @XmlAttribute(name = "id", required = false)
-   public long getId() {
-      return id;
-   }
+  @XmlAttribute(name = "id", required = false)
+  public long getId() {
+    return id;
+  }
 
-   @XmlTransient
-   public Timestamp getModification() {
-      return modification;
-   }
+  @XmlTransient
+  public Timestamp getModification() {
+    return modification;
+  }
 
-   @XmlAttribute(name = "version", required = false)
-   public int getVersion() {
-      return version;
-   }
+  @XmlAttribute(name = "version", required = false)
+  public int getVersion() {
+    return version;
+  }
 
-   @Transient
-   public abstract void prePersist();
+  @Transient
+  public abstract void prePersist();
 
-   @PrePersist
-   protected void prePersistType() {
-      creation = new Timestamp(System.currentTimeMillis());
-      modification = new Timestamp(System.currentTimeMillis());
-      prePersist();
-   }
+  @PrePersist
+  protected void prePersistType() {
+    creation = new Timestamp(System.currentTimeMillis());
+    modification = new Timestamp(System.currentTimeMillis());
+    prePersist();
+  }
 
-   @Transient
-   public abstract void preUpdate();
+  @Transient
+  public abstract void preUpdate();
 
-   @PreUpdate
-   protected void preUpdateType() {
-      modification = new Timestamp(System.currentTimeMillis());
-      preUpdate();
-   }
+  @PreUpdate
+  protected void preUpdateType() {
+    modification = new Timestamp(System.currentTimeMillis());
+    preUpdate();
+  }
 
-   public void setCreation(Timestamp creation) {
-      this.creation = creation;
-   }
+  public void setCreation(Timestamp creation) {
+    this.creation = creation;
+  }
 
-   public void setId(long id) {
-      this.id = id;
-   }
+  public void setId(long id) {
+    this.id = id;
+  }
 
-   public void setModification(Timestamp modification) {
-      this.modification = modification;
-   }
+  public void setModification(Timestamp modification) {
+    this.modification = modification;
+  }
 
-   public void setVersion(int version) {
-      this.version = version;
-   }
+  public void setVersion(int version) {
+    this.version = version;
+  }
 }

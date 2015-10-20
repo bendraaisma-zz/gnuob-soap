@@ -21,46 +21,46 @@ import com.netbrasoft.gnuob.generic.customer.Address;
 @XmlRootElement(name = Shipment.ENTITY)
 public class Shipment extends Type {
 
-   private static final long serialVersionUID = 7122488386952479304L;
-   protected static final String ENTITY = "Shipment";
-   protected static final String TABLE = "GNUOB_SHIPMENTS";
+  private static final long serialVersionUID = 7122488386952479304L;
+  protected static final String ENTITY = "Shipment";
+  protected static final String TABLE = "GNUOB_SHIPMENTS";
 
-   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, optional = false)
-   private Address address;
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true, optional = false)
+  private Address address;
 
-   @Column(name = "SHIPMENT_TYPE")
-   private String shipmentType = "NOT_SPECIFIED";
+  @Column(name = "SHIPMENT_TYPE")
+  private String shipmentType = "NOT_SPECIFIED";
 
-   public Shipment() {
+  public Shipment() {
 
-   }
+  }
 
-   @XmlElement(name = "address", required = true)
-   public Address getAddress() {
-      return address;
-   }
+  @XmlElement(name = "address", required = true)
+  public Address getAddress() {
+    return address;
+  }
 
-   @XmlElement(name = "shipmentType")
-   public String getShipmentType() {
-      return shipmentType;
-   }
+  @XmlElement(name = "shipmentType")
+  public String getShipmentType() {
+    return shipmentType;
+  }
 
-   @Override
-   public void prePersist() {
-      return;
-   }
+  @Override
+  public void prePersist() {
+    return;
+  }
 
-   @Override
-   public void preUpdate() {
-      return;
-   }
+  @Override
+  public void preUpdate() {
+    return;
+  }
 
-   public void setAddress(Address address) {
-      this.address = address;
-   }
+  public void setAddress(Address address) {
+    this.address = address;
+  }
 
-   public void setShipmentType(String shipmentType) {
-      this.shipmentType = shipmentType;
-   }
+  public void setShipmentType(String shipmentType) {
+    this.shipmentType = shipmentType;
+  }
 
 }

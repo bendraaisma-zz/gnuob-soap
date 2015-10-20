@@ -12,90 +12,90 @@ import org.hibernate.Session;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @Stateless(name = "GenericTypeDaoImpl")
-@Interceptors(value = { AppSimonInterceptor.class })
+@Interceptors(value = {AppSimonInterceptor.class})
 public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
 
-   @PersistenceContext(unitName = "primary")
-   private EntityManager entityManager;
+  @PersistenceContext(unitName = "primary")
+  private EntityManager entityManager;
 
-   public GenericTypeDaoImpl() {
+  public GenericTypeDaoImpl() {
 
-   }
+  }
 
-   @Override
-   public boolean contains(T type) {
-      return entityManager.contains(type);
-   }
+  @Override
+  public boolean contains(T type) {
+    return entityManager.contains(type);
+  }
 
-   @Override
-   public void disableFilter(String filterName) {
-      final Session session = getDelegate();
-      session.disableFilter(filterName);
-   }
+  @Override
+  public void disableFilter(String filterName) {
+    final Session session = getDelegate();
+    session.disableFilter(filterName);
+  }
 
-   @Override
-   public void enableFilter(String fiterName, Parameter... param) {
-      final Session session = getDelegate();
-      final Filter filter = session.enableFilter(fiterName);
+  @Override
+  public void enableFilter(String fiterName, Parameter... param) {
+    final Session session = getDelegate();
+    final Filter filter = session.enableFilter(fiterName);
 
-      for (final Parameter p : param) {
-         filter.setParameter(p.getName(), p.getValue());
-      }
-   }
+    for (final Parameter p : param) {
+      filter.setParameter(p.getName(), p.getValue());
+    }
+  }
 
-   @SuppressWarnings("unchecked")
-   @Override
-   public T find(T type, long id, LockModeType lockModeType) {
-      return (T) entityManager.find(type.getClass(), id, lockModeType);
-   }
+  @SuppressWarnings("unchecked")
+  @Override
+  public T find(T type, long id, LockModeType lockModeType) {
+    return (T) entityManager.find(type.getClass(), id, lockModeType);
+  }
 
-   @Override
-   public void flush() {
-      entityManager.flush();
-   }
+  @Override
+  public void flush() {
+    entityManager.flush();
+  }
 
-   @Override
-   public Session getDelegate() {
-      return (Session) entityManager.getDelegate();
-   }
+  @Override
+  public Session getDelegate() {
+    return (Session) entityManager.getDelegate();
+  }
 
-   @Override
-   public LockModeType getLockModeTypeOfType(T type) {
-      return entityManager.getLockMode(type);
-   }
+  @Override
+  public LockModeType getLockModeTypeOfType(T type) {
+    return entityManager.getLockMode(type);
+  }
 
-   @Override
-   public boolean isOpen() {
-      return entityManager.isOpen();
-   }
+  @Override
+  public boolean isOpen() {
+    return entityManager.isOpen();
+  }
 
-   @Override
-   public void lock(T type, LockModeType lockModeType) {
-      entityManager.lock(type, lockModeType);
-   }
+  @Override
+  public void lock(T type, LockModeType lockModeType) {
+    entityManager.lock(type, lockModeType);
+  }
 
-   @Override
-   public void merge(T type) {
-      entityManager.merge(type);
-   }
+  @Override
+  public void merge(T type) {
+    entityManager.merge(type);
+  }
 
-   @Override
-   public void persist(T type) {
-      entityManager.persist(type);
-   }
+  @Override
+  public void persist(T type) {
+    entityManager.persist(type);
+  }
 
-   @Override
-   public T refresh(T type, long id, LockModeType lockModeType) {
-      if (!entityManager.contains(type)) {
-         return find(type, id, lockModeType);
-      }
+  @Override
+  public T refresh(T type, long id, LockModeType lockModeType) {
+    if (!entityManager.contains(type)) {
+      return find(type, id, lockModeType);
+    }
 
-      entityManager.refresh(type);
-      return type;
-   }
+    entityManager.refresh(type);
+    return type;
+  }
 
-   @Override
-   public void remove(T type) {
-      entityManager.remove(entityManager.contains(type) ? type : entityManager.merge(type));
-   }
+  @Override
+  public void remove(T type) {
+    entityManager.remove(entityManager.contains(type) ? type : entityManager.merge(type));
+  }
 }

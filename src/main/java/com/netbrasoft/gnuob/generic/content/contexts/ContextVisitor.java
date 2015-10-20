@@ -16,25 +16,25 @@ import com.netbrasoft.gnuob.generic.setting.Setting;
 
 public interface ContextVisitor {
 
-   Context visit(Category category);
+  Context visit(Category category);
 
-   Context visit(Content content);
+  Context visit(Content content);
 
-   Context visit(Contract contract);
+  Context visit(Contract contract);
 
-   Context visit(Customer customer);
+  Context visit(Customer customer);
 
-   Context visit(Group group);
+  Context visit(Group group);
 
-   Context visit(Offer offer);
+  Context visit(Offer offer);
 
-   Context visit(Order order);
+  Context visit(Order order);
 
-   Context visit(Product product);
+  Context visit(Product product);
 
-   Context visit(Setting setting);
+  Context visit(Setting setting);
 
-   Context visit(Site site);
+  Context visit(Site site);
 
-   Context visit(User user);
+  Context visit(User user);
 }

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 	<changeSet id="Adding MAX_TOTAL column for orders" author="Bernard Arjan Draaisma">
 		<addColumn tableName="gnuob_orders">
 			<column name="MAX_TOTAL" type="DECIMAL(19, 2)" />
@@ -19,7 +21,9 @@
 			<column name="VALUE" type="VARCHAR(128)">
 				<constraints nullable="false" />
 			</column>
-			<column name="DESCRIPTION" type="VARCHAR(128)" />
+			<column name="DESCRIPTION" type="VARCHAR(128)">
+				<constraints nullable="false" />
+			</column>
 			<column name="DISABLED" type="BIT(1)" />
 			<column name="POSITION" type="INT(10)" />
 		</createTable>
@@ -27,7 +31,8 @@
 			<dropTable tableName="GNUOB_OPTIONS" />
 		</rollback>
 	</changeSet>
-	<changeSet id="Add gnuob_products_gnuob_options table" author="Bernard Arjan Draaisma">
+	<changeSet id="Add gnuob_products_gnuob_options table"
+		author="Bernard Arjan Draaisma">
 		<createTable tableName="gnuob_products_gnuob_options">
 			<column name="GNUOB_PRODUCTS_ID" type="BIGINT(19)">
 				<constraints nullable="false" />
@@ -41,27 +46,40 @@
 		</rollback>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="gnuob_products_gnuob_options_primary">
-		<addPrimaryKey columnNames="GNUOB_PRODUCTS_ID, options_ID" constraintName="PRIMARY" tableName="gnuob_products_gnuob_options" />
+		<addPrimaryKey columnNames="GNUOB_PRODUCTS_ID, options_ID"
+			constraintName="PRIMARY" tableName="gnuob_products_gnuob_options" />
 		<rollback>
 			<dropPrimaryKey tableName="gnuob_products_gnuob_options" />
 		</rollback>
 	</changeSet>
-	<changeSet author="Bernard Arjan Draaisma" id="UK options_ID for gnuob_products_gnuob_options">
-		<addUniqueConstraint columnNames="options_ID" constraintName="UK_gnuob_products_gnuob_options" deferrable="false" disabled="false" initiallyDeferred="false" tableName="gnuob_products_gnuob_options" />
+	<changeSet author="Bernard Arjan Draaisma"
+		id="UK options_ID for gnuob_products_gnuob_options">
+		<addUniqueConstraint columnNames="options_ID"
+			constraintName="UK_gnuob_products_gnuob_options" deferrable="false"
+			disabled="false" initiallyDeferred="false" tableName="gnuob_products_gnuob_options" />
 		<rollback>
-			<dropUniqueConstraint tableName="gnuob_products_gnuob_options" constraintName="UK_gnuob_products_gnuob_options" />
+			<dropUniqueConstraint tableName="gnuob_products_gnuob_options"
+				constraintName="UK_gnuob_products_gnuob_options" />
 		</rollback>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="FK options_ID for gnuob_options">
-		<addForeignKeyConstraint baseColumnNames="options_ID" baseTableName="gnuob_products_gnuob_options" constraintName="FK_gnuob_options_id_gnuob_options" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_options" />
+		<addForeignKeyConstraint baseColumnNames="options_ID"
+			baseTableName="gnuob_products_gnuob_options" constraintName="FK_gnuob_options_id_gnuob_options"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_options" />
 		<rollback>
-			<dropForeignKeyConstraint baseTableName="gnuob_products_gnuob_options" constraintName="FK_gnuob_options_id_gnuob_options" />
+			<dropForeignKeyConstraint baseTableName="gnuob_products_gnuob_options"
+				constraintName="FK_gnuob_options_id_gnuob_options" />
 		</rollback>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="FK GNUOB_PRODUCTS_ID for gnuob_products">
-		<addForeignKeyConstraint baseColumnNames="GNUOB_PRODUCTS_ID" baseTableName="gnuob_products_gnuob_options" constraintName="FK_gnuob_products_id_gnuob_products" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_products" />
+		<addForeignKeyConstraint baseColumnNames="GNUOB_PRODUCTS_ID"
+			baseTableName="gnuob_products_gnuob_options" constraintName="FK_gnuob_products_id_gnuob_products"
+			deferrable="false" initiallyDeferred="false" onDelete="NO ACTION"
+			onUpdate="NO ACTION" referencedColumnNames="ID" referencedTableName="gnuob_products" />
 		<rollback>
-			<dropForeignKeyConstraint baseTableName="gnuob_products_gnuob_options" constraintName="FK_gnuob_products_id_gnuob_products" />
+			<dropForeignKeyConstraint baseTableName="gnuob_products_gnuob_options"
+				constraintName="FK_gnuob_products_id_gnuob_products" />
 		</rollback>
 	</changeSet>
 	<changeSet author="Bernard Arjan Draaisma" id="add options to order records">
@@ -80,7 +98,8 @@
 			<dropColumn tableName="GNUOB_OFFER_RECORDS" columnName="OPTION" />
 		</rollback>
 	</changeSet>
-	<changeSet id="Adding position column for list sorting" author="Bernard Arjan Draaisma">
+	<changeSet id="Adding position column for list sorting"
+		author="Bernard Arjan Draaisma">
 		<addColumn tableName="gnuob_order_records">
 			<column name="POSITION" type="INT(10)" />
 		</addColumn>
@@ -112,7 +131,8 @@
 			<dropColumn tableName="gnuob_orders" columnName="ORDER_DATE" />
 		</rollback>
 	</changeSet>
-	<changeSet id="Adding DELIVERY_DATE column for order records" author="Bernard Arjan Draaisma">
+	<changeSet id="Adding DELIVERY_DATE column for order records"
+		author="Bernard Arjan Draaisma">
 		<addColumn tableName="gnuob_order_records">
 			<column name="DELIVERY_DATE" type="DATE" />
 		</addColumn>
@@ -120,7 +140,8 @@
 			<dropColumn tableName="gnuob_order_records" columnName="DELIVERY_DATE" />
 		</rollback>
 	</changeSet>
-	<changeSet id="Adding ORDER_RECORD_ID column for order records" author="Bernard Arjan Draaisma">
+	<changeSet id="Adding ORDER_RECORD_ID column for order records"
+		author="Bernard Arjan Draaisma">
 		<addColumn tableName="gnuob_order_records">
 			<column name="ORDER_RECORD_ID" type="VARCHAR(127)">
 				<constraints nullable="false" />
@@ -130,7 +151,8 @@
 			<dropColumn tableName="gnuob_order_records" columnName="ORDER_RECORD_ID" />
 		</rollback>
 	</changeSet>
-	<changeSet id="Adding OFFER_RECORD_ID column for offer records" author="Bernard Arjan Draaisma">
+	<changeSet id="Adding OFFER_RECORD_ID column for offer records"
+		author="Bernard Arjan Draaisma">
 		<addColumn tableName="gnuob_offer_records">
 			<column name="OFFER_RECORD_ID" type="VARCHAR(64)">
 				<constraints nullable="false" />

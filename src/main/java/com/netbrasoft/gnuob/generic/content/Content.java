@@ -22,71 +22,71 @@ import com.netbrasoft.gnuob.generic.security.Access;
 @XmlRootElement(name = Content.ENTITY)
 public class Content extends Access {
 
-   private static final long serialVersionUID = -6963744731098668340L;
-   protected static final String ENTITY = "Content";
-   protected static final String TABLE = "GNUOB_CONTENTS";
+  private static final long serialVersionUID = -6963744731098668340L;
+  protected static final String ENTITY = "Content";
+  protected static final String TABLE = "GNUOB_CONTENTS";
 
-   @Column(name = "POSITION")
-   private Integer position = 0;
+  @Column(name = "POSITION")
+  private Integer position = 0;
 
-   @Column(name = "NAME", nullable = false)
-   private String name;
+  @Column(name = "NAME", nullable = false)
+  private String name;
 
-   @Column(name = "FORMAT", nullable = false)
-   private String format;
+  @Column(name = "FORMAT", nullable = false)
+  private String format;
 
-   @Column(name = "CONTENT", columnDefinition = "MEDIUMBLOB", nullable = false)
-   private byte[] data;
+  @Column(name = "CONTENT", columnDefinition = "MEDIUMBLOB", nullable = false)
+  private byte[] data;
 
-   @Override
-   public Context accept(ContextVisitor visitor) {
-      return visitor.visit(this);
-   }
+  @Override
+  public Context accept(ContextVisitor visitor) {
+    return visitor.visit(this);
+  }
 
-   @XmlElement(name = "content", required = true)
-   @XmlMimeType("application/octet-stream")
-   public byte[] getData() {
-      return Base64.getDecoder().decode(data);
-   }
+  @XmlElement(name = "content", required = true)
+  @XmlMimeType("application/octet-stream")
+  public byte[] getData() {
+    return Base64.getDecoder().decode(data);
+  }
 
-   @XmlElement(name = "format", required = true)
-   public String getFormat() {
-      return format;
-   }
+  @XmlElement(name = "format", required = true)
+  public String getFormat() {
+    return format;
+  }
 
-   @XmlElement(name = "name", required = true)
-   public String getName() {
-      return name;
-   }
+  @XmlElement(name = "name", required = true)
+  public String getName() {
+    return name;
+  }
 
-   @XmlTransient
-   public Integer getPosition() {
-      return position;
-   }
+  @XmlTransient
+  public Integer getPosition() {
+    return position;
+  }
 
-   @Override
-   public void prePersist() {
-      return;
-   }
+  @Override
+  public void prePersist() {
+    return;
+  }
 
-   @Override
-   public void preUpdate() {
-      return;
-   }
+  @Override
+  public void preUpdate() {
+    return;
+  }
 
-   public void setData(byte[] data) {
-      this.data = Base64.getEncoder().encode(data);
-   }
+  public void setData(byte[] data) {
+    this.data = Base64.getEncoder().encode(data);
+  }
 
-   public void setFormat(String format) {
-      this.format = format;
-   }
+  public void setFormat(String format) {
+    this.format = format;
+  }
 
-   public void setName(String name) {
-      this.name = name;
-   }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-   public void setPosition(Integer position) {
-      this.position = position;
-   }
+  public void setPosition(Integer position) {
+    this.position = position;
+  }
 }

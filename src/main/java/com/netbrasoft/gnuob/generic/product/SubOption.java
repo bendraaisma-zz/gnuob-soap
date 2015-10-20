@@ -19,65 +19,65 @@ import com.netbrasoft.gnuob.generic.Type;
 @XmlRootElement(name = SubOption.ENTITY)
 public class SubOption extends Type {
 
-	private static final long serialVersionUID = -4350389615614303733L;
-	protected static final String ENTITY = "SubOption";
-	protected static final String TABLE = "GNUOB_SUB_OPTIONS";
+  private static final long serialVersionUID = -4350389615614303733L;
+  protected static final String ENTITY = "SubOption";
+  protected static final String TABLE = "GNUOB_SUB_OPTIONS";
 
-	@Column(name = "POSITION")
-	private Integer position = 0;
+  @Column(name = "POSITION")
+  private Integer position = 0;
 
-	@Column(name = "VALUE", nullable = false)
-	private String value;
+  @Column(name = "VALUE", nullable = false)
+  private String value;
 
-	@Column(name = "DESCRIPTION")
-	private String description;
+  @Column(name = "DESCRIPTION", nullable = false)
+  private String description;
 
-	@Column(name = "DISABLED", nullable = false)
-	private boolean disabled;
+  @Column(name = "DISABLED", nullable = false)
+  private boolean disabled;
 
-	@XmlElement(name = "description")
-	public String getDescription() {
-		return description;
-	}
+  @XmlElement(name = "description", required = true)
+  public String getDescription() {
+    return description;
+  }
 
-	@XmlTransient
-	public Integer getPosition() {
-		return position;
-	}
+  @XmlTransient
+  public Integer getPosition() {
+    return position;
+  }
 
-	@XmlElement(name = "value", required = true)
-	public String getValue() {
-		return value;
-	}
+  @XmlElement(name = "value", required = true)
+  public String getValue() {
+    return value;
+  }
 
-	@XmlElement(name = "disabled", required = true)
-	public boolean isDisabled() {
-		return disabled;
-	}
+  @XmlElement(name = "disabled", required = true)
+  public boolean isDisabled() {
+    return disabled;
+  }
 
-	@Override
-	public void prePersist() {
+  @Override
+  public void prePersist() {
 
-	}
+  }
 
-	@Override
-	public void preUpdate() {
+  @Override
+  public void preUpdate() {
 
-	}
+  }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-	public void setDisabled(boolean disabled) {
-		this.disabled = disabled;
-	}
+  public void setDisabled(boolean disabled) {
+    this.disabled = disabled;
+  }
 
-	public void setPosition(Integer position) {
-		this.position = position;
-	}
+  public void setPosition(Integer position) {
+    this.position = position;
+  }
 
-	public void setValue(String value) {
-		this.value = value;
-	}
+  public void setValue(String value) {
+    this.value = value;
+  }
 }
