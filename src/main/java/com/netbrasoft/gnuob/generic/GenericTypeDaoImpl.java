@@ -75,8 +75,8 @@ public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
   }
 
   @Override
-  public void merge(T type) {
-    entityManager.merge(type);
+  public T merge(T type) {
+    return entityManager.merge(type);
   }
 
   @Override
@@ -89,7 +89,6 @@ public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
     if (!entityManager.contains(type)) {
       return find(type, id, lockModeType);
     }
-
     entityManager.refresh(type);
     return type;
   }

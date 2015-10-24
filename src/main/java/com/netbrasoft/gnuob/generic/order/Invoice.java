@@ -63,6 +63,19 @@ public class Invoice extends Type {
     return payments;
   }
 
+  @Override
+  public boolean isDetached() {
+    if (address != null && address.isDetached()) {
+      return address.isDetached();
+    }
+    for (final Payment payment : payments) {
+      if (payment.isDetached()) {
+        return payment.isDetached();
+      }
+    }
+    return getId() > 0;
+  }
+
   private void positionPayments() {
     int index = 0;
 

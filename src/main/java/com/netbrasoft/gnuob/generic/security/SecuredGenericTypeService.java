@@ -20,7 +20,7 @@ public interface SecuredGenericTypeService<T> {
 
   void flush();
 
-  void merge(MetaData metadata, T type);
+  T merge(MetaData metadata, T type);
 
   void persist(MetaData metadata, T type);
 

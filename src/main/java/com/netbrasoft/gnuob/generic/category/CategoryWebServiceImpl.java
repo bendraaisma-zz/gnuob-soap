@@ -39,6 +39,8 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
   @WebMethod(operationName = "countCategory")
   public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "category") C type) {
     try {
+      readContents(metadata, type.getContents());
+      readSubCategoryContents(metadata, type.getSubCategories());
       if (!type.getSubCategories().isEmpty()) {
         final List<Example> examples = getSubCategoryExamples(type.getSubCategories());
         final Parameter parameter = new Parameter("subCategories", Restrictions.or(examples.toArray(new Example[examples.size()])));
@@ -50,10 +52,52 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
     }
   }
 
+  private void createUpdateContents(MetaData metadata, Set<Content> contents) {
+    if (contents != null && !contents.isEmpty()) {
+      for (final Content content : contents) {
+        if (content.getId() == 0) {
+          securedGenericContentService.create(metadata, content);
+        } else {
+          securedGenericContentService.update(metadata, content);
+        }
+      }
+    }
+  }
+
+  private void createUpdateSubCategoryContents(MetaData metadata, Set<SubCategory> subCategories) {
+    if (subCategories != null && !subCategories.isEmpty()) {
+      for (final SubCategory subCategory : subCategories) {
+        createUpdateContents(metadata, subCategory.getContents());
+        createUpdateSubCategoryContents(metadata, subCategory.getSubCategories());
+      }
+    }
+  }
+
+  private void deleteContents(MetaData metadata, Set<Content> contents) {
+    if (contents != null && !contents.isEmpty()) {
+      for (final Content content : contents) {
+        if (content.getId() > 0) {
+          securedGenericContentService.delete(metadata, content);
+        }
+      }
+    }
+  }
+
+  private void deleteSubCategoryContents(MetaData metadata, Set<SubCategory> subCategories) {
+    if (subCategories != null && !subCategories.isEmpty()) {
+      for (final SubCategory subCategory : subCategories) {
+        deleteContents(metadata, subCategory.getContents());
+        deleteSubCategoryContents(metadata, subCategory.getSubCategories());
+      }
+    }
+  }
+
   @Override
   @WebMethod(operationName = "findCategoryById")
   public C find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "category") C type) {
     try {
+      readContents(metadata, type.getContents());
+      readSubCategoryContents(metadata, type.getSubCategories());
       return securedGenericCategoryService.find(metadata, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
@@ -65,6 +109,8 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
   public List<C> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "category") C type, @WebParam(name = "paging") Paging paging,
       @WebParam(name = "orderBy") OrderBy orderBy) {
     try {
+      readContents(metadata, type.getContents());
+      readSubCategoryContents(metadata, type.getSubCategories());
       if (!type.getSubCategories().isEmpty()) {
         final List<Example> examples = getSubCategoryExamples(type.getSubCategories());
         final Parameter parameter = new Parameter("subCategories", Restrictions.or(examples.toArray(new Example[examples.size()])));
@@ -90,10 +136,9 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
   @WebMethod(operationName = "mergeCategory")
   public C merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "category") C type) {
     try {
-      persistMergeContents(metadata, type.getContents());
-      persistMergeSubCategoryContents(metadata, type.getSubCategories());
-      securedGenericCategoryService.merge(metadata, type);
-      return type;
+      createUpdateContents(metadata, type.getContents());
+      createUpdateSubCategoryContents(metadata, type.getSubCategories());
+      return securedGenericCategoryService.merge(metadata, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -103,8 +148,11 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
   @WebMethod(operationName = "persistCategory")
   public C persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "category") C type) {
     try {
-      persistMergeContents(metadata, type.getContents());
-      persistMergeSubCategoryContents(metadata, type.getSubCategories());
+      createUpdateContents(metadata, type.getContents());
+      createUpdateSubCategoryContents(metadata, type.getSubCategories());
+      if (type.isDetached()) {
+        return securedGenericCategoryService.merge(metadata, type);
+      }
       securedGenericCategoryService.persist(metadata, type);
       return type;
     } catch (final Exception e) {
@@ -112,23 +160,21 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
     }
   }
 
-  private void persistMergeContents(MetaData metadata, Set<Content> contents) {
+  private void readContents(MetaData metadata, Set<Content> contents) {
     if (contents != null && !contents.isEmpty()) {
       for (final Content content : contents) {
-        if (content.getId() == 0) {
-          securedGenericContentService.create(metadata, content);
-        } else {
-          securedGenericContentService.update(metadata, content);
+        if (content.getId() > 0) {
+          securedGenericContentService.read(metadata, content);
         }
       }
     }
   }
 
-  private void persistMergeSubCategoryContents(MetaData metadata, Set<SubCategory> subCategories) {
+  private void readSubCategoryContents(MetaData metadata, Set<SubCategory> subCategories) {
     if (subCategories != null && !subCategories.isEmpty()) {
       for (final SubCategory subCategory : subCategories) {
-        persistMergeContents(metadata, subCategory.getContents());
-        persistMergeSubCategoryContents(metadata, subCategory.getSubCategories());
+        readContents(metadata, subCategory.getContents());
+        readSubCategoryContents(metadata, subCategory.getSubCategories());
       }
     }
   }
@@ -137,6 +183,8 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
   @WebMethod(operationName = "refreshCategory")
   public C refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "category") C type) {
     try {
+      readContents(metadata, type.getContents());
+      readSubCategoryContents(metadata, type.getSubCategories());
       return securedGenericCategoryService.refresh(metadata, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
@@ -147,6 +195,8 @@ public class CategoryWebServiceImpl<C extends Category> implements GenericTypeWe
   @WebMethod(operationName = "removeCategory")
   public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "category") C type) {
     try {
+      deleteContents(metadata, type.getContents());
+      deleteSubCategoryContents(metadata, type.getSubCategories());
       securedGenericCategoryService.remove(metadata, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);

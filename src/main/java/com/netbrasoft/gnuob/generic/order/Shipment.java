@@ -46,6 +46,14 @@ public class Shipment extends Type {
   }
 
   @Override
+  public boolean isDetached() {
+    if (address != null && address.isDetached()) {
+      return address.isDetached();
+    }
+    return getId() > 0;
+  }
+
+  @Override
   public void prePersist() {
     return;
   }

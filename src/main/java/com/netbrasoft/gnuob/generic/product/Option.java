@@ -68,6 +68,16 @@ public class Option extends Type {
     return value;
   }
 
+  @Override
+  public boolean isDetached() {
+    for (final SubOption subOption : subOptions) {
+      if (subOption.isDetached()) {
+        return subOption.isDetached();
+      }
+    }
+    return getId() > 0;
+  }
+
   @XmlElement(name = "disabled", required = true)
   public boolean isDisabled() {
     return disabled;

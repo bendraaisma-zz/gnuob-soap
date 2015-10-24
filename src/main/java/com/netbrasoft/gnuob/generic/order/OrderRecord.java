@@ -311,6 +311,11 @@ public class OrderRecord extends Type {
   }
 
   @Override
+  public boolean isDetached() {
+    return getId() > 0;
+  }
+
+  @Override
   public void prePersist() {
     if (orderRecordId == null || "".equals(orderRecordId.trim())) {
       orderRecordId = UUID.randomUUID().toString();

@@ -9,14 +9,13 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
-import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
-
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.GenericTypeWebService;
 import com.netbrasoft.gnuob.generic.OrderBy;
 import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
+import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
 @Stateless(name = "SettingWebServiceImpl")
@@ -31,7 +30,7 @@ public class SettingWebServiceImpl<S extends Setting> implements GenericTypeWebS
   public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "Setting") S type) {
     try {
       return securedGenericSettingService.count(metadata, type);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
@@ -41,7 +40,7 @@ public class SettingWebServiceImpl<S extends Setting> implements GenericTypeWebS
   public S find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "Setting") S type) {
     try {
       return securedGenericSettingService.find(metadata, type, type.getId());
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
@@ -52,7 +51,7 @@ public class SettingWebServiceImpl<S extends Setting> implements GenericTypeWebS
       @WebParam(name = "orderBy") OrderBy orderBy) {
     try {
       return securedGenericSettingService.find(metadata, type, paging, orderBy);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
@@ -61,9 +60,8 @@ public class SettingWebServiceImpl<S extends Setting> implements GenericTypeWebS
   @WebMethod(operationName = "mergeSetting")
   public S merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "Setting") S type) {
     try {
-      securedGenericSettingService.merge(metadata, type);
-      return type;
-    } catch (Exception e) {
+      return securedGenericSettingService.merge(metadata, type);
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
@@ -72,9 +70,12 @@ public class SettingWebServiceImpl<S extends Setting> implements GenericTypeWebS
   @WebMethod(operationName = "persistSetting")
   public S persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "Setting") S type) {
     try {
+      if (type.isDetached()) {
+        return securedGenericSettingService.merge(metadata, type);
+      }
       securedGenericSettingService.persist(metadata, type);
       return type;
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
@@ -84,7 +85,7 @@ public class SettingWebServiceImpl<S extends Setting> implements GenericTypeWebS
   public S refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "Setting") S type) {
     try {
       return securedGenericSettingService.refresh(metadata, type, type.getId());
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
@@ -94,9 +95,8 @@ public class SettingWebServiceImpl<S extends Setting> implements GenericTypeWebS
   public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "Setting") S type) {
     try {
       securedGenericSettingService.remove(metadata, type);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
-
 }

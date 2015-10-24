@@ -9,14 +9,13 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
-import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
-
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.GenericTypeWebService;
 import com.netbrasoft.gnuob.generic.OrderBy;
 import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
+import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
 @Stateless(name = "ContentWebServiceImpl")
@@ -31,7 +30,7 @@ public class ContentWebServiceImpl<C extends Content> implements GenericTypeWebS
   public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) {
     try {
       return securedGenericContentService.count(metadata, type);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
@@ -41,7 +40,7 @@ public class ContentWebServiceImpl<C extends Content> implements GenericTypeWebS
   public C find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) {
     try {
       return securedGenericContentService.find(metadata, type, type.getId());
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
@@ -52,7 +51,7 @@ public class ContentWebServiceImpl<C extends Content> implements GenericTypeWebS
       @WebParam(name = "orderBy") OrderBy orderBy) {
     try {
       return securedGenericContentService.find(metadata, type, paging, orderBy);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
@@ -61,9 +60,8 @@ public class ContentWebServiceImpl<C extends Content> implements GenericTypeWebS
   @WebMethod(operationName = "mergeContent")
   public C merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) {
     try {
-      securedGenericContentService.merge(metadata, type);
-      return type;
-    } catch (Exception e) {
+      return securedGenericContentService.merge(metadata, type);
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
@@ -72,9 +70,12 @@ public class ContentWebServiceImpl<C extends Content> implements GenericTypeWebS
   @WebMethod(operationName = "persistContent")
   public C persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) {
     try {
+      if (type.isDetached()) {
+        return securedGenericContentService.merge(metadata, type);
+      }
       securedGenericContentService.persist(metadata, type);
       return type;
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
@@ -84,7 +85,7 @@ public class ContentWebServiceImpl<C extends Content> implements GenericTypeWebS
   public C refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) {
     try {
       return securedGenericContentService.refresh(metadata, type, type.getId());
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
@@ -94,9 +95,8 @@ public class ContentWebServiceImpl<C extends Content> implements GenericTypeWebS
   public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "content") C type) {
     try {
       securedGenericContentService.remove(metadata, type);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
-
 }

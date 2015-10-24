@@ -32,15 +32,15 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
   @Override
   @OperationAccess(operation = Operation.NONE)
   public long count(T type, Parameter... param) {
-    Session session = genericTypeDao.getDelegate();
+    final Session session = genericTypeDao.getDelegate();
 
-    ProjectionList projectionList = Projections.projectionList();
+    final ProjectionList projectionList = Projections.projectionList();
     projectionList.add(Projections.property("id"));
 
-    Criteria criteria = session.createCriteria(type.getClass());
+    final Criteria criteria = session.createCriteria(type.getClass());
     criteria.add(Example.create(type).excludeProperty("creation").excludeProperty("modification"));
 
-    for (Parameter p : param) {
+    for (final Parameter p : param) {
       criteria.createCriteria(p.getName()).add((Criterion) p.getValue());
     }
 
@@ -67,14 +67,14 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
   @SuppressWarnings("unchecked")
   @OperationAccess(operation = Operation.NONE)
   public T find(T type, long id) {
-    Session session = genericTypeDao.getDelegate();
-    Criteria criteria = session.createCriteria(type.getClass());
+    final Session session = genericTypeDao.getDelegate();
+    final Criteria criteria = session.createCriteria(type.getClass());
 
     criteria.add(Restrictions.eq("id", id));
 
     criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
 
-    List<T> list = criteria.setCacheable(true).list();
+    final List<T> list = criteria.setCacheable(true).list();
 
     return list.isEmpty() ? null : list.iterator().next();
   }
@@ -89,13 +89,13 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
   @SuppressWarnings("unchecked")
   @OperationAccess(operation = Operation.NONE)
   public List<T> find(T type, Paging paging, OrderBy orderBy, Parameter... param) {
-    List<Long> idlist = findIds(type, paging, orderBy, param);
+    final List<Long> idlist = findIds(type, paging, orderBy, param);
 
     if (idlist.isEmpty()) {
       return new ArrayList<T>();
     } else {
-      Session session = genericTypeDao.getDelegate();
-      Criteria criteria = session.createCriteria(type.getClass());
+      final Session session = genericTypeDao.getDelegate();
+      final Criteria criteria = session.createCriteria(type.getClass());
 
       criteria.add(Restrictions.in("id", idlist));
 
@@ -120,12 +120,12 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
   @SuppressWarnings("unchecked")
   @OperationAccess(operation = Operation.NONE)
   protected List<Long> findIds(T type, Paging paging, OrderBy orderBy, Parameter... param) {
-    Session session = genericTypeDao.getDelegate();
+    final Session session = genericTypeDao.getDelegate();
 
-    Criteria criteria = session.createCriteria(type.getClass());
+    final Criteria criteria = session.createCriteria(type.getClass());
     criteria.add(Example.create(type).excludeProperty("creation").excludeProperty("modification"));
 
-    for (Parameter p : param) {
+    for (final Parameter p : param) {
       criteria.createCriteria(p.getName()).add((Criterion) p.getValue());
     }
 
@@ -149,7 +149,7 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
       criteria.setMaxResults(paging.getMax());
     }
 
-    ProjectionList projectionList = Projections.projectionList();
+    final ProjectionList projectionList = Projections.projectionList();
     projectionList.add(Projections.property("id"));
 
     criteria.setProjection(projectionList);
@@ -166,8 +166,8 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public void merge(T type) {
-    genericTypeDao.merge(type);
+  public T merge(T type) {
+    return genericTypeDao.merge(type);
   }
 
   @Override

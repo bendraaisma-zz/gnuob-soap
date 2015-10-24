@@ -240,6 +240,30 @@ public class Product extends Access {
     return tax;
   }
 
+  @Override
+  public boolean isDetached() {
+    if (stock.isDetached()) {
+      return stock.isDetached();
+    }
+    for (final SubCategory subCategory : subCategories) {
+      if (subCategory.isDetached()) {
+        return subCategory.isDetached();
+      }
+    }
+    for (final Content content : contents) {
+      if (content.isDetached()) {
+        return content.isDetached();
+      }
+    }
+    for (final Option option : options) {
+      if (option.isDetached()) {
+        return option.isDetached();
+      }
+    }
+
+    return getId() > 0;
+  }
+
   private void positionContents() {
     int position = 0;
 

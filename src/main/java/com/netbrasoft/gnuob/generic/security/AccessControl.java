@@ -366,8 +366,8 @@ public class AccessControl<A extends Access, U extends User, S extends Site> {
           }
 
         } else {
-          split.stop();
-          throw new GNUOpenBusinessServiceException("Entity object is not found in database, access is denied");
+          // If access object isn't in database than test it by using create operation access.
+          return createOperationAccess(subject, ctx);
         }
       } else {
         // Parameter is instance of Type?

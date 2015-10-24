@@ -198,6 +198,19 @@ public class Offer extends Access {
     return taxTotal;
   }
 
+  @Override
+  public boolean isDetached() {
+    if (contract != null && contract.isDetached()) {
+      return contract.isDetached();
+    }
+    for (final OfferRecord offerRecord : records) {
+      if (offerRecord.isDetached()) {
+        return offerRecord.isDetached();
+      }
+    }
+    return getId() > 0;
+  }
+
   public void offerId(String offerId) {
     this.offerId = offerId;
   }

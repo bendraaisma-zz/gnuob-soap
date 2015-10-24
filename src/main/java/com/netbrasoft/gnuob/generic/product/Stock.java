@@ -60,6 +60,11 @@ public class Stock extends Type {
   }
 
   @Override
+  public boolean isDetached() {
+    return getId() > 0;
+  }
+
+  @Override
   public void prePersist() {
     return;
   }

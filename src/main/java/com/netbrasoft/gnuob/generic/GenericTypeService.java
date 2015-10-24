@@ -20,7 +20,7 @@ public interface GenericTypeService<T> {
 
   void flush();
 
-  void merge(T type);
+  T merge(T type);
 
   void persist(T type);
 

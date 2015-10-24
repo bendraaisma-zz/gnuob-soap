@@ -65,6 +65,11 @@ public class Content extends Access {
   }
 
   @Override
+  public boolean isDetached() {
+    return getId() > 0;
+  }
+
+  @Override
   public void prePersist() {
     return;
   }

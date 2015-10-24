@@ -74,6 +74,14 @@ public class Contract extends Access {
   }
 
   @Override
+  public boolean isDetached() {
+    if (customer != null && customer.isDetached()) {
+      return customer.isDetached();
+    }
+    return getId() > 0;
+  }
+
+  @Override
   public void prePersist() {
     if (contractId == null || "".equals(contractId.trim())) {
       contractId = UUID.randomUUID().toString();

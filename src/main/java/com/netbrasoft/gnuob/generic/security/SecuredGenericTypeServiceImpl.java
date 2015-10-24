@@ -48,8 +48,8 @@ public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T> 
 
   @Override
   @OperationAccess(operation = Operation.UPDATE)
-  public void merge(MetaData metadata, T type) {
-    super.merge(type);
+  public T merge(MetaData metadata, T type) {
+    return super.merge(type);
   }
 
   @Override

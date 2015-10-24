@@ -50,6 +50,11 @@ public class SubOption extends Type {
     return value;
   }
 
+  @Override
+  public boolean isDetached() {
+    return getId() > 0;
+  }
+
   @XmlElement(name = "disabled", required = true)
   public boolean isDisabled() {
     return disabled;

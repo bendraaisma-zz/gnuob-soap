@@ -352,6 +352,25 @@ public class Order extends Access {
     return transactionId;
   }
 
+  @Override
+  public boolean isDetached() {
+    if (contract != null && contract.isDetached()) {
+      return contract.isDetached();
+    }
+    for (final OrderRecord orderRecord : records) {
+      if (orderRecord.isDetached()) {
+        return orderRecord.isDetached();
+      }
+    }
+    if (invoice != null && invoice.isDetached()) {
+      return invoice.isDetached();
+    }
+    if (shipment != null && shipment.isDetached()) {
+      return shipment.isDetached();
+    }
+    return getId() > 0;
+  }
+
   private void positionRecords() {
     int index = 0;
 

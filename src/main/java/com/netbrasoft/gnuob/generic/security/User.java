@@ -119,6 +119,21 @@ public class User extends Access {
   }
 
   @Override
+  public boolean isDetached() {
+    for (final Site site : sites) {
+      if (site.isDetached()) {
+        return site.isDetached();
+      }
+    }
+    for (final Group group : groups) {
+      if (group.isDetached()) {
+        return group.isDetached();
+      }
+    }
+    return getId() > 0;
+  }
+
+  @Override
   public void prePersist() {
     if (!(password.length() == 62 && password.matches("^[0-9A-F]{16}:\\d{4}:[0-9A-F]{40}"))) {
       throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't contain a valid password, verify that the given password is valid", name));

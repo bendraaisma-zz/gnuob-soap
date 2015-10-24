@@ -30,12 +30,18 @@ import com.netbrasoft.gnuob.generic.content.contexts.ContextElement;
     @FilterDef(name = Access.NFQ2, parameters = @ParamDef(name = "siteId", type = "long") )})
 @Filters({@Filter(
     // Select based on user ownership.
-    name = Access.NFQ1, condition = "((owner_ID = (SELECT GNUOB_USERS.ID FROM GNUOB_USERS " + " WHERE GNUOB_USERS.ID = :userId) "
-        + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS " + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OWNER != 'NONE_ACCESS')) "
+    name = Access.NFQ1, condition = "((owner_ID = (SELECT GNUOB_USERS.ID FROM GNUOB_USERS "
+        + " WHERE GNUOB_USERS.ID = :userId) "
+        + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
+        + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OWNER != 'NONE_ACCESS')) "
         // Or select based on group ownership.
-        + " OR (group_ID IN(SELECT GNUOB_GROUPS.ID FROM GNUOB_GROUPS " + "	INNER JOIN GNUOB_USERS_GNUOB_GROUPS "
-        + "	ON GNUOB_GROUPS.ID = GNUOB_USERS_GNUOB_GROUPS.groups_ID " + "	INNER JOIN GNUOB_USERS " + "	ON GNUOB_USERS_GNUOB_GROUPS.GNUOB_USERS_ID = GNUOB_USERS.ID "
-        + " AND GNUOB_USERS.ID = :userId) " + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
+        + " OR (group_ID IN(SELECT GNUOB_GROUPS.ID FROM GNUOB_GROUPS "
+        + "	INNER JOIN GNUOB_USERS_GNUOB_GROUPS "
+        + "	ON GNUOB_GROUPS.ID = GNUOB_USERS_GNUOB_GROUPS.groups_ID "
+        + "	INNER JOIN GNUOB_USERS "
+        + "	ON GNUOB_USERS_GNUOB_GROUPS.GNUOB_USERS_ID = GNUOB_USERS.ID "
+        + " AND GNUOB_USERS.ID = :userId) "
+        + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
         + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.GROUP != 'NONE_ACCESS')) "
         // Or select based on other ownership.
         + " OR (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS " + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OTHERS != 'NONE_ACCESS')) "),

@@ -24,7 +24,7 @@ public interface GenericTypeDao<T> {
 
   void lock(T type, LockModeType lockModeType);
 
-  void merge(T type);
+  T merge(T type);
 
   void persist(T type);
 

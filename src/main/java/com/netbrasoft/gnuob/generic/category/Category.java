@@ -84,6 +84,21 @@ public class Category extends Access {
     return subCategories;
   }
 
+  @Override
+  public boolean isDetached() {
+    for (final SubCategory subCategory : subCategories) {
+      if (subCategory.isDetached()) {
+        return subCategory.isDetached();
+      }
+    }
+    for (final Content content : contents) {
+      if (content.isDetached()) {
+        return content.isDetached();
+      }
+    }
+    return getId() > 0;
+  }
+
   private void positionContents() {
     int index = 0;
 

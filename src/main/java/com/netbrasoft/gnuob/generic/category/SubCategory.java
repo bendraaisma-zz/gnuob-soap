@@ -43,7 +43,7 @@ public class SubCategory extends Type {
   private Set<SubCategory> subCategories = new LinkedHashSet<SubCategory>();
 
   @OrderBy("position asc")
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH}, fetch = FetchType.EAGER)
   @JoinTable(name = "gnuob_sub_categories_gnuob_contents", joinColumns = {@JoinColumn(name = "GNUOB_SUB_CATEGORIES_ID", referencedColumnName = "ID")},
       inverseJoinColumns = {@JoinColumn(name = "contents_ID", referencedColumnName = "ID")})
   private Set<Content> contents = new LinkedHashSet<Content>();
@@ -79,6 +79,21 @@ public class SubCategory extends Type {
 
   public Set<SubCategory> getSubCategories() {
     return subCategories;
+  }
+
+  @Override
+  public boolean isDetached() {
+    for (final SubCategory subCategory : subCategories) {
+      if (subCategory.isDetached()) {
+        return subCategory.isDetached();
+      }
+    }
+    for (final Content content : contents) {
+      if (content.isDetached()) {
+        return content.isDetached();
+      }
+    }
+    return getId() > 0;
   }
 
   private void positionContents() {

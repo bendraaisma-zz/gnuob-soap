@@ -302,6 +302,11 @@ public class OfferRecord extends Type {
   }
 
   @Override
+  public boolean isDetached() {
+    return getId() > 0;
+  }
+
+  @Override
   public void prePersist() {
     if (offerRecordId == null || "".equals(offerRecordId.trim())) {
       offerRecordId = UUID.randomUUID().toString();

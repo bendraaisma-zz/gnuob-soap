@@ -58,6 +58,9 @@ public abstract class Type implements Serializable {
   }
 
   @Transient
+  public abstract boolean isDetached();
+
+  @Transient
   public abstract void prePersist();
 
   @PrePersist
