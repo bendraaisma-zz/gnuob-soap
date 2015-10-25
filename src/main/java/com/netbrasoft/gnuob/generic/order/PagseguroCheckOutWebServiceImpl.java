@@ -18,6 +18,7 @@ import com.netbrasoft.gnuob.generic.content.mail.MailControl;
 import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.customer.Customer;
 import com.netbrasoft.gnuob.generic.security.MetaData;
+import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeCheckOutService;
 import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
@@ -26,8 +27,8 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Interceptors(value = {AppSimonInterceptor.class, MailControl.class})
 public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOutWebService<O> {
 
-  @EJB(beanName = "PagseguroCheckOutServiceImpl")
-  private CheckOutService<O> checkOutService;
+  @EJB(beanName = "SecuredPagseguroCheckOutServiceImpl")
+  private SecuredGenericTypeCheckOutService<O> securedGenericTypeCheckOutService;
 
   @EJB(beanName = "SecuredGenericTypeServiceImpl")
   private SecuredGenericTypeService<O> securedGenericOrderService;
@@ -38,17 +39,39 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
   @EJB(beanName = "SecuredGenericTypeServiceImpl")
   private SecuredGenericTypeService<Customer> securedGenericCustomerService;
 
+  private void createUpdateContractCustomer(MetaData metadata, Contract contract) {
+    if (contract != null) {
+      if (contract.getId() == 0) {
+        securedGenericContractService.create(metadata, contract);
+      } else {
+        securedGenericContractService.update(metadata, contract);
+      }
+      createUpdateCustomer(metadata, contract.getCustomer());
+    }
+  }
+
+  private void createUpdateCustomer(MetaData metadata, Customer customer) {
+    if (customer != null) {
+      if (customer.getId() == 0) {
+        securedGenericCustomerService.create(metadata, customer);
+      } else {
+        securedGenericCustomerService.update(metadata, customer);
+      }
+    }
+  }
+
   @Override
   @WebMethod(operationName = "doCheckout")
   @MailAction(operation = Mail.NO_MAIL)
-  public O doCheckout(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
+  public O doCheckout(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type) {
     try {
-      securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
-      securedGenericContractService.update(metadata, order.getContract());
-      securedGenericOrderService.update(metadata, order);
-      checkOutService.doCheckout(order);
-      securedGenericOrderService.merge(metadata, order);
-      return order;
+      createUpdateContractCustomer(metadata, type.getContract());
+      securedGenericTypeCheckOutService.doCheckout(metadata, type);
+      if (type.isDetached()) {
+        return securedGenericOrderService.merge(metadata, type);
+      }
+      securedGenericOrderService.persist(metadata, type);
+      return type;
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -57,14 +80,15 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
   @Override
   @WebMethod(operationName = "doCheckoutDetails")
   @MailAction(operation = Mail.NO_MAIL)
-  public O doCheckoutDetails(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
+  public O doCheckoutDetails(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type) {
     try {
-      securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
-      securedGenericContractService.update(metadata, order.getContract());
-      securedGenericOrderService.update(metadata, order);
-      checkOutService.doCheckoutDetails(order);
-      securedGenericOrderService.merge(metadata, order);
-      return order;
+      createUpdateContractCustomer(metadata, type.getContract());
+      securedGenericTypeCheckOutService.doCheckoutDetails(metadata, type);
+      if (type.isDetached()) {
+        return securedGenericOrderService.merge(metadata, type);
+      }
+      securedGenericOrderService.persist(metadata, type);
+      return type;
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -73,14 +97,15 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
   @Override
   @WebMethod(operationName = "doCheckoutPayment")
   @MailAction(operation = Mail.CONFIRMATION_NEW_ORDER_MAIL)
-  public O doCheckoutPayment(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
+  public O doCheckoutPayment(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type) {
     try {
-      securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
-      securedGenericContractService.update(metadata, order.getContract());
-      securedGenericOrderService.update(metadata, order);
-      checkOutService.doCheckoutPayment(order);
-      securedGenericOrderService.merge(metadata, order);
-      return order;
+      createUpdateContractCustomer(metadata, type.getContract());
+      securedGenericTypeCheckOutService.doCheckoutPayment(metadata, type);
+      if (type.isDetached()) {
+        return securedGenericOrderService.merge(metadata, type);
+      }
+      securedGenericOrderService.persist(metadata, type);
+      return type;
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -89,29 +114,29 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
   @Override
   @WebMethod(operationName = "doNotification")
   @MailAction(operation = Mail.NO_MAIL)
-  public O doNotification(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
+  public O doNotification(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type) {
     try {
-      order = checkOutService.doNotification(order);
+      type = securedGenericTypeCheckOutService.doNotification(metadata, type);
 
-      final String transactionId = order.getTransactionId();
+      final String transactionId = type.getTransactionId();
 
-      order.setActive(true);
-      order.setTransactionId(null);
-      order.setNotificationId(null);
+      type.setActive(true);
+      type.setTransactionId(null);
+      type.setNotificationId(null);
 
-      final Iterator<O> iterator = securedGenericOrderService.find(metadata, order, new Paging(0, 1), OrderBy.NONE).iterator();
+      final Iterator<O> iterator = securedGenericOrderService.find(metadata, type, new Paging(0, 1), OrderBy.NONE).iterator();
 
       if (iterator.hasNext()) {
-        order = iterator.next();
-        order.setTransactionId(transactionId);
+        type = iterator.next();
+        type.setTransactionId(transactionId);
 
-        securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
-        securedGenericContractService.update(metadata, order.getContract());
-        securedGenericOrderService.update(metadata, order);
-        checkOutService.doTransactionDetails(order);
-        securedGenericOrderService.merge(metadata, order);
-
-        return order;
+        createUpdateContractCustomer(metadata, type.getContract());
+        securedGenericTypeCheckOutService.doTransactionDetails(metadata, type);
+        if (type.isDetached()) {
+          return securedGenericOrderService.merge(metadata, type);
+        }
+        securedGenericOrderService.persist(metadata, type);
+        return type;
       } else {
         throw new GNUOpenBusinessServiceException("Exception from Pagseguro Notification, no order found for the given notification code.");
       }
@@ -123,14 +148,15 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
   @Override
   @WebMethod(operationName = "doRefundTransaction")
   @MailAction(operation = Mail.NO_MAIL)
-  public O doRefundTransaction(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
+  public O doRefundTransaction(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type) {
     try {
-      securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
-      securedGenericContractService.update(metadata, order.getContract());
-      securedGenericOrderService.update(metadata, order);
-      checkOutService.doRefundTransaction(order);
-      securedGenericOrderService.merge(metadata, order);
-      return order;
+      createUpdateContractCustomer(metadata, type.getContract());
+      securedGenericTypeCheckOutService.doRefundTransaction(metadata, type);
+      if (type.isDetached()) {
+        return securedGenericOrderService.merge(metadata, type);
+      }
+      securedGenericOrderService.persist(metadata, type);
+      return type;
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -139,14 +165,15 @@ public class PagseguroCheckOutWebServiceImpl<O extends Order> implements CheckOu
   @Override
   @WebMethod(operationName = "doTransactionDetails")
   @MailAction(operation = Mail.NO_MAIL)
-  public O doTransactionDetails(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O order) {
+  public O doTransactionDetails(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "order") O type) {
     try {
-      securedGenericCustomerService.update(metadata, order.getContract().getCustomer());
-      securedGenericContractService.update(metadata, order.getContract());
-      securedGenericOrderService.update(metadata, order);
-      checkOutService.doTransactionDetails(order);
-      securedGenericOrderService.merge(metadata, order);
-      return order;
+      createUpdateContractCustomer(metadata, type.getContract());
+      securedGenericTypeCheckOutService.doTransactionDetails(metadata, type);
+      if (type.isDetached()) {
+        return securedGenericOrderService.merge(metadata, type);
+      }
+      securedGenericOrderService.persist(metadata, type);
+      return type;
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }

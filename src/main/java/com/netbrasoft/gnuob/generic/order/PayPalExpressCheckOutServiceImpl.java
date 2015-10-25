@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.ejb.Stateless;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
@@ -24,6 +23,8 @@ import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.customer.Address;
+import com.netbrasoft.gnuob.generic.security.OperationAccess;
+import com.netbrasoft.gnuob.generic.security.Rule.Operation;
 
 import ebay.api.paypalapi.DoExpressCheckoutPaymentReq;
 import ebay.api.paypalapi.DoExpressCheckoutPaymentRequestType;
@@ -65,7 +66,6 @@ import ebay.apis.eblbasecomponents.PaymentTransactionType;
 import ebay.apis.eblbasecomponents.SetExpressCheckoutRequestDetailsType;
 import ebay.apis.eblbasecomponents.UserIdPasswordType;
 
-@Stateless(name = "PayPalExpressCheckOutServiceImpl")
 public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckOutService<O> {
 
   private static final String PAYPAL_SITE_PROPERTY = "paypal.site";
@@ -150,6 +150,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
   }
 
   @Override
+  @OperationAccess(operation = Operation.NONE)
   public void doCheckout(O order) {
 
     // SetExpressCheckout fields.
@@ -175,6 +176,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
   }
 
   @Override
+  @OperationAccess(operation = Operation.NONE)
   public void doCheckoutDetails(O order) {
 
     // GetExpressCheckoutDetails Resquest Fields
@@ -267,6 +269,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
   }
 
   @Override
+  @OperationAccess(operation = Operation.NONE)
   public void doCheckoutPayment(O order) {
 
     // Do Express Checkout Payment Request Fields
@@ -372,6 +375,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
   }
 
   @Override
+  @OperationAccess(operation = Operation.NONE)
   public O doNotification(O order) {
 
     // GetTransactionDetails Request Fields
@@ -643,6 +647,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
   }
 
   @Override
+  @OperationAccess(operation = Operation.NONE)
   public void doRefundTransaction(O order) {
     // TODO Auto-generated method stub
 
@@ -720,6 +725,7 @@ public class PayPalExpressCheckOutServiceImpl<O extends Order> implements CheckO
   }
 
   @Override
+  @OperationAccess(operation = Operation.NONE)
   public void doTransactionDetails(O order) {
     // GetTransactionDetails Request Fields
     final GetTransactionDetailsReq getTransactionDetailsReq = new GetTransactionDetailsReq();

@@ -153,10 +153,8 @@ public class OrderWebServiceImpl<O extends Order> implements GenericTypeWebServi
   }
 
   private void readUpdateCustomer(MetaData metadata, Customer customer) {
-    if (customer != null) {
-      if (customer.getId() > 0) {
-        securedGenericCustomerService.read(metadata, customer);
-      }
+    if (customer != null && customer.getId() > 0) {
+      securedGenericCustomerService.read(metadata, customer);
     }
   }
 

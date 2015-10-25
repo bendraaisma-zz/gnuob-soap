@@ -61,7 +61,9 @@ public class Address extends Type {
   @Column(name = "PHONE")
   private String phone;
 
-  public Address() {}
+  public Address() {
+
+  }
 
   @XmlElement(name = "cityName", required = true)
   public String getCityName() {

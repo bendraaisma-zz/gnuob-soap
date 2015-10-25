@@ -9,12 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.ejb.Stateless;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
+import com.netbrasoft.gnuob.generic.security.OperationAccess;
+import com.netbrasoft.gnuob.generic.security.Rule.Operation;
 
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
@@ -31,7 +32,6 @@ import br.com.uol.pagseguro.service.NotificationService;
 import br.com.uol.pagseguro.service.TransactionSearchService;
 import br.com.uol.pagseguro.service.checkout.CheckoutService;
 
-@Stateless(name = "PagseguroCheckOutServiceImpl")
 public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutService<O> {
 
   private static final String PAGSEGURO_EMAIL_PROPERTY = "pagseguro.email";
@@ -85,6 +85,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
   }
 
   @Override
+  @OperationAccess(operation = Operation.NONE)
   public void doCheckout(O order) {
 
     // set checkout request fields.
@@ -114,6 +115,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
   }
 
   @Override
+  @OperationAccess(operation = Operation.NONE)
   public void doCheckoutDetails(O order) {
     try {
       final Transaction transaction = searchByOrderTransactionId(order);
@@ -134,6 +136,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
   }
 
   @Override
+  @OperationAccess(operation = Operation.NONE)
   public void doCheckoutPayment(O order) {
     try {
       final Transaction transaction = searchByOrderTransactionId(order);
@@ -181,6 +184,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
   }
 
   @Override
+  @OperationAccess(operation = Operation.NONE)
   public O doNotification(O order) {
     try {
       final Transaction transaction = searchByOrderNotificationCode(order);
@@ -256,6 +260,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
   }
 
   @Override
+  @OperationAccess(operation = Operation.NONE)
   public void doRefundTransaction(O order) {
     throw new UnsupportedOperationException("Refund transaction is not supported for PagSeguro.");
   }
@@ -293,6 +298,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
   }
 
   @Override
+  @OperationAccess(operation = Operation.NONE)
   public void doTransactionDetails(O order) {
     try {
       final Transaction transaction = searchByOrderTransactionId(order);

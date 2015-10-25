@@ -83,10 +83,8 @@ public class OfferWebServiceImpl<O extends Offer> implements GenericTypeWebServi
   }
 
   private void deletUpdateCustomer(MetaData metadata, Customer customer) {
-    if (customer != null) {
-      if (customer.getId() > 0) {
-        securedGenericCustomerService.delete(metadata, customer);
-      }
+    if (customer != null && customer.getId() > 0) {
+      securedGenericCustomerService.delete(metadata, customer);
     }
   }
 

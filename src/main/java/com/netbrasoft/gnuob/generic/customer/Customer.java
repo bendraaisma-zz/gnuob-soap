@@ -104,7 +104,7 @@ public class Customer extends Access {
     return contactPhone;
   }
 
-  @XmlElement(name = "dateOfBirth", required = true)
+  @XmlElement(name = "dateOfBirth")
   public Date getDateOfBirth() {
     return dateOfBirth;
   }
