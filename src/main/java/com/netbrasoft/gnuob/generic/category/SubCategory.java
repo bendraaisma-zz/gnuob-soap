@@ -62,7 +62,7 @@ public class SubCategory extends Type {
     return contents;
   }
 
-  @XmlElement(name = "description")
+  @XmlElement(name = "description", required = true)
   public String getDescription() {
     return description;
   }
@@ -124,23 +124,23 @@ public class SubCategory extends Type {
     positionContents();
   }
 
-  public void setContents(Set<Content> contents) {
+  public void setContents(final Set<Content> contents) {
     this.contents = contents;
   }
 
-  public void setDescription(String description) {
+  public void setDescription(final String description) {
     this.description = description;
   }
 
-  public void setName(String name) {
+  public void setName(final String name) {
     this.name = name;
   }
 
-  public void setPosition(Integer position) {
+  public void setPosition(final Integer position) {
     this.position = position;
   }
 
-  public void setSubCategories(Set<SubCategory> subCategories) {
+  public void setSubCategories(final Set<SubCategory> subCategories) {
     this.subCategories = subCategories;
   }
 
