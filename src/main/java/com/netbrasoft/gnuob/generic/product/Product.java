@@ -25,13 +25,13 @@ import org.apache.velocity.context.Context;
 import com.netbrasoft.gnuob.generic.category.SubCategory;
 import com.netbrasoft.gnuob.generic.content.Content;
 import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
-import com.netbrasoft.gnuob.generic.security.Access;
+import com.netbrasoft.gnuob.generic.security.AbstractAccess;
 
 @Cacheable(value = true)
 @Entity(name = Product.ENTITY)
 @Table(name = Product.TABLE)
 @XmlRootElement(name = Product.ENTITY)
-public class Product extends Access {
+public class Product extends AbstractAccess {
 
   private static final long serialVersionUID = -5818453495081202563L;
   protected static final String ENTITY = "Product";
@@ -119,7 +119,7 @@ public class Product extends Access {
   private Boolean latestCollection;
 
   @Override
-  public Context accept(ContextVisitor visitor) {
+  public Context accept(final ContextVisitor visitor) {
     return visitor.visit(this);
   }
 
@@ -302,99 +302,99 @@ public class Product extends Access {
     positionOptions();
   }
 
-  public void setAmount(BigDecimal amount) {
+  public void setAmount(final BigDecimal amount) {
     this.amount = amount;
   }
 
-  public void setBestsellers(Boolean bestsellers) {
+  public void setBestsellers(final Boolean bestsellers) {
     this.bestsellers = bestsellers;
   }
 
-  public void setContents(Set<Content> contents) {
+  public void setContents(final Set<Content> contents) {
     this.contents = contents;
   }
 
-  public void setDescription(String description) {
+  public void setDescription(final String description) {
     this.description = description;
   }
 
-  public void setDiscount(BigDecimal discount) {
+  public void setDiscount(final BigDecimal discount) {
     this.discount = discount;
   }
 
-  public void setItemHeight(BigDecimal itemHeight) {
+  public void setItemHeight(final BigDecimal itemHeight) {
     this.itemHeight = itemHeight;
   }
 
-  public void setItemHeightUnit(String itemHeightUnit) {
+  public void setItemHeightUnit(final String itemHeightUnit) {
     this.itemHeightUnit = itemHeightUnit;
   }
 
-  public void setItemLength(BigDecimal itemLength) {
+  public void setItemLength(final BigDecimal itemLength) {
     this.itemLength = itemLength;
   }
 
-  public void setItemLengthUnit(String itemLengthUnit) {
+  public void setItemLengthUnit(final String itemLengthUnit) {
     this.itemLengthUnit = itemLengthUnit;
   }
 
-  public void setItemUrl(String itemUrl) {
+  public void setItemUrl(final String itemUrl) {
     this.itemUrl = itemUrl;
   }
 
-  public void setItemWeight(BigDecimal itemWeight) {
+  public void setItemWeight(final BigDecimal itemWeight) {
     this.itemWeight = itemWeight;
   }
 
-  public void setItemWeightUnit(String itemWeightUnit) {
+  public void setItemWeightUnit(final String itemWeightUnit) {
     this.itemWeightUnit = itemWeightUnit;
   }
 
-  public void setItemWidth(BigDecimal itemWidth) {
+  public void setItemWidth(final BigDecimal itemWidth) {
     this.itemWidth = itemWidth;
   }
 
-  public void setItemWidthUnit(String itemWidthUnit) {
+  public void setItemWidthUnit(final String itemWidthUnit) {
     this.itemWidthUnit = itemWidthUnit;
   }
 
-  public void setLatestCollection(Boolean latestCollection) {
+  public void setLatestCollection(final Boolean latestCollection) {
     this.latestCollection = latestCollection;
   }
 
-  public void setName(String name) {
+  public void setName(final String name) {
     this.name = name;
   }
 
-  public void setNumber(String number) {
+  public void setNumber(final String number) {
     this.number = number;
   }
 
-  public void setOptions(Set<Option> options) {
+  public void setOptions(final Set<Option> options) {
     this.options = options;
   }
 
-  public void setRating(Integer rating) {
+  public void setRating(final Integer rating) {
     this.rating = rating;
   }
 
-  public void setRecommended(Boolean recommended) {
+  public void setRecommended(final Boolean recommended) {
     this.recommended = recommended;
   }
 
-  public void setShippingCost(BigDecimal shippingCost) {
+  public void setShippingCost(final BigDecimal shippingCost) {
     this.shippingCost = shippingCost;
   }
 
-  public void setStock(Stock stock) {
+  public void setStock(final Stock stock) {
     this.stock = stock;
   }
 
-  public void setSubCategories(Set<SubCategory> subCategories) {
+  public void setSubCategories(final Set<SubCategory> subCategories) {
     this.subCategories = subCategories;
   }
 
-  public void setTax(BigDecimal tax) {
+  public void setTax(final BigDecimal tax) {
     this.tax = tax;
   }
 }

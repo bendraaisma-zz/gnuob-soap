@@ -5,7 +5,7 @@ public final class Parameter {
   private final String name;
   private final Object value;
 
-  public Parameter(String name, Object value) {
+  public Parameter(final String name, final Object value) {
     this.name = name;
     this.value = value;
   }

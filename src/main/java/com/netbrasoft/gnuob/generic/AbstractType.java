@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Cacheable(value = false)
 @MappedSuperclass
-public abstract class Type implements Serializable {
+public abstract class AbstractType implements Serializable {
 
   private static final long serialVersionUID = 7895247154381678321L;
 
@@ -79,19 +79,19 @@ public abstract class Type implements Serializable {
     preUpdate();
   }
 
-  public void setCreation(Timestamp creation) {
+  public void setCreation(final Timestamp creation) {
     this.creation = creation;
   }
 
-  public void setId(long id) {
+  public void setId(final long id) {
     this.id = id;
   }
 
-  public void setModification(Timestamp modification) {
+  public void setModification(final Timestamp modification) {
     this.modification = modification;
   }
 
-  public void setVersion(int version) {
+  public void setVersion(final int version) {
     this.version = version;
   }
 }

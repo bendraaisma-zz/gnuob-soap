@@ -17,16 +17,17 @@ import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
 
-public class ContentResourceLoader<C extends Content> extends ResourceLoader {
+public class ContentResourceLoader<T extends Content> extends ResourceLoader {
 
-  private SecuredGenericTypeService<C> securedGenericContentService;
+  private transient SecuredGenericTypeService<T> securedGenericContentService;
 
-  private final MetaData metaData = new MetaData();
+  private final MetaData metaData;
 
   @SuppressWarnings("unchecked")
   public ContentResourceLoader() {
     try {
-      securedGenericContentService = (SecuredGenericTypeService<C>) InitialContext.doLookup("java:module/SecuredGenericTypeServiceImpl");
+      securedGenericContentService = (SecuredGenericTypeService<T>) InitialContext.doLookup("java:module/SecuredGenericTypeServiceImpl");
+      metaData = new MetaData();
     } catch (final Exception e) {
       throw new RuntimeException("ContentResourceLoader not properly initialized. No SecuredGenericTypeService was identified.", e);
     }
@@ -34,12 +35,12 @@ public class ContentResourceLoader<C extends Content> extends ResourceLoader {
 
   @Override
   @SuppressWarnings("unchecked")
-  public long getLastModified(Resource resource) {
+  public long getLastModified(final Resource resource) {
     final Content content = new Content();
     content.setActive(true);
     content.setName(resource.getName());
 
-    final Iterator<C> iterator = securedGenericContentService.find(metaData, (C) content, new Paging(0, 1), OrderBy.NONE).iterator();
+    final Iterator<T> iterator = securedGenericContentService.find(metaData, (T) content, new Paging(0, 1), OrderBy.NONE).iterator();
 
     if (iterator.hasNext()) {
       return iterator.next().getModification().getTime();
@@ -50,12 +51,12 @@ public class ContentResourceLoader<C extends Content> extends ResourceLoader {
 
   @Override
   @SuppressWarnings("unchecked")
-  public InputStream getResourceStream(String source) throws ResourceNotFoundException {
+  public InputStream getResourceStream(final String source) throws ResourceNotFoundException {
     final Content content = new Content();
     content.setActive(true);
     content.setName(source);
 
-    final Iterator<C> iterator = securedGenericContentService.find(metaData, (C) content, new Paging(0, 1), OrderBy.NONE).iterator();
+    final Iterator<T> iterator = securedGenericContentService.find(metaData, (T) content, new Paging(0, 1), OrderBy.NONE).iterator();
 
     if (iterator.hasNext()) {
       return new BufferedInputStream(new ByteArrayInputStream(iterator.next().getData()));
@@ -65,14 +66,14 @@ public class ContentResourceLoader<C extends Content> extends ResourceLoader {
   }
 
   @Override
-  public void init(ExtendedProperties configuration) {
+  public void init(final ExtendedProperties configuration) {
     metaData.setUser(configuration.getString("user"));
     metaData.setPassword(configuration.getString("password"));
     metaData.setSite(configuration.getString("site"));
   }
 
   @Override
-  public boolean isSourceModified(Resource resource) {
+  public boolean isSourceModified(final Resource resource) {
     return resource.getLastModified() != getLastModified(resource);
   }
 }

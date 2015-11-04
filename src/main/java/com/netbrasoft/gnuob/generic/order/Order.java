@@ -26,13 +26,13 @@ import org.apache.velocity.context.Context;
 
 import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 import com.netbrasoft.gnuob.generic.contract.Contract;
-import com.netbrasoft.gnuob.generic.security.Access;
+import com.netbrasoft.gnuob.generic.security.AbstractAccess;
 
 @Cacheable(value = false)
 @Entity(name = Order.ENTITY)
 @Table(name = Order.TABLE)
 @XmlRootElement(name = Order.ENTITY)
-public class Order extends Access {
+public class Order extends AbstractAccess {
 
   private static final long serialVersionUID = -43318034570501796L;
   protected static final String ENTITY = "Order";
@@ -141,11 +141,11 @@ public class Order extends Access {
   private String checkout;
 
   public Order() {
-
+    // Empty constructor.
   }
 
   @Override
-  public Context accept(ContextVisitor visitor) {
+  public Context accept(final ContextVisitor visitor) {
     return visitor.visit(this);
   }
 
@@ -411,139 +411,139 @@ public class Order extends Access {
     positionRecords();
   }
 
-  public void setBillingAgreementId(String billingAgreementId) {
+  public void setBillingAgreementId(final String billingAgreementId) {
     this.billingAgreementId = billingAgreementId;
   }
 
-  public void setCheckout(String checkout) {
+  public void setCheckout(final String checkout) {
     this.checkout = checkout;
   }
 
-  public void setCheckoutStatus(String checkoutStatus) {
+  public void setCheckoutStatus(final String checkoutStatus) {
     this.checkoutStatus = checkoutStatus;
   }
 
-  public void setContract(Contract contract) {
+  public void setContract(final Contract contract) {
     this.contract = contract;
   }
 
-  public void setCustom(String custom) {
+  public void setCustom(final String custom) {
     this.custom = custom;
   }
 
-  public void setDiscountTotal(BigDecimal discountTotal) {
+  public void setDiscountTotal(final BigDecimal discountTotal) {
     this.discountTotal = discountTotal;
   }
 
-  public void setExtraAmount(BigDecimal extraAmount) {
+  public void setExtraAmount(final BigDecimal extraAmount) {
     this.extraAmount = extraAmount;
   }
 
-  public void setGiftMessage(String giftMessage) {
+  public void setGiftMessage(final String giftMessage) {
     this.giftMessage = giftMessage;
   }
 
-  public void setGiftMessageEnable(Boolean giftMessageEnable) {
+  public void setGiftMessageEnable(final Boolean giftMessageEnable) {
     this.giftMessageEnable = giftMessageEnable;
   }
 
-  public void setGiftReceiptEnable(Boolean giftReceiptEnable) {
+  public void setGiftReceiptEnable(final Boolean giftReceiptEnable) {
     this.giftReceiptEnable = giftReceiptEnable;
   }
 
-  public void setGiftWrapAmount(BigDecimal giftWrapAmount) {
+  public void setGiftWrapAmount(final BigDecimal giftWrapAmount) {
     this.giftWrapAmount = giftWrapAmount;
   }
 
-  public void setGiftWrapEnable(Boolean giftWrapEnable) {
+  public void setGiftWrapEnable(final Boolean giftWrapEnable) {
     this.giftWrapEnable = giftWrapEnable;
   }
 
-  public void setGiftWrapName(String giftWrapName) {
+  public void setGiftWrapName(final String giftWrapName) {
     this.giftWrapName = giftWrapName;
   }
 
-  public void setHandlingTotal(BigDecimal handlingTotal) {
+  public void setHandlingTotal(final BigDecimal handlingTotal) {
     this.handlingTotal = handlingTotal;
   }
 
-  public void setInsuranceOptionOffered(Boolean insuranceOptionOffered) {
+  public void setInsuranceOptionOffered(final Boolean insuranceOptionOffered) {
     this.insuranceOptionOffered = insuranceOptionOffered;
   }
 
-  public void setInsuranceTotal(BigDecimal insuranceTotal) {
+  public void setInsuranceTotal(final BigDecimal insuranceTotal) {
     this.insuranceTotal = insuranceTotal;
   }
 
-  public void setInvoice(Invoice invoice) {
+  public void setInvoice(final Invoice invoice) {
     this.invoice = invoice;
   }
 
-  public void setItemTotal(BigDecimal itemTotal) {
+  public void setItemTotal(final BigDecimal itemTotal) {
     this.itemTotal = itemTotal;
   }
 
-  public void setMaxTotal(BigDecimal maxTotal) {
+  public void setMaxTotal(final BigDecimal maxTotal) {
     this.maxTotal = maxTotal;
   }
 
-  public void setNote(String note) {
+  public void setNote(final String note) {
     this.note = note;
   }
 
-  public void setNoteText(String noteText) {
+  public void setNoteText(final String noteText) {
     this.noteText = noteText;
   }
 
-  public void setNotificationId(String notificationId) {
+  public void setNotificationId(final String notificationId) {
     this.notificationId = notificationId;
   }
 
-  public void setOrderDate(Date orderDate) {
+  public void setOrderDate(final Date orderDate) {
     this.orderDate = orderDate;
   }
 
-  public void setOrderDate(Timestamp orderDate) {
+  public void setOrderDate(final Timestamp orderDate) {
     this.orderDate = orderDate;
   }
 
-  public void setOrderDescription(String orderDescription) {
+  public void setOrderDescription(final String orderDescription) {
     this.orderDescription = orderDescription;
   }
 
-  public void setOrderId(String orderId) {
+  public void setOrderId(final String orderId) {
     this.orderId = orderId;
   }
 
-  public void setOrderTotal(BigDecimal orderTotal) {
+  public void setOrderTotal(final BigDecimal orderTotal) {
     this.orderTotal = orderTotal;
   }
 
-  public void setRecords(Set<OrderRecord> records) {
+  public void setRecords(final Set<OrderRecord> records) {
     this.records = records;
   }
 
-  public void setShipment(Shipment shipment) {
+  public void setShipment(final Shipment shipment) {
     this.shipment = shipment;
   }
 
-  public void setShippingDiscount(BigDecimal shippingDiscount) {
+  public void setShippingDiscount(final BigDecimal shippingDiscount) {
     this.shippingDiscount = shippingDiscount;
   }
 
-  public void setShippingTotal(BigDecimal shippingTotal) {
+  public void setShippingTotal(final BigDecimal shippingTotal) {
     this.shippingTotal = shippingTotal;
   }
 
-  public void setTaxTotal(BigDecimal taxTotal) {
+  public void setTaxTotal(final BigDecimal taxTotal) {
     this.taxTotal = taxTotal;
   }
 
-  public void setToken(String token) {
+  public void setToken(final String token) {
     this.token = token;
   }
 
-  public void setTransactionId(String transactionId) {
+  public void setTransactionId(final String transactionId) {
     this.transactionId = transactionId;
   }
 }

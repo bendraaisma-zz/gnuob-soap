@@ -52,7 +52,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
     }
   }
 
-  private String createCheckoutRequest(Checkout checkout) throws PagSeguroServiceException, ParserConfigurationException, SAXException, IOException {
+  private String createCheckoutRequest(final Checkout checkout) throws PagSeguroServiceException, ParserConfigurationException, SAXException, IOException {
     final String email = EMAIL_PROPERTY;
     final String productionToken = PRODUCTION_TOKEN_PROPERTY;
     final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
@@ -60,7 +60,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
     return CheckoutService.createCheckoutRequest(new AccountCredentials(email, productionToken, sandboxToken), checkout, false);
   }
 
-  private Address doAddress(com.netbrasoft.gnuob.generic.customer.Address address) {
+  private Address doAddress(final com.netbrasoft.gnuob.generic.customer.Address address) {
     final Address addressType = new Address();
     addressType.setCity(address.getCityName());
     addressType.setStreet(address.getStreet1());
@@ -73,7 +73,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
     return addressType;
   }
 
-  private void doAddress(com.netbrasoft.gnuob.generic.customer.Address address, Address addressType) {
+  private void doAddress(final com.netbrasoft.gnuob.generic.customer.Address address, final Address addressType) {
     address.setCountry(addressType.getCountry());
     address.setStateOrProvince(addressType.getState());
     address.setCityName(addressType.getCity());
@@ -86,7 +86,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public void doCheckout(O order) {
+  public void doCheckout(final O order) {
 
     // set checkout request fields.
     final Checkout checkout = new Checkout();
@@ -116,7 +116,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public void doCheckoutDetails(O order) {
+  public void doCheckoutDetails(final O order) {
     try {
       final Transaction transaction = searchByOrderTransactionId(order);
 
@@ -137,7 +137,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public void doCheckoutPayment(O order) {
+  public void doCheckoutPayment(final O order) {
     try {
       final Transaction transaction = searchByOrderTransactionId(order);
 
@@ -153,7 +153,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
     }
   }
 
-  private Item doItem(OrderRecord orderRecord) {
+  private Item doItem(final OrderRecord orderRecord) {
     final Item item = new Item();
     item.setAmount(orderRecord.getAmount().setScale(2));
     item.setDescription(orderRecord.getDescription());
@@ -164,14 +164,13 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
     return item;
   }
 
-  private void doItem(OrderRecord orderRecord, Item item) {
-    // TODO: BD not update but check if equal.
+  private void doItem(final OrderRecord orderRecord, final Item item) {
     orderRecord.setDescription(item.getDescription());
     orderRecord.setAmount(item.getAmount());
     orderRecord.setQuantity(BigInteger.valueOf(item.getQuantity()));
   }
 
-  private List<Item> doItems(O order) {
+  private List<Item> doItems(final O order) {
 
     final List<Item> items = new ArrayList<Item>();
 
@@ -185,7 +184,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public O doNotification(O order) {
+  public O doNotification(final O order) {
     try {
       final Transaction transaction = searchByOrderNotificationCode(order);
 
@@ -199,8 +198,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
     }
   }
 
-  private void doPaymentDetails(O order, Transaction transaction) {
-    // TODO: BD not update but check if equal.
+  private void doPaymentDetails(final O order, final Transaction transaction) {
     order.setTransactionId(transaction.getCode());
     order.setOrderId(transaction.getReference());
     order.setDiscountTotal(transaction.getDiscountAmount());
@@ -218,7 +216,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
     }
   }
 
-  private Payment doPaymentInfo(Transaction transaction) {
+  private Payment doPaymentInfo(final Transaction transaction) {
     final Payment payment = new Payment();
 
     // Unique transaction ID of the payment.
@@ -261,25 +259,24 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public void doRefundTransaction(O order) {
+  public void doRefundTransaction(final O order) {
     throw new UnsupportedOperationException("Refund transaction is not supported for PagSeguro.");
   }
 
-  private Sender doSender(O order) {
+  private Sender doSender(final O order) {
     final Sender sender = new Sender();
     sender.setEmail(order.getContract().getCustomer().getBuyerEmail());
     sender.setName(order.getContract().getCustomer().getFriendlyName());
     return sender;
   }
 
-  private void doSender(O order, Sender sender) {
-    // TODO: BD not update but check if equal.
+  private void doSender(final O order, final Sender sender) {
     order.getContract().getCustomer().setPayer(sender.getEmail());
     order.getContract().getCustomer().setFriendlyName(sender.getName());
     order.getContract().getCustomer().setContactPhone(sender.getPhone().toString());
   }
 
-  private Shipping doShipping(O order) {
+  private Shipping doShipping(final O order) {
     final Shipping shipping = new Shipping();
 
     final BigDecimal cost = order.getShippingTotal().subtract(order.getShippingDiscount());
@@ -291,7 +288,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
     return shipping;
   }
 
-  private void doShipping(O order, Shipping shipping) {
+  private void doShipping(final O order, final Shipping shipping) {
     order.setShippingTotal(shipping.getCost());
     order.getShipment().setShipmentType(shipping.getType().name());
     doAddress(order.getShipment().getAddress(), shipping.getAddress());
@@ -299,7 +296,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public void doTransactionDetails(O order) {
+  public void doTransactionDetails(final O order) {
     try {
       final Transaction transaction = searchByOrderTransactionId(order);
 
@@ -322,7 +319,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
     }
   }
 
-  private Transaction searchByOrderNotificationCode(O order) throws PagSeguroServiceException {
+  private Transaction searchByOrderNotificationCode(final O order) throws PagSeguroServiceException {
     final String email = EMAIL_PROPERTY;
     final String productionToken = PRODUCTION_TOKEN_PROPERTY;
     final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
@@ -330,7 +327,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
     return NotificationService.checkTransaction(new AccountCredentials(email, productionToken, sandboxToken), order.getNotificationId());
   }
 
-  private Transaction searchByOrderTransactionId(O order) throws PagSeguroServiceException {
+  private Transaction searchByOrderTransactionId(final O order) throws PagSeguroServiceException {
     final String email = EMAIL_PROPERTY;
     final String productionToken = PRODUCTION_TOKEN_PROPERTY;
     final String sandboxToken = SANDBOX_TOKEN_PROPERTY;

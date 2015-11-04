@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.AbstractType;
 import com.netbrasoft.gnuob.generic.customer.Address;
 
 @Cacheable(value = false)
@@ -19,7 +19,7 @@ import com.netbrasoft.gnuob.generic.customer.Address;
 @Table(name = Shipment.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @XmlRootElement(name = Shipment.ENTITY)
-public class Shipment extends Type {
+public class Shipment extends AbstractType {
 
   private static final long serialVersionUID = 7122488386952479304L;
   protected static final String ENTITY = "Shipment";
@@ -32,7 +32,7 @@ public class Shipment extends Type {
   private String shipmentType = "NOT_SPECIFIED";
 
   public Shipment() {
-
+    // Empty constructor.
   }
 
   @XmlElement(name = "address", required = true)
@@ -63,11 +63,11 @@ public class Shipment extends Type {
     return;
   }
 
-  public void setAddress(Address address) {
+  public void setAddress(final Address address) {
     this.address = address;
   }
 
-  public void setShipmentType(String shipmentType) {
+  public void setShipmentType(final String shipmentType) {
     this.shipmentType = shipmentType;
   }
 

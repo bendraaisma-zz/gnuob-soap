@@ -19,7 +19,7 @@ public class MetaData {
     this(true);
   }
 
-  public MetaData(boolean enabled) {
+  public MetaData(final boolean enabled) {
     this.enabled = enabled;
   }
 
@@ -43,15 +43,15 @@ public class MetaData {
     return enabled;
   }
 
-  public void setPassword(String password) {
+  public void setPassword(final String password) {
     this.password = password;
   }
 
-  public void setSite(String site) {
+  public void setSite(final String site) {
     this.site = site;
   }
 
-  public void setUser(String user) {
+  public void setUser(final String user) {
     this.user = user;
   }
 }

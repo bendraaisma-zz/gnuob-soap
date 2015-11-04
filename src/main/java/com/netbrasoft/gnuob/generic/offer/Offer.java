@@ -23,13 +23,13 @@ import org.apache.velocity.context.Context;
 
 import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 import com.netbrasoft.gnuob.generic.contract.Contract;
-import com.netbrasoft.gnuob.generic.security.Access;
+import com.netbrasoft.gnuob.generic.security.AbstractAccess;
 
 @Cacheable(value = false)
 @Entity(name = Offer.ENTITY)
 @Table(name = Offer.TABLE)
 @XmlRootElement(name = Offer.ENTITY)
-public class Offer extends Access {
+public class Offer extends AbstractAccess {
 
   private static final long serialVersionUID = -3662500407068979105L;
   protected static final String ENTITY = "Offer";
@@ -81,11 +81,11 @@ public class Offer extends Access {
   private BigDecimal extraAmount;
 
   public Offer() {
-
+    // Empty constructor.
   }
 
   @Override
-  public Context accept(ContextVisitor visitor) {
+  public Context accept(final ContextVisitor visitor) {
     return visitor.visit(this);
   }
 
@@ -211,7 +211,7 @@ public class Offer extends Access {
     return getId() > 0;
   }
 
-  public void offerId(String offerId) {
+  public void offerId(final String offerId) {
     this.offerId = offerId;
   }
 
@@ -244,59 +244,59 @@ public class Offer extends Access {
     positionRecords();
   }
 
-  public void setContract(Contract contract) {
+  public void setContract(final Contract contract) {
     this.contract = contract;
   }
 
-  public void setDiscountTotal(BigDecimal discountTotal) {
+  public void setDiscountTotal(final BigDecimal discountTotal) {
     this.discountTotal = discountTotal;
   }
 
-  public void setExtraAmount(BigDecimal extraAmount) {
+  public void setExtraAmount(final BigDecimal extraAmount) {
     this.extraAmount = extraAmount;
   }
 
-  public void setHandlingTotal(BigDecimal handlingTotal) {
+  public void setHandlingTotal(final BigDecimal handlingTotal) {
     this.handlingTotal = handlingTotal;
   }
 
-  public void setInsuranceTotal(BigDecimal insuranceTotal) {
+  public void setInsuranceTotal(final BigDecimal insuranceTotal) {
     this.insuranceTotal = insuranceTotal;
   }
 
-  public void setItemTotal(BigDecimal itemTotal) {
+  public void setItemTotal(final BigDecimal itemTotal) {
     this.itemTotal = itemTotal;
   }
 
-  public void setMaxTotal(BigDecimal maxTotal) {
+  public void setMaxTotal(final BigDecimal maxTotal) {
     this.maxTotal = maxTotal;
   }
 
-  public void setOfferDescription(String offerDescription) {
+  public void setOfferDescription(final String offerDescription) {
     this.offerDescription = offerDescription;
   }
 
-  public void setOfferId(String offerId) {
+  public void setOfferId(final String offerId) {
     this.offerId = offerId;
   }
 
-  public void setOfferTotal(BigDecimal offerTotal) {
+  public void setOfferTotal(final BigDecimal offerTotal) {
     this.offerTotal = offerTotal;
   }
 
-  public void setRecords(Set<OfferRecord> records) {
+  public void setRecords(final Set<OfferRecord> records) {
     this.records = records;
   }
 
-  public void setShippingDiscount(BigDecimal shippingDiscount) {
+  public void setShippingDiscount(final BigDecimal shippingDiscount) {
     this.shippingDiscount = shippingDiscount;
   }
 
-  public void setShippingTotal(BigDecimal shippingTotal) {
+  public void setShippingTotal(final BigDecimal shippingTotal) {
     this.shippingTotal = shippingTotal;
   }
 
-  public void setTaxTotal(BigDecimal taxTotal) {
+  public void setTaxTotal(final BigDecimal taxTotal) {
     this.taxTotal = taxTotal;
   }
 }

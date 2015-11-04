@@ -11,30 +11,32 @@ import org.hibernate.Session;
 
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
-@Stateless(name = "GenericTypeDaoImpl")
+@Stateless(name = GenericTypeDaoImpl.GENERIC_TYPE_DAO_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
 public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
+
+  protected static final String GENERIC_TYPE_DAO_IMPL_NAME = "GenericTypeDaoImpl";
 
   @PersistenceContext(unitName = "primary")
   private EntityManager entityManager;
 
   public GenericTypeDaoImpl() {
-
+    // Empty constructor.
   }
 
   @Override
-  public boolean contains(T type) {
+  public boolean contains(final T type) {
     return entityManager.contains(type);
   }
 
   @Override
-  public void disableFilter(String filterName) {
+  public void disableFilter(final String filterName) {
     final Session session = getDelegate();
     session.disableFilter(filterName);
   }
 
   @Override
-  public void enableFilter(String fiterName, Parameter... param) {
+  public void enableFilter(final String fiterName, final Parameter... param) {
     final Session session = getDelegate();
     final Filter filter = session.enableFilter(fiterName);
 
@@ -45,7 +47,7 @@ public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
 
   @SuppressWarnings("unchecked")
   @Override
-  public T find(T type, long id, LockModeType lockModeType) {
+  public T find(final T type, final long id, final LockModeType lockModeType) {
     return (T) entityManager.find(type.getClass(), id, lockModeType);
   }
 
@@ -60,7 +62,7 @@ public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
   }
 
   @Override
-  public LockModeType getLockModeTypeOfType(T type) {
+  public LockModeType getLockModeTypeOfType(final T type) {
     return entityManager.getLockMode(type);
   }
 
@@ -70,22 +72,22 @@ public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
   }
 
   @Override
-  public void lock(T type, LockModeType lockModeType) {
+  public void lock(final T type, final LockModeType lockModeType) {
     entityManager.lock(type, lockModeType);
   }
 
   @Override
-  public T merge(T type) {
+  public T merge(final T type) {
     return entityManager.merge(type);
   }
 
   @Override
-  public void persist(T type) {
+  public void persist(final T type) {
     entityManager.persist(type);
   }
 
   @Override
-  public T refresh(T type, long id, LockModeType lockModeType) {
+  public T refresh(final T type, final long id, final LockModeType lockModeType) {
     if (!entityManager.contains(type)) {
       return find(type, id, lockModeType);
     }
@@ -94,7 +96,7 @@ public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
   }
 
   @Override
-  public void remove(T type) {
+  public void remove(final T type) {
     entityManager.remove(entityManager.contains(type) ? type : entityManager.merge(type));
   }
 }

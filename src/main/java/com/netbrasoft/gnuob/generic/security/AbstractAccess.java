@@ -18,19 +18,19 @@ import org.hibernate.annotations.FilterDefs;
 import org.hibernate.annotations.Filters;
 import org.hibernate.annotations.ParamDef;
 
-import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.AbstractType;
 import com.netbrasoft.gnuob.generic.content.contexts.ContextElement;
 
 @Cacheable(value = true)
-@Entity(name = Access.ENTITY)
-@Table(name = Access.TABLE)
+@Entity(name = AbstractAccess.ENTITY)
+@Table(name = AbstractAccess.TABLE)
 @Inheritance(strategy = InheritanceType.JOINED)
 // @formatter:off
-@FilterDefs({@FilterDef(name = Access.NFQ1, parameters = @ParamDef(name = "userId", type = "long") ),
-    @FilterDef(name = Access.NFQ2, parameters = @ParamDef(name = "siteId", type = "long") )})
+@FilterDefs({@FilterDef(name = AbstractAccess.NFQ1, parameters = @ParamDef(name = "userId", type = "long") ),
+    @FilterDef(name = AbstractAccess.NFQ2, parameters = @ParamDef(name = "siteId", type = "long") )})
 @Filters({@Filter(
     // Select based on user ownership.
-    name = Access.NFQ1, condition = "((owner_ID = (SELECT GNUOB_USERS.ID FROM GNUOB_USERS "
+    name = AbstractAccess.NFQ1, condition = "((owner_ID = (SELECT GNUOB_USERS.ID FROM GNUOB_USERS "
         + " WHERE GNUOB_USERS.ID = :userId) "
         + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
         + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OWNER != 'NONE_ACCESS')) "
@@ -44,10 +44,11 @@ import com.netbrasoft.gnuob.generic.content.contexts.ContextElement;
         + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
         + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.GROUP != 'NONE_ACCESS')) "
         // Or select based on other ownership.
-        + " OR (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS " + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OTHERS != 'NONE_ACCESS')) "),
-    @Filter(name = Access.NFQ2, condition = "site_ID = :siteId")})
+        + " OR (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
+        + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OTHERS != 'NONE_ACCESS')) "),
+    @Filter(name = AbstractAccess.NFQ2, condition = "site_ID = :siteId")})
 // @formatter:on
-public abstract class Access extends Type implements ContextElement {
+public abstract class AbstractAccess extends AbstractType implements ContextElement {
 
   private static final long serialVersionUID = 6374088000216811805L;
 
@@ -98,23 +99,23 @@ public abstract class Access extends Type implements ContextElement {
     return site;
   }
 
-  public void setActive(Boolean active) {
+  public void setActive(final Boolean active) {
     this.active = active;
   }
 
-  public void setGroup(Group group) {
+  public void setGroup(final Group group) {
     this.group = group;
   }
 
-  public void setOwner(User owner) {
+  public void setOwner(final User owner) {
     this.owner = owner;
   }
 
-  public void setPermission(Permission permission) {
+  public void setPermission(final Permission permission) {
     this.permission = permission;
   }
 
-  public void setSite(Site site) {
+  public void setSite(final Site site) {
     this.site = site;
   }
 }

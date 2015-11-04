@@ -12,73 +12,75 @@ import com.netbrasoft.gnuob.generic.Parameter;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
-@Stateless(name = "SecuredGenericTypeServiceImpl", mappedName = "SecuredGenericTypeServiceImpl")
+@Stateless(name = SecuredGenericTypeServiceImpl.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME, mappedName = SecuredGenericTypeServiceImpl.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
 @Interceptors(value = {AccessControl.class, AppSimonInterceptor.class})
 public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T> implements SecuredGenericTypeService<T> {
 
+  public static final String SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME = "SecuredGenericTypeServiceImpl";
+
   @Override
   @OperationAccess(operation = Operation.READ)
-  public long count(MetaData metadata, T type, Parameter... param) {
+  public long count(final MetaData metaData, final T type, final Parameter... param) {
     return super.count(type, param);
   }
 
   @Override
   @OperationAccess(operation = Operation.CREATE)
-  public void create(MetaData metadata, T type) {
+  public void create(final MetaData metaData, final T type) {
     // Method is used by access control to test if type can be created.
   }
 
   @Override
   @OperationAccess(operation = Operation.DELETE)
-  public void delete(MetaData metadata, T type) {
+  public void delete(final MetaData metaData, final T type) {
     // Method is used by access control to test if type can be deleted.
   }
 
   @Override
   @OperationAccess(operation = Operation.READ)
-  public T find(MetaData metadata, T type, long id) {
+  public T find(final MetaData metaData, final T type, final long id) {
     return super.find(type, id);
   }
 
   @Override
   @OperationAccess(operation = Operation.READ)
-  public List<T> find(MetaData metadata, T type, Paging paging, OrderBy orderBy, Parameter... param) {
+  public List<T> find(final MetaData metaData, final T type, final Paging paging, final OrderBy orderBy, final Parameter... param) {
     return super.find(type, paging, orderBy, param);
   }
 
   @Override
   @OperationAccess(operation = Operation.UPDATE)
-  public T merge(MetaData metadata, T type) {
+  public T merge(final MetaData metaData, final T type) {
     return super.merge(type);
   }
 
   @Override
   @OperationAccess(operation = Operation.CREATE)
-  public void persist(MetaData metadata, T type) {
+  public void persist(final MetaData metaData, final T type) {
     super.persist(type);
   }
 
   @Override
   @OperationAccess(operation = Operation.READ)
-  public void read(MetaData metadata, T type) {
+  public void read(final MetaData metaData, final T type) {
     // Method is used by access control to test if type is readable.
   }
 
   @Override
   @OperationAccess(operation = Operation.READ)
-  public T refresh(MetaData metadata, T type, long id) {
+  public T refresh(final MetaData metaData, final T type, final long id) {
     return super.refresh(type, id);
   }
 
   @Override
   @OperationAccess(operation = Operation.DELETE)
-  public void remove(MetaData metadata, T type) {
+  public void remove(final MetaData metaData, final T type) {
     super.remove(type);
   }
 
   @Override
   @OperationAccess(operation = Operation.UPDATE)
-  public void update(MetaData metadata, T type) {
+  public void update(final MetaData metaData, final T type) {
     // Method is used by access control to test if type is updatable.
   }
 }

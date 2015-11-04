@@ -17,70 +17,72 @@ import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
-@Stateless(name = "UserWebServiceImpl")
+@Stateless(name = UserWebServiceImpl.USER_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
-public class UserWebServiceImpl<U extends User> implements GenericTypeWebService<U> {
+public class UserWebServiceImpl<T extends User> implements GenericTypeWebService<T> {
 
-  @EJB(beanName = "SecuredGenericTypeServiceImpl")
-  private SecuredGenericTypeService<U> securedGenericUserService;
+  protected static final String USER_WEB_SERVICE_IMPL_NAME = "UserWebServiceImpl";
 
-  @EJB(beanName = "SecuredGenericTypeServiceImpl")
-  private SecuredGenericTypeService<Group> securedGenericGroupService;
+  @EJB(beanName = SecuredGenericTypeServiceImpl.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private transient SecuredGenericTypeService<T> securedGenericUserService;
 
-  @EJB(beanName = "SecuredGenericTypeServiceImpl")
-  private SecuredGenericTypeService<Site> securedGenericSiteService;
+  @EJB(beanName = SecuredGenericTypeServiceImpl.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private transient SecuredGenericTypeService<Group> securedGenericGroupService;
+
+  @EJB(beanName = SecuredGenericTypeServiceImpl.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private transient SecuredGenericTypeService<Site> securedGenericSiteService;
 
   @Override
   @WebMethod(operationName = "countUser")
-  public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "user") U type) {
+  public long count(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "user") final T type) {
     try {
-      readSites(metadata, type.getSites());
-      readGroups(metadata, type.getGroups());
-      return securedGenericUserService.count(metadata, type);
+      readSites(metaData, type.getSites());
+      readGroups(metaData, type.getGroups());
+      return securedGenericUserService.count(metaData, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
-  private void createUpdateGroups(MetaData metadata, Set<Group> groups) {
+  private void createUpdateGroups(final MetaData metaData, final Set<Group> groups) {
     if (groups != null && !groups.isEmpty()) {
       for (final Group group : groups) {
         if (group.getId() == 0) {
-          securedGenericGroupService.create(metadata, group);
+          securedGenericGroupService.create(metaData, group);
         } else {
-          securedGenericGroupService.update(metadata, group);
+          securedGenericGroupService.update(metaData, group);
         }
       }
     }
   }
 
-  private void createUpdateSites(MetaData metadata, Set<Site> sites) {
+  private void createUpdateSites(final MetaData metaData, final Set<Site> sites) {
     if (sites != null && !sites.isEmpty()) {
       for (final Site site : sites) {
         if (site.getId() == 0) {
-          securedGenericSiteService.create(metadata, site);
+          securedGenericSiteService.create(metaData, site);
         } else {
-          securedGenericSiteService.update(metadata, site);
+          securedGenericSiteService.update(metaData, site);
         }
       }
     }
   }
 
-  private void deleteGroups(MetaData metadata, Set<Group> groups) {
+  private void deleteGroups(final MetaData metaData, final Set<Group> groups) {
     if (groups != null && !groups.isEmpty()) {
       for (final Group group : groups) {
         if (group.getId() > 0) {
-          securedGenericGroupService.delete(metadata, group);
+          securedGenericGroupService.delete(metaData, group);
         }
       }
     }
   }
 
-  private void deleteSites(MetaData metadata, Set<Site> sites) {
+  private void deleteSites(final MetaData metaData, final Set<Site> sites) {
     if (sites != null && !sites.isEmpty()) {
       for (final Site site : sites) {
         if (site.getId() > 0) {
-          securedGenericSiteService.delete(metadata, site);
+          securedGenericSiteService.delete(metaData, site);
         }
       }
     }
@@ -88,11 +90,11 @@ public class UserWebServiceImpl<U extends User> implements GenericTypeWebService
 
   @Override
   @WebMethod(operationName = "findUserById")
-  public U find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "user") U type) {
+  public T find(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "user") final T type) {
     try {
-      readSites(metadata, type.getSites());
-      readGroups(metadata, type.getGroups());
-      return securedGenericUserService.find(metadata, type, type.getId());
+      readSites(metaData, type.getSites());
+      readGroups(metaData, type.getGroups());
+      return securedGenericUserService.find(metaData, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -100,12 +102,12 @@ public class UserWebServiceImpl<U extends User> implements GenericTypeWebService
 
   @Override
   @WebMethod(operationName = "findUser")
-  public List<U> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "user") U type, @WebParam(name = "paging") Paging paging,
-      @WebParam(name = "orderBy") OrderBy orderBy) {
+  public List<T> find(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "user") final T type, @WebParam(name = "paging") final Paging paging,
+      @WebParam(name = "orderBy") final OrderBy orderBy) {
     try {
-      readSites(metadata, type.getSites());
-      readGroups(metadata, type.getGroups());
-      return securedGenericUserService.find(metadata, type, paging, orderBy);
+      readSites(metaData, type.getSites());
+      readGroups(metaData, type.getGroups());
+      return securedGenericUserService.find(metaData, type, paging, orderBy);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -113,11 +115,11 @@ public class UserWebServiceImpl<U extends User> implements GenericTypeWebService
 
   @Override
   @WebMethod(operationName = "mergeUser")
-  public U merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "user") U type) {
+  public T merge(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "user") final T type) {
     try {
-      createUpdateSites(metadata, type.getSites());
-      createUpdateGroups(metadata, type.getGroups());
-      return securedGenericUserService.merge(metadata, type);
+      createUpdateSites(metaData, type.getSites());
+      createUpdateGroups(metaData, type.getGroups());
+      return securedGenericUserService.merge(metaData, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -125,35 +127,35 @@ public class UserWebServiceImpl<U extends User> implements GenericTypeWebService
 
   @Override
   @WebMethod(operationName = "persistUser")
-  public U persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "user") U type) {
+  public T persist(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "user") final T type) {
     try {
-      createUpdateSites(metadata, type.getSites());
-      createUpdateGroups(metadata, type.getGroups());
+      createUpdateSites(metaData, type.getSites());
+      createUpdateGroups(metaData, type.getGroups());
       if (type.isDetached()) {
-        return securedGenericUserService.merge(metadata, type);
+        return securedGenericUserService.merge(metaData, type);
       }
-      securedGenericUserService.persist(metadata, type);
+      securedGenericUserService.persist(metaData, type);
       return type;
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
-  private void readGroups(MetaData metadata, Set<Group> groups) {
+  private void readGroups(final MetaData metaData, final Set<Group> groups) {
     if (groups != null && !groups.isEmpty()) {
       for (final Group group : groups) {
         if (group.getId() > 0) {
-          securedGenericGroupService.read(metadata, group);
+          securedGenericGroupService.read(metaData, group);
         }
       }
     }
   }
 
-  private void readSites(MetaData metadata, Set<Site> sites) {
+  private void readSites(final MetaData metaData, final Set<Site> sites) {
     if (sites != null && !sites.isEmpty()) {
       for (final Site site : sites) {
         if (site.getId() > 0) {
-          securedGenericSiteService.read(metadata, site);
+          securedGenericSiteService.read(metaData, site);
         }
       }
     }
@@ -161,11 +163,11 @@ public class UserWebServiceImpl<U extends User> implements GenericTypeWebService
 
   @Override
   @WebMethod(operationName = "refreshUser")
-  public U refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "user") U type) {
+  public T refresh(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "user") final T type) {
     try {
-      readSites(metadata, type.getSites());
-      readGroups(metadata, type.getGroups());
-      return securedGenericUserService.refresh(metadata, type, type.getId());
+      readSites(metaData, type.getSites());
+      readGroups(metaData, type.getGroups());
+      return securedGenericUserService.refresh(metaData, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -173,11 +175,11 @@ public class UserWebServiceImpl<U extends User> implements GenericTypeWebService
 
   @Override
   @WebMethod(operationName = "removeUser")
-  public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "user") U type) {
+  public void remove(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "user") final T type) {
     try {
-      deleteGroups(metadata, type.getGroups());
-      deleteSites(metadata, type.getSites());
-      securedGenericUserService.remove(metadata, type);
+      deleteGroups(metaData, type.getGroups());
+      deleteSites(metaData, type.getSites());
+      securedGenericUserService.remove(metaData, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }

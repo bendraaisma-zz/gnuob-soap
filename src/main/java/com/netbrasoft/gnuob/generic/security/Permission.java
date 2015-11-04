@@ -11,14 +11,14 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = true)
 @Entity(name = Permission.ENTITY)
 @Table(name = Permission.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @XmlRootElement(name = Permission.ENTITY)
-public class Permission extends Type {
+public class Permission extends AbstractType {
 
   private static final long serialVersionUID = 3108374497171836688L;
   protected static final String ENTITY = "Permission";
@@ -66,15 +66,15 @@ public class Permission extends Type {
     return;
   }
 
-  public void setGroup(Rule group) {
+  public void setGroup(final Rule group) {
     this.group = group;
   }
 
-  public void setOthers(Rule others) {
+  public void setOthers(final Rule others) {
     this.others = others;
   }
 
-  public void setOwner(Rule owner) {
+  public void setOwner(final Rule owner) {
     this.owner = owner;
   }
 

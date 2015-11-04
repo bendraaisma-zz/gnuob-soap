@@ -22,13 +22,13 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.netbrasoft.gnuob.generic.content.Content;
 import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
-import com.netbrasoft.gnuob.generic.security.Access;
+import com.netbrasoft.gnuob.generic.security.AbstractAccess;
 
 @Cacheable(value = true)
 @Entity(name = Category.ENTITY)
 @Table(name = Category.TABLE)
 @XmlRootElement(name = Category.ENTITY)
-public class Category extends Access {
+public class Category extends AbstractAccess {
 
   private static final long serialVersionUID = 8531470310780646179L;
   protected static final String ENTITY = "Category";

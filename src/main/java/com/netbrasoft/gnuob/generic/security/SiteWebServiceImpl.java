@@ -16,18 +16,20 @@ import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
-@Stateless(name = "SiteWebServiceImpl")
+@Stateless(name = SiteWebServiceImpl.SITE_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
-public class SiteWebServiceImpl<S extends Site> implements GenericTypeWebService<S> {
+public class SiteWebServiceImpl<T extends Site> implements GenericTypeWebService<T> {
 
-  @EJB(beanName = "SecuredGenericTypeServiceImpl")
-  private SecuredGenericTypeService<S> securedGenericSiteService;
+  protected static final String SITE_WEB_SERVICE_IMPL_NAME = "SiteWebServiceImpl";
+
+  @EJB(beanName = SecuredGenericTypeServiceImpl.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private transient SecuredGenericTypeService<T> securedGenericSiteService;
 
   @Override
   @WebMethod(operationName = "countSite")
-  public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "site") S type) {
+  public long count(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type) {
     try {
-      return securedGenericSiteService.count(metadata, type);
+      return securedGenericSiteService.count(metaData, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -35,9 +37,9 @@ public class SiteWebServiceImpl<S extends Site> implements GenericTypeWebService
 
   @Override
   @WebMethod(operationName = "findSiteById")
-  public S find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "site") S type) {
+  public T find(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type) {
     try {
-      return securedGenericSiteService.find(metadata, type, type.getId());
+      return securedGenericSiteService.find(metaData, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -45,10 +47,10 @@ public class SiteWebServiceImpl<S extends Site> implements GenericTypeWebService
 
   @Override
   @WebMethod(operationName = "findSite")
-  public List<S> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "site") S type, @WebParam(name = "paging") Paging paging,
-      @WebParam(name = "orderBy") OrderBy orderBy) {
+  public List<T> find(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type, @WebParam(name = "paging") final Paging paging,
+      @WebParam(name = "orderBy") final OrderBy orderBy) {
     try {
-      return securedGenericSiteService.find(metadata, type, paging, orderBy);
+      return securedGenericSiteService.find(metaData, type, paging, orderBy);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -56,9 +58,9 @@ public class SiteWebServiceImpl<S extends Site> implements GenericTypeWebService
 
   @Override
   @WebMethod(operationName = "mergeSite")
-  public S merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "site") S type) {
+  public T merge(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type) {
     try {
-      return securedGenericSiteService.merge(metadata, type);
+      return securedGenericSiteService.merge(metaData, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -66,12 +68,12 @@ public class SiteWebServiceImpl<S extends Site> implements GenericTypeWebService
 
   @Override
   @WebMethod(operationName = "persistSite")
-  public S persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "site") S type) {
+  public T persist(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type) {
     try {
       if (type.isDetached()) {
-        return securedGenericSiteService.merge(metadata, type);
+        return securedGenericSiteService.merge(metaData, type);
       }
-      securedGenericSiteService.persist(metadata, type);
+      securedGenericSiteService.persist(metaData, type);
       return type;
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
@@ -80,9 +82,9 @@ public class SiteWebServiceImpl<S extends Site> implements GenericTypeWebService
 
   @Override
   @WebMethod(operationName = "refreshSite")
-  public S refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "site") S type) {
+  public T refresh(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type) {
     try {
-      return securedGenericSiteService.refresh(metadata, type, type.getId());
+      return securedGenericSiteService.refresh(metaData, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -90,9 +92,9 @@ public class SiteWebServiceImpl<S extends Site> implements GenericTypeWebService
 
   @Override
   @WebMethod(operationName = "removeSite")
-  public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "site") S type) {
+  public void remove(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type) {
     try {
-      securedGenericSiteService.remove(metadata, type);
+      securedGenericSiteService.remove(metaData, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }

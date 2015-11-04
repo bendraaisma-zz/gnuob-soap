@@ -14,13 +14,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.velocity.context.Context;
 
 import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
-import com.netbrasoft.gnuob.generic.security.Access;
+import com.netbrasoft.gnuob.generic.security.AbstractAccess;
 
 @Cacheable(value = true)
 @Entity(name = Customer.ENTITY)
 @Table(name = Customer.TABLE)
 @XmlRootElement(name = Customer.ENTITY)
-public class Customer extends Access {
+public class Customer extends AbstractAccess {
 
   private static final long serialVersionUID = -4021500012055256731L;
   protected static final String ENTITY = "Customer";
@@ -77,10 +77,12 @@ public class Customer extends Access {
   @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
   private Address address;
 
-  public Customer() {}
+  public Customer() {
+    // Empty constructor.
+  }
 
   @Override
-  public Context accept(ContextVisitor visitor) {
+  public Context accept(final ContextVisitor visitor) {
     return visitor.visit(this);
   }
 
@@ -187,75 +189,75 @@ public class Customer extends Access {
     return;
   }
 
-  public void setAddress(Address address) {
+  public void setAddress(final Address address) {
     this.address = address;
   }
 
-  public void setBuyerEmail(String buyerEmail) {
+  public void setBuyerEmail(final String buyerEmail) {
     this.buyerEmail = buyerEmail;
   }
 
-  public void setBuyerMarketingEmail(String buyerMarketingEmail) {
+  public void setBuyerMarketingEmail(final String buyerMarketingEmail) {
     this.buyerMarketingEmail = buyerMarketingEmail;
   }
 
-  public void setContactPhone(String contactPhone) {
+  public void setContactPhone(final String contactPhone) {
     this.contactPhone = contactPhone;
   }
 
-  public void setDateOfBirth(Date dateOfBirth) {
+  public void setDateOfBirth(final Date dateOfBirth) {
     this.dateOfBirth = dateOfBirth;
   }
 
-  public void setFirstName(String firstName) {
+  public void setFirstName(final String firstName) {
     this.firstName = firstName;
   }
 
-  public void setFriendlyName(String friendlyName) {
+  public void setFriendlyName(final String friendlyName) {
     this.friendlyName = friendlyName;
   }
 
-  public void setLastName(String lastName) {
+  public void setLastName(final String lastName) {
     this.lastName = lastName;
   }
 
-  public void setMiddleName(String middleName) {
+  public void setMiddleName(final String middleName) {
     this.middleName = middleName;
   }
 
-  public void setPayer(String payer) {
+  public void setPayer(final String payer) {
     this.payer = payer;
   }
 
-  public void setPayerBusiness(String payerBusiness) {
+  public void setPayerBusiness(final String payerBusiness) {
     this.payerBusiness = payerBusiness;
   }
 
-  public void setPayerId(String payerId) {
+  public void setPayerId(final String payerId) {
     this.payerId = payerId;
   }
 
-  public void setPayerStatus(String payerStatus) {
+  public void setPayerStatus(final String payerStatus) {
     this.payerStatus = payerStatus;
   }
 
-  public void setPrefix(String suffix) {
+  public void setPrefix(final String suffix) {
     this.suffix = suffix;
   }
 
-  public void setSalutation(String salutation) {
+  public void setSalutation(final String salutation) {
     this.salutation = salutation;
   }
 
-  public void setSuffix(String suffix) {
+  public void setSuffix(final String suffix) {
     this.suffix = suffix;
   }
 
-  public void setTaxId(String taxId) {
+  public void setTaxId(final String taxId) {
     this.taxId = taxId;
   }
 
-  public void setTaxIdType(String taxIdType) {
+  public void setTaxIdType(final String taxIdType) {
     this.taxIdType = taxIdType;
   }
 }

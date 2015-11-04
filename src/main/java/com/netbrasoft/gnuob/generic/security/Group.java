@@ -15,7 +15,7 @@ import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 @Entity(name = Group.ENTITY)
 @Table(name = Group.TABLE)
 @XmlRootElement(name = Group.ENTITY)
-public class Group extends Access {
+public class Group extends AbstractAccess {
 
   private static final long serialVersionUID = -3688942214897329995L;
 
@@ -29,11 +29,11 @@ public class Group extends Access {
   private String description;
 
   public Group() {
-
+    // Empty constructor.
   }
 
   @Override
-  public Context accept(ContextVisitor visitor) {
+  public Context accept(final ContextVisitor visitor) {
     return visitor.visit(this);
   }
 
@@ -62,11 +62,11 @@ public class Group extends Access {
     return;
   }
 
-  public void setDescription(String description) {
+  public void setDescription(final String description) {
     this.description = description;
   }
 
-  public void setName(String name) {
+  public void setName(final String name) {
     this.name = name;
   }
 }

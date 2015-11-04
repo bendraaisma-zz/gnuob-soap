@@ -14,14 +14,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = false)
 @Entity(name = Payment.ENTITY)
 @Table(name = Payment.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @XmlRootElement(name = Payment.ENTITY)
-public class Payment extends Type {
+public class Payment extends AbstractType {
 
   private static final long serialVersionUID = -4794906337826218748L;
   protected static final String ENTITY = "Payment";
@@ -194,79 +194,79 @@ public class Payment extends Type {
     return;
   }
 
-  public void setExchangeRate(String exchangeRate) {
+  public void setExchangeRate(final String exchangeRate) {
     this.exchangeRate = exchangeRate;
   }
 
-  public void setFeeAmount(BigDecimal feeAmount) {
+  public void setFeeAmount(final BigDecimal feeAmount) {
     this.feeAmount = feeAmount;
   }
 
-  public void setGrossAmount(BigDecimal grossAmount) {
+  public void setGrossAmount(final BigDecimal grossAmount) {
     this.grossAmount = grossAmount;
   }
 
-  public void setHoldDecision(String holdDecision) {
+  public void setHoldDecision(final String holdDecision) {
     this.holdDecision = holdDecision;
   }
 
-  public void setInstallmentCount(BigInteger installmentCount) {
+  public void setInstallmentCount(final BigInteger installmentCount) {
     this.installmentCount = installmentCount;
   }
 
-  public void setPaymentDate(Date paymentDate) {
+  public void setPaymentDate(final Date paymentDate) {
     this.paymentDate = paymentDate;
   }
 
-  public void setPaymentRequestId(String paymentRequestId) {
+  public void setPaymentRequestId(final String paymentRequestId) {
     this.paymentRequestId = paymentRequestId;
   }
 
-  public void setPaymentStatus(String paymentStatus) {
+  public void setPaymentStatus(final String paymentStatus) {
     this.paymentStatus = paymentStatus;
   }
 
-  public void setPaymentType(String paymentType) {
+  public void setPaymentType(final String paymentType) {
     this.paymentType = paymentType;
   }
 
-  public void setPendingReason(String pendingReason) {
+  public void setPendingReason(final String pendingReason) {
     this.pendingReason = pendingReason;
   }
 
-  public void setPosition(Integer position) {
+  public void setPosition(final Integer position) {
     this.position = position;
   }
 
-  public void setProtectionEligibilityType(String protectionEligibilityType) {
+  public void setProtectionEligibilityType(final String protectionEligibilityType) {
     this.protectionEligibilityType = protectionEligibilityType;
   }
 
-  public void setReasonCode(String reasonCode) {
+  public void setReasonCode(final String reasonCode) {
     this.reasonCode = reasonCode;
   }
 
-  public void setSettleAmount(BigDecimal settleAmount) {
+  public void setSettleAmount(final BigDecimal settleAmount) {
     this.settleAmount = settleAmount;
   }
 
-  public void setStoreId(String storeId) {
+  public void setStoreId(final String storeId) {
     this.storeId = storeId;
   }
 
-  public void setTaxAmount(BigDecimal taxAmount) {
+  public void setTaxAmount(final BigDecimal taxAmount) {
     this.taxAmount = taxAmount;
   }
 
-  public void setTerminalId(String terminalId) {
+  public void setTerminalId(final String terminalId) {
     this.terminalId = terminalId;
   }
 
-  public void setTransactionId(String transactionId) {
+  public void setTransactionId(final String transactionId) {
     this.transactionId = transactionId;
   }
 
-  public void setTransactionType(String transactionType) {
+  public void setTransactionType(final String transactionType) {
     this.transactionType = transactionType;
   }
 }

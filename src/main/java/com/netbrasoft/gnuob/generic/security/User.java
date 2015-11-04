@@ -30,7 +30,7 @@ import de.rtner.security.auth.spi.SimplePBKDF2;
 @Entity(name = User.ENTITY)
 @Table(name = User.TABLE)
 @XmlRootElement(name = User.ENTITY)
-public class User extends Access {
+public class User extends AbstractAccess {
 
   private static final long serialVersionUID = 2439569681567208145L;
 
@@ -70,15 +70,15 @@ public class User extends Access {
   private String description;
 
   public User() {
-
+    // Empty constructor.
   }
 
-  public User(String name) {
+  public User(final String name) {
     this.name = name;
   }
 
   @Override
-  public Context accept(ContextVisitor visitor) {
+  public Context accept(final ContextVisitor visitor) {
     return visitor.visit(this);
   }
 
@@ -147,35 +147,35 @@ public class User extends Access {
     }
   }
 
-  public void setAccess(Rule access) {
+  public void setAccess(final Rule access) {
     this.access = access;
   }
 
-  public void setDescription(String description) {
+  public void setDescription(final String description) {
     this.description = description;
   }
 
-  public void setGroups(Set<Group> groups) {
+  public void setGroups(final Set<Group> groups) {
     this.groups = groups;
   }
 
-  public void setName(String name) {
+  public void setName(final String name) {
     this.name = name;
   }
 
-  public void setPassword(String password) {
+  public void setPassword(final String password) {
     this.password = new SimplePBKDF2().deriveKeyFormatted(password);
   }
 
-  public void setRoles(Set<Role> roles) {
+  public void setRoles(final Set<Role> roles) {
     this.roles = roles;
   }
 
-  public void setRoot(Boolean root) {
+  public void setRoot(final Boolean root) {
     this.root = root;
   }
 
-  public void setSites(Set<Site> sites) {
+  public void setSites(final Set<Site> sites) {
     this.sites = sites;
   }
 }

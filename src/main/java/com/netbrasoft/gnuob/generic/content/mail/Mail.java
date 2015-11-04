@@ -10,7 +10,7 @@ public enum Mail {
 
     private String template;
 
-    private Body(String template) {
+    private Body(final String template) {
       setTemplate(template);
     }
 
@@ -18,7 +18,7 @@ public enum Mail {
       return template;
     }
 
-    public void setTemplate(String template) {
+    public void setTemplate(final String template) {
       this.template = template;
     }
   }
@@ -28,7 +28,7 @@ public enum Mail {
 
     private String template;
 
-    private Subject(String template) {
+    private Subject(final String template) {
       setTemplate(template);
     }
 
@@ -36,7 +36,7 @@ public enum Mail {
       return template;
     }
 
-    public void setTemplate(String template) {
+    public void setTemplate(final String template) {
       this.template = template;
     }
   }
@@ -45,7 +45,7 @@ public enum Mail {
 
   private Body body;
 
-  private Mail(Subject subject, Body body) {
+  private Mail(final Subject subject, final Body body) {
     setSubject(subject);
     setBody(body);
   }
@@ -58,11 +58,11 @@ public enum Mail {
     return subject;
   }
 
-  public void setBody(Body body) {
+  public void setBody(final Body body) {
     this.body = body;
   }
 
-  public void setSubject(Subject subject) {
+  public void setSubject(final Subject subject) {
     this.subject = subject;
   }
 }

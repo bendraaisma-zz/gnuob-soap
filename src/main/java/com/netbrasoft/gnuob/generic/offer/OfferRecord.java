@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.AbstractType;
 import com.netbrasoft.gnuob.generic.product.Option;
 import com.netbrasoft.gnuob.generic.product.Product;
 
@@ -32,7 +32,7 @@ import com.netbrasoft.gnuob.generic.product.Product;
 @Table(name = OfferRecord.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @XmlRootElement(name = OfferRecord.ENTITY)
-public class OfferRecord extends Type {
+public class OfferRecord extends AbstractType {
 
   private static final long serialVersionUID = 710723043281502969L;
   protected static final String ENTITY = "OfferRecord";
@@ -107,7 +107,9 @@ public class OfferRecord extends Type {
   @Transient
   private Product product;
 
-  public OfferRecord() {}
+  public OfferRecord() {
+    // Empty constructor.
+  }
 
   @XmlElement(name = "amount")
   public BigDecimal getAmount() {
@@ -338,91 +340,91 @@ public class OfferRecord extends Type {
     }
   }
 
-  public void setAmount(BigDecimal amount) {
+  public void setAmount(final BigDecimal amount) {
     this.amount = amount;
   }
 
-  public void setDescription(String description) {
+  public void setDescription(final String description) {
     this.description = description;
   }
 
-  public void setDiscount(BigDecimal discount) {
+  public void setDiscount(final BigDecimal discount) {
     this.discount = discount;
   }
 
-  public void setItemHeight(BigDecimal itemHeight) {
+  public void setItemHeight(final BigDecimal itemHeight) {
     this.itemHeight = itemHeight;
   }
 
-  public void setItemHeightUnit(String itemHeightUnit) {
+  public void setItemHeightUnit(final String itemHeightUnit) {
     this.itemHeightUnit = itemHeightUnit;
   }
 
-  public void setItemLength(BigDecimal itemLength) {
+  public void setItemLength(final BigDecimal itemLength) {
     this.itemLength = itemLength;
   }
 
-  public void setItemLengthUnit(String itemLengthUnit) {
+  public void setItemLengthUnit(final String itemLengthUnit) {
     this.itemLengthUnit = itemLengthUnit;
   }
 
-  public void setItemUrl(String itemUrl) {
+  public void setItemUrl(final String itemUrl) {
     this.itemUrl = itemUrl;
   }
 
-  public void setItemWeight(BigDecimal itemWeight) {
+  public void setItemWeight(final BigDecimal itemWeight) {
     this.itemWeight = itemWeight;
   }
 
-  public void setItemWeightUnit(String itemWeightUnit) {
+  public void setItemWeightUnit(final String itemWeightUnit) {
     this.itemWeightUnit = itemWeightUnit;
   }
 
-  public void setItemWidth(BigDecimal itemWidth) {
+  public void setItemWidth(final BigDecimal itemWidth) {
     this.itemWidth = itemWidth;
   }
 
-  public void setItemWidthUnit(String itemWidthUnit) {
+  public void setItemWidthUnit(final String itemWidthUnit) {
     this.itemWidthUnit = itemWidthUnit;
   }
 
-  public void setName(String name) {
+  public void setName(final String name) {
     this.name = name;
   }
 
-  public void setOfferRecordId(String offerRecordId) {
+  public void setOfferRecordId(final String offerRecordId) {
     this.offerRecordId = offerRecordId;
   }
 
-  public void setOption(String option) {
+  public void setOption(final String option) {
     this.option = option;
   }
 
-  public void setOptions(Set<Option> options) {
+  public void setOptions(final Set<Option> options) {
     this.options = options;
   }
 
-  public void setPosition(Integer position) {
+  public void setPosition(final Integer position) {
     this.position = position;
   }
 
-  public void setProduct(Product product) {
+  public void setProduct(final Product product) {
     this.product = product;
   }
 
-  public void setProductNumber(String productNumber) {
+  public void setProductNumber(final String productNumber) {
     this.productNumber = productNumber;
   }
 
-  public void setQuantity(BigInteger quantity) {
+  public void setQuantity(final BigInteger quantity) {
     this.quantity = quantity;
   }
 
-  public void setShippingCost(BigDecimal shippingCost) {
+  public void setShippingCost(final BigDecimal shippingCost) {
     this.shippingCost = shippingCost;
   }
 
-  public void setTax(BigDecimal tax) {
+  public void setTax(final BigDecimal tax) {
     this.tax = tax;
   }
 }

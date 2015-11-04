@@ -14,13 +14,13 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.apache.velocity.context.Context;
 
 import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
-import com.netbrasoft.gnuob.generic.security.Access;
+import com.netbrasoft.gnuob.generic.security.AbstractAccess;
 
 @Cacheable(value = true)
 @Entity(name = Content.ENTITY)
 @Table(name = Content.TABLE)
 @XmlRootElement(name = Content.ENTITY)
-public class Content extends Access {
+public class Content extends AbstractAccess {
 
   private static final long serialVersionUID = -6963744731098668340L;
   protected static final String ENTITY = "Content";
@@ -39,7 +39,7 @@ public class Content extends Access {
   private byte[] data;
 
   @Override
-  public Context accept(ContextVisitor visitor) {
+  public Context accept(final ContextVisitor visitor) {
     return visitor.visit(this);
   }
 
@@ -79,19 +79,19 @@ public class Content extends Access {
     return;
   }
 
-  public void setData(byte[] data) {
+  public void setData(final byte[] data) {
     this.data = Base64.getEncoder().encode(data);
   }
 
-  public void setFormat(String format) {
+  public void setFormat(final String format) {
     this.format = format;
   }
 
-  public void setName(String name) {
+  public void setName(final String name) {
     this.name = name;
   }
 
-  public void setPosition(Integer position) {
+  public void setPosition(final Integer position) {
     this.position = position;
   }
 }

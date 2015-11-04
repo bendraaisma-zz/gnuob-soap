@@ -7,9 +7,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "Rule")
 public enum Rule {
-  CREATE_ACCESS(Arrays.asList(Operation.CREATE, Operation.READ)), READ_ACCESS(Arrays.asList(Operation.READ)), UPDATE_ACCESS(
-      Arrays.asList(Operation.CREATE, Operation.READ, Operation.UPDATE)), DELETE_ACCESS(
-          Arrays.asList(Operation.CREATE, Operation.READ, Operation.UPDATE, Operation.DELETE)), NONE_ACCESS(Arrays.asList(Operation.NONE));
+//@formatter:off
+  CREATE_ACCESS(Arrays.asList(Operation.CREATE, Operation.READ)),
+  READ_ACCESS(Arrays.asList(Operation.READ)),
+  UPDATE_ACCESS(Arrays.asList(Operation.CREATE, Operation.READ, Operation.UPDATE)),
+  DELETE_ACCESS(Arrays.asList(Operation.CREATE, Operation.READ, Operation.UPDATE, Operation.DELETE)),
+  NONE_ACCESS(Arrays.asList(Operation.NONE));
+//@formatter:on
 
   public enum Operation {
     CREATE, READ, UPDATE, DELETE, NONE;
@@ -17,7 +21,7 @@ public enum Rule {
 
   private List<Operation> operations;
 
-  private Rule(List<Operation> operations) {
+  private Rule(final List<Operation> operations) {
     setOperations(operations);
   }
 
@@ -25,7 +29,7 @@ public enum Rule {
     return operations;
   }
 
-  public void setOperations(List<Operation> operations) {
+  public void setOperations(final List<Operation> operations) {
     this.operations = operations;
   }
 }

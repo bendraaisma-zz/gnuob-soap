@@ -5,16 +5,16 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * The class {@code GNUOpenBusinessServiceException} and its subclasses are a form of
  * {@code Throwable} that indicates conditions that a reasonable application might want to catch.
- * 
+ *
  * <p>
  * The class {@code GNUOpenBusinessServiceException} and any subclasses that are not also subclasses
  * of {@link RuntimeException} are <em>checked
  * exceptions</em>. Checked exceptions need to be declared in a method or constructor's
  * {@code throws} clause if they can be thrown by the execution of the method or constructor and
  * propagate outside the method or constructor boundary.
- * 
+ *
  * @author "Bernard Arjan Draaisma"
- * 
+ *
  */
 @XmlRootElement(name = "GNUOpenBusinessServiceException")
 public class GNUOpenBusinessServiceException extends RuntimeException {
@@ -32,11 +32,11 @@ public class GNUOpenBusinessServiceException extends RuntimeException {
   /**
    * Constructs a new exception with the specified detail message. The cause is not initialized, and
    * may subsequently be initialized by a call to {@link #initCause}.
-   * 
+   *
    * @param message the detail message. The detail message is saved for later retrieval by the
    *        {@link #getMessage()} method.
    */
-  public GNUOpenBusinessServiceException(String message) {
+  public GNUOpenBusinessServiceException(final String message) {
     super(message);
   }
 
@@ -45,7 +45,7 @@ public class GNUOpenBusinessServiceException extends RuntimeException {
    * <p>
    * Note that the detail message associated with {@code cause} is <i>not</i> automatically
    * incorporated in this exception's detail message.
-   * 
+   *
    * @param message the detail message (which is saved for later retrieval by the
    *        {@link #getMessage()} method).
    * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method).
@@ -53,7 +53,7 @@ public class GNUOpenBusinessServiceException extends RuntimeException {
    *        unknown.)
    * @since 1.4
    */
-  public GNUOpenBusinessServiceException(String message, Throwable cause) {
+  public GNUOpenBusinessServiceException(final String message, final Throwable cause) {
     super(message, cause);
   }
 
@@ -62,13 +62,13 @@ public class GNUOpenBusinessServiceException extends RuntimeException {
    * <tt>(cause==null ? null : cause.toString())</tt> (which typically contains the class and detail
    * message of <tt>cause</tt>). This constructor is useful for exceptions that are little more than
    * wrappers for other throwables (for example, {@link java.security.PrivilegedActionException}).
-   * 
+   *
    * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method).
    *        (A <tt>null</tt> value is permitted, and indicates that the cause is nonexistent or
    *        unknown.)
    * @since 1.4
    */
-  public GNUOpenBusinessServiceException(Throwable cause) {
+  public GNUOpenBusinessServiceException(final Throwable cause) {
     super(cause);
   }
 

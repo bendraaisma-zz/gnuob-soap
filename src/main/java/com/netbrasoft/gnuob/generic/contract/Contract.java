@@ -22,13 +22,13 @@ import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 import com.netbrasoft.gnuob.generic.customer.Customer;
 import com.netbrasoft.gnuob.generic.offer.Offer;
 import com.netbrasoft.gnuob.generic.order.Order;
-import com.netbrasoft.gnuob.generic.security.Access;
+import com.netbrasoft.gnuob.generic.security.AbstractAccess;
 
 @Cacheable(value = true)
 @Entity(name = Contract.ENTITY)
 @Table(name = Contract.TABLE)
 @XmlRootElement(name = Contract.ENTITY)
-public class Contract extends Access {
+public class Contract extends AbstractAccess {
 
   private static final long serialVersionUID = -2215842699700777956L;
   protected static final String ENTITY = "Contract";
@@ -46,10 +46,12 @@ public class Contract extends Access {
   @Column(name = "CONTRACT_ID", nullable = false)
   private String contractId;
 
-  public Contract() {}
+  public Contract() {
+    // Empty constructor.
+  }
 
   @Override
-  public Context accept(ContextVisitor visitor) {
+  public Context accept(final ContextVisitor visitor) {
     return visitor.visit(this);
   }
 
@@ -93,19 +95,19 @@ public class Contract extends Access {
     return;
   }
 
-  public void setContractId(String contractId) {
+  public void setContractId(final String contractId) {
     this.contractId = contractId;
   }
 
-  public void setCustomer(Customer customer) {
+  public void setCustomer(final Customer customer) {
     this.customer = customer;
   }
 
-  public void setOffers(Set<Offer> offers) {
+  public void setOffers(final Set<Offer> offers) {
     this.offers = offers;
   }
 
-  public void setOrders(Set<Order> orders) {
+  public void setOrders(final Set<Order> orders) {
     this.orders = orders;
   }
 

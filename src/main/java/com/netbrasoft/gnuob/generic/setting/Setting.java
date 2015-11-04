@@ -12,14 +12,14 @@ import javax.xml.bind.annotation.XmlType;
 import org.apache.velocity.context.Context;
 
 import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
-import com.netbrasoft.gnuob.generic.security.Access;
+import com.netbrasoft.gnuob.generic.security.AbstractAccess;
 
 @Cacheable(value = true)
 @Entity(name = Setting.ENTITY)
 @Table(name = Setting.TABLE)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = Setting.ENTITY)
-public class Setting extends Access {
+public class Setting extends AbstractAccess {
 
   private static final long serialVersionUID = -1489369413428188989L;
   protected static final String ENTITY = "Setting";
@@ -38,7 +38,7 @@ public class Setting extends Access {
   private String description;
 
   @Override
-  public Context accept(ContextVisitor visitor) {
+  public Context accept(final ContextVisitor visitor) {
     return visitor.visit(this);
   }
 
@@ -69,15 +69,15 @@ public class Setting extends Access {
     return;
   }
 
-  public void setDescription(String description) {
+  public void setDescription(final String description) {
     this.description = description;
   }
 
-  public void setProperty(String property) {
+  public void setProperty(final String property) {
     this.property = property;
   }
 
-  public void setValue(String value) {
+  public void setValue(final String value) {
     this.value = value;
   }
 }

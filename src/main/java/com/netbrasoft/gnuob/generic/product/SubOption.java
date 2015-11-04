@@ -10,14 +10,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = false)
 @Entity(name = SubOption.ENTITY)
 @Table(name = SubOption.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @XmlRootElement(name = SubOption.ENTITY)
-public class SubOption extends Type {
+public class SubOption extends AbstractType {
 
   private static final long serialVersionUID = -4350389615614303733L;
   protected static final String ENTITY = "SubOption";
@@ -62,27 +62,27 @@ public class SubOption extends Type {
 
   @Override
   public void prePersist() {
-
+    return;
   }
 
   @Override
   public void preUpdate() {
-
+    return;
   }
 
-  public void setDescription(String description) {
+  public void setDescription(final String description) {
     this.description = description;
   }
 
-  public void setDisabled(boolean disabled) {
+  public void setDisabled(final boolean disabled) {
     this.disabled = disabled;
   }
 
-  public void setPosition(Integer position) {
+  public void setPosition(final Integer position) {
     this.position = position;
   }
 
-  public void setValue(String value) {
+  public void setValue(final String value) {
     this.value = value;
   }
 }

@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.AbstractType;
 import com.netbrasoft.gnuob.generic.content.Content;
 
 @Cacheable(value = true)
@@ -30,7 +30,7 @@ import com.netbrasoft.gnuob.generic.content.Content;
 @Table(name = SubCategory.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @XmlRootElement(name = SubCategory.ENTITY)
-public class SubCategory extends Type {
+public class SubCategory extends AbstractType {
 
   private static final long serialVersionUID = -5835673403321034535L;
   protected static final String ENTITY = "SubCategory";
@@ -67,7 +67,7 @@ public class SubCategory extends Type {
     return description;
   }
 
-  @XmlElement(name = "name")
+  @XmlElement(name = "name", required = true)
   public String getName() {
     return name;
   }

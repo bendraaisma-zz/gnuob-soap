@@ -1,16 +1,16 @@
 package com.netbrasoft.gnuob.generic.order;
 
-public interface CheckOutService<O extends Order> {
+public interface CheckOutService<T extends Order> {
 
-  void doCheckout(O order);
+  void doCheckout(T type);
 
-  void doCheckoutDetails(O order);
+  void doCheckoutDetails(T type);
 
-  void doCheckoutPayment(O order);
+  void doCheckoutPayment(T type);
 
-  O doNotification(O order);
+  T doNotification(T type);
 
-  void doRefundTransaction(O order);
+  void doRefundTransaction(T type);
 
-  void doTransactionDetails(O order);
+  void doTransactionDetails(T type);
 }

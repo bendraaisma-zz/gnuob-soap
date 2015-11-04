@@ -11,10 +11,10 @@ public final class Paging {
   private int max;
 
   public Paging() {
-
+    // Empty constructor.
   }
 
-  public Paging(int first, int max) {
+  public Paging(final int first, final int max) {
     this.first = first;
     this.max = max;
   }
@@ -29,11 +29,11 @@ public final class Paging {
     return max;
   }
 
-  public void setFirst(int first) {
+  public void setFirst(final int first) {
     this.first = first;
   }
 
-  public void setMax(int max) {
+  public void setMax(final int max) {
     this.max = max;
   }
 }

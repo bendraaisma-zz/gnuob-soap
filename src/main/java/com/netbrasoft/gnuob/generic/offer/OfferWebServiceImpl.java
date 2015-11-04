@@ -21,79 +21,82 @@ import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.customer.Customer;
 import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
+import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeServiceImpl;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
-@Stateless(name = "OfferWebServiceImpl")
+@Stateless(name = OfferWebServiceImpl.OFFER_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
-public class OfferWebServiceImpl<O extends Offer> implements GenericTypeWebService<O> {
+public class OfferWebServiceImpl<T extends Offer> implements GenericTypeWebService<T> {
 
-  @EJB(beanName = "SecuredGenericTypeServiceImpl")
-  private SecuredGenericTypeService<O> securedGenericOfferService;
+  protected static final String OFFER_WEB_SERVICE_IMPL_NAME = "OfferWebServiceImpl";
 
-  @EJB(beanName = "SecuredGenericTypeServiceImpl")
-  private SecuredGenericTypeService<Contract> securedGenericContractService;
+  @EJB(beanName = SecuredGenericTypeServiceImpl.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private transient SecuredGenericTypeService<T> securedGenericOfferService;
 
-  @EJB(beanName = "SecuredGenericTypeServiceImpl")
-  private SecuredGenericTypeService<Customer> securedGenericCustomerService;
+  @EJB(beanName = SecuredGenericTypeServiceImpl.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private transient SecuredGenericTypeService<Contract> securedGenericContractService;
+
+  @EJB(beanName = SecuredGenericTypeServiceImpl.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private transient SecuredGenericTypeService<Customer> securedGenericCustomerService;
 
   @Override
   @WebMethod(operationName = "countOffer")
-  public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) {
+  public long count(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "offer") final T type) {
     try {
-      readUpdateContractCustomer(metadata, type.getContract());
+      readUpdateContractCustomer(metaData, type.getContract());
       if (type.getContract() != null) {
         final Parameter parameter = new Parameter("contract", Restrictions.or(Example.create(type.getContract())));
-        return securedGenericOfferService.count(metadata, type, parameter);
+        return securedGenericOfferService.count(metaData, type, parameter);
       }
-      return securedGenericOfferService.count(metadata, type);
+      return securedGenericOfferService.count(metaData, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
-  private void createUpdateContractCustomer(MetaData metadata, Contract contract) {
+  private void createUpdateContractCustomer(final MetaData metaData, final Contract contract) {
     if (contract != null) {
       if (contract.getId() == 0) {
-        securedGenericContractService.create(metadata, contract);
+        securedGenericContractService.create(metaData, contract);
       } else {
-        securedGenericContractService.update(metadata, contract);
+        securedGenericContractService.update(metaData, contract);
       }
-      createUpdateCustomer(metadata, contract.getCustomer());
+      createUpdateCustomer(metaData, contract.getCustomer());
     }
   }
 
-  private void createUpdateCustomer(MetaData metadata, Customer customer) {
+  private void createUpdateCustomer(final MetaData metaData, final Customer customer) {
     if (customer != null) {
       if (customer.getId() == 0) {
-        securedGenericCustomerService.create(metadata, customer);
+        securedGenericCustomerService.create(metaData, customer);
       } else {
-        securedGenericCustomerService.update(metadata, customer);
+        securedGenericCustomerService.update(metaData, customer);
       }
     }
   }
 
-  private void deleteUpdateContractCustomer(MetaData metadata, Contract contract) {
+  private void deleteUpdateContractCustomer(final MetaData metaData, final Contract contract) {
     if (contract != null) {
       if (contract.getId() > 0) {
-        securedGenericContractService.delete(metadata, contract);
+        securedGenericContractService.delete(metaData, contract);
       }
-      deletUpdateCustomer(metadata, contract.getCustomer());
+      deletUpdateCustomer(metaData, contract.getCustomer());
     }
   }
 
-  private void deletUpdateCustomer(MetaData metadata, Customer customer) {
+  private void deletUpdateCustomer(final MetaData metaData, final Customer customer) {
     if (customer != null && customer.getId() > 0) {
-      securedGenericCustomerService.delete(metadata, customer);
+      securedGenericCustomerService.delete(metaData, customer);
     }
   }
 
   @Override
   @WebMethod(operationName = "findOfferById")
-  public O find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) {
+  public T find(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "offer") final T type) {
     try {
-      readUpdateContractCustomer(metadata, type.getContract());
-      return securedGenericOfferService.find(metadata, type, type.getId());
+      readUpdateContractCustomer(metaData, type.getContract());
+      return securedGenericOfferService.find(metaData, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -101,15 +104,15 @@ public class OfferWebServiceImpl<O extends Offer> implements GenericTypeWebServi
 
   @Override
   @WebMethod(operationName = "findOffer")
-  public List<O> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type, @WebParam(name = "paging") Paging paging,
-      @WebParam(name = "orderBy") OrderBy orderBy) {
+  public List<T> find(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "offer") final T type, @WebParam(name = "paging") final Paging paging,
+      @WebParam(name = "orderBy") final OrderBy orderBy) {
     try {
-      readUpdateContractCustomer(metadata, type.getContract());
+      readUpdateContractCustomer(metaData, type.getContract());
       if (type.getContract() != null) {
         final Parameter parameter = new Parameter("contract", Restrictions.or(Example.create(type.getContract())));
-        return securedGenericOfferService.find(metadata, type, paging, orderBy, parameter);
+        return securedGenericOfferService.find(metaData, type, paging, orderBy, parameter);
       }
-      return securedGenericOfferService.find(metadata, type, paging, orderBy);
+      return securedGenericOfferService.find(metaData, type, paging, orderBy);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -117,10 +120,10 @@ public class OfferWebServiceImpl<O extends Offer> implements GenericTypeWebServi
 
   @Override
   @WebMethod(operationName = "mergeOffer")
-  public O merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) {
+  public T merge(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "offer") final T type) {
     try {
-      createUpdateContractCustomer(metadata, type.getContract());
-      return securedGenericOfferService.merge(metadata, type);
+      createUpdateContractCustomer(metaData, type.getContract());
+      return securedGenericOfferService.merge(metaData, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -128,42 +131,40 @@ public class OfferWebServiceImpl<O extends Offer> implements GenericTypeWebServi
 
   @Override
   @WebMethod(operationName = "persistOffer")
-  public O persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) {
+  public T persist(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "offer") final T type) {
     try {
-      createUpdateContractCustomer(metadata, type.getContract());
+      createUpdateContractCustomer(metaData, type.getContract());
       if (type.isDetached()) {
-        return securedGenericOfferService.merge(metadata, type);
+        return securedGenericOfferService.merge(metaData, type);
       }
-      securedGenericOfferService.persist(metadata, type);
+      securedGenericOfferService.persist(metaData, type);
       return type;
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
-  private void readUpdateContractCustomer(MetaData metadata, Contract contract) {
+  private void readUpdateContractCustomer(final MetaData metaData, final Contract contract) {
     if (contract != null) {
       if (contract.getId() > 0) {
-        securedGenericContractService.read(metadata, contract);
+        securedGenericContractService.read(metaData, contract);
       }
-      readUpdateCustomer(metadata, contract.getCustomer());
+      readUpdateCustomer(metaData, contract.getCustomer());
     }
   }
 
-  private void readUpdateCustomer(MetaData metadata, Customer customer) {
-    if (customer != null) {
-      if (customer.getId() > 0) {
-        securedGenericCustomerService.read(metadata, customer);
-      }
+  private void readUpdateCustomer(final MetaData metaData, final Customer customer) {
+    if (customer != null && customer.getId() > 0) {
+      securedGenericCustomerService.read(metaData, customer);
     }
   }
 
   @Override
   @WebMethod(operationName = "refreshOffer")
-  public O refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) {
+  public T refresh(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "offer") final T type) {
     try {
-      readUpdateContractCustomer(metadata, type.getContract());
-      return securedGenericOfferService.refresh(metadata, type, type.getId());
+      readUpdateContractCustomer(metaData, type.getContract());
+      return securedGenericOfferService.refresh(metaData, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -171,10 +172,10 @@ public class OfferWebServiceImpl<O extends Offer> implements GenericTypeWebServi
 
   @Override
   @WebMethod(operationName = "removeOffer")
-  public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "offer") O type) {
+  public void remove(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "offer") final T type) {
     try {
-      deleteUpdateContractCustomer(metadata, type.getContract());
-      securedGenericOfferService.remove(metadata, type);
+      deleteUpdateContractCustomer(metaData, type.getContract());
+      securedGenericOfferService.remove(metaData, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }

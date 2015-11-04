@@ -20,7 +20,7 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.AbstractType;
 import com.netbrasoft.gnuob.generic.customer.Address;
 
 @Cacheable(value = false)
@@ -28,7 +28,7 @@ import com.netbrasoft.gnuob.generic.customer.Address;
 @Table(name = Invoice.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @XmlRootElement(name = Invoice.ENTITY)
-public class Invoice extends Type {
+public class Invoice extends AbstractType {
 
   private static final long serialVersionUID = 5609152324488531802L;
   protected static final String ENTITY = "Invoice";
@@ -46,7 +46,9 @@ public class Invoice extends Type {
   @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true, optional = false)
   private Address address;
 
-  public Invoice() {}
+  public Invoice() {
+    // Empty constructor.
+  }
 
   @XmlElement(name = "address", required = true)
   public Address getAddress() {
@@ -98,15 +100,15 @@ public class Invoice extends Type {
     positionPayments();
   }
 
-  public void setAddress(Address address) {
+  public void setAddress(final Address address) {
     this.address = address;
   }
 
-  public void setInvoiceId(String invoiceId) {
+  public void setInvoiceId(final String invoiceId) {
     this.invoiceId = invoiceId;
   }
 
-  public void setPayments(Set<Payment> payments) {
+  public void setPayments(final Set<Payment> payments) {
     this.payments = payments;
   }
 }

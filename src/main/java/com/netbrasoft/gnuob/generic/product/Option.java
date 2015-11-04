@@ -18,14 +18,14 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = false)
 @Entity(name = Option.ENTITY)
 @Table(name = Option.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @XmlRootElement(name = Option.ENTITY)
-public class Option extends Type {
+public class Option extends AbstractType {
 
   private static final long serialVersionUID = -4350389615614303733L;
   protected static final String ENTITY = "Option";
@@ -84,10 +84,10 @@ public class Option extends Type {
   }
 
   private void positionSubOptions() {
-    int position = 0;
+    int index = 0;
 
     for (final SubOption subOption : subOptions) {
-      subOption.setPosition(Integer.valueOf(position++));
+      subOption.setPosition(Integer.valueOf(index++));
     }
   }
 
@@ -101,23 +101,23 @@ public class Option extends Type {
     positionSubOptions();
   }
 
-  public void setDescription(String description) {
+  public void setDescription(final String description) {
     this.description = description;
   }
 
-  public void setDisabled(boolean disabled) {
+  public void setDisabled(final boolean disabled) {
     this.disabled = disabled;
   }
 
-  public void setPosition(Integer position) {
+  public void setPosition(final Integer position) {
     this.position = position;
   }
 
-  public void setSubOptions(Set<SubOption> subOptions) {
+  public void setSubOptions(final Set<SubOption> subOptions) {
     this.subOptions = subOptions;
   }
 
-  public void setValue(String value) {
+  public void setValue(final String value) {
     this.value = value;
   }
 }

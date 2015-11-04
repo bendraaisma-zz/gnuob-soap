@@ -9,14 +9,14 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = false)
 @Entity(name = Address.ENTITY)
 @Table(name = Address.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @XmlRootElement(name = Address.ENTITY)
-public class Address extends Type {
+public class Address extends AbstractType {
 
   private static final long serialVersionUID = 1448149897957104670L;
   protected static final String ENTITY = "Address";
@@ -62,7 +62,7 @@ public class Address extends Type {
   private String phone;
 
   public Address() {
-
+    // Empty constructor.
   }
 
   @XmlElement(name = "cityName", required = true)
@@ -145,55 +145,55 @@ public class Address extends Type {
     return;
   }
 
-  public void setCityName(String cityName) {
+  public void setCityName(final String cityName) {
     this.cityName = cityName;
   }
 
-  public void setComplement(String complement) {
+  public void setComplement(final String complement) {
     this.complement = complement;
   }
 
-  public void setCountry(String country) {
+  public void setCountry(final String country) {
     this.country = country;
   }
 
-  public void setCountryName(String countryName) {
+  public void setCountryName(final String countryName) {
     this.countryName = countryName;
   }
 
-  public void setDistrict(String district) {
+  public void setDistrict(final String district) {
     this.district = district;
   }
 
-  public void setInternationalStateAndCity(String internationalStateAndCity) {
+  public void setInternationalStateAndCity(final String internationalStateAndCity) {
     this.internationalStateAndCity = internationalStateAndCity;
   }
 
-  public void setInternationalStreet(String internationalStreet) {
+  public void setInternationalStreet(final String internationalStreet) {
     this.internationalStreet = internationalStreet;
   }
 
-  public void setNumber(String number) {
+  public void setNumber(final String number) {
     this.number = number;
   }
 
-  public void setPhone(String phone) {
+  public void setPhone(final String phone) {
     this.phone = phone;
   }
 
-  public void setPostalCode(String postalCode) {
+  public void setPostalCode(final String postalCode) {
     this.postalCode = postalCode;
   }
 
-  public void setStateOrProvince(String stateOrProvince) {
+  public void setStateOrProvince(final String stateOrProvince) {
     this.stateOrProvince = stateOrProvince;
   }
 
-  public void setStreet1(String street1) {
+  public void setStreet1(final String street1) {
     this.street1 = street1;
   }
 
-  public void setStreet2(String street2) {
+  public void setStreet2(final String street2) {
     this.street2 = street2;
   }
 }

@@ -2,17 +2,17 @@ package com.netbrasoft.gnuob.generic.order;
 
 import com.netbrasoft.gnuob.generic.security.MetaData;
 
-public interface CheckOutWebService<O extends Order> {
+public interface CheckOutWebService<T extends Order> {
 
-  O doCheckout(MetaData metadata, O type);
+  T doCheckout(MetaData metadata, T type);
 
-  O doCheckoutDetails(MetaData metadata, O type);
+  T doCheckoutDetails(MetaData metadata, T type);
 
-  O doCheckoutPayment(MetaData metadata, O type);
+  T doCheckoutPayment(MetaData metadata, T type);
 
-  O doNotification(MetaData metadata, O type);
+  T doNotification(MetaData metadata, T type);
 
-  O doRefundTransaction(MetaData metadata, O type);
+  T doRefundTransaction(MetaData metadata, T type);
 
-  O doTransactionDetails(MetaData metadata, O type);
+  T doTransactionDetails(MetaData metadata, T type);
 }

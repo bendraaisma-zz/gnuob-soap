@@ -2,15 +2,15 @@ package com.netbrasoft.gnuob.generic.security;
 
 public interface SecuredGenericTypeCheckOutService<T> {
 
-  void doCheckout(MetaData metadata, T type);
+  void doCheckout(MetaData metaData, T type);
 
-  void doCheckoutDetails(MetaData metadata, T type);
+  void doCheckoutDetails(MetaData metaData, T type);
 
-  void doCheckoutPayment(MetaData metadata, T type);
+  void doCheckoutPayment(MetaData metaData, T type);
 
-  T doNotification(MetaData metadata, T type);
+  T doNotification(MetaData metaData, T type);
 
-  void doRefundTransaction(MetaData metadata, T type);
+  void doRefundTransaction(MetaData metaData, T type);
 
-  void doTransactionDetails(MetaData metadata, T type);
+  void doTransactionDetails(MetaData metaData, T type);
 }

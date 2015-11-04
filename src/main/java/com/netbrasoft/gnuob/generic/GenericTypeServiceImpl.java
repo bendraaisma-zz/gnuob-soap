@@ -22,16 +22,18 @@ import com.netbrasoft.gnuob.generic.security.OperationAccess;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
-@Stateless(name = "GenericTypeServiceImpl")
+@Stateless(name = GenericTypeServiceImpl.GENERIC_TYPE_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
 public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 
-  @EJB(beanName = "GenericTypeDaoImpl")
-  private GenericTypeDao<T> genericTypeDao;
+  public static final String GENERIC_TYPE_SERVICE_IMPL_NAME = "GenericTypeServiceImpl";
+
+  @EJB(beanName = GenericTypeDaoImpl.GENERIC_TYPE_DAO_IMPL_NAME)
+  private transient GenericTypeDao<T> genericTypeDao;
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public long count(T type, Parameter... param) {
+  public long count(final T type, final Parameter... param) {
     final Session session = genericTypeDao.getDelegate();
 
     final ProjectionList projectionList = Projections.projectionList();
@@ -53,20 +55,20 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public void disableFilter(String filterName) {
+  public void disableFilter(final String filterName) {
     genericTypeDao.disableFilter(filterName);
   }
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public void enableFilter(String filterName, Parameter... param) {
+  public void enableFilter(final String filterName, final Parameter... param) {
     genericTypeDao.enableFilter(filterName, param);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   @OperationAccess(operation = Operation.NONE)
-  public T find(T type, long id) {
+  public T find(final T type, final long id) {
     final Session session = genericTypeDao.getDelegate();
     final Criteria criteria = session.createCriteria(type.getClass());
 
@@ -81,14 +83,14 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public T find(T type, long id, LockModeType lockModeType) {
+  public T find(final T type, final long id, final LockModeType lockModeType) {
     return genericTypeDao.find(type, id, lockModeType);
   }
 
   @Override
   @SuppressWarnings("unchecked")
   @OperationAccess(operation = Operation.NONE)
-  public List<T> find(T type, Paging paging, OrderBy orderBy, Parameter... param) {
+  public List<T> find(final T type, final Paging paging, final OrderBy orderBy, final Parameter... param) {
     final List<Long> idlist = findIds(type, paging, orderBy, param);
 
     if (idlist.isEmpty()) {
@@ -119,7 +121,7 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 
   @SuppressWarnings("unchecked")
   @OperationAccess(operation = Operation.NONE)
-  protected List<Long> findIds(T type, Paging paging, OrderBy orderBy, Parameter... param) {
+  protected List<Long> findIds(final T type, final Paging paging, final OrderBy orderBy, final Parameter... param) {
     final Session session = genericTypeDao.getDelegate();
 
     final Criteria criteria = session.createCriteria(type.getClass());
@@ -166,25 +168,25 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public T merge(T type) {
+  public T merge(final T type) {
     return genericTypeDao.merge(type);
   }
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public void persist(T type) {
+  public void persist(final T type) {
     genericTypeDao.persist(type);
   }
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public T refresh(T type, long id) {
+  public T refresh(final T type, final long id) {
     return genericTypeDao.refresh(type, id, LockModeType.OPTIMISTIC);
   }
 
   @Override
   @OperationAccess(operation = Operation.NONE)
-  public void remove(T type) {
+  public void remove(final T type) {
     genericTypeDao.remove(type);
   }
 

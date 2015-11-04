@@ -14,14 +14,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = false)
 @Entity(name = Stock.ENTITY)
 @Table(name = Stock.TABLE)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @XmlRootElement(name = Stock.ENTITY)
-public class Stock extends Type {
+public class Stock extends AbstractType {
 
   private static final long serialVersionUID = 748737455712566437L;
   protected static final String ENTITY = "Stock";
@@ -74,19 +74,19 @@ public class Stock extends Type {
     return;
   }
 
-  public void setMaxQuantity(BigInteger maxQuantity) {
+  public void setMaxQuantity(final BigInteger maxQuantity) {
     this.maxQuantity = maxQuantity;
   }
 
-  public void setMinQuantity(BigInteger minQuantity) {
+  public void setMinQuantity(final BigInteger minQuantity) {
     this.minQuantity = minQuantity;
   }
 
-  public void setProduct(Product product) {
+  public void setProduct(final Product product) {
     this.product = product;
   }
 
-  public void setQuantity(BigInteger quantity) {
+  public void setQuantity(final BigInteger quantity) {
     this.quantity = quantity;
   }
 }

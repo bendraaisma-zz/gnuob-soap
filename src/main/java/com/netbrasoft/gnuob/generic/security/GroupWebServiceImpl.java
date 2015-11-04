@@ -16,18 +16,20 @@ import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
-@Stateless(name = "GroupWebServiceImpl")
+@Stateless(name = GroupWebServiceImpl.GROUP_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
-public class GroupWebServiceImpl<G extends Group> implements GenericTypeWebService<G> {
+public class GroupWebServiceImpl<T extends Group> implements GenericTypeWebService<T> {
 
-  @EJB(beanName = "SecuredGenericTypeServiceImpl")
-  private SecuredGenericTypeService<G> securedGenericGroupService;
+  protected static final String GROUP_WEB_SERVICE_IMPL_NAME = "GroupWebServiceImpl";
+
+  @EJB(beanName = SecuredGenericTypeServiceImpl.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private transient SecuredGenericTypeService<T> securedGenericGroupService;
 
   @Override
   @WebMethod(operationName = "countGroup")
-  public long count(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "group") G type) {
+  public long count(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "group") final T type) {
     try {
-      return securedGenericGroupService.count(metadata, type);
+      return securedGenericGroupService.count(metaData, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -35,9 +37,9 @@ public class GroupWebServiceImpl<G extends Group> implements GenericTypeWebServi
 
   @Override
   @WebMethod(operationName = "findGroupById")
-  public G find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "group") G type) {
+  public T find(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "group") final T type) {
     try {
-      return securedGenericGroupService.find(metadata, type, type.getId());
+      return securedGenericGroupService.find(metaData, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -45,10 +47,10 @@ public class GroupWebServiceImpl<G extends Group> implements GenericTypeWebServi
 
   @Override
   @WebMethod(operationName = "findGroup")
-  public List<G> find(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "group") G type, @WebParam(name = "paging") Paging paging,
-      @WebParam(name = "orderBy") OrderBy orderBy) {
+  public List<T> find(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "group") final T type, @WebParam(name = "paging") final Paging paging,
+      @WebParam(name = "orderBy") final OrderBy orderBy) {
     try {
-      return securedGenericGroupService.find(metadata, type, paging, orderBy);
+      return securedGenericGroupService.find(metaData, type, paging, orderBy);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -56,9 +58,9 @@ public class GroupWebServiceImpl<G extends Group> implements GenericTypeWebServi
 
   @Override
   @WebMethod(operationName = "mergeGroup")
-  public G merge(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "group") G type) {
+  public T merge(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "group") final T type) {
     try {
-      return securedGenericGroupService.merge(metadata, type);
+      return securedGenericGroupService.merge(metaData, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -66,12 +68,12 @@ public class GroupWebServiceImpl<G extends Group> implements GenericTypeWebServi
 
   @Override
   @WebMethod(operationName = "persistGroup")
-  public G persist(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "group") G type) {
+  public T persist(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "group") final T type) {
     try {
       if (type.isDetached()) {
-        return securedGenericGroupService.merge(metadata, type);
+        return securedGenericGroupService.merge(metaData, type);
       }
-      securedGenericGroupService.persist(metadata, type);
+      securedGenericGroupService.persist(metaData, type);
       return type;
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
@@ -80,9 +82,9 @@ public class GroupWebServiceImpl<G extends Group> implements GenericTypeWebServi
 
   @Override
   @WebMethod(operationName = "refreshGroup")
-  public G refresh(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "group") G type) {
+  public T refresh(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "group") final T type) {
     try {
-      return securedGenericGroupService.refresh(metadata, type, type.getId());
+      return securedGenericGroupService.refresh(metaData, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
@@ -90,12 +92,11 @@ public class GroupWebServiceImpl<G extends Group> implements GenericTypeWebServi
 
   @Override
   @WebMethod(operationName = "removeGroup")
-  public void remove(@WebParam(name = "metaData", header = true) MetaData metadata, @WebParam(name = "group") G type) {
+  public void remove(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "group") final T type) {
     try {
-      securedGenericGroupService.remove(metadata, type);
+      securedGenericGroupService.remove(metaData, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
-
 }

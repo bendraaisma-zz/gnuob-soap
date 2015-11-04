@@ -15,7 +15,7 @@ import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
 @Table(name = Site.TABLE)
 @Entity(name = Site.ENTITY)
 @XmlRootElement(name = Site.ENTITY)
-public class Site extends Access {
+public class Site extends AbstractAccess {
 
   private static final long serialVersionUID = 985676314568291633L;
 
@@ -29,15 +29,15 @@ public class Site extends Access {
   private String description;
 
   public Site() {
-
+    // Empty constructor.
   }
 
-  public Site(String name) {
+  public Site(final String name) {
     this.name = name;
   }
 
   @Override
-  public Context accept(ContextVisitor visitor) {
+  public Context accept(final ContextVisitor visitor) {
     return visitor.visit(this);
   }
 
@@ -66,11 +66,11 @@ public class Site extends Access {
     return;
   }
 
-  public void setDescription(String description) {
+  public void setDescription(final String description) {
     this.description = description;
   }
 
-  public void setName(String name) {
+  public void setName(final String name) {
     this.name = name;
   }
 }
