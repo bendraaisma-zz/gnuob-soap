@@ -62,7 +62,7 @@ public class User extends AbstractAccess {
 
   @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
   @JoinTable(name = "GNUOB_ROLES", joinColumns = @JoinColumn(name = "GNUOB_USERS_ID") )
-  @Column(name = "ROLE", nullable = false)
+  @Column(name = "ROLE")
   @Enumerated(EnumType.STRING)
   private Set<Role> roles;
 
