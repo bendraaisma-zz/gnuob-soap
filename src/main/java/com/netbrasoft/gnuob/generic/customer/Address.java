@@ -19,7 +19,9 @@ import com.netbrasoft.gnuob.generic.AbstractType;
 public class Address extends AbstractType {
 
   private static final long serialVersionUID = 1448149897957104670L;
+
   protected static final String ENTITY = "Address";
+
   protected static final String TABLE = "GNUOB_ADDRESSES";
 
   @Column(name = "INTERNATIONAL_STATE_AND_CITY")

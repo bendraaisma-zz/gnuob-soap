@@ -50,7 +50,7 @@
 		    </nonstop>
         </terracotta>
 	</cache>
-	<cache name="gnuob-soap.war#primary.com.netbrasoft.gnuob.generic.security.Access"
+	<cache name="gnuob-soap.war#primary.com.netbrasoft.gnuob.generic.security.AbstractAccess"
 		maxElementsInMemory="1000"
       	maxElementsOnDisk="10000" 
       	eternal="false" 

@@ -125,7 +125,7 @@ public class GenericTypeServiceImpl<T> implements GenericTypeService<T> {
     final Session session = genericTypeDao.getDelegate();
 
     final Criteria criteria = session.createCriteria(type.getClass());
-    criteria.add(Example.create(type).excludeProperty("creation").excludeProperty("modification"));
+    criteria.add(Example.create(type).excludeZeroes().enableLike().excludeProperty("creation").excludeProperty("modification"));
 
     for (final Parameter p : param) {
       criteria.createCriteria(p.getName()).add((Criterion) p.getValue());

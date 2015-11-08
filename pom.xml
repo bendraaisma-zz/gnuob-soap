@@ -34,7 +34,7 @@
       <version.org.apache.cxf>3.1.1</version.org.apache.cxf>
       <version.javasimon>4.0.1</version.javasimon>
       <version.PBKDF2>1.1.1</version.PBKDF2>
-      <version.picketbox>4.9.3.Final</version.picketbox>
+      <version.picketbox>4.9.4.Final</version.picketbox>
       <version.mockito-all>1.9.5</version.mockito-all>
       <version.graphene-webdriver>2.0.3.Final</version.graphene-webdriver>
       <maven.compiler.target>1.8</maven.compiler.target>
@@ -45,8 +45,8 @@
       <dependencies>
          <dependency>
             <groupId>org.wildfly.bom</groupId>
-            <artifactId>jboss-javaee-7.0-wildfly-with-tools</artifactId>
-            <version>9.0.1.Final</version>
+            <artifactId>wildfly-javaee7-with-tools</artifactId>
+            <version>10.0.0.CR5</version>
             <type>pom</type>
             <scope>import</scope>
          </dependency>

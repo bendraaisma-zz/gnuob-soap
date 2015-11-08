@@ -38,6 +38,7 @@
       <delete tableName="GNUOB_OPTIONS" />
       <delete tableName="GNUOB_PRODUCTS_GNUOB_OPTIONS" />
       <delete tableName="GNUOB_ROLES" />
+      <delete tableName="GNUOB_POSTAL_CODES" />
       <loadData tableName="GNUOB_PERMISSIONS" file="src/main/resources/liquibase/test/GNUOB_PERMISSIONS.csv">
          <column name="ID" type="NUMERIC" />
          <column name="VERSION" type="NUMERIC" />
@@ -191,6 +192,22 @@
          <column name="GNUOB_OPTIONS_ID" type="NUMERIC" />
          <column name="sub_options_ID" type="NUMERIC" />
       </loadData>
+      <loadData tableName="GNUOB_POSTAL_CODES" file="src/main/resources/liquibase/test/BR.txt" separator=";">
+         <column name="ID" type="NUMERIC" />
+         <column name="COUNTRY_CODE" type="STRING" />
+         <column name="POSTAL_CODE" type="STRING" />
+         <column name="PLACE_NAME" type="STRING" />
+         <column name="ADMIN_NAME_1" type="STRING" />
+         <column name="ADMIN_CODE_1" type="STRING" />
+         <column name="ADMIN_NAME_2" type="STRING" />
+         <column name="ADMIN_CODE_2" type="STRING" />
+         <column name="ADMIN_NAME_3" type="STRING" />
+         <column name="ADMIN_CODE_3" type="STRING" />
+         <column name="LATITUDE" type="NUMERIC" />
+         <column name="LONGITUDE" type="NUMERIC" />
+         <column name="ACCURACY" type="STRING" />
+      </loadData>
+      <sql>UPDATE GNUOB_POSTAL_CODES SET VERSION = 0, CREATION = CURRENT_TIMESTAMP, MODIFICATION = CURRENT_TIMESTAMP;</sql>
       <sql>SET FOREIGN_KEY_CHECKS = 1;</sql>
       <rollback>
          <sql>SET FOREIGN_KEY_CHECKS = 0;</sql>
@@ -231,6 +248,7 @@
          <delete tableName="GNUOB_ROLES" />
          <delete tableName="GNUOB_SUB_OPTIONS" />
          <delete tableName="GNUOB_OPTIONS_GNUOB_SUB_OPTIONS" />
+         <delete tableName="GNUOB_POSTAL_CODES" />
          <sql>SET FOREIGN_KEY_CHECKS = 1;</sql>
       </rollback>
    </changeSet>

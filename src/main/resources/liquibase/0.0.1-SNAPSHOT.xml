@@ -471,6 +471,42 @@
          </column>
       </createTable>
    </changeSet>
+   <changeSet author="Bernard Arjan Draaisma" id="Create gnuob_postal_codes table">
+      <createTable tableName="gnuob_postal_codes">
+         <column autoIncrement="true" name="ID" type="BIGINT(19)">
+            <constraints primaryKey="true" />
+         </column>
+         <column name="CREATION" type="datetime" />
+         <column name="MODIFICATION" type="datetime" />
+         <column name="VERSION" type="INT(10)" />
+         <column name="COUNTRY_CODE" type="VARCHAR(2)">
+            <constraints nullable="false" />
+         </column>
+         <column name="POSTAL_CODE" type="VARCHAR(20)">
+            <constraints nullable="false" />
+         </column>
+         <column name="PLACE_NAME" type="VARCHAR(180)">
+            <constraints nullable="false" />
+         </column>
+         <column name="ADMIN_NAME_1" type="VARCHAR(100)">
+            <constraints nullable="false" />
+         </column>
+         <column name="ADMIN_CODE_1" type="VARCHAR(20)">
+            <constraints nullable="false" />
+         </column>
+         <column name="ADMIN_NAME_2" type="VARCHAR(100)" />
+         <column name="ADMIN_CODE_2" type="VARCHAR(20)" />
+         <column name="ADMIN_NAME_3" type="VARCHAR(100)" />
+         <column name="ADMIN_CODE_3" type="VARCHAR(20)" />
+         <column name="LATITUDE" type="DECIMAL(19, 4)">
+            <constraints nullable="false" />
+         </column>
+         <column name="LONGITUDE" type="DECIMAL(19, 4)">
+            <constraints nullable="false" />
+         </column>
+         <column name="ACCURACY" type="VARCHAR(100)" />
+      </createTable>
+   </changeSet>
    <changeSet author="Bernard Arjan Draaisma" id="1415447276727-20">
       <createTable tableName="gnuob_products">
          <column name="AMOUNT" type="DECIMAL(19, 2)">
