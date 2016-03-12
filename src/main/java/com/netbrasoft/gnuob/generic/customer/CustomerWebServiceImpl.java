@@ -1,4 +1,33 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.customer;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.COUNT_CUSTOMER_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CUSTOMER_PARAM_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CUSTOMER_WEB_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.FIND_CUSTOMER_BY_ID_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.FIND_CUSTOMER_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_WEB_SERVICE_TARGET_NAMESPACE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MERGE_CUSTOMER_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.META_DATA_PARAM_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ORDER_BY_PARAM_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAGING_PARAM_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PERSIST_CUSTOMER_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REFRESH_CUSTOMER_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_CUSTOMER_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
 
 import java.util.List;
 
@@ -10,94 +39,108 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
-import com.netbrasoft.gnuob.generic.GenericTypeWebService;
-import com.netbrasoft.gnuob.generic.OrderBy;
+import com.netbrasoft.gnuob.generic.IGenericTypeWebService;
+import com.netbrasoft.gnuob.generic.OrderByEnum;
 import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.generic.security.MetaData;
-import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
-import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeServiceImpl;
+import com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeService;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
-@WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
-@Stateless(name = CustomerWebServiceImpl.CUSTOMER_WEB_SERVICE_IMPL_NAME)
+@WebService(targetNamespace = GNUOB_WEB_SERVICE_TARGET_NAMESPACE)
+@Stateless(name = CUSTOMER_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
-public class CustomerWebServiceImpl<T extends Customer> implements GenericTypeWebService<T> {
+public class CustomerWebServiceImpl<T extends Customer> implements IGenericTypeWebService<T> {
 
-  protected static final String CUSTOMER_WEB_SERVICE_IMPL_NAME = "CustomerWebServiceImpl";
+  @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private ISecuredGenericTypeService<T> securedGenericCustomerService;
 
-  @EJB(beanName = SecuredGenericTypeServiceImpl.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
-  private transient SecuredGenericTypeService<T> securedGenericCustomerService;
+  public CustomerWebServiceImpl() {}
+
+  CustomerWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericCustomerService) {
+    this.securedGenericCustomerService = securedGenericCustomerService;
+  }
 
   @Override
-  @WebMethod(operationName = "countCustomer")
-  public long count(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "customer") final T type) {
+  @WebMethod(operationName = COUNT_CUSTOMER_OPERATION_NAME)
+  public long count(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = CUSTOMER_PARAM_NAME) final T type) {
     try {
-      return securedGenericCustomerService.count(metaData, type);
+      return securedGenericCustomerService.count(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
   @Override
-  @WebMethod(operationName = "findCustomerById")
-  public T find(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "customer") final T type) {
+  @WebMethod(operationName = FIND_CUSTOMER_BY_ID_OPERATION_NAME)
+  public T find(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = CUSTOMER_PARAM_NAME) final T type) {
     try {
-      return securedGenericCustomerService.find(metaData, type, type.getId());
+      return securedGenericCustomerService.find(credentials, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
   @Override
-  @WebMethod(operationName = "findCustomer")
-  public List<T> find(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "customer") final T type,
-      @WebParam(name = "paging") final Paging paging, @WebParam(name = "orderBy") final OrderBy orderBy) {
+  @WebMethod(operationName = FIND_CUSTOMER_OPERATION_NAME)
+  public List<T> find(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = CUSTOMER_PARAM_NAME) final T type, @WebParam(name = PAGING_PARAM_NAME) final Paging paging,
+      @WebParam(name = ORDER_BY_PARAM_NAME) final OrderByEnum orderingProperty) {
     try {
-      return securedGenericCustomerService.find(metaData, type, paging, orderBy);
+      return securedGenericCustomerService.find(credentials, type, paging, orderingProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
   @Override
-  @WebMethod(operationName = "mergeCustomer")
-  public T merge(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "customer") final T type) {
+  @WebMethod(operationName = MERGE_CUSTOMER_OPERATION_NAME)
+  public T merge(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = CUSTOMER_PARAM_NAME) final T type) {
     try {
-      return securedGenericCustomerService.merge(metaData, type);
+      return securedGenericCustomerService.merge(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
   @Override
-  @WebMethod(operationName = "persistCustomer")
-  public T persist(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "customer") final T type) {
+  @WebMethod(operationName = PERSIST_CUSTOMER_OPERATION_NAME)
+  public T persist(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = CUSTOMER_PARAM_NAME) final T type) {
     try {
-      if (type.isDetached()) {
-        return securedGenericCustomerService.merge(metaData, type);
-      }
-      securedGenericCustomerService.persist(metaData, type);
-      return type;
+      return persistMergeCustomer(credentials, type);
+    } catch (final Exception e) {
+      throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    }
+  }
+
+  private T persistMergeCustomer(final MetaData credentials, final T type) {
+    if (type.isDetached()) {
+      return securedGenericCustomerService.merge(credentials, type);
+    }
+    securedGenericCustomerService.persist(credentials, type);
+    return type;
+  }
+
+  @Override
+  @WebMethod(operationName = REFRESH_CUSTOMER_OPERATION_NAME)
+  public T refresh(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = CUSTOMER_PARAM_NAME) final T type) {
+    try {
+      return securedGenericCustomerService.refresh(credentials, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
   @Override
-  @WebMethod(operationName = "refreshCustomer")
-  public T refresh(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "customer") final T type) {
+  @WebMethod(operationName = REMOVE_CUSTOMER_OPERATION_NAME)
+  public void remove(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = CUSTOMER_PARAM_NAME) final T type) {
     try {
-      return securedGenericCustomerService.refresh(metaData, type, type.getId());
-    } catch (final Exception e) {
-      throw new GNUOpenBusinessServiceException(e.getMessage(), e);
-    }
-  }
-
-  @Override
-  @WebMethod(operationName = "removeCustomer")
-  public void remove(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "customer") final T type) {
-    try {
-      securedGenericCustomerService.remove(metaData, type);
+      securedGenericCustomerService.remove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }

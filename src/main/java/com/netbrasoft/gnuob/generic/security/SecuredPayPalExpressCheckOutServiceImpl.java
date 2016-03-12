@@ -11,7 +11,7 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Stateless(name = SecuredPayPalExpressCheckOutServiceImpl.SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME,
     mappedName = SecuredPayPalExpressCheckOutServiceImpl.SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME)
 @Interceptors(value = {AccessControl.class, AppSimonInterceptor.class})
-public class SecuredPayPalExpressCheckOutServiceImpl<T extends Order> extends PayPalExpressCheckOutServiceImpl<T> implements SecuredGenericTypeCheckOutService<T> {
+public class SecuredPayPalExpressCheckOutServiceImpl<T extends Order> extends PayPalExpressCheckOutServiceImpl<T> implements ISecuredGenericTypeCheckOutService<T> {
 
   public static final String SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME = "SecuredPayPalExpressCheckOutServiceImpl";
 

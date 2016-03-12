@@ -1,4 +1,23 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.contract;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_PARAM_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_TABLE_NAME;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,87 +31,83 @@ import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.velocity.context.Context;
 
-import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
+import com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
 import com.netbrasoft.gnuob.generic.customer.Customer;
 import com.netbrasoft.gnuob.generic.offer.Offer;
 import com.netbrasoft.gnuob.generic.order.Order;
 import com.netbrasoft.gnuob.generic.security.AbstractAccess;
 
 @Cacheable(value = true)
-@Entity(name = Contract.ENTITY)
-@Table(name = Contract.TABLE)
-@XmlRootElement(name = Contract.ENTITY)
+@Entity(name = CONTRACT_ENTITY_NAME)
+@Table(name = CONTRACT_TABLE_NAME)
+@XmlRootElement(name = CONTRACT_ENTITY_NAME)
 public class Contract extends AbstractAccess {
 
   private static final long serialVersionUID = -2215842699700777956L;
-  protected static final String ENTITY = "Contract";
-  protected static final String TABLE = "GNUOB_CONTRACTS";
 
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, optional = false, fetch = FetchType.EAGER)
+  private String contractId;
   private Customer customer;
-
-  @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER, mappedBy = "contract")
+  private Set<Offer> offers = new HashSet<Offer>();
   private Set<Order> orders = new HashSet<Order>();
 
-  @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER, mappedBy = "contract")
-  private Set<Offer> offers = new HashSet<Offer>();
+  public Contract() {}
 
-  @Column(name = "CONTRACT_ID", nullable = false)
-  private String contractId;
+  @Override
+  @Transient
+  public boolean isDetached() {
+    return isAbstractTypeDetached() || isCustomerAttached();
+  }
 
-  public Contract() {
-    // Empty constructor.
+  @Transient
+  private boolean isCustomerAttached() {
+    return customer != null && customer.isDetached();
   }
 
   @Override
-  public Context accept(final ContextVisitor visitor) {
+  public void prePersist() {
+    getContractId();
+  }
+
+  @Override
+  public void preUpdate() {
+    prePersist();
+  }
+
+  @Override
+  public Context accept(final IContextVisitor visitor) {
     return visitor.visit(this);
   }
 
-  @XmlElement(name = "contractId", required = true)
+  @XmlElement(required = true)
+  @Column(name = CONTRACT_ID_COLUMN_NAME, nullable = false)
   public String getContractId() {
-    return contractId;
+    return contractId == null || "".equals(contractId.trim()) ? contractId = UUID.randomUUID().toString() : contractId;
   }
 
-  @XmlElement(name = "customer", required = true)
+  @XmlElement(required = true)
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, optional = false,
+      fetch = FetchType.EAGER)
   public Customer getCustomer() {
     return customer;
   }
 
   @XmlTransient
+  @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER, mappedBy = CONTRACT_PARAM_NAME)
   public Set<Offer> getOffers() {
     return offers;
   }
 
   @XmlTransient
+  @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER, mappedBy = CONTRACT_PARAM_NAME)
   public Set<Order> getOrders() {
     return orders;
-  }
-
-  @Override
-  public boolean isDetached() {
-    if (customer != null && customer.isDetached()) {
-      return customer.isDetached();
-    }
-    return getId() > 0;
-  }
-
-  @Override
-  public void prePersist() {
-    if (contractId == null || "".equals(contractId.trim())) {
-      contractId = UUID.randomUUID().toString();
-    }
-  }
-
-  @Override
-  public void preUpdate() {
-    return;
   }
 
   public void setContractId(final String contractId) {
@@ -110,5 +125,4 @@ public class Contract extends AbstractAccess {
   public void setOrders(final Set<Order> orders) {
     this.orders = orders;
   }
-
 }

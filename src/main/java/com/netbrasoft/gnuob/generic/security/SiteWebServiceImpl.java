@@ -1,4 +1,33 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.security;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.COUNT_SITE_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.FIND_SITE_BY_ID_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.FIND_SITE_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_WEB_SERVICE_TARGET_NAMESPACE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MERGE_SITE_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.META_DATA_PARAM_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ORDER_BY_PARAM_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAGING_PARAM_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PERSIST_SITE_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REFRESH_SITE_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_SITE_OPERATION_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_PARAM_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_WEB_SERVICE_IMPL_NAME;
 
 import java.util.List;
 
@@ -10,70 +39,79 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
-import com.netbrasoft.gnuob.generic.GenericTypeWebService;
-import com.netbrasoft.gnuob.generic.OrderBy;
+import com.netbrasoft.gnuob.generic.IGenericTypeWebService;
+import com.netbrasoft.gnuob.generic.OrderByEnum;
 import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
-@WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
-@Stateless(name = SiteWebServiceImpl.SITE_WEB_SERVICE_IMPL_NAME)
+@WebService(targetNamespace = GNUOB_WEB_SERVICE_TARGET_NAMESPACE)
+@Stateless(name = SITE_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
-public class SiteWebServiceImpl<T extends Site> implements GenericTypeWebService<T> {
+public class SiteWebServiceImpl<T extends Site> implements IGenericTypeWebService<T> {
 
-  protected static final String SITE_WEB_SERVICE_IMPL_NAME = "SiteWebServiceImpl";
+  @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private ISecuredGenericTypeService<T> securedGenericSiteService;
 
-  @EJB(beanName = SecuredGenericTypeServiceImpl.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
-  private transient SecuredGenericTypeService<T> securedGenericSiteService;
+  public SiteWebServiceImpl() {}
+
+  SiteWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericSiteService) {
+    this.securedGenericSiteService = securedGenericSiteService;
+  }
 
   @Override
-  @WebMethod(operationName = "countSite")
-  public long count(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type) {
+  @WebMethod(operationName = COUNT_SITE_OPERATION_NAME)
+  public long count(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = SITE_PARAM_NAME) final T type) {
     try {
-      return securedGenericSiteService.count(metaData, type);
+      return securedGenericSiteService.count(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
   @Override
-  @WebMethod(operationName = "findSiteById")
-  public T find(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type) {
+  @WebMethod(operationName = FIND_SITE_BY_ID_OPERATION_NAME)
+  public T find(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = SITE_PARAM_NAME) final T type) {
     try {
-      return securedGenericSiteService.find(metaData, type, type.getId());
+      return securedGenericSiteService.find(credentials, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
   @Override
-  @WebMethod(operationName = "findSite")
-  public List<T> find(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type, @WebParam(name = "paging") final Paging paging,
-      @WebParam(name = "orderBy") final OrderBy orderBy) {
+  @WebMethod(operationName = FIND_SITE_OPERATION_NAME)
+  public List<T> find(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = SITE_PARAM_NAME) final T type, @WebParam(name = PAGING_PARAM_NAME) final Paging paging,
+      @WebParam(name = ORDER_BY_PARAM_NAME) final OrderByEnum orderingProperty) {
     try {
-      return securedGenericSiteService.find(metaData, type, paging, orderBy);
+      return securedGenericSiteService.find(credentials, type, paging, orderingProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
   @Override
-  @WebMethod(operationName = "mergeSite")
-  public T merge(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type) {
+  @WebMethod(operationName = MERGE_SITE_OPERATION_NAME)
+  public T merge(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = SITE_PARAM_NAME) final T type) {
     try {
-      return securedGenericSiteService.merge(metaData, type);
+      return securedGenericSiteService.merge(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
   @Override
-  @WebMethod(operationName = "persistSite")
-  public T persist(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type) {
+  @WebMethod(operationName = PERSIST_SITE_OPERATION_NAME)
+  public T persist(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = SITE_PARAM_NAME) final T type) {
     try {
       if (type.isDetached()) {
-        return securedGenericSiteService.merge(metaData, type);
+        return securedGenericSiteService.merge(credentials, type);
       }
-      securedGenericSiteService.persist(metaData, type);
+      securedGenericSiteService.persist(credentials, type);
       return type;
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
@@ -81,20 +119,22 @@ public class SiteWebServiceImpl<T extends Site> implements GenericTypeWebService
   }
 
   @Override
-  @WebMethod(operationName = "refreshSite")
-  public T refresh(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type) {
+  @WebMethod(operationName = REFRESH_SITE_OPERATION_NAME)
+  public T refresh(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = SITE_PARAM_NAME) final T type) {
     try {
-      return securedGenericSiteService.refresh(metaData, type, type.getId());
+      return securedGenericSiteService.refresh(credentials, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
   @Override
-  @WebMethod(operationName = "removeSite")
-  public void remove(@WebParam(name = "metaData", header = true) final MetaData metaData, @WebParam(name = "site") final T type) {
+  @WebMethod(operationName = REMOVE_SITE_OPERATION_NAME)
+  public void remove(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = SITE_PARAM_NAME) final T type) {
     try {
-      securedGenericSiteService.remove(metaData, type);
+      securedGenericSiteService.remove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }

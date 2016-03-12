@@ -1,4 +1,40 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.order;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.EXCHANGE_RATE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.FEE_AMOUNT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROSS_AMOUNT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.HOLD_DECISION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.INSTALLMENT_COUNT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAYMENT_DATE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAYMENT_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAYMENT_REQUEST_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAYMENT_STATUS_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAYMENT_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAYMENT_TYPE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PENDING_REASON_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSITION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PROTECTION_ELIGIBILITY_TYPE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REASON_CODE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SETTLE_AMOUNT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STORE_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_AMOUNT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TERMINAL_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TRANSACTION_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TRANSACTION_TYPE_COLUMN_NAME;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -10,6 +46,7 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -17,181 +54,160 @@ import javax.xml.bind.annotation.XmlTransient;
 import com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = false)
-@Entity(name = Payment.ENTITY)
-@Table(name = Payment.TABLE)
+@Entity(name = PAYMENT_ENTITY_NAME)
+@Table(name = PAYMENT_TABLE_NAME)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@XmlRootElement(name = Payment.ENTITY)
+@XmlRootElement(name = PAYMENT_ENTITY_NAME)
 public class Payment extends AbstractType {
 
   private static final long serialVersionUID = -4794906337826218748L;
-  protected static final String ENTITY = "Payment";
-  protected static final String TABLE = "GNUOB_PAYMENTS";
 
-  @Column(name = "TRANSACTION_ID", nullable = false)
+  private String exchangeRate;
+  private BigDecimal feeAmount;
+  private BigDecimal grossAmount;
+  private String holdDecision;
+  private BigInteger installmentCount;
+  private Date paymentDate;
+  private String paymentRequestId;
+  private String paymentStatus;
+  private String paymentType;
+  private String pendingReason;
+  private Integer position;
+  private String protectionEligibilityType;
+  private String reasonCode;
+  private BigDecimal settleAmount;
+  private String storeId;
+  private BigDecimal taxAmount;
+  private String terminalId;
   private String transactionId;
-
-  @Column(name = "TRANSACTION_TYPE", nullable = false)
   private String transactionType;
 
-  @Column(name = "PAYMENT_TYPE", nullable = false)
-  private String paymentType;
+  public Payment() {}
 
-  @Column(name = "GROSS_AMOUNT", nullable = false)
-  private BigDecimal grossAmount;
+  @Override
+  @Transient
+  public boolean isDetached() {
+    return isAbstractTypeDetached();
+  }
 
-  @Column(name = "FEE_AMOUNT")
-  private BigDecimal feeAmount;
+  @Override
+  public void prePersist() {}
 
-  @Column(name = "SETTLE_AMOUNT")
-  private BigDecimal settleAmount;
+  @Override
+  public void preUpdate() {}
 
-  @Column(name = "TAX_AMOUNT")
-  private BigDecimal taxAmount;
-
-  @Column(name = "EXCHANGE_RATE")
-  private String exchangeRate;
-
-  @Column(name = "PAYMENT_STATUS", nullable = false)
-  private String paymentStatus;
-
-  @Column(name = "PENDING_REASON")
-  private String pendingReason;
-
-  @Column(name = "REASON_CODE")
-  private String reasonCode;
-
-  @Column(name = "HOLD_DECISION")
-  private String holdDecision;
-
-  @Column(name = "PROTECTION_ELIGIBILITY_TYPE")
-  private String protectionEligibilityType;
-
-  @Column(name = "STORE_ID")
-  private String storeId;
-
-  @Column(name = "TERMINAL_ID")
-  private String terminalId;
-
-  @Column(name = "PAYMENT_REQUEST_ID")
-  private String paymentRequestId;
-
-  @Column(name = "PAYMENT_DATE")
-  private Date paymentDate;
-
-  @Column(name = "INSTALLMENT_COUNT")
-  private BigInteger installmentCount;
-
-  @Column(name = "POSITION")
-  private Integer position;
-
-  @XmlElement(name = "exchangeRate")
+  @XmlElement
+  @Column(name = EXCHANGE_RATE_COLUMN_NAME)
   public String getExchangeRate() {
     return exchangeRate;
   }
 
-  @XmlElement(name = "feeAmount")
+  @XmlElement
+  @Column(name = FEE_AMOUNT_COLUMN_NAME)
   public BigDecimal getFeeAmount() {
     return feeAmount;
   }
 
-  @XmlElement(name = "grossAmount", required = true)
+  @XmlElement(required = true)
+  @Column(name = GROSS_AMOUNT_COLUMN_NAME, nullable = false)
   public BigDecimal getGrossAmount() {
     return grossAmount;
   }
 
-  @XmlElement(name = "holdDecision")
+  @XmlElement
+  @Column(name = HOLD_DECISION_COLUMN_NAME)
   public String getHoldDecision() {
     return holdDecision;
   }
 
-  @XmlElement(name = "installmentCount")
+  @XmlElement
+  @Column(name = INSTALLMENT_COUNT_COLUMN_NAME)
   public BigInteger getInstallmentCount() {
     return installmentCount;
   }
 
-  @XmlElement(name = "paymentDate")
+  @XmlElement
+  @Column(name = PAYMENT_DATE_COLUMN_NAME)
   public Date getPaymentDate() {
     return paymentDate;
   }
 
-  @XmlElement(name = "paymentRequestId")
+  @XmlElement
+  @Column(name = PAYMENT_REQUEST_ID_COLUMN_NAME)
   public String getPaymentRequestId() {
     return paymentRequestId;
   }
 
-  @XmlElement(name = "paymentStatus", required = true)
+  @XmlElement(required = true)
+  @Column(name = PAYMENT_STATUS_COLUMN_NAME, nullable = false)
   public String getPaymentStatus() {
     return paymentStatus;
   }
 
-  @XmlElement(name = "paymentType", required = true)
+  @XmlElement(required = true)
+  @Column(name = PAYMENT_TYPE_COLUMN_NAME, nullable = false)
   public String getPaymentType() {
     return paymentType;
   }
 
-  @XmlElement(name = "pendingReason")
+  @XmlElement
+  @Column(name = PENDING_REASON_COLUMN_NAME)
   public String getPendingReason() {
     return pendingReason;
   }
 
   @XmlTransient
+  @Column(name = POSITION_COLUMN_NAME)
   public Integer getPosition() {
     return position;
   }
 
-  @XmlElement(name = "protectionEligibilityType")
+  @XmlElement
+  @Column(name = PROTECTION_ELIGIBILITY_TYPE_COLUMN_NAME)
   public String getProtectionEligibilityType() {
     return protectionEligibilityType;
   }
 
-  @XmlElement(name = "reasonCode")
+  @XmlElement
+  @Column(name = REASON_CODE_COLUMN_NAME)
   public String getReasonCode() {
     return reasonCode;
   }
 
-  @XmlElement(name = "settleAmount")
+  @XmlElement
+  @Column(name = SETTLE_AMOUNT_COLUMN_NAME)
   public BigDecimal getSettleAmount() {
     return settleAmount;
   }
 
-  @XmlElement(name = "storeId")
+  @XmlElement
+  @Column(name = STORE_ID_COLUMN_NAME)
   public String getStoreId() {
     return storeId;
   }
 
-  @XmlElement(name = "taxAmount")
+  @XmlElement
+  @Column(name = TAX_AMOUNT_COLUMN_NAME)
   public BigDecimal getTaxAmount() {
     return taxAmount;
   }
 
-  @XmlElement(name = "terminalId")
+  @XmlElement
+  @Column(name = TERMINAL_ID_COLUMN_NAME)
   public String getTerminalId() {
     return terminalId;
   }
 
-  @XmlElement(name = "transactionId", required = true)
+  @XmlElement(required = true)
+  @Column(name = TRANSACTION_ID_COLUMN_NAME, nullable = false)
   public String getTransactionId() {
     return transactionId;
   }
 
-  @XmlElement(name = "transactionType", required = true)
+  @XmlElement(required = true)
+  @Column(name = TRANSACTION_TYPE_COLUMN_NAME, nullable = false)
   public String getTransactionType() {
     return transactionType;
-  }
-
-  @Override
-  public boolean isDetached() {
-    return getId() > 0;
-  }
-
-  @Override
-  public void prePersist() {
-    return;
-  }
-
-  @Override
-  public void preUpdate() {
-    return;
   }
 
   public void setExchangeRate(final String exchangeRate) {

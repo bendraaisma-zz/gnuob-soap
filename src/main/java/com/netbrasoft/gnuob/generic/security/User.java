@@ -1,4 +1,37 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.security;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ACCESS_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DESCRIPTION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_ROLES_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_USERS_GNUOB_GROUPS_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_USERS_GNUOB_SITES_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_USERS_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUPS_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NAME_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_LENGTH;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_REGEX;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ROOT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITES_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static java.util.stream.Collectors.counting;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +48,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -22,129 +56,117 @@ import javax.xml.bind.annotation.XmlTransient;
 import org.apache.velocity.context.Context;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
-import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
-
-import de.rtner.security.auth.spi.SimplePBKDF2;
+import com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
 
 @Cacheable(value = true)
-@Entity(name = User.ENTITY)
-@Table(name = User.TABLE)
-@XmlRootElement(name = User.ENTITY)
+@Entity(name = USER_ENTITY_NAME)
+@Table(name = USER_TABLE_NAME)
+@XmlRootElement(name = USER_ENTITY_NAME)
 public class User extends AbstractAccess {
 
   private static final long serialVersionUID = 2439569681567208145L;
 
-  protected static final String ENTITY = "User";
-  protected static final String TABLE = "GNUOB_USERS";
-
-  @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
-  @JoinTable(name = "gnuob_users_gnuob_sites", joinColumns = {@JoinColumn(name = "GNUOB_USERS_ID", referencedColumnName = "ID")},
-      inverseJoinColumns = {@JoinColumn(name = "sites_ID", referencedColumnName = "ID")})
+  private Rule access;
+  private String description;
+  private Set<Group> groups = new HashSet<Group>();
+  private String name;
+  private String password;
+  private Set<Role> roles;
+  private Boolean root;
   private Set<Site> sites = new HashSet<Site>();
 
-  @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
-  @JoinTable(name = "gnuob_users_gnuob_groups", joinColumns = {@JoinColumn(name = "GNUOB_USERS_ID", referencedColumnName = "ID")},
-      inverseJoinColumns = {@JoinColumn(name = "groups_ID", referencedColumnName = "ID")})
-  private Set<Group> groups = new HashSet<Group>();
-
-  @Column(name = "ROOT")
-  private Boolean root;
-
-  @Column(name = "ACCESS", nullable = false)
-  @Enumerated(EnumType.STRING)
-  private Rule access;
-
-  @Column(name = "NAME", nullable = false, unique = true)
-  private String name;
-
-  @Column(name = "PASSWORD", nullable = false)
-  private String password;
-
-  @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-  @JoinTable(name = "GNUOB_ROLES", joinColumns = @JoinColumn(name = "GNUOB_USERS_ID") )
-  @Column(name = "ROLE")
-  @Enumerated(EnumType.STRING)
-  private Set<Role> roles;
-
-  @Column(name = "DESCRIPTION")
-  private String description;
-
-  public User() {
-    // Empty constructor.
-  }
+  public User() {}
 
   public User(final String name) {
     this.name = name;
   }
 
-  @Override
-  public Context accept(final ContextVisitor visitor) {
-    return visitor.visit(this);
-  }
-
-  public Rule getAccess() {
-    return access;
-  }
-
-  @XmlElement(name = "description")
-  public String getDescription() {
-    return description;
-  }
-
-  public Set<Group> getGroups() {
-    return groups;
-  }
-
-  @XmlElement(name = "name", required = true)
-  public String getName() {
-    return name;
-  }
-
-  @XmlElement(name = "password", required = true)
-  public String getPassword() {
-    return password;
-  }
-
-  public Set<Role> getRoles() {
-    return roles;
-  }
-
-  @XmlTransient
-  public Boolean getRoot() {
-    return root;
-  }
-
-  public Set<Site> getSites() {
-    return sites;
-  }
-
+  @Transient
   @Override
   public boolean isDetached() {
-    for (final Site site : sites) {
-      if (site.isDetached()) {
-        return site.isDetached();
-      }
-    }
-    for (final Group group : groups) {
-      if (group.isDetached()) {
-        return group.isDetached();
-      }
-    }
-    return getId() > 0;
+    return isAbstractTypeDetached() || isSitesDetached() || isGroupsDetached();
+  }
+
+  @Transient
+  private boolean isSitesDetached() {
+    return sites.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
+  }
+
+  @Transient
+  private boolean isGroupsDetached() {
+    return groups.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
   @Override
   public void prePersist() {
-    if (!(password.length() == 62 && password.matches("^[0-9A-F]{16}:\\d{4}:[0-9A-F]{40}"))) {
-      throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't contain a valid password, verify that the given password is valid", name));
+    if (!(password.length() == PASSWORD_LENGTH && password.matches(PASSWORD_REGEX))) {
+      throw new GNUOpenBusinessServiceException(String
+          .format("Given user [%s] doesn't contain a valid password, verify that the given password is valid", name));
     }
   }
 
   @Override
   public void preUpdate() {
-    if (!(password.length() == 62 && password.matches("^[0-9A-F]{16}:\\d{4}:[0-9A-F]{40}"))) {
-      throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't contain a valid password, verify that the given password is valid", name));
-    }
+    prePersist();
+  }
+
+  @Override
+  public Context accept(final IContextVisitor visitor) {
+    return visitor.visit(this);
+  }
+
+  @Column(name = ACCESS_COLUMN_NAME, nullable = false)
+  @Enumerated(EnumType.STRING)
+  public Rule getAccess() {
+    return access;
+  }
+
+  @XmlElement
+  @Column(name = DESCRIPTION_COLUMN_NAME)
+  public String getDescription() {
+    return description;
+  }
+
+  @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+  @JoinTable(name = GNUOB_USERS_GNUOB_GROUPS_TABLE_NAME,
+      joinColumns = {@JoinColumn(name = GNUOB_USERS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
+      inverseJoinColumns = {@JoinColumn(name = GROUPS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
+  public Set<Group> getGroups() {
+    return groups;
+  }
+
+  @XmlElement(required = true)
+  @Column(name = NAME_COLUMN_NAME, nullable = false, unique = true)
+  public String getName() {
+    return name;
+  }
+
+  @XmlElement(required = true)
+  @Column(name = PASSWORD_COLUMN_NAME, nullable = false)
+  public String getPassword() {
+    return password;
+  }
+
+  @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+  @JoinTable(name = GNUOB_ROLES_COLUMN_NAME, joinColumns = @JoinColumn(name = GNUOB_USERS_ID_COLUMN_NAME))
+  @Column(name = "ROLE")
+  @Enumerated(EnumType.STRING)
+  public Set<Role> getRoles() {
+    return roles;
+  }
+
+  @XmlTransient
+  @Column(name = ROOT_COLUMN_NAME)
+  public Boolean getRoot() {
+    return root;
+  }
+
+  @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+  @JoinTable(name = GNUOB_USERS_GNUOB_SITES_TABLE_NAME,
+      joinColumns = {@JoinColumn(name = GNUOB_USERS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
+      inverseJoinColumns = {@JoinColumn(name = SITES_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
+  public Set<Site> getSites() {
+    return sites;
   }
 
   public void setAccess(final Rule access) {
@@ -164,7 +186,7 @@ public class User extends AbstractAccess {
   }
 
   public void setPassword(final String password) {
-    this.password = new SimplePBKDF2().deriveKeyFormatted(password);
+    this.password = password;
   }
 
   public void setRoles(final Set<Role> roles) {

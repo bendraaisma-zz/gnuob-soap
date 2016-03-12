@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project
+   xmlns="http://maven.apache.org/POM/4.0.0"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
-
    <groupId>com.netbrasoft</groupId>
    <artifactId>gnuob-soap</artifactId>
    <version>0.0.4-SNAPSHOT</version>
    <packaging>war</packaging>
    <name>GNU Open Business Platform Simple Object Access Protocol</name>
    <description>GNU Open Business Platform is a open source business framework</description>
-
    <url>https://github.com/bendraaisma/gnuob-soap</url>
    <licenses>
       <license>
@@ -17,46 +18,42 @@
          <url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
       </license>
    </licenses>
-
    <repositories>
       <repository>
          <id>jitpack.io</id>
          <url>https://jitpack.io</url>
       </repository>
    </repositories>
-
    <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <version.war.plugin>2.1.1</version.war.plugin>
       <version.jboss.maven.plugin>7.4.Final</version.jboss.maven.plugin>
       <version.springframework.plugin>4.1.7.RELEASE</version.springframework.plugin>
       <version.surefire.plugin>2.10</version.surefire.plugin>
-      <version.org.apache.cxf>3.1.1</version.org.apache.cxf>
-      <version.javasimon>4.0.1</version.javasimon>
+      <version.org.apache.cxf>3.1.4</version.org.apache.cxf>
+      <version.javasimon>4.1.1</version.javasimon>
       <version.PBKDF2>1.1.1</version.PBKDF2>
       <version.picketbox>4.9.4.Final</version.picketbox>
-      <version.mockito-all>1.9.5</version.mockito-all>
+      <version.mockito-all>1.10.19</version.mockito-all>
       <version.graphene-webdriver>2.0.3.Final</version.graphene-webdriver>
+      <version.wildfly.plugin>10.0.0.Final</version.wildfly.plugin>
+      <version.jasper.report>RELEASE</version.jasper.report>
       <maven.compiler.target>1.8</maven.compiler.target>
       <maven.compiler.source>1.8</maven.compiler.source>
    </properties>
-
    <dependencyManagement>
       <dependencies>
          <dependency>
             <groupId>org.wildfly.bom</groupId>
             <artifactId>wildfly-javaee7-with-tools</artifactId>
-            <version>10.0.0.CR5</version>
+            <version>${version.wildfly.plugin}</version>
             <type>pom</type>
             <scope>import</scope>
          </dependency>
       </dependencies>
    </dependencyManagement>
-
    <dependencies>
-
       <!-- JBOSS Etc. -->
-
       <dependency>
          <groupId>org.apache.cxf</groupId>
          <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -106,9 +103,13 @@
          <artifactId>arquillian-junit-container</artifactId>
          <scope>test</scope>
       </dependency>
-
+      <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-all</artifactId>
+         <version>${version.mockito-all}</version>
+         <scope>test</scope>
+      </dependency>
       <!-- UTILS -->
-
       <dependency>
          <groupId>com.paypal</groupId>
          <artifactId>paypal-service</artifactId>
@@ -144,9 +145,7 @@
          <artifactId>PBKDF2</artifactId>
          <version>${version.PBKDF2}</version>
       </dependency>
-
       <!-- SIMON -->
-
       <dependency>
          <groupId>org.javasimon</groupId>
          <artifactId>javasimon-core</artifactId>
@@ -167,10 +166,21 @@
          <artifactId>javasimon-console-embed</artifactId>
          <version>${version.javasimon}</version>
       </dependency>
+      <!-- JASPER REPORT -->
+      <dependency>
+         <groupId>net.sf.jasperreports</groupId>
+         <artifactId>jasperreports</artifactId>
+         <version>${version.jasper.report}</version>
+      </dependency>
+      <dependency>
+         <groupId>net.sf.jasperreports</groupId>
+         <artifactId>jasperreports-fonts</artifactId>
+         <version>${version.jasper.report}</version>
+      </dependency>
    </dependencies>
-
    <build>
-      <!-- Maven will append the version to the finalName (which is the name given to the generated war, and hence the context root) -->
+      <!-- Maven will append the version to the finalName (which is the name given to the generated war, and hence the context 
+         root) -->
       <finalName>${project.artifactId}</finalName>
       <plugins>
          <plugin>
@@ -183,8 +193,8 @@
                   <manifestEntries>
                      <mode>development</mode>
                      <url>${project.url}</url>
-                     <dependencies>org.apache.cxf services, org.apache.cxf.impl,
-                        org.apache.velocity, org.apache.commons.collections</dependencies>
+                     <dependencies>org.apache.cxf services, org.apache.cxf.impl, org.apache.velocity,
+                        org.apache.commons.collections</dependencies>
                   </manifestEntries>
                   <manifest>
                      <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
@@ -223,11 +233,11 @@
          </plugin>
       </plugins>
    </build>
-
    <profiles>
       <profile>
          <!-- The default profile skips all tests, though you can tune it to run just unit tests based on a custom pattern -->
-         <!-- Seperate profiles are provided for running all tests, including Arquillian tests that execute in the specified container -->
+         <!-- Seperate profiles are provided for running all tests, including Arquillian tests that execute in the specified 
+            container -->
          <id>default</id>
          <activation>
             <activeByDefault>true</activeByDefault>
@@ -238,7 +248,7 @@
                   <artifactId>maven-surefire-plugin</artifactId>
                   <version>${version.surefire.plugin}</version>
                   <configuration>
-                     <skip>true</skip>
+                     <skip>false</skip>
                   </configuration>
                </plugin>
             </plugins>
@@ -258,7 +268,6 @@
          </dependencies>
       </profile>
    </profiles>
-
    <organization>
       <name>Netbrasoft</name>
       <url>www.netbrasoft.com</url>

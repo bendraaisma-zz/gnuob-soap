@@ -1,4 +1,33 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.customer;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ACCURACY_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ADMIN_CODE_1_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ADMIN_CODE_2_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ADMIN_CODE_3_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ADMIN_NAME_1_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ADMIN_NAME_2_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ADMIN_NAME_3_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.COUNTRY_CODE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.LATITUDE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.LONGITUDE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PLACE_NAME_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSTAL_CODE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSTAL_CODE_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSTAL_CODE_TABLE_NAME;
 
 import java.math.BigDecimal;
 
@@ -8,163 +37,118 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = false)
-@Entity(name = PostalCode.ENTITY)
-@Table(name = PostalCode.TABLE)
+@Entity(name = POSTAL_CODE_ENTITY_NAME)
+@Table(name = POSTAL_CODE_TABLE_NAME)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@XmlRootElement(name = PostalCode.ENTITY)
+@XmlRootElement(name = POSTAL_CODE_ENTITY_NAME)
 public class PostalCode extends AbstractType {
 
   private static final long serialVersionUID = -3917024445691566656L;
 
-  protected static final String ENTITY = "PostalCode";
-
-  protected static final String TABLE = "GNUOB_POSTAL_CODES";
-
-  /**
-   * ISO country code, 2 characters.
-   */
-  @Column(name = "COUNTRY_CODE", nullable = false)
+  private String accuracy;
+  private String adminCode1;
+  private String adminCode2;
+  private String adminCode3;
+  private String adminName1;
+  private String adminName2;
+  private String adminName3;
   private String countryCode;
-
-  @Column(name = "POSTAL_CODE", nullable = false)
+  private BigDecimal latitude;
+  private BigDecimal longitude;
+  private String placeName;
   private String postalCode;
 
-  @Column(name = "PLACE_NAME", nullable = false)
-  private String placeName;
+  public PostalCode() {}
 
-  /**
-   * 1. Order subdivision (state) varchar(100).
-   */
-  @Column(name = "ADMIN_NAME_1", nullable = false)
-  private String adminName1;
+  @Override
+  @Transient
+  public boolean isDetached() {
+    return isAbstractTypeDetached();
+  }
 
-  /**
-   * 1. Order subdivision (state) varchar(20).
-   */
-  @Column(name = "ADMIN_CODE_1", nullable = false)
-  private String adminCode1;
+  @Override
+  public void prePersist() {}
 
-  /**
-   * 2. Order subdivision (state) varchar(100).
-   */
-  @Column(name = "ADMIN_NAME_2")
-  private String adminName2;
+  @Override
+  public void preUpdate() {}
 
-  /**
-   * 2. Order subdivision (state) varchar(20).
-   */
-  @Column(name = "ADMIN_CODE_2")
-  private String adminCode2;
-
-  /**
-   * 3. Order subdivision (state) varchar(100).
-   */
-  @Column(name = "ADMIN_NAME_3")
-  private String adminName3;
-
-  /**
-   * 3. Order subdivision (state) varchar(20).
-   */
-  @Column(name = "ADMIN_CODE_3")
-  private String adminCode3;
-
-  /**
-   * Estimated latitude (wgs84).
-   */
-  @Column(name = "LATITUDE", nullable = false)
-  private BigDecimal latitude;
-
-  /**
-   * Estimated longitude (wgs84).
-   */
-  @Column(name = "LONGITUDE", nullable = false)
-  private BigDecimal longitude;
-
-  /**
-   * Accuracy of lat/lng from 1=estimated to 6=centroid.
-   */
-  @Column(name = "ACCURACY")
-  private String accuracy;
-
-  @XmlElement(name = "accuracy")
+  @XmlElement
+  @Column(name = ACCURACY_COLUMN_NAME)
   public String getAccuracy() {
     return accuracy;
   }
 
-  @XmlElement(name = "adminCode1", required = true)
+  @XmlElement(required = true)
+  @Column(name = ADMIN_CODE_1_COLUMN_NAME, nullable = false)
   public String getAdminCode1() {
     return adminCode1;
   }
 
-  @XmlElement(name = "adminCode2")
+  @XmlElement
+  @Column(name = ADMIN_CODE_2_COLUMN_NAME)
   public String getAdminCode2() {
     return adminCode2;
   }
 
-  @XmlElement(name = "adminCode3")
+  @XmlElement
+  @Column(name = ADMIN_CODE_3_COLUMN_NAME)
   public String getAdminCode3() {
     return adminCode3;
   }
 
-  @XmlElement(name = "adminName1", required = true)
+  @XmlElement(required = true)
+  @Column(name = ADMIN_NAME_1_COLUMN_NAME, nullable = false)
   public String getAdminName1() {
     return adminName1;
   }
 
-  @XmlElement(name = "adminName2")
+  @XmlElement
+  @Column(name = ADMIN_NAME_2_COLUMN_NAME)
   public String getAdminName2() {
     return adminName2;
   }
 
-  @XmlElement(name = "adminName3")
+  @XmlElement
+  @Column(name = ADMIN_NAME_3_COLUMN_NAME)
   public String getAdminName3() {
     return adminName3;
   }
 
-  @XmlElement(name = "countryCode", required = true)
+  @XmlElement(required = true)
+  @Column(name = COUNTRY_CODE_COLUMN_NAME, nullable = false)
   public String getCountryCode() {
     return countryCode;
   }
 
-  @XmlElement(name = "latitude", required = true)
+  @XmlElement(required = true)
+  @Column(name = LATITUDE_COLUMN_NAME, nullable = false)
   public BigDecimal getLatitude() {
     return latitude;
   }
 
-  @XmlElement(name = "longitude", required = true)
+  @XmlElement(required = true)
+  @Column(name = LONGITUDE_COLUMN_NAME, nullable = false)
   public BigDecimal getLongitude() {
     return longitude;
   }
 
-  @XmlElement(name = "placeName", required = true)
+  @XmlElement(required = true)
+  @Column(name = PLACE_NAME_COLUMN_NAME, nullable = false)
   public String getPlaceName() {
     return placeName;
   }
 
-  @XmlElement(name = "postalCode", required = true)
+  @XmlElement(required = true)
+  @Column(name = POSTAL_CODE_COLUMN_NAME, nullable = false)
   public String getPostalCode() {
     return postalCode;
-  }
-
-  @Override
-  public boolean isDetached() {
-    return getId() > 0;
-  }
-
-  @Override
-  public void prePersist() {
-    return;
-  }
-
-  @Override
-  public void preUpdate() {
-    return;
   }
 
   public void setAccuracy(final String accuracy) {

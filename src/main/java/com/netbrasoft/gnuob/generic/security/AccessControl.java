@@ -1,4 +1,20 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.security;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GENERIC_TYPE_SERVICE_IMPL_NAME;
 
 import javax.ejb.EJB;
 import javax.interceptor.AroundInvoke;
@@ -10,9 +26,8 @@ import org.javasimon.Split;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.AbstractType;
-import com.netbrasoft.gnuob.generic.GenericTypeService;
-import com.netbrasoft.gnuob.generic.GenericTypeServiceImpl;
-import com.netbrasoft.gnuob.generic.OrderBy;
+import com.netbrasoft.gnuob.generic.IGenericTypeService;
+import com.netbrasoft.gnuob.generic.OrderByEnum;
 import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.generic.Parameter;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
@@ -30,19 +45,20 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
     }
   }
 
-  @EJB(beanName = GenericTypeServiceImpl.GENERIC_TYPE_SERVICE_IMPL_NAME)
-  private GenericTypeService<A> accessTypeService;
+  @EJB(beanName = GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private IGenericTypeService<A> accessTypeService;
 
-  @EJB(beanName = GenericTypeServiceImpl.GENERIC_TYPE_SERVICE_IMPL_NAME)
-  private GenericTypeService<U> userServiceImpl;
+  @EJB(beanName = GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private IGenericTypeService<U> userServiceImpl;
 
-  @EJB(beanName = GenericTypeServiceImpl.GENERIC_TYPE_SERVICE_IMPL_NAME)
-  private GenericTypeService<S> siteServiceImpl;
+  @EJB(beanName = GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private IGenericTypeService<S> siteServiceImpl;
 
   @SuppressWarnings("unchecked")
   private Subject authenticateSubject(final InvocationContext ctx) {
 
-    final Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.authenticateSubject").start();
+    final Split split =
+        SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.authenticateSubject").start();
 
     final SimplePBKDF2 simplePBKDF2 = new SimplePBKDF2();
 
@@ -58,29 +74,38 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
 
         // Check site credentials
         if (siteServiceImpl.count((S) new Site(metaData.getSite())) > 0) {
-          subject.site = siteServiceImpl.find((S) new Site(metaData.getSite()), new Paging(-1, -1), OrderBy.NONE).get(0);
+          subject.site = siteServiceImpl
+              .find((S) new Site(metaData.getSite()), Paging.getInstance(-1, -1), OrderByEnum.NONE).get(0);
         } else {
           split.stop();
-          throw new GNUOpenBusinessServiceException(String.format("Given site [%s] doesn't have the right access, verify that the given site has access", metaData.getSite()));
+          throw new GNUOpenBusinessServiceException(
+              String.format("Given site [%s] doesn't have the right access, verify that the given site has access",
+                  metaData.getSite()));
         }
 
         // Check user credentials
         if (userServiceImpl.count((U) new User(metaData.getUser())) > 0) {
-          subject.user = userServiceImpl.find((U) new User(metaData.getUser()), new Paging(-1, -1), OrderBy.NONE).get(0);
+          subject.user = userServiceImpl
+              .find((U) new User(metaData.getUser()), Paging.getInstance(-1, -1), OrderByEnum.NONE).get(0);
 
           if (!simplePBKDF2.verifyKeyFormatted(subject.user.getPassword(), metaData.getPassword())) {
             split.stop();
-            throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access", metaData.getUser()));
+            throw new GNUOpenBusinessServiceException(
+                String.format("Given user [%s] doesn't have the right access, verify that the given user has access",
+                    metaData.getUser()));
           }
         } else {
           split.stop();
-          throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access, verify that the given user has access", metaData.getUser()));
+          throw new GNUOpenBusinessServiceException(
+              String.format("Given user [%s] doesn't have the right access, verify that the given user has access",
+                  metaData.getUser()));
         }
 
         // Check user contain access to site.
         if (!subject.user.getSites().contains(subject.site)) {
           split.stop();
-          throw new GNUOpenBusinessServiceException(String.format("Given user [%s] doesn't have the right access for site [%s], verify that the given user have access to the site",
+          throw new GNUOpenBusinessServiceException(String.format(
+              "Given user [%s] doesn't have the right access for site [%s], verify that the given user have access to the site",
               subject.user.getName(), subject.site.getName()));
         }
       }
@@ -92,7 +117,8 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
 
   private Object createOperationAccess(final Subject subject, final InvocationContext ctx) {
 
-    final Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.createOperationAccess").start();
+    final Split split =
+        SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.createOperationAccess").start();
 
     // Checks if the method contains a access, or type object as parameter
     for (final Object parameter : ctx.getParameters()) {
@@ -100,8 +126,9 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
       // Check if user has create access.
       if (!subject.user.getAccess().getOperations().contains(Operation.CREATE)) {
         split.stop();
-        throw new GNUOpenBusinessServiceException(
-            String.format("Given user [%s] doesn't have the right access to create this entity object, verify that the given user has access", subject.user.getName()));
+        throw new GNUOpenBusinessServiceException(String.format(
+            "Given user [%s] doesn't have the right access to create this entity object, verify that the given user has access",
+            subject.user.getName()));
       }
 
       // Parameter is instance of Access?
@@ -125,8 +152,9 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
         // Check if user has create access.
         if (parameter instanceof AbstractType && !subject.user.getAccess().getOperations().contains(Operation.CREATE)) {
           split.stop();
-          throw new GNUOpenBusinessServiceException(
-              String.format("Given user [%s] doesn't have the right access to create this entity object, verify that the given user has access", subject.user.getName()));
+          throw new GNUOpenBusinessServiceException(String.format(
+              "Given user [%s] doesn't have the right access to create this entity object, verify that the given user has access",
+              subject.user.getName()));
         }
       }
     }
@@ -142,7 +170,8 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
 
   private Object deleteOperationAccess(final Subject subject, final InvocationContext ctx) {
 
-    final Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.deleteOperationAccess").start();
+    final Split split =
+        SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.deleteOperationAccess").start();
 
     // Checks if the method contains a access, or type object as parameter
     for (final Object parameter : ctx.getParameters()) {
@@ -150,8 +179,9 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
       // Check if user has delete access.
       if (!subject.user.getAccess().getOperations().contains(Operation.DELETE)) {
         split.stop();
-        throw new GNUOpenBusinessServiceException(
-            String.format("Given user [%s] doesn't have the right access to delete this entity object, verify that the given user has access", subject.user.getName()));
+        throw new GNUOpenBusinessServiceException(String.format(
+            "Given user [%s] doesn't have the right access to delete this entity object, verify that the given user has access",
+            subject.user.getName()));
       }
 
       // Parameter is instance of Access?
@@ -190,7 +220,8 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
 
             // Check if it has delete access based on
             // others permission
-            if (!groupOwnership && access.getPermission() != null && access.getPermission().getOthers().getOperations().contains(Operation.DELETE)) {
+            if (!groupOwnership && access.getPermission() != null
+                && access.getPermission().getOthers().getOperations().contains(Operation.DELETE)) {
               othersOwnership = true;
             }
           }
@@ -204,8 +235,9 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
             ((AbstractAccess) parameter).setModification(access.getModification());
           } else {
             split.stop();
-            throw new GNUOpenBusinessServiceException(
-                String.format("Given user [%s] doesn't have the right access to delete this entity object, verify that the given user has access", subject.user.getName()));
+            throw new GNUOpenBusinessServiceException(String.format(
+                "Given user [%s] doesn't have the right access to delete this entity object, verify that the given user has access",
+                subject.user.getName()));
           }
         } else {
           split.stop();
@@ -216,8 +248,9 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
         // Check if user has delete access.
         if (parameter instanceof AbstractType && !subject.user.getAccess().getOperations().contains(Operation.DELETE)) {
           split.stop();
-          throw new GNUOpenBusinessServiceException(
-              String.format("Given user [%s] doesn't have the right access to delete this entity object, verify that the given user has access", subject.user.getName()));
+          throw new GNUOpenBusinessServiceException(String.format(
+              "Given user [%s] doesn't have the right access to delete this entity object, verify that the given user has access",
+              subject.user.getName()));
         }
       }
     }
@@ -275,13 +308,15 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
 
   private Object readOperationAccess(final Subject subject, final InvocationContext ctx) {
 
-    final Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.readOperationAccess").start();
+    final Split split =
+        SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.readOperationAccess").start();
 
     // Check if user has read access.
     if (!subject.user.getAccess().getOperations().contains(Operation.READ)) {
       split.stop();
-      throw new GNUOpenBusinessServiceException(
-          String.format("Given user [%s] doesn't have the right access to read this entity object, verify that the given user has access", subject.user.getName()));
+      throw new GNUOpenBusinessServiceException(String.format(
+          "Given user [%s] doesn't have the right access to read this entity object, verify that the given user has access",
+          subject.user.getName()));
     }
 
     enableAccessFilter(subject);
@@ -302,7 +337,8 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
 
   private Object updateOperationAccess(final Subject subject, final InvocationContext ctx) {
 
-    final Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.updateOperationAccess").start();
+    final Split split =
+        SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.security.AccessControl.updateOperationAccess").start();
 
     // Checks if the method contains a access object as parameter
     for (final Object parameter : ctx.getParameters()) {
@@ -313,8 +349,9 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
         // Check if user has update access.
         if (!subject.user.getAccess().getOperations().contains(Operation.UPDATE)) {
           split.stop();
-          throw new GNUOpenBusinessServiceException(
-              String.format("Given user [%s] doesn't have the right access to update this entity object, verify that the given user has access", subject.user.getName()));
+          throw new GNUOpenBusinessServiceException(String.format(
+              "Given user [%s] doesn't have the right access to update this entity object, verify that the given user has access",
+              subject.user.getName()));
         }
 
         // Cast parameter to a access object and get id.
@@ -350,7 +387,8 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
 
             // Check if it has update access based on
             // others permission
-            if (!groupOwnership && access.getPermission() != null && access.getPermission().getOthers().getOperations().contains(Operation.UPDATE)) {
+            if (!groupOwnership && access.getPermission() != null
+                && access.getPermission().getOthers().getOperations().contains(Operation.UPDATE)) {
               othersOwnership = true;
             }
           }
@@ -364,8 +402,9 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
             ((AbstractAccess) parameter).setModification(access.getModification());
           } else {
             split.stop();
-            throw new GNUOpenBusinessServiceException(
-                String.format("Given user [%s] doesn't have the right access to update this entity object, verify that the given user has access", subject.user.getName()));
+            throw new GNUOpenBusinessServiceException(String.format(
+                "Given user [%s] doesn't have the right access to update this entity object, verify that the given user has access",
+                subject.user.getName()));
           }
 
         } else {
@@ -377,8 +416,9 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
         // Check if user has update access.
         if (parameter instanceof AbstractType && !subject.user.getAccess().getOperations().contains(Operation.UPDATE)) {
           split.stop();
-          throw new GNUOpenBusinessServiceException(
-              String.format("Given user [%s] doesn't have the right access to update this entity object, verify that the given user has access", subject.user.getName()));
+          throw new GNUOpenBusinessServiceException(String.format(
+              "Given user [%s] doesn't have the right access to update this entity object, verify that the given user has access",
+              subject.user.getName()));
         }
       }
     }

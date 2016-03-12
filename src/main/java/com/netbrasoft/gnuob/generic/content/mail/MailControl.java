@@ -1,14 +1,50 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.content.mail;
 
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.COM_NETBRASOFT_GNUOB_GENERIC_CONTENT_CONTENT_RESOURCE_LOADER;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.COM_NETBRASOFT_GNUOB_GENERIC_CONTENT_MAIL_MAIL_CONTROL_SEND_MAIL_ACTION;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_CACHE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_CLASS;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_DESCRIPTION;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_MODIFICATION_CHECK_INTERVAL;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_PASSWORD;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_SITE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_USER;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTEXT_VISITOR_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.FALSE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GENERIC_TYPE_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.JAVA_JBOSS_MAIL_DEFAULT;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MODIFICATION_CHECK_INTERVAL_IN_SEC;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.RESOURCE_LOADER;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TEXT_HTML_CHARSET_UTF_8;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.UNCHECKED_VALUE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VELOCITY_CONTENT_RESOURCE_LOADER;
+
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
-import javax.mail.Address;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -21,110 +57,116 @@ import org.javasimon.SimonManager;
 import org.javasimon.Split;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
-import com.netbrasoft.gnuob.generic.GenericTypeService;
-import com.netbrasoft.gnuob.generic.GenericTypeServiceImpl;
-import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
-import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitorImpl;
-import com.netbrasoft.gnuob.generic.content.mail.Mail.Body;
-import com.netbrasoft.gnuob.generic.content.mail.Mail.Subject;
+import com.netbrasoft.gnuob.generic.IGenericTypeService;
+import com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
 import com.netbrasoft.gnuob.generic.security.AbstractAccess;
 import com.netbrasoft.gnuob.generic.security.MetaData;
 
 public class MailControl<A extends AbstractAccess> {
 
-  @EJB(beanName = GenericTypeServiceImpl.GENERIC_TYPE_SERVICE_IMPL_NAME)
-  private transient GenericTypeService<A> accessTypeService;
+  @EJB(beanName = GENERIC_TYPE_SERVICE_IMPL_NAME)
+  private IGenericTypeService<A> accessTypeService;
 
-  @EJB(beanName = ContextVisitorImpl.CONTEXT_VISITOR_IMPL_NAME)
-  private transient ContextVisitor contextVisitor;
+  @EJB(beanName = CONTEXT_VISITOR_IMPL_NAME)
+  private IContextVisitor contextVisitor;
 
-  @Resource(mappedName = "java:jboss/mail/Default")
+  @Resource(mappedName = JAVA_JBOSS_MAIL_DEFAULT)
   private Session session;
 
-  private MetaData getMetaData(final InvocationContext ctx) {
-    final MetaData metaData = new MetaData();
+  public MailControl() {}
 
-    for (final Object parameter : ctx.getParameters()) {
-      if (parameter instanceof MetaData) {
-        return (MetaData) parameter;
-      }
-    }
-    return metaData;
+  MailControl(final IGenericTypeService<A> accessTypeService, final IContextVisitor contextVisitor,
+      final Session session) {
+    this.accessTypeService = accessTypeService;
+    this.contextVisitor = contextVisitor;
+    this.session = session;
   }
 
   @AroundInvoke
   public Object intercept(final InvocationContext ctx) {
+    final Split split =
+        SimonManager.getStopwatch(COM_NETBRASOFT_GNUOB_GENERIC_CONTENT_MAIL_MAIL_CONTROL_SEND_MAIL_ACTION).start();
     try {
-      final MailAction mailAcction = ctx.getMethod().getAnnotation(MailAction.class);
-      final Object object = ctx.proceed();
-
-      if (mailAcction != null) {
-        if (!mailAcction.operation().equals(Mail.NO_MAIL)) {
-          processMailAction(ctx, getMetaData(ctx), mailAcction.operation().getSubject(), mailAcction.operation().getBody());
-        }
-        return object;
-      } else {
-        throw new GNUOpenBusinessServiceException("Mail action is not set on this method, no mail can be sent.");
-      }
+      final Object proces = ctx.proceed();
+      processMail(getCredentials(ctx), getAttachedTyp(ctx), getMailAction(ctx));
+      return proces;
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException("Mail action exception.", e);
+    } finally {
+      split.stop();
     }
   }
 
-  private void processMailAction(final InvocationContext ctx, final MetaData metadata, final Subject subject, final Body body) {
+  private MetaData getCredentials(final InvocationContext ctx) {
+    return (MetaData) Arrays.asList(ctx.getParameters()).stream().filter(e -> e instanceof MetaData).findFirst().get();
+  }
+
+  private A getAttachedTyp(final InvocationContext ctx) {
+    return accessTypeService.find(getType(ctx), getType(ctx).getId(), LockModeType.NONE);
+  }
+
+  @SuppressWarnings(UNCHECKED_VALUE)
+  private A getType(final InvocationContext ctx) {
+    return (A) Arrays.asList(ctx.getParameters()).stream().filter(e -> e instanceof AbstractAccess).findFirst().get();
+  }
+
+  private MailAction getMailAction(final InvocationContext ctx) {
+    return ctx.getMethod().getAnnotation(MailAction.class);
+  }
+
+  private void processMail(final MetaData credentials, final A type, final MailAction mailAction) {
     try {
-      final Split split = SimonManager.getStopwatch("com.netbrasoft.gnuob.generic.content.mail.MailControl.sendMailAction").start();
-
-      for (final Object parameter : ctx.getParameters()) {
-
-        if (parameter instanceof AbstractAccess) {
-
-          final long accessId = ((AbstractAccess) parameter).getId();
-
-          @SuppressWarnings("unchecked")
-          final AbstractAccess access = accessTypeService.find((A) parameter, accessId, LockModeType.NONE);
-
-          if (access != null) {
-
-            final VelocityEngine ve = new VelocityEngine();
-            final StringWriter subjectWriter = new StringWriter();
-            final StringWriter bodyWriter = new StringWriter();
-
-            ve.addProperty("resource.loader", "content");
-            ve.addProperty("content.resource.loader.class", "com.netbrasoft.gnuob.generic.content.ContentResourceLoader");
-            ve.addProperty("content.resource.loader.description", "Velocity Content Resource Loader");
-            ve.addProperty("content.resource.loader.cache", "false");
-            ve.addProperty("content.resource.loader.modificationCheckInterval", "60");
-            ve.addProperty("content.resource.loader.user", metadata.getUser());
-            ve.addProperty("content.resource.loader.password", metadata.getPassword());
-            ve.addProperty("content.resource.loader.site", metadata.getSite());
-            ve.init();
-
-            final Template subjectTemplate = ve.getTemplate(subject.getTemplate());
-            final Template bodyTemplate = ve.getTemplate(body.getTemplate());
-            final Message message = new MimeMessage(session);
-            final Address from = new InternetAddress(System.getProperty("gnuob." + metadata.getSite() + ".email"));
-            // TODO BD: get email from customer object using a email adress template.
-            final Address[] to = new InternetAddress[] {new InternetAddress("bendraaisma@gmail.com")};
-
-            subjectTemplate.merge(access.accept(contextVisitor), subjectWriter);
-            bodyTemplate.merge(access.accept(contextVisitor), bodyWriter);
-
-            message.setFrom(from);
-            message.setRecipients(Message.RecipientType.TO, to);
-            message.setSentDate(new Date());
-            message.setSubject(subjectWriter.toString());
-            message.setContent(bodyWriter.toString(), "text/html;charset=UTF-8");
-            Transport.send(message);
-            split.stop();
-          } else {
-            split.stop();
-            throw new GNUOpenBusinessServiceException("Enity object is not found in database, no mail wil be sent.");
-          }
-        }
+      if (mailAction.operation().isEnabled()) {
+        Transport.send(mail(credentials, type, mailAction));
       }
     } catch (final Exception e) {
-      throw new GNUOpenBusinessServiceException("Mail action exception during processing.", e);
+      throw new GNUOpenBusinessServiceException("Mail control exception during email processing.", e);
     }
+  }
+
+  private Message mail(final MetaData credentials, final A type, final MailAction mailAction)
+      throws MessagingException {
+    final VelocityEngine templateEngine = initTemplateEngine(credentials);
+    final Message message = new MimeMessage(session);
+    final InternetAddress internetAddress = new InternetAddress("bendraaisma@gmail.com");
+    message.setSentDate(new Date());
+    message.setFrom(new InternetAddress(System.getProperty("gnuob." + credentials.getSite() + ".email")));
+    message.setRecipients(Message.RecipientType.TO, new InternetAddress[] {internetAddress});
+    message.setSubject(getSubject(type, mailAction, templateEngine));
+    message.setContent(getContent(type, mailAction, templateEngine), TEXT_HTML_CHARSET_UTF_8);
+    return message;
+  }
+
+  private VelocityEngine initTemplateEngine(final MetaData credentials) {
+    final VelocityEngine ve = new VelocityEngine(createVelocityEngineProperties(credentials));
+    ve.init();
+    return ve;
+  }
+
+  private Properties createVelocityEngineProperties(final MetaData credentials) {
+    final Properties properties = new Properties();
+    properties.setProperty(RESOURCE_LOADER, CONTENT);
+    properties.setProperty(CONTENT_RESOURCE_LOADER_CLASS, COM_NETBRASOFT_GNUOB_GENERIC_CONTENT_CONTENT_RESOURCE_LOADER);
+    properties.setProperty(CONTENT_RESOURCE_LOADER_DESCRIPTION, VELOCITY_CONTENT_RESOURCE_LOADER);
+    properties.setProperty(CONTENT_RESOURCE_LOADER_CACHE, FALSE);
+    properties.setProperty(CONTENT_RESOURCE_LOADER_MODIFICATION_CHECK_INTERVAL, MODIFICATION_CHECK_INTERVAL_IN_SEC);
+    properties.setProperty(CONTENT_RESOURCE_LOADER_USER, credentials.getUser());
+    properties.setProperty(CONTENT_RESOURCE_LOADER_PASSWORD, credentials.getPassword());
+    properties.setProperty(CONTENT_RESOURCE_LOADER_SITE, credentials.getSite());
+    return properties;
+  }
+
+  private String getSubject(final A type, final MailAction mailAction, final VelocityEngine templateEngine) {
+    return fillTemplate(type, templateEngine.getTemplate(mailAction.operation().getSubject().getTemplate()));
+  }
+
+  private String getContent(final A type, final MailAction mailAction, final VelocityEngine templateEngine) {
+    return fillTemplate(type, templateEngine.getTemplate(mailAction.operation().getBody().getTemplate()));
+  }
+
+  private String fillTemplate(final A type, final Template template) {
+    final StringWriter stringWriter = new StringWriter();
+    template.merge(type.accept(contextVisitor), stringWriter);
+    return stringWriter.toString();
   }
 }

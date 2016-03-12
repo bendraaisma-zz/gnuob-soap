@@ -11,7 +11,7 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Stateless(name = SecuredPagseguroCheckOutServiceImpl.SECURED_PAGSEGURO_CHECK_OUT_SERVICE_IMPL_NAME,
     mappedName = SecuredPagseguroCheckOutServiceImpl.SECURED_PAGSEGURO_CHECK_OUT_SERVICE_IMPL_NAME)
 @Interceptors(value = {AccessControl.class, AppSimonInterceptor.class})
-public class SecuredPagseguroCheckOutServiceImpl<T extends Order> extends PagseguroCheckOutServiceImpl<T> implements SecuredGenericTypeCheckOutService<T> {
+public class SecuredPagseguroCheckOutServiceImpl<T extends Order> extends PagseguroCheckOutServiceImpl<T> implements ISecuredGenericTypeCheckOutService<T> {
 
   public static final String SECURED_PAGSEGURO_CHECK_OUT_SERVICE_IMPL_NAME = "SecuredPagseguroCheckOutServiceImpl";
 

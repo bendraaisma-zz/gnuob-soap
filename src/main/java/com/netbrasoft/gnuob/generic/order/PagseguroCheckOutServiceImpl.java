@@ -1,4 +1,25 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.order;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.EMAIL_PROPERTY;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_SITE_REDIRECT_PROPERTY_VALUE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PRODUCTION_TOKEN_PROPERTY;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SANDBOX_TOKEN_PROPERTY;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -32,19 +53,7 @@ import br.com.uol.pagseguro.service.NotificationService;
 import br.com.uol.pagseguro.service.TransactionSearchService;
 import br.com.uol.pagseguro.service.checkout.CheckoutService;
 
-public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutService<O> {
-
-  private static final String PAGSEGURO_EMAIL_PROPERTY = "pagseguro.email";
-  private static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY = "pagseguro.production.token";
-  private static final String PAGSEGURO_SANDBOX_TOKEN_PROPERTY = "pagseguro.sandbox.token";
-  private static final String GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE = "http://localhost:8080/pagseguro_notifications";
-  private static final String GNUOB_SITE_REDIRECT_PROPERTY_VALUE = "http://localhost:8080/confirmation.html";
-  private static final String PAGSEGURO_EMAIL_PROPERTY_VALUE = "badraaisma@msn.com";
-  private static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE = "NO_PRODUCTION_TOKEN";
-  private static final String PAGSEGURO_SANDBOX_TOKEN_PROPERTY_VALUE = "007D4EDFF33042E79EC7B8039B5F7FCE";
-  private static final String EMAIL_PROPERTY = System.getProperty(PAGSEGURO_EMAIL_PROPERTY, PAGSEGURO_EMAIL_PROPERTY_VALUE);
-  private static final String PRODUCTION_TOKEN_PROPERTY = System.getProperty(PAGSEGURO_PRODUCTION_TOKEN_PROPERTY, PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE);
-  private static final String SANDBOX_TOKEN_PROPERTY = System.getProperty(PAGSEGURO_SANDBOX_TOKEN_PROPERTY, PAGSEGURO_SANDBOX_TOKEN_PROPERTY_VALUE);
+public class PagseguroCheckOutServiceImpl<O extends Order> implements ICheckOutService<O> {
 
   public PagseguroCheckOutServiceImpl() {
     if (!PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE.equals(PRODUCTION_TOKEN_PROPERTY)) {
@@ -52,12 +61,14 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
     }
   }
 
-  private String createCheckoutRequest(final Checkout checkout) throws PagSeguroServiceException, ParserConfigurationException, SAXException, IOException {
+  private String createCheckoutRequest(final Checkout checkout)
+      throws PagSeguroServiceException, ParserConfigurationException, SAXException, IOException {
     final String email = EMAIL_PROPERTY;
     final String productionToken = PRODUCTION_TOKEN_PROPERTY;
     final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
 
-    return CheckoutService.createCheckoutRequest(new AccountCredentials(email, productionToken, sandboxToken), checkout, false);
+    return CheckoutService.createCheckoutRequest(new AccountCredentials(email, productionToken, sandboxToken), checkout,
+        false);
   }
 
   private Address doAddress(final com.netbrasoft.gnuob.generic.customer.Address address) {
@@ -90,10 +101,13 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
 
     // set checkout request fields.
     final Checkout checkout = new Checkout();
-    checkout.setCurrency(Currency.valueOf(NumberFormat.getCurrencyInstance(Locale.getDefault()).getCurrency().getCurrencyCode()));
+    checkout.setCurrency(
+        Currency.valueOf(NumberFormat.getCurrencyInstance(Locale.getDefault()).getCurrency().getCurrencyCode()));
     checkout.setExtraAmount(order.getExtraAmount().setScale(2));
-    checkout.setNotificationURL(System.getProperty("gnuob." + order.getSite().getName() + ".pagsegure.notification", GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE));
-    checkout.setRedirectURL(System.getProperty("gnuob." + order.getSite().getName() + ".pagseguro.redirect", GNUOB_SITE_REDIRECT_PROPERTY_VALUE));
+    checkout.setNotificationURL(System.getProperty("gnuob." + order.getSite().getName() + ".pagsegure.notification",
+        GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE));
+    checkout.setRedirectURL(System.getProperty("gnuob." + order.getSite().getName() + ".pagseguro.redirect",
+        GNUOB_SITE_REDIRECT_PROPERTY_VALUE));
     checkout.setReference(order.getOrderId());
 
     // set checkout shipping request details field..
@@ -324,7 +338,8 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
     final String productionToken = PRODUCTION_TOKEN_PROPERTY;
     final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
 
-    return NotificationService.checkTransaction(new AccountCredentials(email, productionToken, sandboxToken), order.getNotificationId());
+    return NotificationService.checkTransaction(new AccountCredentials(email, productionToken, sandboxToken),
+        order.getNotificationId());
   }
 
   private Transaction searchByOrderTransactionId(final O order) throws PagSeguroServiceException {
@@ -332,6 +347,7 @@ public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutSe
     final String productionToken = PRODUCTION_TOKEN_PROPERTY;
     final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
 
-    return TransactionSearchService.searchByCode(new AccountCredentials(email, productionToken, sandboxToken), order.getTransactionId());
+    return TransactionSearchService.searchByCode(new AccountCredentials(email, productionToken, sandboxToken),
+        order.getTransactionId());
   }
 }

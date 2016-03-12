@@ -1,4 +1,24 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CREATION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MODIFICATION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VERSION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -22,40 +42,10 @@ public abstract class AbstractType implements Serializable {
 
   private static final long serialVersionUID = 7895247154381678321L;
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "ID")
-  private long id;
-
-  @Version
-  @Column(name = "VERSION")
-  private int version;
-
-  @Column(name = "CREATION")
   private Timestamp creation;
-
-  @Column(name = "MODIFICATION")
+  private long id;
   private Timestamp modification;
-
-  @XmlTransient
-  public Timestamp getCreation() {
-    return creation;
-  }
-
-  @XmlAttribute(name = "id", required = false)
-  public long getId() {
-    return id;
-  }
-
-  @XmlTransient
-  public Timestamp getModification() {
-    return modification;
-  }
-
-  @XmlAttribute(name = "version", required = false)
-  public int getVersion() {
-    return version;
-  }
+  private int version;
 
   @Transient
   public abstract boolean isDetached();
@@ -77,6 +67,40 @@ public abstract class AbstractType implements Serializable {
   protected void preUpdateType() {
     modification = new Timestamp(System.currentTimeMillis());
     preUpdate();
+  }
+
+  @XmlTransient
+  // FIXME Change Timestamp for LocalDateTime
+  @Column(name = CREATION_COLUMN_NAME)
+  public Timestamp getCreation() {
+    return creation;
+  }
+
+  @XmlAttribute
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = ID_COLUMN_NAME)
+  public long getId() {
+    return id;
+  }
+
+  @XmlTransient
+  // FIXME Change Timestamp for LocalDateTime
+  @Column(name = MODIFICATION_COLUMN_NAME)
+  public Timestamp getModification() {
+    return modification;
+  }
+
+  @XmlAttribute
+  @Version
+  @Column(name = VERSION_COLUMN_NAME)
+  public int getVersion() {
+    return version;
+  }
+
+  @Transient
+  public boolean isAbstractTypeDetached() {
+    return id > ZERO;
   }
 
   public void setCreation(final Timestamp creation) {

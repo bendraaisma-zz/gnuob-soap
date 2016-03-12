@@ -1,4 +1,34 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.customer;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ADDRESS_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ADDRESS_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CITY_NAME_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.COMPLEMENT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.COUNTRY_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.COUNTRY_NAME_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DISTRICT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.INTERNATIONAL_STATE_AND_CITY_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.INTERNATIONAL_STREET_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NUMBER_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PHONE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSTAL_CODE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STATE_OR_PROVINCE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STREET1_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STREET2_COLUMN_NAME;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -6,145 +36,125 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = false)
-@Entity(name = Address.ENTITY)
-@Table(name = Address.TABLE)
+@Entity(name = ADDRESS_ENTITY_NAME)
+@Table(name = ADDRESS_TABLE_NAME)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@XmlRootElement(name = Address.ENTITY)
+@XmlRootElement(name = ADDRESS_ENTITY_NAME)
 public class Address extends AbstractType {
 
   private static final long serialVersionUID = 1448149897957104670L;
 
-  protected static final String ENTITY = "Address";
-
-  protected static final String TABLE = "GNUOB_ADDRESSES";
-
-  @Column(name = "INTERNATIONAL_STATE_AND_CITY")
+  private String cityName;
+  private String complement;
+  private String country;
+  private String countryName;
+  private String district;
   private String internationalStateAndCity;
-
-  @Column(name = "INTERNATIONAL_STREET")
   private String internationalStreet;
-
-  @Column(name = "STREET1", nullable = false)
+  private String number;
+  private String phone;
+  private String postalCode;
+  private String stateOrProvince;
   private String street1;
-
-  @Column(name = "STREET2")
   private String street2;
 
-  @Column(name = "NUMBER")
-  private String number;
+  public Address() {}
 
-  @Column(name = "COMPLEMENT")
-  private String complement;
-
-  @Column(name = "DISTRICT")
-  private String district;
-
-  @Column(name = "CITY_NAME", nullable = false)
-  private String cityName;
-
-  @Column(name = "STATE_OR_PROVINCE", nullable = false)
-  private String stateOrProvince;
-
-  @Column(name = "POSTAL_CODE", nullable = false)
-  private String postalCode;
-
-  @Column(name = "COUNTRY", nullable = false)
-  private String country;
-
-  @Column(name = "COUNTRY_NAME")
-  private String countryName;
-
-  @Column(name = "PHONE")
-  private String phone;
-
-  public Address() {
-    // Empty constructor.
+  @Override
+  @Transient
+  public boolean isDetached() {
+    return isAbstractTypeDetached();
   }
 
-  @XmlElement(name = "cityName", required = true)
+  @Override
+  public void prePersist() {}
+
+  @Override
+  public void preUpdate() {}
+
+  @XmlElement(required = true)
+  @Column(name = CITY_NAME_COLUMN_NAME, nullable = false)
   public String getCityName() {
     return cityName;
   }
 
-  @XmlElement(name = "complement")
+  @XmlElement
+  @Column(name = COMPLEMENT_COLUMN_NAME)
   public String getComplement() {
     return complement;
   }
 
-  @XmlElement(name = "country", required = true)
+  @XmlElement(required = true)
+  @Column(name = COUNTRY_COLUMN_NAME, nullable = false)
   public String getCountry() {
     return country;
   }
 
-  @XmlElement(name = "countryName")
+  @XmlElement
+  @Column(name = COUNTRY_NAME_COLUMN_NAME)
   public String getCountryName() {
     return countryName;
   }
 
-  @XmlElement(name = "district")
+  @XmlElement
+  @Column(name = DISTRICT_COLUMN_NAME)
   public String getDistrict() {
     return district;
   }
 
-  @XmlElement(name = "internationalStateAndCity")
+  @XmlElement
+  @Column(name = INTERNATIONAL_STATE_AND_CITY_COLUMN_NAME)
   public String getInternationalStateAndCity() {
     return internationalStateAndCity;
   }
 
-  @XmlElement(name = "internationalStreet")
+  @XmlElement
+  @Column(name = INTERNATIONAL_STREET_COLUMN_NAME)
   public String getInternationalStreet() {
     return internationalStreet;
   }
 
-  @XmlElement(name = "number")
+  @XmlElement
+  @Column(name = NUMBER_COLUMN_NAME)
   public String getNumber() {
     return number;
   }
 
-  @XmlElement(name = "phone")
+  @XmlElement
+  @Column(name = PHONE_COLUMN_NAME)
   public String getPhone() {
     return phone;
   }
 
-  @XmlElement(name = "postalCode", required = true)
+  @XmlElement(required = true)
+  @Column(name = POSTAL_CODE_COLUMN_NAME, nullable = false)
   public String getPostalCode() {
     return postalCode;
   }
 
-  @XmlElement(name = "stateOrProvince", required = true)
+  @XmlElement(required = true)
+  @Column(name = STATE_OR_PROVINCE_COLUMN_NAME, nullable = false)
   public String getStateOrProvince() {
     return stateOrProvince;
   }
 
-  @XmlElement(name = "street1", required = true)
+  @XmlElement(required = true)
+  @Column(name = STREET1_COLUMN_NAME, nullable = false)
   public String getStreet1() {
     return street1;
   }
 
-  @XmlElement(name = "street2")
+  @XmlElement
+  @Column(name = STREET2_COLUMN_NAME)
   public String getStreet2() {
     return street2;
-  }
-
-  @Override
-  public boolean isDetached() {
-    return getId() > 0;
-  }
-
-  @Override
-  public void prePersist() {
-    return;
-  }
-
-  @Override
-  public void preUpdate() {
-    return;
   }
 
   public void setCityName(final String cityName) {

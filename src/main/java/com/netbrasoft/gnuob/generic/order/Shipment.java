@@ -1,4 +1,23 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.order;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NOT_SPECIFIED;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_TYPE_COLUMN_NAME;
 
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -8,6 +27,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -15,52 +35,47 @@ import com.netbrasoft.gnuob.generic.AbstractType;
 import com.netbrasoft.gnuob.generic.customer.Address;
 
 @Cacheable(value = false)
-@Entity(name = Shipment.ENTITY)
-@Table(name = Shipment.TABLE)
+@Entity(name = SHIPMENT_ENTITY_NAME)
+@Table(name = SHIPMENT_TABLE_NAME)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@XmlRootElement(name = Shipment.ENTITY)
+@XmlRootElement(name = SHIPMENT_ENTITY_NAME)
 public class Shipment extends AbstractType {
 
   private static final long serialVersionUID = 7122488386952479304L;
-  protected static final String ENTITY = "Shipment";
-  protected static final String TABLE = "GNUOB_SHIPMENTS";
 
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true, optional = false)
   private Address address;
+  private String shipmentType;
 
-  @Column(name = "SHIPMENT_TYPE")
-  private String shipmentType = "NOT_SPECIFIED";
+  public Shipment() {}
 
-  public Shipment() {
-    // Empty constructor.
+  @Override
+  @Transient
+  public boolean isDetached() {
+    return isAbstractTypeDetached() || isAddressDetached();
   }
 
-  @XmlElement(name = "address", required = true)
+  @Transient
+  private boolean isAddressDetached() {
+    return address != null && address.isDetached();
+  }
+
+  @Override
+  public void prePersist() {}
+
+  @Override
+  public void preUpdate() {}
+
+  @XmlElement(required = true)
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
+      orphanRemoval = true, optional = false)
   public Address getAddress() {
     return address;
   }
 
-  @XmlElement(name = "shipmentType")
+  @XmlElement
+  @Column(name = SHIPMENT_TYPE_COLUMN_NAME)
   public String getShipmentType() {
-    return shipmentType;
-  }
-
-  @Override
-  public boolean isDetached() {
-    if (address != null && address.isDetached()) {
-      return address.isDetached();
-    }
-    return getId() > 0;
-  }
-
-  @Override
-  public void prePersist() {
-    return;
-  }
-
-  @Override
-  public void preUpdate() {
-    return;
+    return shipmentType == null || "".equals(shipmentType.trim()) ? shipmentType = NOT_SPECIFIED : shipmentType;
   }
 
   public void setAddress(final Address address) {

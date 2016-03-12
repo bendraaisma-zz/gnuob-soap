@@ -1,4 +1,30 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.order;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_INVOICES_GNUOB_PAYMENTS_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_INVOICES_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.INVOICE_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.INVOICE_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.INVOICE_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAYMENTS_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSITION_ASC;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.START_POSITION_VALUE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static java.util.stream.Collectors.counting;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +43,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -24,80 +51,75 @@ import com.netbrasoft.gnuob.generic.AbstractType;
 import com.netbrasoft.gnuob.generic.customer.Address;
 
 @Cacheable(value = false)
-@Entity(name = Invoice.ENTITY)
-@Table(name = Invoice.TABLE)
+@Entity(name = INVOICE_ENTITY_NAME)
+@Table(name = INVOICE_TABLE_NAME)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@XmlRootElement(name = Invoice.ENTITY)
+@XmlRootElement(name = INVOICE_ENTITY_NAME)
 public class Invoice extends AbstractType {
 
   private static final long serialVersionUID = 5609152324488531802L;
-  protected static final String ENTITY = "Invoice";
-  protected static final String TABLE = "GNUOB_INVOICES";
 
-  @Column(name = "INVOICE_ID", nullable = false)
+  private Address address;
   private String invoiceId;
-
-  @OrderBy("position asc")
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true, fetch = FetchType.EAGER)
-  @JoinTable(name = "gnuob_invoices_gnuob_payments", joinColumns = {@JoinColumn(name = "GNUOB_INVOICES_ID", referencedColumnName = "ID")},
-      inverseJoinColumns = {@JoinColumn(name = "payments_ID", referencedColumnName = "ID")})
   private Set<Payment> payments = new HashSet<Payment>();
 
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH}, orphanRemoval = true, optional = false)
-  private Address address;
-
-  public Invoice() {
-    // Empty constructor.
-  }
-
-  @XmlElement(name = "address", required = true)
-  public Address getAddress() {
-    return address;
-  }
-
-  @XmlElement(name = "invoiceId")
-  public String getInvoiceId() {
-    return invoiceId;
-  }
-
-  @XmlElement(name = "payments")
-  public Set<Payment> getPayments() {
-    return payments;
-  }
+  public Invoice() {}
 
   @Override
+  @Transient
   public boolean isDetached() {
-    if (address != null && address.isDetached()) {
-      return address.isDetached();
-    }
-    for (final Payment payment : payments) {
-      if (payment.isDetached()) {
-        return payment.isDetached();
-      }
-    }
-    return getId() > 0;
+    return isAbstractTypeDetached() || isAddressDetached() || isPaymentsDetached();
   }
 
-  private void positionPayments() {
-    int index = 0;
+  @Transient
+  private boolean isAddressDetached() {
+    return address != null && address.isDetached();
+  }
 
-    for (final Payment payment : payments) {
-      payment.setPosition(Integer.valueOf(index++));
-    }
+  @Transient
+  private boolean isPaymentsDetached() {
+    return payments.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
   @Override
   public void prePersist() {
-    if (invoiceId == null || "".equals(invoiceId.trim())) {
-      invoiceId = UUID.randomUUID().toString();
-    }
-
-    positionPayments();
+    getInvoiceId();
+    reinitAllPositionPaymentss(START_POSITION_VALUE);
   }
 
   @Override
   public void preUpdate() {
-    positionPayments();
+    reinitAllPositionPaymentss(START_POSITION_VALUE);
+  }
+
+  private void reinitAllPositionPaymentss(int startPositionValue) {
+    for (final Payment payment : payments) {
+      payment.setPosition(Integer.valueOf(startPositionValue++));
+    }
+  }
+
+  @XmlElement(required = true)
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
+      orphanRemoval = true, optional = false)
+  public Address getAddress() {
+    return address;
+  }
+
+  @XmlElement
+  @Column(name = INVOICE_ID_COLUMN_NAME, nullable = false)
+  public String getInvoiceId() {
+    return invoiceId == null || "".equals(invoiceId.trim()) ? invoiceId = UUID.randomUUID().toString() : invoiceId;
+  }
+
+  @XmlElement
+  @OrderBy(POSITION_ASC)
+  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
+      orphanRemoval = true, fetch = FetchType.EAGER)
+  @JoinTable(name = GNUOB_INVOICES_GNUOB_PAYMENTS_TABLE_NAME,
+      joinColumns = {@JoinColumn(name = GNUOB_INVOICES_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
+      inverseJoinColumns = {@JoinColumn(name = PAYMENTS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
+  public Set<Payment> getPayments() {
+    return payments;
   }
 
   public void setAddress(final Address address) {

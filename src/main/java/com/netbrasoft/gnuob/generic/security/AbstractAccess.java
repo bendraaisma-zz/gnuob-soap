@@ -1,4 +1,22 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.security;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ACCESS_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ACCESS_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ACTIVE_COLUMN_NAME;
 
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -19,11 +37,11 @@ import org.hibernate.annotations.Filters;
 import org.hibernate.annotations.ParamDef;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
-import com.netbrasoft.gnuob.generic.content.contexts.ContextElement;
+import com.netbrasoft.gnuob.generic.content.contexts.IContextElement;
 
 @Cacheable(value = true)
-@Entity(name = AbstractAccess.ENTITY)
-@Table(name = AbstractAccess.TABLE)
+@Entity(name = ACCESS_ENTITY_NAME)
+@Table(name = ACCESS_TABLE_NAME)
 @Inheritance(strategy = InheritanceType.JOINED)
 // @formatter:off
 @FilterDefs({@FilterDef(name = AbstractAccess.NFQ1, parameters = @ParamDef(name = "userId", type = "long") ),
@@ -48,53 +66,44 @@ import com.netbrasoft.gnuob.generic.content.contexts.ContextElement;
         + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OTHERS != 'NONE_ACCESS')) "),
     @Filter(name = AbstractAccess.NFQ2, condition = "site_ID = :siteId")})
 // @formatter:on
-public abstract class AbstractAccess extends AbstractType implements ContextElement {
+public abstract class AbstractAccess extends AbstractType implements IContextElement {
+
+  public static final String NFQ1 = "filterByUserIdOrGroupIdsOrOtherIds";
+  public static final String NFQ2 = "filterBySiteId";
 
   private static final long serialVersionUID = 6374088000216811805L;
 
-  protected static final String ENTITY = "Access";
-
-  public static final String TABLE = "GNUOB_ACCESS";
-
-  public static final String NFQ1 = "filterByUserIdOrGroupIdsOrOtherIds";
-
-  public static final String NFQ2 = "filterBySiteId";
-
-  @ManyToOne(cascade = {CascadeType.PERSIST}, optional = false)
+  private Boolean active = true;
+  private Group group;
+  private User owner;
+  private Permission permission;
   private Site site;
 
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, optional = false)
-  private Permission permission;
-
-  @ManyToOne(cascade = {CascadeType.PERSIST}, optional = false)
-  private User owner;
-
-  @ManyToOne(cascade = {CascadeType.PERSIST}, optional = false)
-  private Group group;
-
-  @Column(name = "ACTIVE", nullable = false)
-  private Boolean active = true;
-
-  @XmlElement(name = "active", required = true, defaultValue = "true")
+  @XmlElement(required = true/* , defaultValue = "true" */)
+  @Column(name = ACTIVE_COLUMN_NAME, nullable = false)
   public Boolean getActive() {
     return active;
   }
 
   @XmlTransient
+  @ManyToOne(cascade = {CascadeType.PERSIST}, optional = false)
   public Group getGroup() {
     return group;
   }
 
   @XmlTransient
+  @ManyToOne(cascade = {CascadeType.PERSIST}, optional = false)
   public User getOwner() {
     return owner;
   }
 
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, optional = false)
   public Permission getPermission() {
     return permission;
   }
 
   @XmlTransient
+  @ManyToOne(cascade = {CascadeType.PERSIST}, optional = false)
   public Site getSite() {
     return site;
   }

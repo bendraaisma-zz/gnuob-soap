@@ -1,4 +1,53 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.product;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.AMOUNT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.BESTSELLERS_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENTS_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DESCRIPTION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DISCOUNT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_PRODUCTS_GNUOB_CONTENTS_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_PRODUCTS_GNUOB_OPTIONS_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_PRODUCTS_GNUOB_SUB_CATEGORIES_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_PRODUCTS_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_HEIGHT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_HEIGHT_UNIT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_LENGTH_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_LENGTH_UNIT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_URL_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_WEIGHT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_WEIGHT_UNIT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_WIDTH_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_WIDTH_UNIT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.LATEST_COLLECTION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NAME_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NUMBER_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OPTIONS_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSITION_ASC;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PRODUCT_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PRODUCT_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.RATING_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.RECOMMENDED_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPPING_COST_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.START_POSITION_VALUE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_CATEGORIES_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static java.util.stream.Collectors.counting;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -17,6 +66,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -24,282 +74,259 @@ import org.apache.velocity.context.Context;
 
 import com.netbrasoft.gnuob.generic.category.SubCategory;
 import com.netbrasoft.gnuob.generic.content.Content;
-import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitor;
+import com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
 import com.netbrasoft.gnuob.generic.security.AbstractAccess;
 
 @Cacheable(value = true)
-@Entity(name = Product.ENTITY)
-@Table(name = Product.TABLE)
-@XmlRootElement(name = Product.ENTITY)
+@Entity(name = PRODUCT_ENTITY_NAME)
+@Table(name = PRODUCT_TABLE_NAME)
+@XmlRootElement(name = PRODUCT_ENTITY_NAME)
 public class Product extends AbstractAccess {
 
   private static final long serialVersionUID = -5818453495081202563L;
-  protected static final String ENTITY = "Product";
-  protected static final String TABLE = "GNUOB_PRODUCTS";
 
-  @OrderBy("position asc")
-  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-  @JoinTable(name = "gnuob_products_gnuob_sub_categories", joinColumns = {@JoinColumn(name = "GNUOB_PRODUCTS_ID", referencedColumnName = "ID")},
-      inverseJoinColumns = {@JoinColumn(name = "subCategories_ID", referencedColumnName = "ID")})
-  private Set<SubCategory> subCategories = new LinkedHashSet<SubCategory>();
-
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH}, optional = false)
-  private Stock stock;
-
-  @OrderBy("position asc")
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-  @JoinTable(name = "gnuob_products_gnuob_contents", joinColumns = {@JoinColumn(name = "GNUOB_PRODUCTS_ID", referencedColumnName = "ID")},
-      inverseJoinColumns = {@JoinColumn(name = "contents_ID", referencedColumnName = "ID")})
-  private Set<Content> contents = new HashSet<Content>();
-
-  @OrderBy("position asc")
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
-  @JoinTable(name = "gnuob_products_gnuob_options", joinColumns = {@JoinColumn(name = "GNUOB_PRODUCTS_ID", referencedColumnName = "ID")},
-      inverseJoinColumns = {@JoinColumn(name = "options_ID", referencedColumnName = "ID")})
-  private Set<Option> options = new HashSet<Option>();
-
-  @Column(name = "NAME", nullable = false)
-  private String name;
-
-  @Column(name = "DESCRIPTION", nullable = false)
-  private String description;
-
-  @Column(name = "NUMBER", nullable = false)
-  private String number;
-
-  @Column(name = "AMOUNT", nullable = false)
   private BigDecimal amount;
-
-  @Column(name = "TAX", nullable = false)
+  private Boolean bestsellers;
+  private Set<Content> contents = new HashSet<Content>();
+  private String description;
+  private BigDecimal discount;
+  private BigDecimal itemHeight;
+  private String itemHeightUnit;
+  private BigDecimal itemLength;
+  private String itemLengthUnit;
+  private String itemUrl;
+  private BigDecimal itemWeight;
+  private String itemWeightUnit;
+  private BigDecimal itemWidth;
+  private String itemWidthUnit;
+  private Boolean latestCollection;
+  private String name;
+  private String number;
+  private Set<Option> options = new HashSet<Option>();
+  private Integer rating;
+  private Boolean recommended;
+  private BigDecimal shippingCost;
+  private Stock stock;
+  private Set<SubCategory> subCategories = new LinkedHashSet<SubCategory>();
   private BigDecimal tax;
 
-  @Column(name = "SHIPPING_COST", nullable = false)
-  private BigDecimal shippingCost;
-
-  @Column(name = "ITEM_WEIGHT", nullable = false)
-  private BigDecimal itemWeight;
-
-  @Column(name = "ITEM_WEIGHT_UNIT")
-  private String itemWeightUnit;
-
-  @Column(name = "ITEM_LENGTH")
-  private BigDecimal itemLength;
-
-  @Column(name = "ITEM_LENGTH_UNIT")
-  private String itemLengthUnit;
-
-  @Column(name = "ITEM_WIDTH")
-  private BigDecimal itemWidth;
-
-  @Column(name = "ITEM_WIDTH_UNIT")
-  private String itemWidthUnit;
-
-  @Column(name = "ITEM_HEIGHT")
-  private BigDecimal itemHeight;
-
-  @Column(name = "ITEM_HEIGHT_UNIT")
-  private String itemHeightUnit;
-
-  @Column(name = "ITEM_URL")
-  private String itemUrl;
-
-  @Column(name = "RECOMMENDED")
-  private Boolean recommended;
-
-  @Column(name = "RATING")
-  private Integer rating;
-
-  @Column(name = "DISCOUNT", nullable = false)
-  private BigDecimal discount;
-
-  @Column(name = "BESTSELLERS")
-  private Boolean bestsellers;
-
-  @Column(name = "LATEST_COLLECTION")
-  private Boolean latestCollection;
+  public Product() {}
 
   @Override
-  public Context accept(final ContextVisitor visitor) {
-    return visitor.visit(this);
-  }
-
-  @XmlElement(name = "amount", required = true)
-  public BigDecimal getAmount() {
-    return amount;
-  }
-
-  @XmlElement(name = "bestsellers")
-  public Boolean getBestsellers() {
-    return bestsellers;
-  }
-
-  public Set<Content> getContents() {
-    return contents;
-  }
-
-  @XmlElement(name = "description", required = true)
-  public String getDescription() {
-    return description;
-  }
-
-  @XmlElement(name = "discount", required = true)
-  public BigDecimal getDiscount() {
-    return discount;
-  }
-
-  @XmlElement(name = "itemHeight")
-  public BigDecimal getItemHeight() {
-    return itemHeight;
-  }
-
-  @XmlElement(name = "itemHeightUnit")
-  public String getItemHeightUnit() {
-    return itemHeightUnit;
-  }
-
-  @XmlElement(name = "itemLength")
-  public BigDecimal getItemLength() {
-    return itemLength;
-  }
-
-  @XmlElement(name = "itemLengthUnit")
-  public String getItemLengthUnit() {
-    return itemLengthUnit;
-  }
-
-  @XmlElement(name = "itemUrl")
-  public String getItemUrl() {
-    return itemUrl;
-  }
-
-  @XmlElement(name = "itemWeight", required = true)
-  public BigDecimal getItemWeight() {
-    return itemWeight;
-  }
-
-  @XmlElement(name = "itemWeightUnit")
-  public String getItemWeightUnit() {
-    return itemWeightUnit;
-  }
-
-  @XmlElement(name = "itemWidth")
-  public BigDecimal getItemWidth() {
-    return itemWidth;
-  }
-
-  @XmlElement(name = "itemWidthUnit")
-  public String getItemWidthUnit() {
-    return itemWidthUnit;
-  }
-
-  @XmlElement(name = "latestCollection")
-  public Boolean getLatestCollection() {
-    return latestCollection;
-  }
-
-  @XmlElement(name = "name", required = true)
-  public String getName() {
-    return name;
-  }
-
-  @XmlElement(name = "number", required = true)
-  public String getNumber() {
-    return number;
-  }
-
-  public Set<Option> getOptions() {
-    return options;
-  }
-
-  @XmlElement(name = "rating")
-  public Integer getRating() {
-    return rating;
-  }
-
-  @XmlElement(name = "recommended")
-  public Boolean getRecommended() {
-    return recommended;
-  }
-
-  @XmlElement(name = "shippingCost", required = true)
-  public BigDecimal getShippingCost() {
-    return shippingCost;
-  }
-
-  @XmlElement(name = "stock", required = true)
-  public Stock getStock() {
-    return stock;
-  }
-
-  public Set<SubCategory> getSubCategories() {
-    return subCategories;
-  }
-
-  @XmlElement(name = "tax", required = true)
-  public BigDecimal getTax() {
-    return tax;
-  }
-
-  @Override
+  @Transient
   public boolean isDetached() {
-    if (stock.isDetached()) {
-      return stock.isDetached();
-    }
-    for (final SubCategory subCategory : subCategories) {
-      if (subCategory.isDetached()) {
-        return subCategory.isDetached();
-      }
-    }
-    for (final Content content : contents) {
-      if (content.isDetached()) {
-        return content.isDetached();
-      }
-    }
-    for (final Option option : options) {
-      if (option.isDetached()) {
-        return option.isDetached();
-      }
-    }
-
-    return getId() > 0;
+    return isAbstractTypeDetached() || isStockDetached() || isSubCategoriesDetached() || isContentsDetached()
+        || isOptionsDetached();
   }
 
-  private void positionContents() {
-    int position = 0;
-
-    for (final Content content : contents) {
-      content.setPosition(Integer.valueOf(position++));
-    }
+  @Transient
+  private boolean isStockDetached() {
+    return stock != null && stock.isDetached();
   }
 
-  private void positionOptions() {
-    int position = 0;
-
-    for (final Option option : options) {
-      option.setPosition(Integer.valueOf(position++));
-    }
+  @Transient
+  private boolean isSubCategoriesDetached() {
+    return subCategories.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
-  private void positionSubCategories() {
-    int position = 0;
+  @Transient
+  private boolean isContentsDetached() {
+    return contents.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
+  }
 
-    for (final SubCategory subCategory : subCategories) {
-      subCategory.setPosition(Integer.valueOf(position++));
-    }
+  @Transient
+  private boolean isOptionsDetached() {
+    return options.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
   @Override
   public void prePersist() {
-    positionSubCategories();
-    positionContents();
-    positionOptions();
+    reinitAllPositionContents(START_POSITION_VALUE);
+    reinitAllPositionCOptions(START_POSITION_VALUE);
+    reinitAllPositionSubCategories(START_POSITION_VALUE);
   }
 
   @Override
   public void preUpdate() {
-    positionSubCategories();
-    positionContents();
-    positionOptions();
+    prePersist();
+  }
+
+  private void reinitAllPositionContents(int startPositionValue) {
+    for (final Content content : contents) {
+      content.setPosition(Integer.valueOf(startPositionValue++));
+    }
+  }
+
+  private void reinitAllPositionCOptions(int startPositionValue) {
+    for (final Option option : options) {
+      option.setPosition(Integer.valueOf(startPositionValue++));
+    }
+  }
+
+  private void reinitAllPositionSubCategories(int startPositionValue) {
+    for (final SubCategory subCategory : subCategories) {
+      subCategory.setPosition(Integer.valueOf(startPositionValue++));
+    }
+  }
+
+  @Override
+  public Context accept(final IContextVisitor visitor) {
+    return visitor.visit(this);
+  }
+
+  @XmlElement(required = true)
+  @Column(name = AMOUNT_COLUMN_NAME, nullable = false)
+  public BigDecimal getAmount() {
+    return amount;
+  }
+
+  @XmlElement
+  @Column(name = BESTSELLERS_COLUMN_NAME)
+  public Boolean getBestsellers() {
+    return bestsellers;
+  }
+
+  @OrderBy(POSITION_ASC)
+  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+  @JoinTable(name = GNUOB_PRODUCTS_GNUOB_CONTENTS_TABLE_NAME,
+      joinColumns = {@JoinColumn(name = GNUOB_PRODUCTS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
+      inverseJoinColumns = {@JoinColumn(name = CONTENTS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
+  public Set<Content> getContents() {
+    return contents;
+  }
+
+  @XmlElement(required = true)
+  @Column(name = DESCRIPTION_COLUMN_NAME, nullable = false)
+  public String getDescription() {
+    return description;
+  }
+
+  @XmlElement(required = true)
+  @Column(name = DISCOUNT_COLUMN_NAME, nullable = false)
+  public BigDecimal getDiscount() {
+    return discount;
+  }
+
+  @XmlElement
+  @Column(name = ITEM_HEIGHT_COLUMN_NAME)
+  public BigDecimal getItemHeight() {
+    return itemHeight;
+  }
+
+  @XmlElement
+  @Column(name = ITEM_HEIGHT_UNIT_COLUMN_NAME)
+  public String getItemHeightUnit() {
+    return itemHeightUnit;
+  }
+
+  @XmlElement
+  @Column(name = ITEM_LENGTH_COLUMN_NAME)
+  public BigDecimal getItemLength() {
+    return itemLength;
+  }
+
+  @XmlElement
+  @Column(name = ITEM_LENGTH_UNIT_COLUMN_NAME)
+  public String getItemLengthUnit() {
+    return itemLengthUnit;
+  }
+
+  @XmlElement
+  @Column(name = ITEM_URL_COLUMN_NAME)
+  public String getItemUrl() {
+    return itemUrl;
+  }
+
+  @XmlElement(required = true)
+  @Column(name = ITEM_WEIGHT_COLUMN_NAME, nullable = false)
+  public BigDecimal getItemWeight() {
+    return itemWeight;
+  }
+
+  @XmlElement
+  @Column(name = ITEM_WEIGHT_UNIT_COLUMN_NAME)
+  public String getItemWeightUnit() {
+    return itemWeightUnit;
+  }
+
+  @XmlElement
+  @Column(name = ITEM_WIDTH_COLUMN_NAME)
+  public BigDecimal getItemWidth() {
+    return itemWidth;
+  }
+
+  @XmlElement
+  @Column(name = ITEM_WIDTH_UNIT_COLUMN_NAME)
+  public String getItemWidthUnit() {
+    return itemWidthUnit;
+  }
+
+  @XmlElement
+  @Column(name = LATEST_COLLECTION_COLUMN_NAME)
+  public Boolean getLatestCollection() {
+    return latestCollection;
+  }
+
+  @XmlElement(required = true)
+  @Column(name = NAME_COLUMN_NAME, nullable = false)
+  public String getName() {
+    return name;
+  }
+
+  @XmlElement(required = true)
+  @Column(name = NUMBER_COLUMN_NAME, nullable = false)
+  public String getNumber() {
+    return number;
+  }
+
+  @OrderBy(POSITION_ASC)
+  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
+      fetch = FetchType.EAGER)
+  @JoinTable(name = GNUOB_PRODUCTS_GNUOB_OPTIONS_TABLE_NAME,
+      joinColumns = {@JoinColumn(name = GNUOB_PRODUCTS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
+      inverseJoinColumns = {@JoinColumn(name = OPTIONS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
+  public Set<Option> getOptions() {
+    return options;
+  }
+
+  @XmlElement
+  @Column(name = RATING_COLUMN_NAME)
+  public Integer getRating() {
+    return rating;
+  }
+
+  @XmlElement
+  @Column(name = RECOMMENDED_COLUMN_NAME)
+  public Boolean getRecommended() {
+    return recommended;
+  }
+
+  @XmlElement(required = true)
+  @Column(name = SHIPPING_COST_COLUMN_NAME, nullable = false)
+  public BigDecimal getShippingCost() {
+    return shippingCost;
+  }
+
+  @XmlElement(required = true)
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
+      optional = false)
+  public Stock getStock() {
+    return stock;
+  }
+
+  @OrderBy(POSITION_ASC)
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+  @JoinTable(name = GNUOB_PRODUCTS_GNUOB_SUB_CATEGORIES_TABLE_NAME,
+      joinColumns = {@JoinColumn(name = GNUOB_PRODUCTS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
+      inverseJoinColumns = {@JoinColumn(name = SUB_CATEGORIES_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
+  public Set<SubCategory> getSubCategories() {
+    return subCategories;
+  }
+
+  @XmlElement(required = true)
+  @Column(name = TAX_COLUMN_NAME, nullable = false)
+  public BigDecimal getTax() {
+    return tax;
   }
 
   public void setAmount(final BigDecimal amount) {

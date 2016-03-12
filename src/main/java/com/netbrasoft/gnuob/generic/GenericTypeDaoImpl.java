@@ -1,4 +1,22 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GENERIC_TYPE_DAO_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PRIMARY_UNIT_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.UNCHECKED_VALUE;
 
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -11,55 +29,12 @@ import org.hibernate.Session;
 
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
-@Stateless(name = GenericTypeDaoImpl.GENERIC_TYPE_DAO_IMPL_NAME)
+@Stateless(name = GENERIC_TYPE_DAO_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
-public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
+public class GenericTypeDaoImpl<T> implements IGenericTypeDao<T> {
 
-  protected static final String GENERIC_TYPE_DAO_IMPL_NAME = "GenericTypeDaoImpl";
-
-  @PersistenceContext(unitName = "primary")
+  @PersistenceContext(unitName = PRIMARY_UNIT_NAME)
   private EntityManager entityManager;
-
-  public GenericTypeDaoImpl() {
-    // Empty constructor.
-  }
-
-  @Override
-  public boolean contains(final T type) {
-    return entityManager.contains(type);
-  }
-
-  @Override
-  public void disableFilter(final String filterName) {
-    final Session session = getDelegate();
-    session.disableFilter(filterName);
-  }
-
-  @Override
-  public void enableFilter(final String fiterName, final Parameter... param) {
-    final Session session = getDelegate();
-    final Filter filter = session.enableFilter(fiterName);
-
-    for (final Parameter p : param) {
-      filter.setParameter(p.getName(), p.getValue());
-    }
-  }
-
-  @SuppressWarnings("unchecked")
-  @Override
-  public T find(final T type, final long id, final LockModeType lockModeType) {
-    return (T) entityManager.find(type.getClass(), id, lockModeType);
-  }
-
-  @Override
-  public void flush() {
-    entityManager.flush();
-  }
-
-  @Override
-  public Session getDelegate() {
-    return (Session) entityManager.getDelegate();
-  }
 
   @Override
   public LockModeType getLockModeTypeOfType(final T type) {
@@ -67,18 +42,14 @@ public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
   }
 
   @Override
-  public boolean isOpen() {
-    return entityManager.isOpen();
-  }
-
-  @Override
   public void lock(final T type, final LockModeType lockModeType) {
     entityManager.lock(type, lockModeType);
   }
 
+  @SuppressWarnings(UNCHECKED_VALUE)
   @Override
-  public T merge(final T type) {
-    return entityManager.merge(type);
+  public T find(final T type, final long id, final LockModeType lockModeType) {
+    return (T) entityManager.find(type.getClass(), id, lockModeType);
   }
 
   @Override
@@ -87,10 +58,12 @@ public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
   }
 
   @Override
+  public T merge(final T type) {
+    return entityManager.merge(type);
+  }
+
+  @Override
   public T refresh(final T type, final long id, final LockModeType lockModeType) {
-    if (!entityManager.contains(type)) {
-      return find(type, id, lockModeType);
-    }
     entityManager.refresh(type);
     return type;
   }
@@ -98,5 +71,41 @@ public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
   @Override
   public void remove(final T type) {
     entityManager.remove(entityManager.contains(type) ? type : entityManager.merge(type));
+  }
+
+  @Override
+  public boolean contains(final T type) {
+    return entityManager.contains(type);
+  }
+
+  @Override
+  public void flush() {
+    entityManager.flush();
+  }
+
+  @Override
+  public void disableFilter(final String filterName) {
+    getDelegate().disableFilter(filterName);
+  }
+
+  @Override
+  public void enableFilter(final String fiterName, final Parameter... param) {
+    setFilterParameters(getDelegate().enableFilter(fiterName), param);
+  }
+
+  private void setFilterParameters(final Filter filter, final Parameter... param) {
+    for (final Parameter p : param) {
+      filter.setParameter(p.getName(), p.getValue());
+    }
+  }
+
+  @Override
+  public Session getDelegate() {
+    return (Session) entityManager.getDelegate();
+  }
+
+  @Override
+  public boolean isOpen() {
+    return entityManager.isOpen();
   }
 }

@@ -1,75 +1,108 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.content;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.JAVA_MODULE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ONE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_PARAM_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_PARAM_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.UNCHECKED_VALUE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_PARAM_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Iterator;
 
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.apache.commons.collections.ExtendedProperties;
-import org.apache.velocity.exception.ResourceNotFoundException;
 import org.apache.velocity.runtime.resource.Resource;
 import org.apache.velocity.runtime.resource.loader.ResourceLoader;
 
-import com.netbrasoft.gnuob.generic.OrderBy;
+import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
+import com.netbrasoft.gnuob.generic.OrderByEnum;
 import com.netbrasoft.gnuob.generic.Paging;
+import com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeService;
 import com.netbrasoft.gnuob.generic.security.MetaData;
-import com.netbrasoft.gnuob.generic.security.SecuredGenericTypeService;
 
 public class ContentResourceLoader<T extends Content> extends ResourceLoader {
 
-  private transient SecuredGenericTypeService<T> securedGenericContentService;
+  private static final String COULDN_T_FIND_CONTENT_WITH_GIVEN_NAME = "Couldn't find content with given name: ";
 
-  private final MetaData metaData;
+  private MetaData credentials = MetaData.getInstance();
+  private ISecuredGenericTypeService<T> securedGenericContentService;
 
-  @SuppressWarnings("unchecked")
-  public ContentResourceLoader() {
-    try {
-      securedGenericContentService = (SecuredGenericTypeService<T>) InitialContext.doLookup("java:module/SecuredGenericTypeServiceImpl");
-      metaData = new MetaData();
-    } catch (final Exception e) {
-      throw new RuntimeException("ContentResourceLoader not properly initialized. No SecuredGenericTypeService was identified.", e);
-    }
+  @SuppressWarnings(UNCHECKED_VALUE)
+  public ContentResourceLoader() throws NamingException {
+    this((ISecuredGenericTypeService<T>) InitialContext.doLookup(JAVA_MODULE + SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME));
+  }
+
+  ContentResourceLoader(final ISecuredGenericTypeService<T> securedGenericContentService) {
+    this.securedGenericContentService = securedGenericContentService;
   }
 
   @Override
-  @SuppressWarnings("unchecked")
   public long getLastModified(final Resource resource) {
-    final Content content = new Content();
-    content.setActive(true);
-    content.setName(resource.getName());
+    return getContentLastModificationTimeByName(resource.getName());
+  }
 
-    final Iterator<T> iterator = securedGenericContentService.find(metaData, (T) content, new Paging(0, 1), OrderBy.NONE).iterator();
-
-    if (iterator.hasNext()) {
-      return iterator.next().getModification().getTime();
-    } else {
-      throw new ResourceNotFoundException("ContentResourceLoader: could not find resource '" + resource.getName() + "'");
+  private long getContentLastModificationTimeByName(final String contentName) {
+    if (containContentByName(contentName)) {
+      return getContentModificationTimeByName(contentName);
     }
+    throw new GNUOpenBusinessServiceException(COULDN_T_FIND_CONTENT_WITH_GIVEN_NAME + contentName);
+  }
+
+  @SuppressWarnings(UNCHECKED_VALUE)
+  private boolean containContentByName(final String contentName) {
+    return securedGenericContentService.count(credentials, (T) Content.getInstance(contentName)) > ZERO;
+  }
+
+  @SuppressWarnings(UNCHECKED_VALUE)
+  private long getContentModificationTimeByName(final String contentName) {
+    return securedGenericContentService
+        .find(credentials, (T) Content.getInstance(contentName), Paging.getInstance(ZERO, ONE), OrderByEnum.NONE)
+        .iterator().next().getModification().getTime();
   }
 
   @Override
-  @SuppressWarnings("unchecked")
-  public InputStream getResourceStream(final String source) throws ResourceNotFoundException {
-    final Content content = new Content();
-    content.setActive(true);
-    content.setName(source);
+  public InputStream getResourceStream(final String sourceName) {
+    return getContentResourceInputStreamByName(sourceName);
+  }
 
-    final Iterator<T> iterator = securedGenericContentService.find(metaData, (T) content, new Paging(0, 1), OrderBy.NONE).iterator();
-
-    if (iterator.hasNext()) {
-      return new BufferedInputStream(new ByteArrayInputStream(iterator.next().getData()));
-    } else {
-      throw new ResourceNotFoundException("ContentResourceLoader: could not find resource '" + source + "'");
+  private InputStream getContentResourceInputStreamByName(final String sourceName) {
+    if (containContentByName(sourceName)) {
+      return getContentResourceBufferedInputStreamByName(sourceName);
     }
+    throw new GNUOpenBusinessServiceException(COULDN_T_FIND_CONTENT_WITH_GIVEN_NAME + sourceName);
+  }
+
+  @SuppressWarnings(UNCHECKED_VALUE)
+  private InputStream getContentResourceBufferedInputStreamByName(final String sourceName) {
+    return new BufferedInputStream(new ByteArrayInputStream(securedGenericContentService
+        .find(credentials, (T) Content.getInstance(sourceName), Paging.getInstance(ZERO, ONE), OrderByEnum.NONE)
+        .iterator().next().getData()));
   }
 
   @Override
   public void init(final ExtendedProperties configuration) {
-    metaData.setUser(configuration.getString("user"));
-    metaData.setPassword(configuration.getString("password"));
-    metaData.setSite(configuration.getString("site"));
+    credentials = MetaData.getInstance(configuration.getString(SITE_PARAM_NAME),
+        configuration.getString(USER_PARAM_NAME), configuration.getString(PASSWORD_PARAM_NAME));
   }
 
   @Override

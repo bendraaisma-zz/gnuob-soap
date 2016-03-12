@@ -1,4 +1,49 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.order;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.AMOUNT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DELIVERY_DATE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DESCRIPTION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DISCOUNT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_ORDER_RECORDS_GNUOB_OPTIONS_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_ORDER_RECORDS_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_HEIGHT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_HEIGHT_UNIT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_LENGTH_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_LENGTH_UNIT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_URL_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_WEIGHT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_WEIGHT_UNIT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_WIDTH_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_WIDTH_UNIT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NAME_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OPTIONS_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OPTION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ORDER_RECORD_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ORDER_RECORD_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ORDER_RECORD_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSITION_ASC;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSITION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PRODUCT_NUMBER_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.QUANTITY_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPPING_COST_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static java.util.stream.Collectors.counting;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -29,119 +74,98 @@ import com.netbrasoft.gnuob.generic.product.Option;
 import com.netbrasoft.gnuob.generic.product.Product;
 
 @Cacheable(value = false)
-@Entity(name = OrderRecord.ENTITY)
-@Table(name = OrderRecord.TABLE)
+@Entity(name = ORDER_RECORD_ENTITY_NAME)
+@Table(name = ORDER_RECORD_TABLE_NAME)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@XmlRootElement(name = OrderRecord.ENTITY)
+@XmlRootElement(name = ORDER_RECORD_ENTITY_NAME)
 public class OrderRecord extends AbstractType {
 
   private static final long serialVersionUID = 5394749104442554097L;
-  protected static final String ENTITY = "OrderRecord";
-  protected static final String TABLE = "GNUOB_ORDER_RECORDS";
 
-  @Column(name = "NAME")
-  private String name;
-
-  @Column(name = "AMOUNT", nullable = false)
   private BigDecimal amount;
-
-  @Column(name = "DESCRIPTION")
+  private Date deliveryDate;
   private String description;
-
-  @Column(name = "PRODUCT_NUMBER", nullable = false)
+  private BigDecimal discount;
+  private BigDecimal itemHeight;
+  private String itemHeightUnit;
+  private BigDecimal itemLength;
+  private String itemLengthUnit;
+  private String itemUrl;
+  private BigDecimal itemWeight;
+  private String itemWeightUnit;
+  private BigDecimal itemWidth;
+  private String itemWidthUnit;
+  private String name;
+  private String option;
+  private Set<Option> options = new HashSet<Option>();
+  private String orderRecordId = UUID.randomUUID().toString();
+  private Integer position;
+  private Product product;
   private String productNumber;
-
-  @Column(name = "TAX")
+  private BigInteger quantity;
+  private BigDecimal shippingCost;
   private BigDecimal tax;
 
-  @Column(name = "QUANTITY", nullable = false)
-  private BigInteger quantity;
+  public OrderRecord() {}
 
-  @Column(name = "SHIPPING_COST")
-  private BigDecimal shippingCost;
-
-  @Column(name = "DISCOUNT")
-  private BigDecimal discount;
-
-  @Column(name = "ITEM_WEIGHT")
-  private BigDecimal itemWeight;
-
-  @Column(name = "ITEM_WEIGHT_UNIT")
-  private String itemWeightUnit;
-
-  @Column(name = "ITEM_LENGTH")
-  private BigDecimal itemLength;
-
-  @Column(name = "ITEM_LENGTH_UNIT")
-  private String itemLengthUnit;
-
-  @Column(name = "ITEM_WIDTH")
-  private BigDecimal itemWidth;
-
-  @Column(name = "ITEM_WIDTH_UNIT")
-  private String itemWidthUnit;
-
-  @Column(name = "ITEM_HEIGHT")
-  private BigDecimal itemHeight;
-
-  @Column(name = "ITEM_HEIGHT_UNIT")
-  private String itemHeightUnit;
-
-  @Column(name = "ITEM_URL")
-  private String itemUrl;
-
-  @Column(name = "`OPTION`")
-  private String option;
-
-  @Column(name = "POSITION")
-  private Integer position;
-
-  @Column(name = "DELIVERY_DATE")
-  private Date deliveryDate;
-
-  @Column(name = "ORDER_RECORD_ID", nullable = false)
-  private String orderRecordId = UUID.randomUUID().toString();
-
-  @OrderBy("position asc")
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
-  @JoinTable(name = "gnuob_order_records_gnuob_options", joinColumns = {@JoinColumn(name = "GNUOB_ORDER_RECORDS_ID", referencedColumnName = "ID")},
-      inverseJoinColumns = {@JoinColumn(name = "options_ID", referencedColumnName = "ID")})
-  private Set<Option> options = new HashSet<Option>();
+  @Override
+  @Transient
+  public boolean isDetached() {
+    return isAbstractTypeDetached() || isOptionsDetached();
+  }
 
   @Transient
-  private Product product;
-
-  public OrderRecord() {
-    // Empty constructor.
+  private boolean isOptionsDetached() {
+    return options.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
-  @XmlElement(name = "amount")
+  @Override
+  public void prePersist() {
+    getOrderRecordId();
+    getName();
+    getDescription();
+    getAmount();
+    getProductNumber();
+    getTax();
+    getShippingCost();
+    getItemWeight();
+    getItemWeightUnit();
+    getItemLength();
+    getItemLengthUnit();
+    getItemWidth();
+    getItemWidthUnit();
+    getItemHeight();
+    getItemHeightUnit();
+    getItemUrl();
+  }
+
+  @Override
+  public void preUpdate() {
+    getOrderRecordId();
+  }
+
+  @XmlElement
+  @Column(name = AMOUNT_COLUMN_NAME, nullable = false)
   public BigDecimal getAmount() {
-    if (product != null && amount == null) {
-      amount = product.getAmount().subtract(getDiscount());
-    }
-    return amount;
+    return product != null && amount == null ? amount = product.getAmount().subtract(getDiscount()) : amount;
   }
 
-  @XmlElement(name = "deliveryDate")
+  @XmlElement
+  @Column(name = DELIVERY_DATE_COLUMN_NAME)
   public Date getDeliveryDate() {
     return deliveryDate;
   }
 
-  @XmlElement(name = "description")
+  @XmlElement
+  @Column(name = DESCRIPTION_COLUMN_NAME)
   public String getDescription() {
-    if (product != null && description == null) {
-      description = product.getDescription();
-    }
-    return description;
+    return product != null && description == null ? description = product.getDescription() : description;
   }
 
-  @XmlElement(name = "discount")
+  @XmlElement
+  @Column(name = DISCOUNT_COLUMN_NAME)
   public BigDecimal getDiscount() {
-    if (product != null && discount == null) {
-      discount = product.getDiscount();
-    }
-    return discount;
+    return product != null && discount == null ? discount = product.getDiscount() : discount;
   }
 
   @Transient
@@ -153,36 +177,28 @@ public class OrderRecord extends AbstractType {
     return BigDecimal.ZERO;
   }
 
-  @XmlElement(name = "itemHeight")
+  @XmlElement
+  @Column(name = ITEM_HEIGHT_COLUMN_NAME)
   public BigDecimal getItemHeight() {
-    if (product != null && itemHeight == null) {
-      itemHeight = product.getItemHeight();
-    }
-    return itemHeight;
+    return product != null && itemHeight == null ? itemHeight = product.getItemHeight() : itemHeight;
   }
 
-  @XmlElement(name = "itemHeightUnit")
+  @XmlElement
+  @Column(name = ITEM_HEIGHT_UNIT_COLUMN_NAME)
   public String getItemHeightUnit() {
-    if (product != null && itemHeightUnit == null) {
-      itemHeightUnit = product.getItemHeightUnit();
-    }
-    return itemHeightUnit;
+    return product != null && itemHeightUnit == null ? itemHeightUnit = product.getItemHeightUnit() : itemHeightUnit;
   }
 
-  @XmlElement(name = "itemLength")
+  @XmlElement
+  @Column(name = ITEM_LENGTH_COLUMN_NAME)
   public BigDecimal getItemLength() {
-    if (product != null && itemLength == null) {
-      itemLength = product.getItemLength();
-    }
-    return itemLength;
+    return product != null && itemLength == null ? itemLength = product.getItemLength() : itemLength;
   }
 
-  @XmlElement(name = "itemLengthUnit")
+  @XmlElement
+  @Column(name = ITEM_LENGTH_UNIT_COLUMN_NAME)
   public String getItemLengthUnit() {
-    if (product != null && itemLengthUnit == null) {
-      itemHeightUnit = product.getItemHeightUnit();
-    }
-    return itemLengthUnit;
+    return product != null && itemLengthUnit == null ? itemHeightUnit = product.getItemHeightUnit() : itemLengthUnit;
   }
 
   @Transient
@@ -194,96 +210,91 @@ public class OrderRecord extends AbstractType {
     return BigDecimal.ZERO;
   }
 
-  @XmlElement(name = "itemUrl")
+  @XmlElement
+  @Column(name = ITEM_URL_COLUMN_NAME)
   public String getItemUrl() {
-    if (product != null && itemUrl == null) {
-      itemUrl = product.getItemUrl();
-    }
-    return itemUrl;
+    return product != null && itemUrl == null ? itemUrl = product.getItemUrl() : itemUrl;
   }
 
-  @XmlElement(name = "itemWeight")
+  @XmlElement
+  @Column(name = ITEM_WEIGHT_COLUMN_NAME)
   public BigDecimal getItemWeight() {
-    if (product != null && itemWeight == null) {
-      itemWeight = product.getItemWeight();
-    }
-    return itemWeight;
+    return product != null && itemWeight == null ? itemWeight = product.getItemWeight() : itemWeight;
   }
 
-  @XmlElement(name = "itemWeightUnit")
+  @XmlElement
+  @Column(name = ITEM_WEIGHT_UNIT_COLUMN_NAME)
   public String getItemWeightUnit() {
-    if (product != null && itemWeightUnit == null) {
-      itemWeightUnit = product.getItemWeightUnit();
-    }
-    return itemWeightUnit;
+    return product != null && itemWeightUnit == null ? itemWeightUnit = product.getItemWeightUnit() : itemWeightUnit;
   }
 
-  @XmlElement(name = "itemWidth")
+  @XmlElement
+  @Column(name = ITEM_WIDTH_COLUMN_NAME)
   public BigDecimal getItemWidth() {
-    if (product != null && itemWidth == null) {
-      itemWidth = product.getItemWidth();
-    }
-    return itemWidth;
+    return product != null && itemWidth == null ? itemWidth = product.getItemWidth() : itemWidth;
   }
 
-  @XmlElement(name = "itemWidthUnit")
+  @XmlElement
+  @Column(name = ITEM_WIDTH_UNIT_COLUMN_NAME)
   public String getItemWidthUnit() {
-    if (product != null && itemWidthUnit == null) {
-      itemWidthUnit = product.getItemWidthUnit();
-    }
-    return itemWidthUnit;
+    return product != null && itemWidthUnit == null ? itemWidthUnit = product.getItemWidthUnit() : itemWidthUnit;
   }
 
-  @XmlElement(name = "name")
+  @XmlElement
+  @Column(name = NAME_COLUMN_NAME)
   public String getName() {
-    if (product != null && name == null) {
-      name = product.getName();
-    }
-    return name;
+    return product != null && name == null ? name = product.getName() : name;
   }
 
-  @XmlElement(name = "option")
+  @XmlElement
+  @Column(name = OPTION_COLUMN_NAME)
   public String getOption() {
     return option;
   }
 
+  @OrderBy(POSITION_ASC)
+  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+  @JoinTable(name = GNUOB_ORDER_RECORDS_GNUOB_OPTIONS_TABLE_NAME,
+      joinColumns = {@JoinColumn(name = GNUOB_ORDER_RECORDS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
+      inverseJoinColumns = {@JoinColumn(name = OPTIONS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
   public Set<Option> getOptions() {
     return options;
   }
 
-  @XmlElement(name = "orderRecordId")
+  @XmlElement
+  @Column(name = ORDER_RECORD_ID_COLUMN_NAME, nullable = false)
   public String getOrderRecordId() {
-    return orderRecordId;
+    return orderRecordId == null || "".equals(orderRecordId.trim()) ? orderRecordId = UUID.randomUUID().toString()
+        : orderRecordId;
   }
 
   @XmlTransient
+  @Column(name = POSITION_COLUMN_NAME)
   public Integer getPosition() {
     return position;
   }
 
+  @Transient
   public Product getProduct() {
     return product;
   }
 
-  @XmlElement(name = "productNumber")
+  @XmlElement
+  @Column(name = PRODUCT_NUMBER_COLUMN_NAME, nullable = false)
   public String getProductNumber() {
-    if (product != null && productNumber == null) {
-      productNumber = product.getNumber();
-    }
-    return productNumber;
+    return product != null && productNumber == null ? productNumber = product.getNumber() : productNumber;
   }
 
-  @XmlElement(name = "quantity", required = true)
+  @XmlElement(required = true)
+  @Column(name = QUANTITY_COLUMN_NAME, nullable = false)
   public BigInteger getQuantity() {
     return quantity;
   }
 
-  @XmlElement(name = "shippingCost")
+  @XmlElement
+  @Column(name = SHIPPING_COST_COLUMN_NAME)
   public BigDecimal getShippingCost() {
-    if (product != null && shippingCost == null) {
-      shippingCost = product.getShippingCost();
-    }
-    return shippingCost;
+    return product != null && shippingCost == null ? shippingCost = product.getShippingCost() : shippingCost;
   }
 
   @Transient
@@ -295,12 +306,10 @@ public class OrderRecord extends AbstractType {
     return BigDecimal.ZERO;
   }
 
-  @XmlElement(name = "tax")
+  @XmlElement
+  @Column(name = TAX_COLUMN_NAME)
   public BigDecimal getTax() {
-    if (product != null && tax == null) {
-      tax = product.getTax();
-    }
-    return tax;
+    return product != null && tax == null ? tax = product.getTax() : tax;
   }
 
   @Transient
@@ -310,43 +319,6 @@ public class OrderRecord extends AbstractType {
       return getTax().multiply(new BigDecimal(getQuantity()));
     }
     return BigDecimal.ZERO;
-  }
-
-  @Override
-  public boolean isDetached() {
-    return getId() > 0;
-  }
-
-  @Override
-  public void prePersist() {
-    if (orderRecordId == null || "".equals(orderRecordId.trim())) {
-      orderRecordId = UUID.randomUUID().toString();
-    }
-
-    if (product != null) {
-      name = name == null ? product.getName() : name;
-      description = description == null ? product.getDescription() : description;
-      amount = amount == null ? product.getAmount() : amount;
-      productNumber = productNumber == null ? product.getNumber() : productNumber;
-      tax = tax == null ? product.getTax() : tax;
-      shippingCost = shippingCost == null ? product.getShippingCost() : shippingCost;
-      itemWeight = itemWeight == null ? product.getItemWeight() : itemWeight;
-      itemWeightUnit = itemWeightUnit == null ? product.getItemWeightUnit() : itemWeightUnit;
-      itemLength = itemLength == null ? product.getItemLength() : itemLength;
-      itemLengthUnit = itemLengthUnit == null ? product.getItemLengthUnit() : itemLengthUnit;
-      itemWidth = itemWidth == null ? product.getItemWidth() : itemWidth;
-      itemWidthUnit = itemWidthUnit == null ? product.getItemWidthUnit() : itemLengthUnit;
-      itemHeight = itemHeight == null ? product.getItemHeight() : itemHeight;
-      itemHeightUnit = itemHeightUnit == null ? product.getItemLengthUnit() : itemHeightUnit;
-      itemUrl = itemUrl == null ? product.getItemUrl() : itemUrl;
-    }
-  }
-
-  @Override
-  public void preUpdate() {
-    if (orderRecordId == null || "".equals(orderRecordId.trim())) {
-      orderRecordId = UUID.randomUUID().toString();
-    }
   }
 
   public void setAmount(final BigDecimal amount) {
