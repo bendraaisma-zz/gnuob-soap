@@ -53,7 +53,8 @@ public final class NetbrasoftSoapConstants {
   public static final String CONTENT_PARAM_NAME = "content";
   public static final String CONTENT_RESOURCE_LOADER_CACHE = "content.resource.loader.cache";
   public static final String CONTENT_RESOURCE_LOADER_CLASS = "content.resource.loader.class";
-  public static final String CONTENT_RESOURCE_LOADER_DESCRIPTION = "content.resource.loader.description";
+  public static final String CONTENT_RESOURCE_LOADER_DESCRIPTION =
+      "content.resource.loader.description";
   public static final String CONTENT_RESOURCE_LOADER_MODIFICATION_CHECK_INTERVAL =
       "content.resource.loader.modificationCheckInterval";
   public static final String CONTENT_RESOURCE_LOADER_PASSWORD = "content.resource.loader.password";
@@ -89,7 +90,8 @@ public final class NetbrasoftSoapConstants {
   public static final String CUSTOM_COLUMN_NAME = "CUSTOM";
   public static final String CUSTOMER_ENTITY_NAME = "Customer";
   public static final String CUSTOMER_PARAM_NAME = "customer";
-  public static final String CUSTOMER_SERVICE_NUMBER_PROPERTY = System.getProperty("paypal.serviceNumber", "-");
+  public static final String CUSTOMER_SERVICE_NUMBER_PROPERTY =
+      System.getProperty("paypal.serviceNumber", "-");
   public static final String CUSTOMER_TABLE_NAME = "GNUOB_CUSTOMERS";
   public static final String CUSTOMER_WEB_SERVICE_IMPL_NAME = "CustomerWebServiceImpl";
   public static final String DATE_OF_BIRTH_COLUMN_NAME = "DATE_OF_BIRTH";
@@ -99,7 +101,14 @@ public final class NetbrasoftSoapConstants {
   public static final String DISCOUNT_COLUMN_NAME = "DISCOUNT";
   public static final String DISCOUNT_TOTAL_COLUMN_NAME = "DISCOUNT_TOTAL";
   public static final String DISTRICT_COLUMN_NAME = "DISTRICT";
-  public static final String EMAIL_PROPERTY = System.getProperty("pagseguro.email", "badraaisma@msn.com");
+  public static final String DO_CHECKOUT_DETAILS_OPERATION_NAME = "doCheckoutDetails";
+  public static final String DO_CHECKOUT_OPERATION_NAME = "doCheckout";
+  public static final String DO_CHECKOUT_PAYMENT_OPERATION_NAME = "doCheckoutPayment";
+  public static final String DO_NOTIFICATION_OPERATION_NAME = "doNotification";
+  public static final String DO_REFUND_TRANSACTION_OPERATION_NAME = "doRefundTransaction";
+  public static final String DO_TRANSACTION_DETAILS_OPERATION_NAME = "doTransactionDetails";
+  public static final String EMAIL_PROPERTY =
+      System.getProperty("pagseguro.email", "badraaisma@msn.com");
   public static final String EXCHANGE_RATE_COLUMN_NAME = "EXCHANGE_RATE";
   public static final String EXTRA_AMOUNT_COLUMN_NAME = "EXTRA_AMOUNT";
   public static final String FALSE = "false";
@@ -139,30 +148,44 @@ public final class NetbrasoftSoapConstants {
   public static final String GIFT_WRAP_AMOUNT_COLUMN_NAME = "GIFT_WRAP_AMOUNT";
   public static final String GIFT_WRAP_ENABLE_COLUMN_NAME = "GIFT_WRAP_ENABLE";
   public static final String GIFT_WRAP_NAME_COLUMN_NAME = "GIFT_WRAP_NAME";
-  public static final String GNUOB_CATEGORIES_GNUOB_CONTENTS_TABLE_NAME = "gnuob_categories_gnuob_contents";
-  public static final String GNUOB_CATEGORIES_GNUOB_SUB_CATEGORIES_TABLE_NAME = "gnuob_categories_gnuob_sub_categories";
+  public static final String GNUOB_CATEGORIES_GNUOB_CONTENTS_TABLE_NAME =
+      "gnuob_categories_gnuob_contents";
+  public static final String GNUOB_CATEGORIES_GNUOB_SUB_CATEGORIES_TABLE_NAME =
+      "gnuob_categories_gnuob_sub_categories";
   public static final String GNUOB_CATEGORIES_ID_COLUMN_NAME = "GNUOB_CATEGORIES_ID";
-  public static final String GNUOB_INVOICES_GNUOB_PAYMENTS_TABLE_NAME = "gnuob_invoices_gnuob_payments";
+  public static final String GNUOB_INVOICES_GNUOB_PAYMENTS_TABLE_NAME =
+      "gnuob_invoices_gnuob_payments";
   public static final String GNUOB_INVOICES_ID_COLUMN_NAME = "GNUOB_INVOICES_ID";
-  public static final String GNUOB_OFFER_RECORDS_GNUOB_OPTIONS_TABLE_NAME = "gnuob_offer_records_gnuob_options";
+  public static final String GNUOB_OFFER_RECORDS_GNUOB_OPTIONS_TABLE_NAME =
+      "gnuob_offer_records_gnuob_options";
   public static final String GNUOB_OFFER_RECORDS_ID_COLUMN_NAME = "GNUOB_OFFER_RECORDS_ID";
-  public static final String GNUOB_OFFERS_GNUOB_OFFER_RECORDS_TABLE_NAME = "gnuob_offers_gnuob_offer_records";
+  public static final String GNUOB_OFFERS_GNUOB_OFFER_RECORDS_TABLE_NAME =
+      "gnuob_offers_gnuob_offer_records";
   public static final String GNUOB_OFFERS_ID_COLUMN_NAME = "GNUOB_OFFERS_ID";
-  public static final String GNUOB_OPTIONS_GNUOB_SUB_OPTIONS_TABLE_NAME = "gnuob_options_gnuob_sub_options";
+  public static final String GNUOB_OPTIONS_GNUOB_SUB_OPTIONS_TABLE_NAME =
+      "gnuob_options_gnuob_sub_options";
   public static final String GNUOB_OPTIONS_ID_COLUMN_NAME = "GNUOB_OPTIONS_ID";
-  public static final String GNUOB_ORDER_RECORDS_GNUOB_OPTIONS_TABLE_NAME = "gnuob_order_records_gnuob_options";
+  public static final String GNUOB_ORDER_RECORDS_GNUOB_OPTIONS_TABLE_NAME =
+      "gnuob_order_records_gnuob_options";
   public static final String GNUOB_ORDER_RECORDS_ID_COLUMN_NAME = "GNUOB_ORDER_RECORDS_ID";
-  public static final String GNUOB_ORDERS_GNUOB_ORDER_RECORDS_TABLE_NAME = "gnuob_orders_gnuob_order_records";
+  public static final String GNUOB_ORDERS_GNUOB_ORDER_RECORDS_TABLE_NAME =
+      "gnuob_orders_gnuob_order_records";
   public static final String GNUOB_ORDERS_ID_COLUMN_NAME = "GNUOB_ORDERS_ID";
-  public static final String GNUOB_PRODUCTS_GNUOB_CONTENTS_TABLE_NAME = "gnuob_products_gnuob_contents";
-  public static final String GNUOB_PRODUCTS_GNUOB_OPTIONS_TABLE_NAME = "gnuob_products_gnuob_options";
-  public static final String GNUOB_PRODUCTS_GNUOB_SUB_CATEGORIES_TABLE_NAME = "gnuob_products_gnuob_sub_categories";
+  public static final String GNUOB_PRODUCTS_GNUOB_CONTENTS_TABLE_NAME =
+      "gnuob_products_gnuob_contents";
+  public static final String GNUOB_PRODUCTS_GNUOB_OPTIONS_TABLE_NAME =
+      "gnuob_products_gnuob_options";
+  public static final String GNUOB_PRODUCTS_GNUOB_SUB_CATEGORIES_TABLE_NAME =
+      "gnuob_products_gnuob_sub_categories";
   public static final String GNUOB_PRODUCTS_ID_COLUMN_NAME = "GNUOB_PRODUCTS_ID";
   public static final String GNUOB_ROLES_COLUMN_NAME = "GNUOB_ROLES";
   public static final String GNUOB_SITE_CANCEL_PROPERTY_VALUE = "http://localhost:8080/cancel.html";
-  public static final String GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE = "http://localhost:8080/paypal_notifications";
-  public static final String GNUOB_SITE_REDIRECT_PROPERTY_VALUE = "http://localhost:8080/confirmation.html";
-  public static final String GNUOB_SUB_CATEGORIES_GNUOB_CONTENTS_TABLE_NAME = "gnuob_sub_categories_gnuob_contents";
+  public static final String GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE =
+      "http://localhost:8080/paypal_notifications";
+  public static final String GNUOB_SITE_REDIRECT_PROPERTY_VALUE =
+      "http://localhost:8080/confirmation.html";
+  public static final String GNUOB_SUB_CATEGORIES_GNUOB_CONTENTS_TABLE_NAME =
+      "gnuob_sub_categories_gnuob_contents";
   public static final String GNUOB_SUB_CATEGORIES_GNUOB_SUB_CATEGORIES_TABLE_NAME =
       "gnuob_sub_categories_gnuob_sub_categories";
   public static final String GNUOB_SUB_CATEGORIES_ID_COLUMN_NAME = "GNUOB_SUB_CATEGORIES_ID";
@@ -184,7 +207,8 @@ public final class NetbrasoftSoapConstants {
   public static final String INSTALLMENT_COUNT_COLUMN_NAME = "INSTALLMENT_COUNT";
   public static final String INSURANCE_OPTION_OFFERED_COLUMN_NAME = "INSURANCE_OPTION_OFFERED";
   public static final String INSURANCE_TOTAL_COLUMN_NAME = "INSURANCE_TOTAL";
-  public static final String INTERNATIONAL_STATE_AND_CITY_COLUMN_NAME = "INTERNATIONAL_STATE_AND_CITY";
+  public static final String INTERNATIONAL_STATE_AND_CITY_COLUMN_NAME =
+      "INTERNATIONAL_STATE_AND_CITY";
   public static final String INTERNATIONAL_STREET_COLUMN_NAME = "INTERNATIONAL_STREET";
   public static final String INVOICE_ENTITY_NAME = "Invoice";
   public static final String INVOICE_ID_COLUMN_NAME = "INVOICE_ID";
@@ -264,13 +288,18 @@ public final class NetbrasoftSoapConstants {
   public static final String OWNER_COLUMN_NAME = "OWNER";
   public static final String PAGING_NAME = "Paging";
   public static final String PAGING_PARAM_NAME = "paging";
-  public static final String PAGSEGURO_NOTIFICATION_PROPERTY_VALUE = "http://localhost:8080/pagseguro_notifications";
+  public static final String PAGSEGURO_CHECK_OUT_WEB_SERVICE_IMPL_NAME =
+      "PagseguroCheckOutWebServiceImpl";
+  public static final String PAGSEGURO_NOTIFICATION_PROPERTY_VALUE =
+      "http://localhost:8080/pagseguro_notifications";
   public static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE = "NO_PRODUCTION_TOKEN";
-  public static final String PAGSEGURO_REDIRECT_PROPERTY_VALUE = "http://localhost:8080/confirmation.html";
+  public static final String PAGSEGURO_REDIRECT_PROPERTY_VALUE =
+      "http://localhost:8080/confirmation.html";
   public static final String PASSWORD_COLUMN_NAME = "PASSWORD";
   public static final int PASSWORD_LENGTH = 62;
   public static final String PASSWORD_PARAM_NAME = "password";
-  public static final String PASSWORD_PROPERTY = System.getProperty("paypal.password", "UU9AJQJYE2CAMP54");
+  public static final String PASSWORD_PROPERTY =
+      System.getProperty("paypal.password", "UU9AJQJYE2CAMP54");
   public static final String PASSWORD_REGEX = "^[0-9A-F]{16}:\\d{4}:[0-9A-F]{40}";
   public static final String PAYER_BUSINESS_COLUMN_NAME = "PAYER_BUSINESS";
   public static final String PAYER_COLUMN_NAME = "PAYER";
@@ -317,7 +346,8 @@ public final class NetbrasoftSoapConstants {
   public static final String PRODUCTION_TOKEN_PROPERTY =
       System.getProperty("pagseguro.production.token", "NO_PRODUCTION_TOKEN");
   public static final String PROPERTY_COLUMN_NAME = "PROPERTY";
-  public static final String PROTECTION_ELIGIBILITY_TYPE_COLUMN_NAME = "PROTECTION_ELIGIBILITY_TYPE";
+  public static final String PROTECTION_ELIGIBILITY_TYPE_COLUMN_NAME =
+      "PROTECTION_ELIGIBILITY_TYPE";
   public static final String QUANTITY_COLUMN_NAME = "QUANTITY";
   public static final String RATING_COLUMN_NAME = "RATING";
   public static final String REASON_CODE_COLUMN_NAME = "REASON_CODE";
@@ -354,7 +384,10 @@ public final class NetbrasoftSoapConstants {
   public static final String SALUTATION_COLUMN_NAME = "SALUTATION";
   public static final String SANDBOX_TOKEN_PROPERTY =
       System.getProperty("pagseguro.sandbox.token", "007D4EDFF33042E79EC7B8039B5F7FCE");
-  public static final String SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME = "SecuredGenericTypeServiceImpl";
+  public static final String SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME =
+      "SecuredGenericTypeServiceImpl";
+  public static final String SECURED_PAGSEGURO_CHECK_OUT_SERVICE_IMPL_NAME = "SecuredPagseguroCheckOutServiceImpl";
+  public static final String SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME = "SecuredPayPalExpressCheckOutServiceImpl";
   public static final String SETTING_ENTITY_NAME = "Setting";
   public static final String SETTING_PARAM_NAME = "setting";
   public static final String SETTING_TABLE_NAME = "GNUOB_SETTINGS";
@@ -366,8 +399,8 @@ public final class NetbrasoftSoapConstants {
   public static final String SHIPPING_COST_COLUMN_NAME = "SHIPPING_COST";
   public static final String SHIPPING_DISCOUNT_COLUMN_NAME = "SHIPPING_DISCOUNT";
   public static final String SHIPPING_TOTAL_COLUMN_NAME = "SHIPPING_TOTAL";
-  public static final String SIGNATURE_PROPERTY =
-      System.getProperty("paypal.signature", "AFcWxV21C7fd0v3bYYYRCpSSRl31A7mmuIDpb.xZccUUAyCy0P.XGaWg");
+  public static final String SIGNATURE_PROPERTY = System.getProperty("paypal.signature",
+      "AFcWxV21C7fd0v3bYYYRCpSSRl31A7mmuIDpb.xZccUUAyCy0P.XGaWg");
   public static final String SITE_ENTITY_NAME = "Site";
   public static final String SITE_PARAM_NAME = "site";
   public static final String SITE_PROPERTY =
@@ -406,7 +439,8 @@ public final class NetbrasoftSoapConstants {
   public static final String USER_PARAM_NAME = "user";
   public static final String USER_TABLE_NAME = "GNUOB_USERS";
   public static final String USER_WEB_SERVICE_IMPL_NAME = "UserWebServiceImpl";
-  public static final String USERNAME_PROPERTY = System.getProperty("paypal.username", "BR2GaGfg_api1.netbrasoft.com");
+  public static final String USERNAME_PROPERTY =
+      System.getProperty("paypal.username", "BR2GaGfg_api1.netbrasoft.com");
   public static final String VALUE_COLUMN_NAME = "VALUE";
   public static final String VELOCITY_CONTENT_RESOURCE_LOADER = "Velocity Content Resource Loader";
   public static final String VERSION_COLUMN_NAME = "VERSION";

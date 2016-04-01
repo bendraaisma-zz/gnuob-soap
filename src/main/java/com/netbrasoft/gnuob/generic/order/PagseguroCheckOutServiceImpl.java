@@ -53,7 +53,7 @@ import br.com.uol.pagseguro.service.NotificationService;
 import br.com.uol.pagseguro.service.TransactionSearchService;
 import br.com.uol.pagseguro.service.checkout.CheckoutService;
 
-public class PagseguroCheckOutServiceImpl<O extends Order> implements ICheckOutService<O> {
+public abstract class PagseguroCheckOutServiceImpl<O extends Order> implements ICheckOutService<O> {
 
   public PagseguroCheckOutServiceImpl() {
     if (!PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE.equals(PRODUCTION_TOKEN_PROPERTY)) {

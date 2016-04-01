@@ -15,6 +15,7 @@
 package com.netbrasoft.gnuob.generic.order;
 
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME;
 
 import java.util.Iterator;
 
@@ -36,7 +37,6 @@ import com.netbrasoft.gnuob.generic.customer.Customer;
 import com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeCheckOutService;
 import com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeService;
 import com.netbrasoft.gnuob.generic.security.MetaData;
-import com.netbrasoft.gnuob.generic.security.SecuredPayPalExpressCheckOutServiceImpl;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = "http://gnuob.netbrasoft.com/")
@@ -46,7 +46,7 @@ public class PayPalExpressCheckOutWebServiceImpl<T extends Order> implements ICh
 
   protected static final String PAY_PAL_EXPRESS_CHECK_OUT_WEB_SERVICE_IMPL_NAME = "PayPalExpressCheckOutWebServiceImpl";
 
-  @EJB(beanName = SecuredPayPalExpressCheckOutServiceImpl.SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME)
+  @EJB(beanName = SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeCheckOutService<T> securedGenericTypeCheckOutService;
 
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)

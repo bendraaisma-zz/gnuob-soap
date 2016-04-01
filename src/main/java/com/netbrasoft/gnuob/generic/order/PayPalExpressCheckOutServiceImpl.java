@@ -90,7 +90,7 @@ import ebay.apis.eblbasecomponents.PaymentTransactionType;
 import ebay.apis.eblbasecomponents.SetExpressCheckoutRequestDetailsType;
 import ebay.apis.eblbasecomponents.UserIdPasswordType;
 
-public class PayPalExpressCheckOutServiceImpl<O extends Order> implements ICheckOutService<O> {
+public abstract class PayPalExpressCheckOutServiceImpl<O extends Order> implements ICheckOutService<O> {
 
   @WebServiceRef(wsdlLocation = "https://www.paypalobjects.com/wsdl/PayPalSvc.wsdl")
   private PayPalAPIInterfaceService payPalAPIInterfaceService;
