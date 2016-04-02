@@ -1,4 +1,34 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.customer;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ADDRESS_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ADDRESS_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CITY_NAME_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.COMPLEMENT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.COUNTRY_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.COUNTRY_NAME_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DISTRICT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.INTERNATIONAL_STATE_AND_CITY_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.INTERNATIONAL_STREET_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NUMBER_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PHONE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSTAL_CODE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STATE_OR_PROVINCE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STREET1_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STREET2_COLUMN_NAME;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -6,188 +36,176 @@ import javax.persistence.Entity;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = false)
-@Entity(name = Address.ENTITY)
-@Table(name = Address.TABLE)
+@Entity(name = ADDRESS_ENTITY_NAME)
+@Table(name = ADDRESS_TABLE_NAME)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@XmlRootElement(name = Address.ENTITY)
-public class Address extends Type {
+@XmlRootElement(name = ADDRESS_ENTITY_NAME)
+public class Address extends AbstractType {
 
-   private static final long serialVersionUID = 1448149897957104670L;
-   protected static final String ENTITY = "Address";
-   protected static final String TABLE = "GNUOB_ADDRESSES";
+  private static final long serialVersionUID = 1448149897957104670L;
 
-   @Column(name = "INTERNATIONAL_STATE_AND_CITY")
-   private String internationalStateAndCity;
+  private String cityName;
+  private String complement;
+  private String country;
+  private String countryName;
+  private String district;
+  private String internationalStateAndCity;
+  private String internationalStreet;
+  private String number;
+  private String phone;
+  private String postalCode;
+  private String stateOrProvince;
+  private String street1;
+  private String street2;
 
-   @Column(name = "INTERNATIONAL_STREET")
-   private String internationalStreet;
+  public Address() {}
 
-   @Column(name = "STREET1", nullable = false)
-   private String street1;
+  @Override
+  @Transient
+  public boolean isDetached() {
+    return isAbstractTypeDetached();
+  }
 
-   @Column(name = "STREET2")
-   private String street2;
+  @Override
+  public void prePersist() {}
 
-   @Column(name = "NUMBER")
-   private String number;
+  @Override
+  public void preUpdate() {}
 
-   @Column(name = "COMPLEMENT")
-   private String complement;
+  @XmlElement(required = true)
+  @Column(name = CITY_NAME_COLUMN_NAME, nullable = false)
+  public String getCityName() {
+    return cityName;
+  }
 
-   @Column(name = "DISTRICT")
-   private String district;
+  @XmlElement
+  @Column(name = COMPLEMENT_COLUMN_NAME)
+  public String getComplement() {
+    return complement;
+  }
 
-   @Column(name = "CITY_NAME", nullable = false)
-   private String cityName;
+  @XmlElement(required = true)
+  @Column(name = COUNTRY_COLUMN_NAME, nullable = false)
+  public String getCountry() {
+    return country;
+  }
 
-   @Column(name = "STATE_OR_PROVINCE", nullable = false)
-   private String stateOrProvince;
+  @XmlElement
+  @Column(name = COUNTRY_NAME_COLUMN_NAME)
+  public String getCountryName() {
+    return countryName;
+  }
 
-   @Column(name = "POSTAL_CODE", nullable = false)
-   private String postalCode;
+  @XmlElement
+  @Column(name = DISTRICT_COLUMN_NAME)
+  public String getDistrict() {
+    return district;
+  }
 
-   @Column(name = "COUNTRY", nullable = false)
-   private String country;
+  @XmlElement
+  @Column(name = INTERNATIONAL_STATE_AND_CITY_COLUMN_NAME)
+  public String getInternationalStateAndCity() {
+    return internationalStateAndCity;
+  }
 
-   @Column(name = "COUNTRY_NAME")
-   private String countryName;
+  @XmlElement
+  @Column(name = INTERNATIONAL_STREET_COLUMN_NAME)
+  public String getInternationalStreet() {
+    return internationalStreet;
+  }
 
-   @Column(name = "PHONE")
-   private String phone;
+  @XmlElement
+  @Column(name = NUMBER_COLUMN_NAME)
+  public String getNumber() {
+    return number;
+  }
 
-   public Address() {
-   }
+  @XmlElement
+  @Column(name = PHONE_COLUMN_NAME)
+  public String getPhone() {
+    return phone;
+  }
 
-   @XmlElement(name = "cityName", required = true)
-   public String getCityName() {
-      return cityName;
-   }
+  @XmlElement(required = true)
+  @Column(name = POSTAL_CODE_COLUMN_NAME, nullable = false)
+  public String getPostalCode() {
+    return postalCode;
+  }
 
-   @XmlElement(name = "complement")
-   public String getComplement() {
-      return complement;
-   }
+  @XmlElement(required = true)
+  @Column(name = STATE_OR_PROVINCE_COLUMN_NAME, nullable = false)
+  public String getStateOrProvince() {
+    return stateOrProvince;
+  }
 
-   @XmlElement(name = "country", required = true)
-   public String getCountry() {
-      return country;
-   }
+  @XmlElement(required = true)
+  @Column(name = STREET1_COLUMN_NAME, nullable = false)
+  public String getStreet1() {
+    return street1;
+  }
 
-   @XmlElement(name = "countryName")
-   public String getCountryName() {
-      return countryName;
-   }
+  @XmlElement
+  @Column(name = STREET2_COLUMN_NAME)
+  public String getStreet2() {
+    return street2;
+  }
 
-   @XmlElement(name = "district")
-   public String getDistrict() {
-      return district;
-   }
+  public void setCityName(final String cityName) {
+    this.cityName = cityName;
+  }
 
-   @XmlElement(name = "internationalStateAndCity")
-   public String getInternationalStateAndCity() {
-      return internationalStateAndCity;
-   }
+  public void setComplement(final String complement) {
+    this.complement = complement;
+  }
 
-   @XmlElement(name = "internationalStreet")
-   public String getInternationalStreet() {
-      return internationalStreet;
-   }
+  public void setCountry(final String country) {
+    this.country = country;
+  }
 
-   @XmlElement(name = "number", required = true)
-   public String getNumber() {
-      return number;
-   }
+  public void setCountryName(final String countryName) {
+    this.countryName = countryName;
+  }
 
-   @XmlElement(name = "phone")
-   public String getPhone() {
-      return phone;
-   }
+  public void setDistrict(final String district) {
+    this.district = district;
+  }
 
-   @XmlElement(name = "postalCode", required = true)
-   public String getPostalCode() {
-      return postalCode;
-   }
+  public void setInternationalStateAndCity(final String internationalStateAndCity) {
+    this.internationalStateAndCity = internationalStateAndCity;
+  }
 
-   @XmlElement(name = "stateOrProvince", required = true)
-   public String getStateOrProvince() {
-      return stateOrProvince;
-   }
+  public void setInternationalStreet(final String internationalStreet) {
+    this.internationalStreet = internationalStreet;
+  }
 
-   @XmlElement(name = "street1", required = true)
-   public String getStreet1() {
-      return street1;
-   }
+  public void setNumber(final String number) {
+    this.number = number;
+  }
 
-   @XmlElement(name = "street2")
-   public String getStreet2() {
-      return street2;
-   }
+  public void setPhone(final String phone) {
+    this.phone = phone;
+  }
 
-   @Override
-   public void prePersist() {
-      return;
-   }
+  public void setPostalCode(final String postalCode) {
+    this.postalCode = postalCode;
+  }
 
-   @Override
-   public void preUpdate() {
-      return;
-   }
+  public void setStateOrProvince(final String stateOrProvince) {
+    this.stateOrProvince = stateOrProvince;
+  }
 
-   public void setCityName(String cityName) {
-      this.cityName = cityName;
-   }
+  public void setStreet1(final String street1) {
+    this.street1 = street1;
+  }
 
-   public void setComplement(String complement) {
-      this.complement = complement;
-   }
-
-   public void setCountry(String country) {
-      this.country = country;
-   }
-
-   public void setCountryName(String countryName) {
-      this.countryName = countryName;
-   }
-
-   public void setDistrict(String district) {
-      this.district = district;
-   }
-
-   public void setInternationalStateAndCity(String internationalStateAndCity) {
-      this.internationalStateAndCity = internationalStateAndCity;
-   }
-
-   public void setInternationalStreet(String internationalStreet) {
-      this.internationalStreet = internationalStreet;
-   }
-
-   public void setNumber(String number) {
-      this.number = number;
-   }
-
-   public void setPhone(String phone) {
-      this.phone = phone;
-   }
-
-   public void setPostalCode(String postalCode) {
-      this.postalCode = postalCode;
-   }
-
-   public void setStateOrProvince(String stateOrProvince) {
-      this.stateOrProvince = stateOrProvince;
-   }
-
-   public void setStreet1(String street1) {
-      this.street1 = street1;
-   }
-
-   public void setStreet2(String street2) {
-      this.street2 = street2;
-   }
+  public void setStreet2(final String street2) {
+    this.street2 = street2;
+  }
 }

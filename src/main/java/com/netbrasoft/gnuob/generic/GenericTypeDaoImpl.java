@@ -1,4 +1,22 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GENERIC_TYPE_DAO_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PRIMARY_UNIT_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.UNCHECKED_VALUE;
 
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -11,91 +29,83 @@ import org.hibernate.Session;
 
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
-@Stateless(name = "GenericTypeDaoImpl")
-@Interceptors(value = { AppSimonInterceptor.class })
-public class GenericTypeDaoImpl<T> implements GenericTypeDao<T> {
+@Stateless(name = GENERIC_TYPE_DAO_IMPL_NAME)
+@Interceptors(value = {AppSimonInterceptor.class})
+public class GenericTypeDaoImpl<T> implements IGenericTypeDao<T> {
 
-   @PersistenceContext(unitName = "primary")
-   private EntityManager entityManager;
+  @PersistenceContext(unitName = PRIMARY_UNIT_NAME)
+  private EntityManager entityManager;
 
-   public GenericTypeDaoImpl() {
+  @Override
+  public LockModeType getLockModeTypeOfType(final T type) {
+    return entityManager.getLockMode(type);
+  }
 
-   }
+  @Override
+  public void lock(final T type, final LockModeType lockModeType) {
+    entityManager.lock(type, lockModeType);
+  }
 
-   @Override
-   public boolean contains(T type) {
-      return entityManager.contains(type);
-   }
+  @SuppressWarnings(UNCHECKED_VALUE)
+  @Override
+  public T find(final T type, final long id, final LockModeType lockModeType) {
+    return (T) entityManager.find(type.getClass(), id, lockModeType);
+  }
 
-   @Override
-   public void disableFilter(String filterName) {
-      Session session = getDelegate();
-      session.disableFilter(filterName);
-   }
+  @Override
+  public void persist(final T type) {
+    entityManager.persist(type);
+  }
 
-   @Override
-   public void enableFilter(String fiterName, Parameter... param) {
-      Session session = getDelegate();
-      Filter filter = session.enableFilter(fiterName);
+  @Override
+  public T merge(final T type) {
+    return entityManager.merge(type);
+  }
 
-      for (Parameter p : param) {
-         filter.setParameter(p.getName(), p.getValue());
-      }
-   }
+  @Override
+  public T refresh(final T type, final long id, final LockModeType lockModeType) {
+    entityManager.refresh(type);
+    return type;
+  }
 
-   @SuppressWarnings("unchecked")
-   @Override
-   public T find(T type, long id, LockModeType lockModeType) {
-      return (T) entityManager.find(type.getClass(), id, lockModeType);
-   }
+  @Override
+  public void remove(final T type) {
+    entityManager.remove(entityManager.contains(type) ? type : entityManager.merge(type));
+  }
 
-   @Override
-   public void flush() {
-      entityManager.flush();
-   }
+  @Override
+  public boolean contains(final T type) {
+    return entityManager.contains(type);
+  }
 
-   @Override
-   public Session getDelegate() {
-      return ((Session) entityManager.getDelegate());
-   }
+  @Override
+  public void flush() {
+    entityManager.flush();
+  }
 
-   @Override
-   public LockModeType getLockModeTypeOfType(T type) {
-      return entityManager.getLockMode(type);
-   }
+  @Override
+  public void disableFilter(final String filterName) {
+    getDelegate().disableFilter(filterName);
+  }
 
-   @Override
-   public boolean isOpen() {
-      return entityManager.isOpen();
-   }
+  @Override
+  public void enableFilter(final String fiterName, final Parameter... param) {
+    setFilterParameters(getDelegate().enableFilter(fiterName), param);
+  }
 
-   @Override
-   public void lock(T type, LockModeType lockModeType) {
-      entityManager.lock(type, lockModeType);
-   }
+  private void setFilterParameters(final Filter filter, final Parameter... param) {
+    for (final Parameter p : param) {
+      filter.setParameter(p.getName(), p.getValue());
+    }
+  }
 
-   @Override
-   public void merge(T type) {
-      entityManager.merge(type);
-   }
+  @Override
+  public Session getDelegate() {
+    return (Session) entityManager.getDelegate();
+  }
 
-   @Override
-   public void persist(T type) {
-      entityManager.persist(type);
-   }
-
-   @Override
-   public T refresh(T type, long id, LockModeType lockModeType) {
-      if (!entityManager.contains(type)) {
-         return find(type, id, lockModeType);
-      }
-
-      entityManager.refresh(type);
-      return type;
-   }
-
-   @Override
-   public void remove(T type) {
-      entityManager.remove(entityManager.contains(type) ? type : entityManager.merge(type));
-   }
+  @Override
+  public boolean isOpen() {
+    return entityManager.isOpen();
+  }
 }

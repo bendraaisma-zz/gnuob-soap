@@ -1,6 +1,39 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.customer;
 
-import java.sql.Date;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.BUYER_EMAIL_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.BUYER_MARKETING_EMAIL_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTACT_PHONE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CUSTOMER_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CUSTOMER_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DATE_OF_BIRTH_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.FIRST_NAME_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.FRIENDLY_NAME_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.LAST_NAME_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MIDDLE_NAME_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAYER_BUSINESS_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAYER_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAYER_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAYER_STATUS_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SALUTATION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUFFIX_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_ID_TYPE_COLUMN_NAME;
+
+import java.util.Date;
 
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -8,245 +41,234 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import com.netbrasoft.gnuob.generic.jaxb.JaxbDateAdapter;
-import com.netbrasoft.gnuob.generic.security.Access;
+import org.apache.velocity.context.Context;
+
+import com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
+import com.netbrasoft.gnuob.generic.security.AbstractAccess;
 
 @Cacheable(value = true)
-@Entity(name = Customer.ENTITY)
-@Table(name = Customer.TABLE)
-@XmlRootElement(name = Customer.ENTITY)
-public class Customer extends Access {
+@Entity(name = CUSTOMER_ENTITY_NAME)
+@Table(name = CUSTOMER_TABLE_NAME)
+@XmlRootElement(name = CUSTOMER_ENTITY_NAME)
+public class Customer extends AbstractAccess {
 
-   private static final long serialVersionUID = -4021500012055256731L;
-   protected static final String ENTITY = "Customer";
-   protected static final String TABLE = "GNUOB_CUSTOMERS";
+  private static final long serialVersionUID = -4021500012055256731L;
 
-   @Column(name = "SALUTATION")
-   private String salutation;
+  private Address address;
+  private String buyerEmail;
+  private String buyerMarketingEmail;
+  private String contactPhone;
+  private Date dateOfBirth;
+  private String firstName;
+  private String friendlyName;
+  private String lastName;
+  private String middleName;
+  private String payer;
+  private String payerBusiness;
+  private String payerId;
+  private String payerStatus;
+  private String salutation;
+  private String suffix;
+  private String taxId;
+  private String taxIdType;
 
-   @Column(name = "FIRST_NAME", nullable = false)
-   private String firstName;
+  public Customer() {}
 
-   @Column(name = "FRIENDLY_NAME")
-   private String friendlyName;
+  @Override
+  @Transient
+  public boolean isDetached() {
+    return isAbstractTypeDetached() || isAddressAttached();
+  }
 
-   @Column(name = "PREFIX")
-   private String suffix;
+  @Transient
+  private boolean isAddressAttached() {
+    return address != null && address.isDetached();
+  }
 
-   @Column(name = "LAST_NAME", nullable = false)
-   private String lastName;
+  @Override
+  public void prePersist() {}
 
-   @Column(name = "MIDDLE_NAME")
-   private String middleName;
+  @Override
+  public void preUpdate() {}
 
-   @Column(name = "DATE_OF_BIRTH")
-   private Date dateOfBirth;
+  @Override
+  public Context accept(final IContextVisitor visitor) {
+    return visitor.visit(this);
+  }
 
-   @Column(name = "PAYER_BUSINESS")
-   private String payerBusiness;
+  @XmlElement(required = true)
+  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
+  public Address getAddress() {
+    return address;
+  }
 
-   @Column(name = "PAYER_ID")
-   private String payerId;
+  @XmlElement(required = true)
+  @Column(name = BUYER_EMAIL_COLUMN_NAME, nullable = false)
+  public String getBuyerEmail() {
+    return buyerEmail;
+  }
 
-   @Column(name = "BUYER_EMAIL", nullable = false)
-   private String buyerEmail;
+  @XmlElement
+  @Column(name = BUYER_MARKETING_EMAIL_COLUMN_NAME)
+  public String getBuyerMarketingEmail() {
+    return buyerMarketingEmail;
+  }
 
-   @Column(name = "BUYER_MARKETING_EMAIL")
-   private String buyerMarketingEmail;
+  @XmlElement
+  @Column(name = CONTACT_PHONE_COLUMN_NAME)
+  public String getContactPhone() {
+    return contactPhone;
+  }
 
-   @Column(name = "PAYER")
-   private String payer;
+  @XmlElement
+  @Column(name = DATE_OF_BIRTH_COLUMN_NAME)
+  public Date getDateOfBirth() {
+    return dateOfBirth;
+  }
 
-   @Column(name = "PAYER_STATUS")
-   private String payerStatus;
+  @XmlElement(required = true)
+  @Column(name = FIRST_NAME_COLUMN_NAME, nullable = false)
+  public String getFirstName() {
+    return firstName;
+  }
 
-   @Column(name = "CONTACT_PHONE")
-   private String contactPhone;
+  @XmlElement
+  @Column(name = FRIENDLY_NAME_COLUMN_NAME)
+  public String getFriendlyName() {
+    return friendlyName == null ? friendlyName = getFirstName()
+        + (getMiddleName() == null || "".equals(getMiddleName().trim()) ? " " : " " + getMiddleName() + " ")
+        + getLastName() : friendlyName;
+  }
 
-   @Column(name = "TAX_ID_TYPE")
-   private String taxIdType;
+  @XmlElement(required = true)
+  @Column(name = LAST_NAME_COLUMN_NAME, nullable = false)
+  public String getLastName() {
+    return lastName;
+  }
 
-   @Column(name = "TAX_ID")
-   private String taxId;
+  @XmlElement
+  @Column(name = MIDDLE_NAME_COLUMN_NAME)
+  public String getMiddleName() {
+    return middleName;
+  }
 
-   @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true)
-   private Address address;
+  @XmlElement
+  @Column(name = PAYER_COLUMN_NAME)
+  public String getPayer() {
+    return payer;
+  }
 
-   public Customer() {
-   }
+  @XmlElement
+  @Column(name = PAYER_BUSINESS_COLUMN_NAME)
+  public String getPayerBusiness() {
+    return payerBusiness;
+  }
 
-   @XmlElement(name = "address", required = true)
-   public Address getAddress() {
-      return address;
-   }
+  @XmlElement
+  @Column(name = PAYER_ID_COLUMN_NAME)
+  public String getPayerId() {
+    return payerId;
+  }
 
-   @XmlElement(name = "buyerEmail", required = true)
-   public String getBuyerEmail() {
-      return buyerEmail;
-   }
+  @XmlElement
+  @Column(name = PAYER_STATUS_COLUMN_NAME)
+  public String getPayerStatus() {
+    return payerStatus;
+  }
 
-   @XmlElement(name = "buyerMarketingEmail")
-   public String getBuyerMarketingEmail() {
-      return buyerMarketingEmail;
-   }
+  @XmlElement
+  @Column(name = SALUTATION_COLUMN_NAME)
+  public String getSalutation() {
+    return salutation;
+  }
 
-   @XmlElement(name = "contactPhone")
-   public String getContactPhone() {
-      return contactPhone;
-   }
+  @XmlElement
+  @Column(name = SUFFIX_COLUMN_NAME)
+  public String getSuffix() {
+    return suffix;
+  }
 
-   @XmlElement(name = "dateOfBirth", required = true)
-   @XmlJavaTypeAdapter(JaxbDateAdapter.class)
-   public Date getDateOfBirth() {
-      return dateOfBirth;
-   }
+  @XmlElement
+  @Column(name = TAX_ID_COLUMN_NAME)
+  public String getTaxId() {
+    return taxId;
+  }
 
-   @XmlElement(name = "firstName", required = true)
-   public String getFirstName() {
-      return firstName;
-   }
+  @XmlElement
+  @Column(name = TAX_ID_TYPE_COLUMN_NAME)
+  public String getTaxIdType() {
+    return taxIdType;
+  }
 
-   @XmlElement(name = "friendlyName")
-   public String getFriendlyName() {
-      if (friendlyName == null) {
-         friendlyName = this.firstName + " " + (this.middleName == null ? "" : this.middleName) + " " + this.lastName;
-      }
-      return friendlyName;
-   }
+  public void setAddress(final Address address) {
+    this.address = address;
+  }
 
-   @XmlElement(name = "lastName", required = true)
-   public String getLastName() {
-      return lastName;
-   }
+  public void setBuyerEmail(final String buyerEmail) {
+    this.buyerEmail = buyerEmail;
+  }
 
-   @XmlElement(name = "middleName")
-   public String getMiddleName() {
-      return middleName;
-   }
+  public void setBuyerMarketingEmail(final String buyerMarketingEmail) {
+    this.buyerMarketingEmail = buyerMarketingEmail;
+  }
 
-   @XmlElement(name = "payer")
-   public String getPayer() {
-      return payer;
-   }
+  public void setContactPhone(final String contactPhone) {
+    this.contactPhone = contactPhone;
+  }
 
-   @XmlElement(name = "payerBusiness")
-   public String getPayerBusiness() {
-      return payerBusiness;
-   }
+  public void setDateOfBirth(final Date dateOfBirth) {
+    this.dateOfBirth = dateOfBirth;
+  }
 
-   @XmlElement(name = "payerId")
-   public String getPayerId() {
-      return payerId;
-   }
+  public void setFirstName(final String firstName) {
+    this.firstName = firstName;
+  }
 
-   @XmlElement(name = "payerStatus")
-   public String getPayerStatus() {
-      return payerStatus;
-   }
+  public void setFriendlyName(final String friendlyName) {
+    this.friendlyName = friendlyName;
+  }
 
-   @XmlElement(name = "salutation")
-   public String getSalutation() {
-      return salutation;
-   }
+  public void setLastName(final String lastName) {
+    this.lastName = lastName;
+  }
 
-   @XmlElement(name = "suffix")
-   public String getSuffix() {
-      return suffix;
-   }
+  public void setMiddleName(final String middleName) {
+    this.middleName = middleName;
+  }
 
-   @XmlElement(name = "taxId")
-   public String getTaxId() {
-      return taxId;
-   }
+  public void setPayer(final String payer) {
+    this.payer = payer;
+  }
 
-   @XmlElement(name = "taxIdType")
-   public String getTaxIdType() {
-      return taxIdType;
-   }
+  public void setPayerBusiness(final String payerBusiness) {
+    this.payerBusiness = payerBusiness;
+  }
 
-   @Override
-   public void prePersist() {
-      return;
-   }
+  public void setPayerId(final String payerId) {
+    this.payerId = payerId;
+  }
 
-   @Override
-   public void preUpdate() {
-      return;
-   }
+  public void setPayerStatus(final String payerStatus) {
+    this.payerStatus = payerStatus;
+  }
 
-   public void setAddress(Address address) {
-      this.address = address;
-   }
+  public void setSalutation(final String salutation) {
+    this.salutation = salutation;
+  }
 
-   public void setBuyerEmail(String buyerEmail) {
-      this.buyerEmail = buyerEmail;
-   }
+  public void setSuffix(final String suffix) {
+    this.suffix = suffix;
+  }
 
-   public void setBuyerMarketingEmail(String buyerMarketingEmail) {
-      this.buyerMarketingEmail = buyerMarketingEmail;
-   }
+  public void setTaxId(final String taxId) {
+    this.taxId = taxId;
+  }
 
-   public void setContactPhone(String contactPhone) {
-      this.contactPhone = contactPhone;
-   }
-
-   public void setDateOfBirth(Date dateOfBirth) {
-      this.dateOfBirth = dateOfBirth;
-   }
-
-   public void setFirstName(String firstName) {
-      this.firstName = firstName;
-   }
-
-   public void setFriendlyName(String friendlyName) {
-      this.friendlyName = friendlyName;
-   }
-
-   public void setLastName(String lastName) {
-      this.lastName = lastName;
-   }
-
-   public void setMiddleName(String middleName) {
-      this.middleName = middleName;
-   }
-
-   public void setPayer(String payer) {
-      this.payer = payer;
-   }
-
-   public void setPayerBusiness(String payerBusiness) {
-      this.payerBusiness = payerBusiness;
-   }
-
-   public void setPayerId(String payerId) {
-      this.payerId = payerId;
-   }
-
-   public void setPayerStatus(String payerStatus) {
-      this.payerStatus = payerStatus;
-   }
-
-   public void setPrefix(String suffix) {
-      this.suffix = suffix;
-   }
-
-   public void setSalutation(String salutation) {
-      this.salutation = salutation;
-   }
-
-   public void setSuffix(String suffix) {
-      this.suffix = suffix;
-   }
-
-   public void setTaxId(String taxId) {
-      this.taxId = taxId;
-   }
-
-   public void setTaxIdType(String taxIdType) {
-      this.taxIdType = taxIdType;
-   }
+  public void setTaxIdType(final String taxIdType) {
+    this.taxIdType = taxIdType;
+  }
 }

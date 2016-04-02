@@ -1,4 +1,41 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.offer;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DISCOUNT_TOTAL_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.EXTRA_AMOUNT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_OFFERS_GNUOB_OFFER_RECORDS_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_OFFERS_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.HANDLING_TOTAL_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.INSURANCE_TOTAL_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ITEM_TOTAL_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MAX_TOTAL_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OFFER_DESCRIPTION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OFFER_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OFFER_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OFFER_TABLE_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OFFER_TOTAL_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSITION_ASC;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.RECORDS_ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPPING_DISCOUNT_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPPING_TOTAL_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.START_POSITION_VALUE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_TOTAL_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static java.util.stream.Collectors.counting;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
@@ -10,268 +47,251 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.velocity.context.Context;
+
+import com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
 import com.netbrasoft.gnuob.generic.contract.Contract;
-import com.netbrasoft.gnuob.generic.security.Access;
+import com.netbrasoft.gnuob.generic.security.AbstractAccess;
 
 @Cacheable(value = false)
-@Entity(name = Offer.ENTITY)
-@Table(name = Offer.TABLE)
-@XmlRootElement(name = Offer.ENTITY)
-public class Offer extends Access {
+@Entity(name = OFFER_ENTITY_NAME)
+@Table(name = OFFER_TABLE_NAME)
+@XmlRootElement(name = OFFER_ENTITY_NAME)
+public class Offer extends AbstractAccess {
 
-   private static final long serialVersionUID = -3662500407068979105L;
-   protected static final String ENTITY = "Offer";
-   protected static final String TABLE = "GNUOB_OFFERS";
+  private static final long serialVersionUID = -3662500407068979105L;
 
-   @ManyToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-   private Contract contract;
+  private Contract contract;
+  private BigDecimal discountTotal;
+  private BigDecimal extraAmount;
+  private BigDecimal handlingTotal;
+  private BigDecimal insuranceTotal;
+  private BigDecimal itemTotal;
+  private BigDecimal maxTotal;
+  private String offerDescription;
+  private String offerId;
+  private BigDecimal offerTotal;
+  private Set<OfferRecord> records = new HashSet<OfferRecord>();
+  private BigDecimal shippingDiscount;
+  private BigDecimal shippingTotal;
+  private BigDecimal taxTotal;
 
-   @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE }, orphanRemoval = true, fetch = FetchType.EAGER)
-   @OrderBy("position asc")
-   private Set<OfferRecord> records = new HashSet<OfferRecord>();
+  public Offer() {}
 
-   @Column(name = "OFFER_ID", nullable = false)
-   private String offerId;
+  @Override
+  @Transient
+  public boolean isDetached() {
+    return isAbstractTypeDetached() || isContractDetached() || isOfferRecordsDetached();
+  }
 
-   @Column(name = "OFFER_DESCRIPTION")
-   private String offerDescription;
+  @Transient
+  private boolean isContractDetached() {
+    return contract != null && contract.isDetached();
+  }
 
-   @Column(name = "OFFER_TOTAL")
-   private BigDecimal offerTotal;
+  @Transient
+  private boolean isOfferRecordsDetached() {
+    return records != null && records.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
+  }
 
-   @Column(name = "DISCOUNT_TOTAL")
-   private BigDecimal discountTotal;
+  @Override
+  public void prePersist() {
+    getOfferId();
+    getTaxTotal();
+    getShippingTotal();
+    getOfferTotal();
+    getItemTotal();
+    getMaxTotal();
+    getDiscountTotal();
+    reinitAllPositionRecords(START_POSITION_VALUE);
+  }
 
-   @Column(name = "ITEM_TOTAL")
-   private BigDecimal itemTotal;
+  @Override
+  public void preUpdate() {
+    reinitAllPositionRecords(START_POSITION_VALUE);
+  }
 
-   @Column(name = "TAX_TOTAL")
-   private BigDecimal taxTotal;
+  private void reinitAllPositionRecords(int startPositionValue) {
+    for (final OfferRecord record : records) {
+      record.setPosition(Integer.valueOf(startPositionValue++));
+    }
+  }
 
-   @Column(name = "MAX_TOTAL")
-   private BigDecimal maxTotal;
+  @Override
+  public Context accept(final IContextVisitor visitor) {
+    return visitor.visit(this);
+  }
 
-   @Column(name = "HANDLING_TOTAL", nullable = false)
-   private BigDecimal handlingTotal;
+  @XmlElement(required = true)
+  @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+  public Contract getContract() {
+    return contract;
+  }
 
-   @Column(name = "INSURANCE_TOTAL", nullable = false)
-   private BigDecimal insuranceTotal;
+  @XmlElement
+  @Column(name = DISCOUNT_TOTAL_COLUMN_NAME)
+  public BigDecimal getDiscountTotal() {
+    if (discountTotal == null) {
+      discountTotal = BigDecimal.ZERO;
+      records.stream().forEach(e -> discountTotal.add(e.getDiscountTotal()));
+    }
+    return discountTotal;
+  }
 
-   @Column(name = "SHIPPING_DISCOUNT", nullable = false)
-   private BigDecimal shippingDiscount;
+  @XmlElement(required = true)
+  @Column(name = EXTRA_AMOUNT_COLUMN_NAME, nullable = false)
+  public BigDecimal getExtraAmount() {
+    return extraAmount == null ? extraAmount = getHandlingTotal().add(getTaxTotal()).add(getInsuranceTotal())
+        : extraAmount;
+  }
 
-   @Column(name = "SHIPPING_TOTAL", nullable = false)
-   private BigDecimal shippingTotal;
+  @XmlElement(required = true)
+  @Column(name = HANDLING_TOTAL_COLUMN_NAME, nullable = false)
+  public BigDecimal getHandlingTotal() {
+    return handlingTotal == null ? handlingTotal = BigDecimal.ZERO : handlingTotal;
+  }
 
-   @Column(name = "EXTRA_AMOUNT", nullable = false)
-   private BigDecimal extraAmount;
+  @XmlElement(required = true)
+  @Column(name = INSURANCE_TOTAL_COLUMN_NAME, nullable = false)
+  public BigDecimal getInsuranceTotal() {
+    return insuranceTotal == null ? insuranceTotal = BigDecimal.ZERO : insuranceTotal;
+  }
 
-   public Offer() {
+  @XmlElement
+  @Column(name = ITEM_TOTAL_COLUMN_NAME)
+  public BigDecimal getItemTotal() {
+    if (itemTotal == null) {
+      itemTotal = BigDecimal.ZERO;
+      records.stream().forEach(e -> itemTotal.add(e.getItemTotal()));
+    }
+    return itemTotal;
+  }
 
-   }
+  @XmlElement
+  @Column(name = MAX_TOTAL_COLUMN_NAME)
+  public BigDecimal getMaxTotal() {
+    return maxTotal == null ? maxTotal = getOfferTotal() : maxTotal;
+  }
 
-   @XmlElement(name = "contract", required = true)
-   public Contract getContract() {
-      return contract;
-   }
+  @XmlElement
+  @Column(name = OFFER_DESCRIPTION_COLUMN_NAME)
+  public String getOfferDescription() {
+    return offerDescription;
+  }
 
-   @XmlElement(name = "discountTotal")
-   public BigDecimal getDiscountTotal() {
-      if (discountTotal == null) {
-         discountTotal = BigDecimal.ZERO;
+  @XmlElement(required = true)
+  @Column(name = OFFER_ID_COLUMN_NAME, nullable = false)
+  public String getOfferId() {
+    return offerId == null || "".equals(offerId.trim()) ? offerId = UUID.randomUUID().toString() : offerId;
+  }
 
-         for (OfferRecord offerRecord : records) {
-            discountTotal = discountTotal.add(offerRecord.getDiscountTotal());
-         }
-      }
-      return discountTotal;
-   }
+  @XmlElement
+  @Column(name = OFFER_TOTAL_COLUMN_NAME)
+  public BigDecimal getOfferTotal() {
+    return offerTotal == null
+        ? offerTotal = getItemTotal().add(getShippingTotal()).subtract(getShippingDiscount()).add(getExtraAmount())
+        : offerTotal;
+  }
 
-   @XmlElement(name = "extraAmount", required = true)
-   public BigDecimal getExtraAmount() {
-      if (extraAmount == null) {
-         extraAmount = getHandlingTotal().add(getTaxTotal()).add(getInsuranceTotal());
-      }
+  @OrderBy(POSITION_ASC)
+  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
+      orphanRemoval = true, fetch = FetchType.EAGER)
+  @JoinTable(name = GNUOB_OFFERS_GNUOB_OFFER_RECORDS_TABLE_NAME,
+      joinColumns = {@JoinColumn(name = GNUOB_OFFERS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
+      inverseJoinColumns = {@JoinColumn(name = RECORDS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
+  public Set<OfferRecord> getRecords() {
+    return records;
+  }
 
-      return extraAmount;
-   }
+  @XmlElement(required = true)
+  @Column(name = SHIPPING_DISCOUNT_COLUMN_NAME, nullable = false)
+  public BigDecimal getShippingDiscount() {
+    return shippingDiscount == null ? shippingDiscount = BigDecimal.ZERO : shippingDiscount;
+  }
 
-   @XmlElement(name = "handlingTotal", required = true)
-   public BigDecimal getHandlingTotal() {
-      return handlingTotal;
-   }
+  @XmlElement
+  @Column(name = SHIPPING_TOTAL_COLUMN_NAME, nullable = false)
+  public BigDecimal getShippingTotal() {
+    if (shippingTotal == null) {
+      shippingTotal = BigDecimal.ZERO;
+      records.stream().forEach(e -> shippingTotal.add(e.getShippingTotal()));
+    }
+    return shippingTotal;
+  }
 
-   @XmlElement(name = "insuranceTotal", required = true)
-   public BigDecimal getInsuranceTotal() {
-      return insuranceTotal;
-   }
+  @XmlElement
+  @Column(name = TAX_TOTAL_COLUMN_NAME)
+  public BigDecimal getTaxTotal() {
+    if (taxTotal == null) {
+      taxTotal = BigDecimal.ZERO;
+      records.stream().forEach(e -> taxTotal.add(e.getTaxTotal()));
+    }
+    return taxTotal;
+  }
 
-   @XmlElement(name = "itemTotal")
-   public BigDecimal getItemTotal() {
-      if (itemTotal == null) {
-         itemTotal = BigDecimal.ZERO;
+  public void setContract(final Contract contract) {
+    this.contract = contract;
+  }
 
-         for (OfferRecord offerRecord : records) {
-            itemTotal = itemTotal.add(offerRecord.getItemTotal());
-         }
-      }
-      return itemTotal;
-   }
+  public void setDiscountTotal(final BigDecimal discountTotal) {
+    this.discountTotal = discountTotal;
+  }
 
-   @XmlElement(name = "maxTotal")
-   public BigDecimal getMaxTotal() {
-      if (maxTotal == null) {
-         maxTotal = getOfferTotal();
-      }
+  public void setExtraAmount(final BigDecimal extraAmount) {
+    this.extraAmount = extraAmount;
+  }
 
-      return maxTotal;
-   }
+  public void setHandlingTotal(final BigDecimal handlingTotal) {
+    this.handlingTotal = handlingTotal;
+  }
 
-   @XmlElement(name = "offerDescription")
-   public String getOfferDescription() {
-      return offerDescription;
-   }
+  public void setInsuranceTotal(final BigDecimal insuranceTotal) {
+    this.insuranceTotal = insuranceTotal;
+  }
 
-   @XmlElement(name = "offerId", required = true)
-   public String getOfferId() {
-      return offerId;
-   }
+  public void setItemTotal(final BigDecimal itemTotal) {
+    this.itemTotal = itemTotal;
+  }
 
-   @XmlElement(name = "offerTotal")
-   public BigDecimal getOfferTotal() {
-      if (offerTotal == null) {
-         offerTotal = getItemTotal().add(getShippingTotal()).subtract(getShippingDiscount()).add(getExtraAmount());
-      }
+  public void setMaxTotal(final BigDecimal maxTotal) {
+    this.maxTotal = maxTotal;
+  }
 
-      return offerTotal;
-   }
+  public void setOfferDescription(final String offerDescription) {
+    this.offerDescription = offerDescription;
+  }
 
-   public Set<OfferRecord> getRecords() {
-      return records;
-   }
+  public void setOfferId(final String offerId) {
+    this.offerId = offerId;
+  }
 
-   @XmlElement(name = "shippingDiscount", required = true)
-   public BigDecimal getShippingDiscount() {
-      return shippingDiscount;
-   }
+  public void setOfferTotal(final BigDecimal offerTotal) {
+    this.offerTotal = offerTotal;
+  }
 
-   @XmlElement(name = "shippingTotal")
-   public BigDecimal getShippingTotal() {
-      if (shippingTotal == null) {
-         shippingTotal = BigDecimal.ZERO;
+  public void setRecords(final Set<OfferRecord> records) {
+    this.records = records;
+  }
 
-         for (OfferRecord offerRecord : records) {
-            shippingTotal = shippingTotal.add(offerRecord.getShippingTotal());
-         }
-      }
-      return shippingTotal;
-   }
+  public void setShippingDiscount(final BigDecimal shippingDiscount) {
+    this.shippingDiscount = shippingDiscount;
+  }
 
-   @XmlElement(name = "taxTotal")
-   public BigDecimal getTaxTotal() {
-      if (taxTotal == null) {
-         taxTotal = BigDecimal.ZERO;
+  public void setShippingTotal(final BigDecimal shippingTotal) {
+    this.shippingTotal = shippingTotal;
+  }
 
-         for (OfferRecord offerRecord : records) {
-            taxTotal = taxTotal.add(offerRecord.getTaxTotal());
-         }
-      }
-      return taxTotal;
-   }
-
-   public void offerId(String offerId) {
-      this.offerId = offerId;
-   }
-
-   private void positionRecords() {
-      int index = 0;
-
-      for (OfferRecord record : records) {
-         record.setPosition(Integer.valueOf(index++));
-      }
-   }
-
-   @Override
-   public void prePersist() {
-      if (offerId == null || "".equals(offerId.trim())) {
-         offerId = UUID.randomUUID().toString();
-      }
-
-      positionRecords();
-
-      getTaxTotal();
-      getShippingTotal();
-      getOfferTotal();
-      getItemTotal();
-      getMaxTotal();
-      getDiscountTotal();
-   }
-
-   @Override
-   public void preUpdate() {
-      positionRecords();
-   }
-
-   public void setContract(Contract contract) {
-      this.contract = contract;
-   }
-
-   public void setDiscountTotal(BigDecimal discountTotal) {
-      this.discountTotal = discountTotal;
-   }
-
-   public void setExtraAmount(BigDecimal extraAmount) {
-      this.extraAmount = extraAmount;
-   }
-
-   public void setHandlingTotal(BigDecimal handlingTotal) {
-      this.handlingTotal = handlingTotal;
-   }
-
-   public void setInsuranceTotal(BigDecimal insuranceTotal) {
-      this.insuranceTotal = insuranceTotal;
-   }
-
-   public void setItemTotal(BigDecimal itemTotal) {
-      this.itemTotal = itemTotal;
-   }
-
-   public void setMaxTotal(BigDecimal maxTotal) {
-      this.maxTotal = maxTotal;
-   }
-
-   public void setOfferDescription(String offerDescription) {
-      this.offerDescription = offerDescription;
-   }
-
-   public void setOfferId(String offerId) {
-      this.offerId = offerId;
-   }
-
-   public void setOfferTotal(BigDecimal offerTotal) {
-      this.offerTotal = offerTotal;
-   }
-
-   public void setRecords(Set<OfferRecord> records) {
-      this.records = records;
-   }
-
-   public void setShippingDiscount(BigDecimal shippingDiscount) {
-      this.shippingDiscount = shippingDiscount;
-   }
-
-   public void setShippingTotal(BigDecimal shippingTotal) {
-      this.shippingTotal = shippingTotal;
-   }
-
-   public void setTaxTotal(BigDecimal taxTotal) {
-      this.taxTotal = taxTotal;
-   }
+  public void setTaxTotal(final BigDecimal taxTotal) {
+    this.taxTotal = taxTotal;
+  }
 }

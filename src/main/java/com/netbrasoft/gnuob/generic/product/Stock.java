@@ -1,5 +1,12 @@
 package com.netbrasoft.gnuob.generic.product;
 
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MAX_QUANTITY_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MIN_QUANTITY_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.QUANTITY_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STOCK_ENTITY_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STOCK_PARAM_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STOCK_TABLE_NAME;
+
 import java.math.BigInteger;
 
 import javax.persistence.Cacheable;
@@ -10,78 +17,78 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import com.netbrasoft.gnuob.generic.Type;
+import com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = false)
-@Entity(name = Stock.ENTITY)
-@Table(name = Stock.TABLE)
+@Entity(name = STOCK_ENTITY_NAME)
+@Table(name = STOCK_TABLE_NAME)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@XmlRootElement(name = Stock.ENTITY)
-public class Stock extends Type {
+@XmlRootElement(name = STOCK_ENTITY_NAME)
+public class Stock extends AbstractType {
 
-   private static final long serialVersionUID = 748737455712566437L;
-   protected static final String ENTITY = "Stock";
-   protected static final String TABLE = "GNUOB_STOCKS";
+  private static final long serialVersionUID = 748737455712566437L;
 
-   @OneToOne(cascade = CascadeType.ALL, mappedBy = "stock")
-   private Product product;
+  private BigInteger maxQuantity;
+  private BigInteger minQuantity;
+  private Product product;
+  private BigInteger quantity;
 
-   @Column(name = "QUANTITY", nullable = false)
-   private BigInteger quantity;
+  public Stock() {}
 
-   @Column(name = "MIN_QUANTITY", nullable = false)
-   private BigInteger minQuantity;
+  @Override
+  @Transient
+  public boolean isDetached() {
+    return isAbstractTypeDetached();
+  }
 
-   @Column(name = "MAX_QUANTITY", nullable = false)
-   private BigInteger maxQuantity;
+  @Override
+  public void prePersist() {}
 
-   @XmlElement(name = "maxQuantity", required = true)
-   public BigInteger getMaxQuantity() {
-      return maxQuantity;
-   }
+  @Override
+  public void preUpdate() {}
 
-   @XmlElement(name = "minQuantity", required = true)
-   public BigInteger getMinQuantity() {
-      return minQuantity;
-   }
+  @XmlElement(required = true)
+  @Column(name = MAX_QUANTITY_COLUMN_NAME, nullable = false)
+  public BigInteger getMaxQuantity() {
+    return maxQuantity;
+  }
 
-   @XmlTransient
-   public Product getProduct() {
-      return product;
-   }
+  @XmlElement(required = true)
+  @Column(name = MIN_QUANTITY_COLUMN_NAME, nullable = false)
+  public BigInteger getMinQuantity() {
+    return minQuantity;
+  }
 
-   @XmlElement(name = "quantity", required = true)
-   public BigInteger getQuantity() {
-      return quantity;
-   }
+  @XmlTransient
+  @OneToOne(cascade = CascadeType.ALL, mappedBy = STOCK_PARAM_NAME)
+  public Product getProduct() {
+    return product;
+  }
 
-   @Override
-   public void prePersist() {
-      return;
-   }
+  @XmlElement(required = true)
+  @Column(name = QUANTITY_COLUMN_NAME, nullable = false)
+  public BigInteger getQuantity() {
+    return quantity;
+  }
 
-   @Override
-   public void preUpdate() {
-      return;
-   }
+  public void setMaxQuantity(final BigInteger maxQuantity) {
+    this.maxQuantity = maxQuantity;
+  }
 
-   public void setMaxQuantity(BigInteger maxQuantity) {
-      this.maxQuantity = maxQuantity;
-   }
+  public void setMinQuantity(final BigInteger minQuantity) {
+    this.minQuantity = minQuantity;
+  }
 
-   public void setMinQuantity(BigInteger minQuantity) {
-      this.minQuantity = minQuantity;
-   }
+  public void setProduct(final Product product) {
+    this.product = product;
+  }
 
-   public void setProduct(Product product) {
-      this.product = product;
-   }
-
-   public void setQuantity(BigInteger quantity) {
-      this.quantity = quantity;
-   }
+  public void setQuantity(final BigInteger quantity) {
+    this.quantity = quantity;
+  }
 }

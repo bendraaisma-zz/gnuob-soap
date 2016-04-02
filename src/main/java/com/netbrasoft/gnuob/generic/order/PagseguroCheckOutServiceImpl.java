@@ -1,4 +1,25 @@
+/*
+ * Copyright 2016 Netbrasoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License
+ * is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 package com.netbrasoft.gnuob.generic.order;
+
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.EMAIL_PROPERTY;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_SITE_REDIRECT_PROPERTY_VALUE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PRODUCTION_TOKEN_PROPERTY;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SANDBOX_TOKEN_PROPERTY;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -9,12 +30,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.ejb.Stateless;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.SAXException;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
+import com.netbrasoft.gnuob.generic.security.OperationAccess;
+import com.netbrasoft.gnuob.generic.security.Rule.Operation;
 
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
@@ -31,304 +53,302 @@ import br.com.uol.pagseguro.service.NotificationService;
 import br.com.uol.pagseguro.service.TransactionSearchService;
 import br.com.uol.pagseguro.service.checkout.CheckoutService;
 
-@Stateless(name = "PagseguroCheckOutServiceImpl")
-public class PagseguroCheckOutServiceImpl<O extends Order> implements CheckOutService<O> {
+public abstract class PagseguroCheckOutServiceImpl<O extends Order> implements ICheckOutService<O> {
 
-   private static final String PAGSEGURO_EMAIL_PROPERTY = "pagseguro.email";
-   private static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY = "pagseguro.production.token";
-   private static final String PAGSEGURO_SANDBOX_TOKEN_PROPERTY = "pagseguro.sandbox.token";
-   private static final String GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE = "http://localhost:8080/pagseguro_notifications";
-   private static final String GNUOB_SITE_REDIRECT_PROPERTY_VALUE = "http://localhost:8080/confirmation.html";
-   private static final String PAGSEGURO_EMAIL_PROPERTY_VALUE = "badraaisma@msn.com";
-   private static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE = "NO_PRODUCTION_TOKEN";
-   private static final String PAGSEGURO_SANDBOX_TOKEN_PROPERTY_VALUE = "007D4EDFF33042E79EC7B8039B5F7FCE";
-   private static final String EMAIL_PROPERTY = System.getProperty(PAGSEGURO_EMAIL_PROPERTY, PAGSEGURO_EMAIL_PROPERTY_VALUE);
-   private static final String PRODUCTION_TOKEN_PROPERTY = System.getProperty(PAGSEGURO_PRODUCTION_TOKEN_PROPERTY, PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE);
-   private static final String SANDBOX_TOKEN_PROPERTY = System.getProperty(PAGSEGURO_SANDBOX_TOKEN_PROPERTY, PAGSEGURO_SANDBOX_TOKEN_PROPERTY_VALUE);
+  public PagseguroCheckOutServiceImpl() {
+    if (!PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE.equals(PRODUCTION_TOKEN_PROPERTY)) {
+      PagSeguroConfig.setProductionEnvironment();
+    }
+  }
 
-   public PagseguroCheckOutServiceImpl() {
-      if (!PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE.equals(PRODUCTION_TOKEN_PROPERTY)) {
-         PagSeguroConfig.setProductionEnvironment();
-      }
-   }
+  private String createCheckoutRequest(final Checkout checkout)
+      throws PagSeguroServiceException, ParserConfigurationException, SAXException, IOException {
+    final String email = EMAIL_PROPERTY;
+    final String productionToken = PRODUCTION_TOKEN_PROPERTY;
+    final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
 
-   private String createCheckoutRequest(Checkout checkout) throws PagSeguroServiceException, ParserConfigurationException, SAXException, IOException {
-      final String email = EMAIL_PROPERTY;
-      final String productionToken = PRODUCTION_TOKEN_PROPERTY;
-      final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
+    return CheckoutService.createCheckoutRequest(new AccountCredentials(email, productionToken, sandboxToken), checkout,
+        false);
+  }
 
-      return CheckoutService.createCheckoutRequest(new AccountCredentials(email, productionToken, sandboxToken), checkout, false);
-   }
+  private Address doAddress(final com.netbrasoft.gnuob.generic.customer.Address address) {
+    final Address addressType = new Address();
+    addressType.setCity(address.getCityName());
+    addressType.setStreet(address.getStreet1());
+    addressType.setComplement(address.getComplement());
+    addressType.setCountry(address.getCountry());
+    address.setDistrict(address.getDistrict());
+    addressType.setNumber(address.getNumber());
+    addressType.setPostalCode(address.getPostalCode());
+    addressType.setState(address.getStateOrProvince());
+    return addressType;
+  }
 
-   private Address doAddress(com.netbrasoft.gnuob.generic.customer.Address address) {
-      final Address addressType = new Address();
-      addressType.setCity(address.getCityName());
-      addressType.setStreet(address.getStreet1());
-      addressType.setComplement(address.getComplement());
-      addressType.setCountry(address.getCountry());
-      address.setDistrict(address.getDistrict());
-      addressType.setNumber(address.getNumber());
-      addressType.setPostalCode(address.getPostalCode());
-      addressType.setState(address.getStateOrProvince());
-      return addressType;
-   }
+  private void doAddress(final com.netbrasoft.gnuob.generic.customer.Address address, final Address addressType) {
+    address.setCountry(addressType.getCountry());
+    address.setStateOrProvince(addressType.getState());
+    address.setCityName(addressType.getCity());
+    address.setPostalCode(addressType.getPostalCode());
+    address.setDistrict(addressType.getDistrict());
+    address.setStreet1(addressType.getStreet());
+    address.setNumber(addressType.getNumber());
+    address.setComplement(addressType.getComplement());
+  }
 
-   private void doAddress(com.netbrasoft.gnuob.generic.customer.Address address, Address addressType) {
-      address.setCountry(addressType.getCountry());
-      address.setStateOrProvince(addressType.getState());
-      address.setCityName(addressType.getCity());
-      address.setPostalCode(addressType.getPostalCode());
-      address.setDistrict(addressType.getDistrict());
-      address.setStreet1(addressType.getStreet());
-      address.setNumber(addressType.getNumber());
-      address.setComplement(addressType.getComplement());
-   }
+  @Override
+  @OperationAccess(operation = Operation.NONE)
+  public void doCheckout(final O order) {
 
-   @Override
-   public void doCheckout(O order) {
+    // set checkout request fields.
+    final Checkout checkout = new Checkout();
+    checkout.setCurrency(
+        Currency.valueOf(NumberFormat.getCurrencyInstance(Locale.getDefault()).getCurrency().getCurrencyCode()));
+    checkout.setExtraAmount(order.getExtraAmount().setScale(2));
+    checkout.setNotificationURL(System.getProperty("gnuob." + order.getSite().getName() + ".pagsegure.notification",
+        GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE));
+    checkout.setRedirectURL(System.getProperty("gnuob." + order.getSite().getName() + ".pagseguro.redirect",
+        GNUOB_SITE_REDIRECT_PROPERTY_VALUE));
+    checkout.setReference(order.getOrderId());
 
-      // set checkout request fields.
-      final Checkout checkout = new Checkout();
-      checkout.setCurrency(Currency.valueOf(NumberFormat.getCurrencyInstance(Locale.getDefault()).getCurrency().getCurrencyCode()));
-      checkout.setExtraAmount(order.getExtraAmount().setScale(2));
-      checkout.setNotificationURL(System.getProperty("gnuob." + order.getSite().getName() + ".pagsegure.notification", GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE));
-      checkout.setRedirectURL(System.getProperty("gnuob." + order.getSite().getName() + ".pagseguro.redirect", GNUOB_SITE_REDIRECT_PROPERTY_VALUE));
-      checkout.setReference(order.getOrderId());
+    // set checkout shipping request details field..
+    checkout.setShipping(doShipping(order));
 
-      // set checkout shipping request details field..
-      checkout.setShipping(doShipping(order));
+    // set checkout items request details fields.
+    checkout.setItems(doItems(order));
 
-      // set checkout items request details fields.
-      checkout.setItems(doItems(order));
+    // Set checkout sender request details fields.
+    checkout.setSender(doSender(order));
 
-      // Set checkout sender request details fields.
-      checkout.setSender(doSender(order));
+    try {
+      // Do checkout call.
+      final String response = createCheckoutRequest(checkout);
+      order.setToken(response.split("code=")[1]);
+    } catch (PagSeguroServiceException | ParserConfigurationException | SAXException | IOException e) {
+      throw new GNUOpenBusinessServiceException("Exception from Pagseguro Checkout, please try again.", e);
+    }
+  }
 
-      try {
-         // Do checkout call.
-         final String response = createCheckoutRequest(checkout);
-         order.setToken(response.split("code=")[1]);
-      } catch (PagSeguroServiceException | ParserConfigurationException | SAXException | IOException e) {
-         throw new GNUOpenBusinessServiceException("Exception from Pagseguro Checkout, please try again.", e);
-      }
-   }
+  @Override
+  @OperationAccess(operation = Operation.NONE)
+  public void doCheckoutDetails(final O order) {
+    try {
+      final Transaction transaction = searchByOrderTransactionId(order);
 
-   @Override
-   public void doCheckoutDetails(O order) {
-      try {
-         final Transaction transaction = searchByOrderTransactionId(order);
+      // Information about the payer.
+      doSender(order, transaction.getSender());
 
-         // Information about the payer.
-         doSender(order, transaction.getSender());
+      // Information about the payment.
+      doPaymentDetails(order, transaction);
 
-         // Information about the payment.
-         doPaymentDetails(order, transaction);
+      // Status of the checkout session. If payment is completed, the
+      // transaction identification number of the resulting transaction is
+      // returned.
+      order.setCheckoutStatus(transaction.getStatus().name());
+    } catch (final PagSeguroServiceException e) {
+      throw new GNUOpenBusinessServiceException("Exception from Pagseguro Checkout, please try again.", e);
+    }
+  }
 
-         // Status of the checkout session. If payment is completed, the
-         // transaction identification number of the resulting transaction is
-         // returned.
-         order.setCheckoutStatus(transaction.getStatus().name());
-      } catch (final PagSeguroServiceException e) {
-         throw new GNUOpenBusinessServiceException("Exception from Pagseguro Checkout, please try again.", e);
-      }
-   }
+  @Override
+  @OperationAccess(operation = Operation.NONE)
+  public void doCheckoutPayment(final O order) {
+    try {
+      final Transaction transaction = searchByOrderTransactionId(order);
 
-   @Override
-   public void doCheckoutPayment(O order) {
-      try {
-         final Transaction transaction = searchByOrderTransactionId(order);
+      // Information about the payment.
+      order.getInvoice().getPayments().add(doPaymentInfo(transaction));
 
-         // Information about the payment.
-         order.getInvoice().getPayments().add(doPaymentInfo(transaction));
+      // Status of the checkout session. If payment is completed, the
+      // transaction identification number of the resulting transaction is
+      // returned.
+      order.setCheckoutStatus(transaction.getStatus().name());
+    } catch (final PagSeguroServiceException e) {
+      throw new GNUOpenBusinessServiceException("Exception from Pagseguro Checkout, please try again.", e);
+    }
+  }
 
-         // Status of the checkout session. If payment is completed, the
-         // transaction identification number of the resulting transaction is
-         // returned.
-         order.setCheckoutStatus(transaction.getStatus().name());
-      } catch (final PagSeguroServiceException e) {
-         throw new GNUOpenBusinessServiceException("Exception from Pagseguro Checkout, please try again.", e);
-      }
-   }
+  private Item doItem(final OrderRecord orderRecord) {
+    final Item item = new Item();
+    item.setAmount(orderRecord.getAmount().setScale(2));
+    item.setDescription(orderRecord.getDescription());
+    item.setId(orderRecord.getOrderRecordId());
+    item.setQuantity(orderRecord.getQuantity().intValue());
+    item.setShippingCost(orderRecord.getShippingCost());
+    item.setWeight(orderRecord.getItemWeight().longValue());
+    return item;
+  }
 
-   private Item doItem(OrderRecord orderRecord) {
-      final Item item = new Item();
-      item.setAmount(orderRecord.getAmount().setScale(2));
-      item.setDescription(orderRecord.getDescription());
-      item.setId(orderRecord.getNumber());
-      item.setQuantity(orderRecord.getQuantity().intValue());
-      item.setShippingCost(orderRecord.getShippingCost());
-      item.setWeight(orderRecord.getItemWeight().longValue());
-      return item;
-   }
+  private void doItem(final OrderRecord orderRecord, final Item item) {
+    orderRecord.setDescription(item.getDescription());
+    orderRecord.setAmount(item.getAmount());
+    orderRecord.setQuantity(BigInteger.valueOf(item.getQuantity()));
+  }
 
-   private void doItem(OrderRecord orderRecord, Item item) {
-      // TODO: BD not update but check if equal.
-      orderRecord.setDescription(item.getDescription());
-      orderRecord.setAmount(item.getAmount());
-      orderRecord.setQuantity(BigInteger.valueOf(item.getQuantity()));
-   }
+  private List<Item> doItems(final O order) {
 
-   private List<Item> doItems(O order) {
+    final List<Item> items = new ArrayList<Item>();
 
-      final List<Item> items = new ArrayList<Item>();
+    // Details about each individual item included in the order.
+    for (final OrderRecord orderRecord : order.getRecords()) {
+      items.add(doItem(orderRecord));
+    }
 
-      // Details about each individual item included in the order.
-      for (final OrderRecord orderRecord : order.getRecords()) {
-         items.add(doItem(orderRecord));
-      }
+    return items;
+  }
 
-      return items;
-   }
+  @Override
+  @OperationAccess(operation = Operation.NONE)
+  public O doNotification(final O order) {
+    try {
+      final Transaction transaction = searchByOrderNotificationCode(order);
 
-   @Override
-   public O doNotification(O order) {
-      try {
-         final Transaction transaction = searchByOrderNotificationCode(order);
-
-         // Information about the order and transaction.
-         order.setTransactionId(transaction.getCode());
-         order.setOrderId(transaction.getReference());
-
-         return order;
-      } catch (final PagSeguroServiceException e) {
-         throw new GNUOpenBusinessServiceException("Exception from Pagseguro Notification, please try again.", e);
-      }
-   }
-
-   private void doPaymentDetails(O order, Transaction transaction) {
-      // TODO: BD not update but check if equal.
+      // Information about the order and transaction.
       order.setTransactionId(transaction.getCode());
       order.setOrderId(transaction.getReference());
-      order.setDiscountTotal(transaction.getDiscountAmount());
-      order.setExtraAmount(transaction.getExtraAmount());
-      doShipping(order, transaction.getShipping());
+      order.setNotificationId(null);
 
-      // Details about each individual item included in the order.
-      for (final Item item : transaction.getItems()) {
-         for (final OrderRecord orderRecord : order.getRecords()) {
-            if (item.getId() == orderRecord.getNumber()) {
-               doItem(orderRecord, item);
-               break;
-            }
-         }
+      return order;
+    } catch (final PagSeguroServiceException e) {
+      throw new GNUOpenBusinessServiceException("Exception from Pagseguro Notification, please try again.", e);
+    }
+  }
+
+  private void doPaymentDetails(final O order, final Transaction transaction) {
+    order.setTransactionId(transaction.getCode());
+    order.setOrderId(transaction.getReference());
+    order.setDiscountTotal(transaction.getDiscountAmount());
+    order.setExtraAmount(transaction.getExtraAmount());
+    doShipping(order, transaction.getShipping());
+
+    // Details about each individual item included in the order.
+    for (final Item item : transaction.getItems()) {
+      for (final OrderRecord orderRecord : order.getRecords()) {
+        if (item.getId() == orderRecord.getOrderRecordId()) {
+          doItem(orderRecord, item);
+          break;
+        }
       }
-   }
+    }
+  }
 
-   private Payment doPaymentInfo(Transaction transaction) {
-      final Payment payment = new Payment();
+  private Payment doPaymentInfo(final Transaction transaction) {
+    final Payment payment = new Payment();
 
-      // Unique transaction ID of the payment.
-      payment.setTransactionId(transaction.getCode());
+    // Unique transaction ID of the payment.
+    payment.setTransactionId(transaction.getCode());
 
-      // Type of transaction.
-      payment.setTransactionType(transaction.getType().name());
+    // Type of transaction.
+    payment.setTransactionType(transaction.getType().name());
 
-      // Indicates whether the payment is instant or delayed.
-      payment.setPaymentType(transaction.getPaymentMethod().getType().getType());
+    // Indicates whether the payment is instant or delayed.
+    payment.setPaymentType(transaction.getPaymentMethod().getType().getType());
 
-      // The final amount charged, including any shipping and taxes from your
-      // Merchant Profile.
-      payment.setGrossAmount(transaction.getGrossAmount());
+    // The final amount charged, including any shipping and taxes from your
+    // Merchant Profile.
+    payment.setGrossAmount(transaction.getGrossAmount());
 
-      // Amount deposited in your Pagseguro account after a currency
-      // conversion.
-      payment.setSettleAmount(transaction.getNetAmount());
+    // Amount deposited in your Pagseguro account after a currency
+    // conversion.
+    payment.setSettleAmount(transaction.getNetAmount());
 
-      // Time/date stamp of payment.
-      if (transaction.getEscrowEndDate() != null) {
-         payment.setPaymentDate(new Date(transaction.getEscrowEndDate().getTime()));
-      }
+    // Time/date stamp of payment.
+    if (transaction.getEscrowEndDate() != null) {
+      payment.setPaymentDate(new Date(transaction.getEscrowEndDate().getTime()));
+    }
 
-      // Reason that this payment is being held.
-      payment.setHoldDecision(transaction.getCancellationSource());
+    // Reason that this payment is being held.
+    payment.setHoldDecision(transaction.getCancellationSource());
 
-      // Indica o número de parcelas que o comprador escolheu no pagamento com
-      // cartão de crédito.
-      payment.setInstallmentCount(BigInteger.valueOf(transaction.getInstallmentCount()));
+    // Indica o número de parcelas que o comprador escolheu no pagamento com
+    // cartão de crédito.
+    payment.setInstallmentCount(BigInteger.valueOf(transaction.getInstallmentCount()));
 
-      // Pagseguro fee amount charged for the transaction.
-      payment.setFeeAmount(transaction.getFeeAmount());
+    // Pagseguro fee amount charged for the transaction.
+    payment.setFeeAmount(transaction.getFeeAmount());
 
-      // The status of the payment.
-      payment.setPaymentStatus(transaction.getStatus().name());
+    // The status of the payment.
+    payment.setPaymentStatus(transaction.getStatus().name());
 
-      return payment;
-   }
+    return payment;
+  }
 
-   @Override
-   public void doRefundTransaction(O order) {
-      throw new UnsupportedOperationException("Refund transaction is not supported for PagSeguro.");
-   }
+  @Override
+  @OperationAccess(operation = Operation.NONE)
+  public void doRefundTransaction(final O order) {
+    throw new UnsupportedOperationException("Refund transaction is not supported for PagSeguro.");
+  }
 
-   private Sender doSender(O order) {
-      final Sender sender = new Sender();
-      sender.setEmail(order.getContract().getCustomer().getBuyerEmail());
-      sender.setName(order.getContract().getCustomer().getFriendlyName());
-      return sender;
-   }
+  private Sender doSender(final O order) {
+    final Sender sender = new Sender();
+    sender.setEmail(order.getContract().getCustomer().getBuyerEmail());
+    sender.setName(order.getContract().getCustomer().getFriendlyName());
+    return sender;
+  }
 
-   private void doSender(O order, Sender sender) {
-      // TODO: BD not update but check if equal.
-      order.getContract().getCustomer().setPayer(sender.getEmail());
-      order.getContract().getCustomer().setFriendlyName(sender.getName());
-      order.getContract().getCustomer().setContactPhone(sender.getPhone().toString());
-   }
+  private void doSender(final O order, final Sender sender) {
+    order.getContract().getCustomer().setPayer(sender.getEmail());
+    order.getContract().getCustomer().setFriendlyName(sender.getName());
+    order.getContract().getCustomer().setContactPhone(sender.getPhone().toString());
+  }
 
-   private Shipping doShipping(O order) {
-      final Shipping shipping = new Shipping();
+  private Shipping doShipping(final O order) {
+    final Shipping shipping = new Shipping();
 
-      final BigDecimal cost = order.getShippingTotal().subtract(order.getShippingDiscount());
-      shipping.setCost(cost.setScale(2));
-      shipping.setType(ShippingType.valueOf(order.getShipment().getShipmentType()));
+    final BigDecimal cost = order.getShippingTotal().subtract(order.getShippingDiscount());
+    shipping.setCost(cost.setScale(2));
+    shipping.setType(ShippingType.valueOf(order.getShipment().getShipmentType()));
 
-      // Address to which the order is shipped.
-      shipping.setAddress(doAddress(order.getShipment().getAddress()));
-      return shipping;
-   }
+    // Address to which the order is shipped.
+    shipping.setAddress(doAddress(order.getShipment().getAddress()));
+    return shipping;
+  }
 
-   private void doShipping(O order, Shipping shipping) {
-      order.setShippingTotal(shipping.getCost());
-      order.getShipment().setShipmentType(shipping.getType().name());
-      doAddress(order.getShipment().getAddress(), shipping.getAddress());
-   }
+  private void doShipping(final O order, final Shipping shipping) {
+    order.setShippingTotal(shipping.getCost());
+    order.getShipment().setShipmentType(shipping.getType().name());
+    doAddress(order.getShipment().getAddress(), shipping.getAddress());
+  }
 
-   @Override
-   public void doTransactionDetails(O order) {
-      try {
-         final Transaction transaction = searchByOrderTransactionId(order);
+  @Override
+  @OperationAccess(operation = Operation.NONE)
+  public void doTransactionDetails(final O order) {
+    try {
+      final Transaction transaction = searchByOrderTransactionId(order);
 
-         // Information about the payer.
-         doSender(order, transaction.getSender());
+      // Information about the payer.
+      doSender(order, transaction.getSender());
 
-         // Information about the payment.
-         doPaymentDetails(order, transaction);
+      // Information about the payment.
+      doPaymentDetails(order, transaction);
 
-         // Information about the payment.
-         order.getInvoice().getPayments().add(doPaymentInfo(transaction));
+      // Information about the payment.
+      order.getInvoice().getPayments().add(doPaymentInfo(transaction));
 
-         // Status of the checkout session. If payment is completed, the
-         // transaction identification number of the resulting transaction is
-         // returned.
-         order.setCheckoutStatus(transaction.getStatus().name());
+      // Status of the checkout session. If payment is completed, the
+      // transaction identification number of the resulting transaction is
+      // returned.
+      order.setCheckoutStatus(transaction.getStatus().name());
 
-      } catch (final PagSeguroServiceException e) {
-         throw new GNUOpenBusinessServiceException("Exception from Pagseguro Transaction Details, please try again.", e);
-      }
-   }
+    } catch (final PagSeguroServiceException e) {
+      throw new GNUOpenBusinessServiceException("Exception from Pagseguro Transaction Details, please try again.", e);
+    }
+  }
 
-   private Transaction searchByOrderNotificationCode(O order) throws PagSeguroServiceException {
-      final String email = EMAIL_PROPERTY;
-      final String productionToken = PRODUCTION_TOKEN_PROPERTY;
-      final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
+  private Transaction searchByOrderNotificationCode(final O order) throws PagSeguroServiceException {
+    final String email = EMAIL_PROPERTY;
+    final String productionToken = PRODUCTION_TOKEN_PROPERTY;
+    final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
 
-      return NotificationService.checkTransaction(new AccountCredentials(email, productionToken, sandboxToken), order.getNotificationId());
-   }
+    return NotificationService.checkTransaction(new AccountCredentials(email, productionToken, sandboxToken),
+        order.getNotificationId());
+  }
 
-   private Transaction searchByOrderTransactionId(O order) throws PagSeguroServiceException {
-      final String email = EMAIL_PROPERTY;
-      final String productionToken = PRODUCTION_TOKEN_PROPERTY;
-      final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
+  private Transaction searchByOrderTransactionId(final O order) throws PagSeguroServiceException {
+    final String email = EMAIL_PROPERTY;
+    final String productionToken = PRODUCTION_TOKEN_PROPERTY;
+    final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
 
-      return TransactionSearchService.searchByCode(new AccountCredentials(email, productionToken, sandboxToken), order.getTransactionId());
-   }
+    return TransactionSearchService.searchByCode(new AccountCredentials(email, productionToken, sandboxToken),
+        order.getTransactionId());
+  }
 }
