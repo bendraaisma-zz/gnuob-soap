@@ -41,6 +41,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSITION_COLU
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PRODUCT_NUMBER_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.QUANTITY_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPPING_COST_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.START_POSITION_VALUE;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 import static java.util.stream.Collectors.counting;
@@ -116,7 +117,7 @@ public class OrderRecord extends AbstractType {
 
   @Transient
   private boolean isOptionsDetached() {
-    return options.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
+    return options != null && options.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
   @Override
@@ -137,11 +138,18 @@ public class OrderRecord extends AbstractType {
     getItemHeight();
     getItemHeightUnit();
     getItemUrl();
+    reinitAllPositionOptions(START_POSITION_VALUE);
   }
 
   @Override
   public void preUpdate() {
-    getOrderRecordId();
+    prePersist();
+  }
+
+  private void reinitAllPositionOptions(int startPositionValue) {
+    for (final Option option : options) {
+      option.setPosition(Integer.valueOf(startPositionValue++));
+    }
   }
 
   @XmlElement
@@ -198,7 +206,7 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = ITEM_LENGTH_UNIT_COLUMN_NAME)
   public String getItemLengthUnit() {
-    return product != null && itemLengthUnit == null ? itemHeightUnit = product.getItemHeightUnit() : itemLengthUnit;
+    return product != null && itemLengthUnit == null ? itemLengthUnit = product.getItemLengthUnit() : itemLengthUnit;
   }
 
   @Transient

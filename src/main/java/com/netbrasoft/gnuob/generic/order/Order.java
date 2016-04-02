@@ -140,7 +140,7 @@ public class Order extends AbstractAccess {
 
   @Transient
   private boolean isOrderRecordsDetached() {
-    return records.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
+    return records != null && records.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
   @Transient
