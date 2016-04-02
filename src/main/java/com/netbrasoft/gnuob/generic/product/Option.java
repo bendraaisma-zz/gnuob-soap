@@ -75,7 +75,7 @@ public class Option extends AbstractType {
 
   @Transient
   private boolean isSubOptionsDetached() {
-    return subOptions.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
+    return subOptions != null && subOptions.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
   @Override
@@ -85,7 +85,7 @@ public class Option extends AbstractType {
 
   @Override
   public void preUpdate() {
-    reinitAllPositionSubOptions(START_POSITION_VALUE);
+    prePersist();
   }
 
   private void reinitAllPositionSubOptions(int startPositionValue) {

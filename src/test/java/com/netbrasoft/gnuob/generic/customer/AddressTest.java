@@ -137,92 +137,92 @@ public class AddressTest {
 
   @Test
   public void testSetCityName() {
-    spyAddress.setCityName("Holding");
-    assertEquals("CityName", "Holding", spyAddress.getCityName());
+    spyAddress.setCityName("Folly words widow one downs few age every seven.");
+    assertEquals("CityName", "Folly words widow one downs few age every seven.", spyAddress.getCityName());
     verify(spyAddress, times(1)).setCityName(anyString());
   }
 
   @Test
   public void testSetComplement() {
-    spyAddress.setComplement("Holding");
-    assertEquals("Complement", "Holding", spyAddress.getComplement());
+    spyAddress.setComplement("Folly words widow one downs few age every seven.");
+    assertEquals("Complement", "Folly words widow one downs few age every seven.", spyAddress.getComplement());
     verify(spyAddress, times(1)).setComplement(anyString());
   }
 
   @Test
   public void testSetCountry() {
-    spyAddress.setCountry("Holding");
-    assertEquals("Country", "Holding", spyAddress.getCountry());
+    spyAddress.setCountry("Folly words widow one downs few age every seven.");
+    assertEquals("Country", "Folly words widow one downs few age every seven.", spyAddress.getCountry());
     verify(spyAddress, times(1)).setCountry(anyString());
   }
 
   @Test
   public void testSetCountryName() {
-    spyAddress.setCountryName("Holding");
-    assertEquals("CountryName", "Holding", spyAddress.getCountryName());
+    spyAddress.setCountryName("Folly words widow one downs few age every seven.");
+    assertEquals("CountryName", "Folly words widow one downs few age every seven.", spyAddress.getCountryName());
     verify(spyAddress, times(1)).setCountryName(anyString());
   }
 
   @Test
   public void testSetDistrict() {
-    spyAddress.setDistrict("Holding");
-    assertEquals("District", "Holding", spyAddress.getDistrict());
+    spyAddress.setDistrict("Folly words widow one downs few age every seven.");
+    assertEquals("District", "Folly words widow one downs few age every seven.", spyAddress.getDistrict());
     verify(spyAddress, times(1)).setDistrict(anyString());
   }
 
   @Test
   public void testSetInternationalStateAndCity() {
-    spyAddress.setInternationalStateAndCity("Holding");
-    assertEquals("InternationalStateAndCity", "Holding", spyAddress.getInternationalStateAndCity());
+    spyAddress.setInternationalStateAndCity("Folly words widow one downs few age every seven.");
+    assertEquals("InternationalStateAndCity", "Folly words widow one downs few age every seven.", spyAddress.getInternationalStateAndCity());
     verify(spyAddress, times(1)).setInternationalStateAndCity(anyString());
   }
 
   @Test
   public void testSetInternationalStreet() {
-    spyAddress.setInternationalStreet("Holding");
-    assertEquals("InternationalStreet", "Holding", spyAddress.getInternationalStreet());
+    spyAddress.setInternationalStreet("Folly words widow one downs few age every seven.");
+    assertEquals("InternationalStreet", "Folly words widow one downs few age every seven.", spyAddress.getInternationalStreet());
     verify(spyAddress, times(1)).setInternationalStreet(anyString());
   }
 
   @Test
   public void testSetNumber() {
-    spyAddress.setNumber("Holding");
-    assertEquals("Number", "Holding", spyAddress.getNumber());
+    spyAddress.setNumber("Folly words widow one downs few age every seven.");
+    assertEquals("Number", "Folly words widow one downs few age every seven.", spyAddress.getNumber());
     verify(spyAddress, times(1)).setNumber(anyString());
   }
 
   @Test
   public void testSetPhone() {
-    spyAddress.setPhone("Holding");
-    assertEquals("Phone", "Holding", spyAddress.getPhone());
+    spyAddress.setPhone("Folly words widow one downs few age every seven.");
+    assertEquals("Phone", "Folly words widow one downs few age every seven.", spyAddress.getPhone());
     verify(spyAddress, times(1)).setPhone(anyString());
   }
 
   @Test
   public void testSetPostalCode() {
-    spyAddress.setPostalCode("Holding");
-    assertEquals("PostalCode", "Holding", spyAddress.getPostalCode());
+    spyAddress.setPostalCode("Folly words widow one downs few age every seven.");
+    assertEquals("PostalCode", "Folly words widow one downs few age every seven.", spyAddress.getPostalCode());
     verify(spyAddress, times(1)).setPostalCode(anyString());
   }
 
   @Test
   public void testSetStateOrProvince() {
-    spyAddress.setStateOrProvince("Holding");
-    assertEquals("StateOrProvince", "Holding", spyAddress.getStateOrProvince());
+    spyAddress.setStateOrProvince("Folly words widow one downs few age every seven.");
+    assertEquals("StateOrProvince", "Folly words widow one downs few age every seven.", spyAddress.getStateOrProvince());
     verify(spyAddress, times(1)).setStateOrProvince(anyString());
   }
 
   @Test
   public void testSetStreet1() {
-    spyAddress.setStreet1("Holding");
-    assertEquals("Street1", "Holding", spyAddress.getStreet1());
+    spyAddress.setStreet1("Folly words widow one downs few age every seven.");
+    assertEquals("Street1", "Folly words widow one downs few age every seven.", spyAddress.getStreet1());
     verify(spyAddress, times(1)).setStreet1(anyString());
   }
 
   @Test
   public void testSetStreet2() {
-    spyAddress.setStreet2("Holding");
-    assertEquals("Street2", "Holding", spyAddress.getStreet2());
+    spyAddress.setStreet2("Folly words widow one downs few age every seven.");
+    assertEquals("Street2", "Folly words widow one downs few age every seven.", spyAddress.getStreet2());
     verify(spyAddress, times(1)).setStreet2(anyString());
   }
 }

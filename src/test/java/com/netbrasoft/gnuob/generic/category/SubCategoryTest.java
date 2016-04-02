@@ -29,8 +29,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
 
-import java.util.Set;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -88,8 +86,7 @@ public class SubCategoryTest {
   @Test
   public void testPrePersist() {
     spySubCategory.prePersist();
-    assertNotNull("Content position", mockContent.getPosition());
-    assertNotNull("SubCategory position", mockSubCategory.getPosition());
+    verify(spySubCategory, times(1)).prePersist();
     verify(mockContent, times(1)).setPosition(anyInt());
     verify(mockSubCategory, times(1)).setPosition(anyInt());
   }
@@ -97,18 +94,14 @@ public class SubCategoryTest {
   @Test
   public void testPreUpdate() {
     spySubCategory.preUpdate();
-    assertNotNull("Content position", mockContent.getPosition());
-    assertNotNull("SubCategory position", mockSubCategory.getPosition());
-    verify(mockContent, times(1)).setPosition(anyInt());
-    verify(mockSubCategory, times(1)).setPosition(anyInt());
+    verify(spySubCategory, times(1)).preUpdate();
   }
 
   @Test
   public void testSetContents() {
-    final Set<Content> mockContents = newSet(mockContent);
-    spySubCategory.setContents(mockContents);
-    assertEquals("Contents", mockContents, spySubCategory.getContents());
-    verify(spySubCategory, atLeastOnce()).setContents(any());
+    spySubCategory.setContents(null);
+    assertNull("Contents", spySubCategory.getContents());
+    verify(spySubCategory, times(1)).setContents(null);
   }
 
   @Test
@@ -120,8 +113,8 @@ public class SubCategoryTest {
 
   @Test
   public void testSetName() {
-    spySubCategory.setName("Holding");
-    assertEquals("Name", "Holding", spySubCategory.getName());
+    spySubCategory.setName("Folly words widow one downs few age every seven.");
+    assertEquals("Name", "Folly words widow one downs few age every seven.", spySubCategory.getName());
     verify(spySubCategory, times(1)).setName(any());
   }
 
@@ -134,10 +127,9 @@ public class SubCategoryTest {
 
   @Test
   public void testSetSubCategories() {
-    final Set<SubCategory> mockSubCategories = newSet(mockSubCategory);
-    spySubCategory.setSubCategories(mockSubCategories);
-    assertEquals("SubCategories", mockSubCategories, spySubCategory.getSubCategories());
-    verify(spySubCategory, atLeastOnce()).setSubCategories(any());
+    spySubCategory.setSubCategories(null);
+    assertNull("SubCategories", spySubCategory.getSubCategories());
+    verify(spySubCategory, atLeastOnce()).setSubCategories(null);
   }
 
   @Test

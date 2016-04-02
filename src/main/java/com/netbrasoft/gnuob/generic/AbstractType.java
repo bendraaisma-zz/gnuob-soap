@@ -70,7 +70,6 @@ public abstract class AbstractType implements Serializable {
   }
 
   @XmlTransient
-  // FIXME Change Timestamp for LocalDateTime
   @Column(name = CREATION_COLUMN_NAME)
   public Timestamp getCreation() {
     return creation;
@@ -85,7 +84,6 @@ public abstract class AbstractType implements Serializable {
   }
 
   @XmlTransient
-  // FIXME Change Timestamp for LocalDateTime
   @Column(name = MODIFICATION_COLUMN_NAME)
   public Timestamp getModification() {
     return modification;

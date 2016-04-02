@@ -258,42 +258,42 @@ public class OfferTest {
   @Test
   public void testSetDiscountTotal() {
     spyOffer.setDiscountTotal(BigDecimal.ZERO);
-    assertNotNull("DiscountTotal", spyOffer.getDiscountTotal());
+    assertEquals("DiscountTotal", BigDecimal.ZERO, spyOffer.getDiscountTotal());
     verify(spyOffer, times(1)).setDiscountTotal(any());
   }
 
   @Test
   public void testSetExtraAmount() {
     spyOffer.setExtraAmount(BigDecimal.ZERO);
-    assertNotNull("ExtraAmount", spyOffer.getExtraAmount());
+    assertEquals("ExtraAmount", BigDecimal.ZERO, spyOffer.getExtraAmount());
     verify(spyOffer, times(1)).setExtraAmount(any());
   }
 
   @Test
   public void testSetHandlingTotal() {
     spyOffer.setHandlingTotal(BigDecimal.ZERO);
-    assertNotNull("HandlingTotal", spyOffer.getHandlingTotal());
+    assertEquals("HandlingTotal", BigDecimal.ZERO, spyOffer.getHandlingTotal());
     verify(spyOffer, times(1)).setHandlingTotal(any());
   }
 
   @Test
   public void testSetInsuranceTotal() {
     spyOffer.setInsuranceTotal(BigDecimal.ZERO);
-    assertNotNull("InsuranceTotal", spyOffer.getInsuranceTotal());
+    assertEquals("InsuranceTotal", BigDecimal.ZERO, spyOffer.getInsuranceTotal());
     verify(spyOffer, times(1)).setInsuranceTotal(any());
   }
 
   @Test
   public void testSetItemTotal() {
     spyOffer.setItemTotal(BigDecimal.ZERO);
-    assertNotNull("ItemTotal", spyOffer.getItemTotal());
+    assertEquals("ItemTotal", BigDecimal.ZERO, spyOffer.getItemTotal());
     verify(spyOffer, times(1)).setItemTotal(any());
   }
 
   @Test
   public void testSetMaxTotal() {
     spyOffer.setMaxTotal(BigDecimal.ZERO);
-    assertNotNull("MaxTotal", spyOffer.getMaxTotal());
+    assertEquals("MaxTotal", BigDecimal.ZERO, spyOffer.getMaxTotal());
     verify(spyOffer, times(1)).setMaxTotal(any());
   }
 
@@ -307,8 +307,8 @@ public class OfferTest {
 
   @Test
   public void testSetOfferId() {
-    spyOffer.setOfferId("Id");
-    assertEquals("OfferId", "Id", spyOffer.getOfferId());
+    spyOffer.setOfferId("Folly words widow one downs few age every seven.");
+    assertEquals("OfferId", "Folly words widow one downs few age every seven.", spyOffer.getOfferId());
     verify(spyOffer, times(1)).setOfferId(anyString());
   }
 
@@ -322,7 +322,7 @@ public class OfferTest {
   @Test
   public void testSetOfferTotal() {
     spyOffer.setOfferTotal(BigDecimal.ZERO);
-    assertNotNull("OfferTotal", spyOffer.getOfferTotal());
+    assertEquals("OfferTotal", BigDecimal.ZERO, spyOffer.getOfferTotal());
     verify(spyOffer, times(1)).setOfferTotal(any());
   }
 
@@ -336,21 +336,21 @@ public class OfferTest {
   @Test
   public void testSetShippingDiscount() {
     spyOffer.setShippingDiscount(BigDecimal.ZERO);
-    assertNotNull("ShippingDiscount", spyOffer.getShippingDiscount());
+    assertEquals("ShippingDiscount", BigDecimal.ZERO, spyOffer.getShippingDiscount());
     verify(spyOffer, times(1)).setShippingDiscount(any());
   }
 
   @Test
   public void testSetShippingTotal() {
     spyOffer.setShippingTotal(BigDecimal.ZERO);
-    assertNotNull("ShippingTotal", spyOffer.getShippingTotal());
+    assertEquals("ShippingTotal", BigDecimal.ZERO, spyOffer.getShippingTotal());
     verify(spyOffer, times(1)).setShippingTotal(any());
   }
 
   @Test
   public void testSetTaxTotal() {
     spyOffer.setTaxTotal(BigDecimal.ZERO);
-    assertNotNull("TaxTotal", spyOffer.getTaxTotal());
+    assertEquals("TaxTotal", BigDecimal.ZERO, spyOffer.getTaxTotal());
     verify(spyOffer, times(1)).setTaxTotal(any());
   }
 }

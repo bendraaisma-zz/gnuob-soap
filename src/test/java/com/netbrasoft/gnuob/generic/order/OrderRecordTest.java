@@ -84,7 +84,7 @@ public class OrderRecordTest {
 
   @Test
   public void testGetDescription() {
-    when(mockProduct.getDescription()).thenReturn("Holder");
+    when(mockProduct.getDescription()).thenReturn("Folly words widow one downs few age every seven.");
     assertNotNull("Description", spyOrderRecord.getDescription());
     verify(spyOrderRecord, times(1)).getDescription();
   }
@@ -141,7 +141,7 @@ public class OrderRecordTest {
 
   @Test
   public void testGetItemHeightUnit() {
-    when(mockProduct.getItemHeightUnit()).thenReturn("Holder");
+    when(mockProduct.getItemHeightUnit()).thenReturn("Folly words widow one downs few age every seven.");
     assertNotNull("ItemHeightUnit", spyOrderRecord.getItemHeightUnit());
     verify(spyOrderRecord, times(1)).getItemHeightUnit();
   }
@@ -169,7 +169,7 @@ public class OrderRecordTest {
 
   @Test
   public void testGetItemLengthUnit() {
-    when(mockProduct.getItemLengthUnit()).thenReturn("Holder");
+    when(mockProduct.getItemLengthUnit()).thenReturn("Folly words widow one downs few age every seven.");
     assertNotNull("ItemLengthUnit", spyOrderRecord.getItemLengthUnit());
     verify(spyOrderRecord, times(1)).getItemLengthUnit();
   }
@@ -214,7 +214,7 @@ public class OrderRecordTest {
 
   @Test
   public void testGetItemUrl() {
-    when(mockProduct.getItemUrl()).thenReturn("Holder");
+    when(mockProduct.getItemUrl()).thenReturn("Folly words widow one downs few age every seven.");
     assertNotNull("ItemUrl", spyOrderRecord.getItemUrl());
     verify(spyOrderRecord, times(1)).getItemUrl();
   }
@@ -235,7 +235,7 @@ public class OrderRecordTest {
 
   @Test
   public void testGetItemWeightUnit() {
-    when(mockProduct.getItemWeightUnit()).thenReturn("Holder");
+    when(mockProduct.getItemWeightUnit()).thenReturn("Folly words widow one downs few age every seven.");
     assertNotNull("ItemWeightUnit", spyOrderRecord.getItemWeightUnit());
     verify(spyOrderRecord, times(1)).getItemWeightUnit();
   }
@@ -263,7 +263,7 @@ public class OrderRecordTest {
 
   @Test
   public void testGetItemWidthUnit() {
-    when(mockProduct.getItemWidthUnit()).thenReturn("Holder");
+    when(mockProduct.getItemWidthUnit()).thenReturn("Folly words widow one downs few age every seven.");
     assertNotNull("ItemWidthUnit", spyOrderRecord.getItemWidthUnit());
     verify(spyOrderRecord, times(1)).getItemWidthUnit();
   }
@@ -284,7 +284,7 @@ public class OrderRecordTest {
 
   @Test
   public void testGetName() {
-    when(mockProduct.getName()).thenReturn("Holder");
+    when(mockProduct.getName()).thenReturn("Folly words widow one downs few age every seven.");
     assertNotNull("Name", spyOrderRecord.getName());
     verify(spyOrderRecord, times(1)).getName();
   }
@@ -328,7 +328,7 @@ public class OrderRecordTest {
 
   @Test
   public void testGetProductNumber() {
-    when(mockProduct.getNumber()).thenReturn("Holder");
+    when(mockProduct.getNumber()).thenReturn("Folly words widow one downs few age every seven.");
     assertNotNull("ProductNumber", spyOrderRecord.getProductNumber());
     verify(spyOrderRecord, times(1)).getProductNumber();
   }
@@ -488,7 +488,7 @@ public class OrderRecordTest {
   @Test
   public void testSetAmount() {
     spyOrderRecord.setAmount(BigDecimal.ZERO);
-    assertNotNull("Amount", spyOrderRecord.getAmount());
+    assertEquals("Amount", BigDecimal.ZERO, spyOrderRecord.getAmount());
     verify(spyOrderRecord, times(1)).setAmount(any());
   }
 
@@ -510,85 +510,89 @@ public class OrderRecordTest {
   @Test
   public void testSetDiscount() {
     spyOrderRecord.setDiscount(BigDecimal.ZERO);
-    assertNotNull("Discount", spyOrderRecord.getDiscount());
+    assertEquals("Discount", BigDecimal.ZERO, spyOrderRecord.getDiscount());
     verify(spyOrderRecord, times(1)).setDiscount(any());
   }
 
   @Test
   public void testSetItemHeight() {
     spyOrderRecord.setItemHeight(BigDecimal.ZERO);
-    assertNotNull("ItemHeight", spyOrderRecord.getItemHeight());
+    assertEquals("ItemHeight", BigDecimal.ZERO, spyOrderRecord.getItemHeight());
     verify(spyOrderRecord, times(1)).setItemHeight(any());
   }
 
   @Test
   public void testSetItemHeightUnit() {
-    spyOrderRecord.setItemHeightUnit("Holder");
-    assertEquals("OrderDescription", "Holder", spyOrderRecord.getItemHeightUnit());
+    spyOrderRecord.setItemHeightUnit("Folly words widow one downs few age every seven.");
+    assertEquals("OrderDescription", "Folly words widow one downs few age every seven.",
+        spyOrderRecord.getItemHeightUnit());
     verify(spyOrderRecord, times(1)).setItemHeightUnit(anyString());
   }
 
   @Test
   public void testSetItemLength() {
     spyOrderRecord.setItemLength(BigDecimal.ZERO);
-    assertNotNull("ItemLength", spyOrderRecord.getItemLength());
+    assertEquals("ItemLength", BigDecimal.ZERO, spyOrderRecord.getItemLength());
     verify(spyOrderRecord, times(1)).setItemLength(any());
   }
 
 
   @Test
   public void testSetItemLengthUnit() {
-    spyOrderRecord.setItemLengthUnit("Holder");
-    assertEquals("ItemLengthUnit", "Holder", spyOrderRecord.getItemLengthUnit());
+    spyOrderRecord.setItemLengthUnit("Folly words widow one downs few age every seven.");
+    assertEquals("ItemLengthUnit", "Folly words widow one downs few age every seven.",
+        spyOrderRecord.getItemLengthUnit());
     verify(spyOrderRecord, times(1)).setItemLengthUnit(anyString());
   }
 
   @Test
   public void testSetItemUrl() {
-    spyOrderRecord.setItemUrl("Holder");
-    assertEquals("ItemUrl", "Holder", spyOrderRecord.getItemUrl());
+    spyOrderRecord.setItemUrl("Folly words widow one downs few age every seven.");
+    assertEquals("ItemUrl", "Folly words widow one downs few age every seven.", spyOrderRecord.getItemUrl());
     verify(spyOrderRecord, times(1)).setItemUrl(anyString());
   }
 
   @Test
   public void testSetItemWeight() {
     spyOrderRecord.setItemWeight(BigDecimal.ZERO);
-    assertNotNull("ItemWeight", spyOrderRecord.getItemWeight());
+    assertEquals("ItemWeight", BigDecimal.ZERO, spyOrderRecord.getItemWeight());
     verify(spyOrderRecord, times(1)).setItemWeight(any());
   }
 
   @Test
   public void testSetItemWeightUnit() {
-    spyOrderRecord.setItemWeightUnit("Holder");
-    assertEquals("ItemWeightUnit", "Holder", spyOrderRecord.getItemWeightUnit());
+    spyOrderRecord.setItemWeightUnit("Folly words widow one downs few age every seven.");
+    assertEquals("ItemWeightUnit", "Folly words widow one downs few age every seven.",
+        spyOrderRecord.getItemWeightUnit());
     verify(spyOrderRecord, times(1)).setItemWeightUnit(anyString());
   }
 
   @Test
   public void testSetItemWidth() {
     spyOrderRecord.setItemWidth(BigDecimal.ZERO);
-    assertNotNull("ItemWeight", spyOrderRecord.getItemWidth());
+    assertEquals("ItemWeight", BigDecimal.ZERO, spyOrderRecord.getItemWidth());
     verify(spyOrderRecord, times(1)).setItemWidth(any());
   }
 
   @Test
   public void testSetItemWidthUnit() {
-    spyOrderRecord.setItemWidthUnit("Holder");
-    assertEquals("ItemWidthUnit", "Holder", spyOrderRecord.getItemWidthUnit());
+    spyOrderRecord.setItemWidthUnit("Folly words widow one downs few age every seven.");
+    assertEquals("ItemWidthUnit", "Folly words widow one downs few age every seven.",
+        spyOrderRecord.getItemWidthUnit());
     verify(spyOrderRecord, times(1)).setItemWidthUnit(anyString());
   }
 
   @Test
   public void testSetName() {
-    spyOrderRecord.setName("Holder");
-    assertEquals("Name", "Holder", spyOrderRecord.getName());
+    spyOrderRecord.setName("Folly words widow one downs few age every seven.");
+    assertEquals("Name", "Folly words widow one downs few age every seven.", spyOrderRecord.getName());
     verify(spyOrderRecord, times(1)).setName(anyString());
   }
 
   @Test
   public void testSetOption() {
-    spyOrderRecord.setOption("Holder");
-    assertEquals("Option", "Holder", spyOrderRecord.getOption());
+    spyOrderRecord.setOption("Folly words widow one downs few age every seven.");
+    assertEquals("Option", "Folly words widow one downs few age every seven.", spyOrderRecord.getOption());
     verify(spyOrderRecord, times(1)).setOption(anyString());
   }
 
@@ -601,8 +605,9 @@ public class OrderRecordTest {
 
   @Test
   public void testSetOrderRecordId() {
-    spyOrderRecord.setOrderRecordId("Id");
-    assertEquals("OrderRecordId", "Id", spyOrderRecord.getOrderRecordId());
+    spyOrderRecord.setOrderRecordId("Folly words widow one downs few age every seven.");
+    assertEquals("OrderRecordId", "Folly words widow one downs few age every seven.",
+        spyOrderRecord.getOrderRecordId());
     verify(spyOrderRecord, times(1)).setOrderRecordId(anyString());
   }
 
@@ -629,29 +634,30 @@ public class OrderRecordTest {
 
   @Test
   public void testSetProductNumber() {
-    spyOrderRecord.setProductNumber("Holder");
-    assertEquals("ProductNumber", "Holder", spyOrderRecord.getProductNumber());
+    spyOrderRecord.setProductNumber("Folly words widow one downs few age every seven.");
+    assertEquals("ProductNumber", "Folly words widow one downs few age every seven.",
+        spyOrderRecord.getProductNumber());
     verify(spyOrderRecord, times(1)).setProductNumber(anyString());
   }
 
   @Test
   public void testSetQuantity() {
     spyOrderRecord.setQuantity(BigInteger.ZERO);
-    assertNotNull("Quantity", spyOrderRecord.getQuantity());
+    assertEquals("Quantity", BigInteger.ZERO, spyOrderRecord.getQuantity());
     verify(spyOrderRecord, times(1)).setQuantity(any());
   }
 
   @Test
   public void testSetShippingCost() {
     spyOrderRecord.setShippingCost(BigDecimal.ZERO);
-    assertNotNull("ShippingCost", spyOrderRecord.getShippingCost());
+    assertEquals("ShippingCost", BigDecimal.ZERO, spyOrderRecord.getShippingCost());
     verify(spyOrderRecord, times(1)).setShippingCost(any());
   }
 
   @Test
   public void testSetTax() {
     spyOrderRecord.setTax(BigDecimal.ZERO);
-    assertNotNull("Tax", spyOrderRecord.getTax());
+    assertEquals("Tax", BigDecimal.ZERO, spyOrderRecord.getTax());
     verify(spyOrderRecord, times(1)).setTax(any());
   }
 }

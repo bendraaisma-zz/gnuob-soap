@@ -6,7 +6,7 @@ import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 
 import com.netbrasoft.gnuob.generic.order.Order;
-import com.netbrasoft.gnuob.generic.order.PayPalExpressCheckOutServiceImpl;
+import com.netbrasoft.gnuob.generic.order.AbstractPayPalExpressCheckOutServiceImpl;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
@@ -14,7 +14,7 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
     mappedName = SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME)
 @Interceptors(value = {AccessControl.class, AppSimonInterceptor.class})
 public class SecuredPayPalExpressCheckOutServiceImpl<T extends Order>
-    extends PayPalExpressCheckOutServiceImpl<T> implements ISecuredGenericTypeCheckOutService<T> {
+    extends AbstractPayPalExpressCheckOutServiceImpl<T> implements ISecuredGenericTypeCheckOutService<T> {
 
   @Override
   @OperationAccess(operation = Operation.UPDATE)

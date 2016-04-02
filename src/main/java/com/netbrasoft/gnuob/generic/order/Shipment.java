@@ -85,5 +85,4 @@ public class Shipment extends AbstractType {
   public void setShipmentType(final String shipmentType) {
     this.shipmentType = shipmentType;
   }
-
 }

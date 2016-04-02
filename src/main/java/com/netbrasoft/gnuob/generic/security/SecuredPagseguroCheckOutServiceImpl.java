@@ -20,15 +20,15 @@ import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 
 import com.netbrasoft.gnuob.generic.order.Order;
-import com.netbrasoft.gnuob.generic.order.PagseguroCheckOutServiceImpl;
+import com.netbrasoft.gnuob.generic.order.AbstractPagseguroCheckOutServiceImpl;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @Stateless(name = SECURED_PAGSEGURO_CHECK_OUT_SERVICE_IMPL_NAME,
     mappedName = SECURED_PAGSEGURO_CHECK_OUT_SERVICE_IMPL_NAME)
 @Interceptors(value = {AccessControl.class, AppSimonInterceptor.class})
-public class SecuredPagseguroCheckOutServiceImpl<T extends Order>
-    extends PagseguroCheckOutServiceImpl<T> implements ISecuredGenericTypeCheckOutService<T> {
+public class SecuredPagseguroCheckOutServiceImpl<T extends Order> extends AbstractPagseguroCheckOutServiceImpl<T>
+    implements ISecuredGenericTypeCheckOutService<T> {
 
   @Override
   @OperationAccess(operation = Operation.UPDATE)

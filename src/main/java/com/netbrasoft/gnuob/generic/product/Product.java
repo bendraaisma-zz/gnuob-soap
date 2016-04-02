@@ -126,23 +126,24 @@ public class Product extends AbstractAccess {
 
   @Transient
   private boolean isSubCategoriesDetached() {
-    return subCategories.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
+    return subCategories != null
+        && subCategories.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
   @Transient
   private boolean isContentsDetached() {
-    return contents.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
+    return contents != null && contents.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
   @Transient
   private boolean isOptionsDetached() {
-    return options.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
+    return options != null && options.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
   @Override
   public void prePersist() {
     reinitAllPositionContents(START_POSITION_VALUE);
-    reinitAllPositionCOptions(START_POSITION_VALUE);
+    reinitAllPositionOptions(START_POSITION_VALUE);
     reinitAllPositionSubCategories(START_POSITION_VALUE);
   }
 
@@ -157,7 +158,7 @@ public class Product extends AbstractAccess {
     }
   }
 
-  private void reinitAllPositionCOptions(int startPositionValue) {
+  private void reinitAllPositionOptions(int startPositionValue) {
     for (final Option option : options) {
       option.setPosition(Integer.valueOf(startPositionValue++));
     }

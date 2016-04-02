@@ -121,7 +121,7 @@ public class AbstractTypeTest {
 
   @Test
   public void testSetVersion() {
-    spyAbstractType.setVersion(1);;
+    spyAbstractType.setVersion(1);
     assertEquals("Version", 1, spyAbstractType.getVersion());
     verify(spyAbstractType, times(1)).setVersion(anyInt());
   }

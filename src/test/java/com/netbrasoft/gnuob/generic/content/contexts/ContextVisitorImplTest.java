@@ -121,5 +121,4 @@ public class ContextVisitorImplTest {
   public void testVisitUser() {
     assertNotNull("Visit", contextVisitorImpl.visit(mockUser));
   }
-
 }

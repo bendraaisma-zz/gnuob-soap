@@ -66,9 +66,11 @@ public class PayPalExpressCheckOutWebServiceImpl<T extends Order> implements ICh
 
   public PayPalExpressCheckOutWebServiceImpl() {}
 
-  PayPalExpressCheckOutWebServiceImpl(ISecuredGenericTypeService<T> securedGenericOrderService,
+  PayPalExpressCheckOutWebServiceImpl(ISecuredGenericTypeCheckOutService<T> securedGenericTypeCheckOutService,
+      ISecuredGenericTypeService<T> securedGenericOrderService,
       ISecuredGenericTypeService<Contract> securedGenericContractService,
       ISecuredGenericTypeService<Customer> securedGenericCustomerService) {
+    this.securedGenericTypeCheckOutService = securedGenericTypeCheckOutService;
     this.securedGenericOrderService = securedGenericOrderService;
     this.securedGenericContractService = securedGenericContractService;
     this.securedGenericCustomerService = securedGenericCustomerService;

@@ -78,7 +78,7 @@ public class Invoice extends AbstractType {
 
   @Transient
   private boolean isPaymentsDetached() {
-    return payments.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
+    return payments != null && payments.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
   @Override

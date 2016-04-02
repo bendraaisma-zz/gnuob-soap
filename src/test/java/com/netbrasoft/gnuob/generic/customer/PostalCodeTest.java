@@ -18,10 +18,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import java.math.BigDecimal;
 
 import org.junit.After;
 import org.junit.Before;
@@ -137,85 +140,85 @@ public class PostalCodeTest {
 
   @Test
   public void testSetAccuracy() {
-    spyPostalCode.setAccuracy("Holding");
-    assertEquals("Accuracy", "Holding", spyPostalCode.getAccuracy());
+    spyPostalCode.setAccuracy("Folly words widow one downs few age every seven.");
+    assertEquals("Accuracy", "Folly words widow one downs few age every seven.", spyPostalCode.getAccuracy());
     verify(spyPostalCode, times(1)).setAccuracy(anyString());
   }
 
   @Test
   public void testSetAdminCode1() {
-    spyPostalCode.setAdminCode1("Holding");
-    assertEquals("AdminCode1", "Holding", spyPostalCode.getAdminCode1());
+    spyPostalCode.setAdminCode1("Folly words widow one downs few age every seven.");
+    assertEquals("AdminCode1", "Folly words widow one downs few age every seven.", spyPostalCode.getAdminCode1());
     verify(spyPostalCode, times(1)).setAdminCode1(anyString());
   }
 
   @Test
   public void testSetAdminCode2() {
-    spyPostalCode.setAdminCode2("Holding");
-    assertEquals("AdminCode2", "Holding", spyPostalCode.getAdminCode2());
+    spyPostalCode.setAdminCode2("Folly words widow one downs few age every seven.");
+    assertEquals("AdminCode2", "Folly words widow one downs few age every seven.", spyPostalCode.getAdminCode2());
     verify(spyPostalCode, times(1)).setAdminCode2(anyString());
   }
 
   @Test
   public void testSetAdminCode3() {
-    spyPostalCode.setAdminCode3("Holding");
-    assertEquals("AdminCode3", "Holding", spyPostalCode.getAdminCode3());
+    spyPostalCode.setAdminCode3("Folly words widow one downs few age every seven.");
+    assertEquals("AdminCode3", "Folly words widow one downs few age every seven.", spyPostalCode.getAdminCode3());
     verify(spyPostalCode, times(1)).setAdminCode3(anyString());
   }
 
   @Test
   public void testSetAdminName1() {
-    spyPostalCode.setAdminName1("Holding");
-    assertEquals("AdminName1", "Holding", spyPostalCode.getAdminName1());
+    spyPostalCode.setAdminName1("Folly words widow one downs few age every seven.");
+    assertEquals("AdminName1", "Folly words widow one downs few age every seven.", spyPostalCode.getAdminName1());
     verify(spyPostalCode, times(1)).setAdminName1(anyString());
   }
 
   @Test
   public void testSetAdminName2() {
-    spyPostalCode.setAdminName2("Holding");
-    assertEquals("AdminName2", "Holding", spyPostalCode.getAdminName2());
+    spyPostalCode.setAdminName2("Folly words widow one downs few age every seven.");
+    assertEquals("AdminName2", "Folly words widow one downs few age every seven.", spyPostalCode.getAdminName2());
     verify(spyPostalCode, times(1)).setAdminName2(anyString());
   }
 
   @Test
   public void testSetAdminName3() {
-    spyPostalCode.setAdminName3("Holding");
-    assertEquals("AdminName3", "Holding", spyPostalCode.getAdminName3());
+    spyPostalCode.setAdminName3("Folly words widow one downs few age every seven.");
+    assertEquals("AdminName3", "Folly words widow one downs few age every seven.", spyPostalCode.getAdminName3());
     verify(spyPostalCode, times(1)).setAdminName3(anyString());
   }
 
   @Test
   public void testSetCountryCode() {
-    spyPostalCode.setCountryCode("Holding");
-    assertEquals("CountryCode", "Holding", spyPostalCode.getCountryCode());
+    spyPostalCode.setCountryCode("Folly words widow one downs few age every seven.");
+    assertEquals("CountryCode", "Folly words widow one downs few age every seven.", spyPostalCode.getCountryCode());
     verify(spyPostalCode, times(1)).setCountryCode(anyString());
   }
 
   @Test
   public void testSetLatitude() {
-    spyPostalCode.setLatitude(null);
-    assertNull("Latitude", spyPostalCode.getLatitude());
-    verify(spyPostalCode, times(1)).setLatitude(null);
+    spyPostalCode.setLatitude(BigDecimal.ZERO);
+    assertEquals("Latitude", BigDecimal.ZERO, spyPostalCode.getLatitude());
+    verify(spyPostalCode, times(1)).setLatitude(any());
   }
 
   @Test
   public void testSetLongitude() {
-    spyPostalCode.setLongitude(null);
-    assertNull("Longitude", spyPostalCode.getLongitude());
-    verify(spyPostalCode, times(1)).setLongitude(null);
+    spyPostalCode.setLongitude(BigDecimal.ZERO);
+    assertEquals("Longitude", BigDecimal.ZERO, spyPostalCode.getLongitude());
+    verify(spyPostalCode, times(1)).setLongitude(any());
   }
 
   @Test
   public void testSetPlaceName() {
-    spyPostalCode.setPlaceName("Holding");
-    assertEquals("PlaceName", "Holding", spyPostalCode.getPlaceName());
+    spyPostalCode.setPlaceName("Folly words widow one downs few age every seven.");
+    assertEquals("PlaceName", "Folly words widow one downs few age every seven.", spyPostalCode.getPlaceName());
     verify(spyPostalCode, times(1)).setPlaceName(anyString());
   }
 
   @Test
   public void testSetPostalCode() {
-    spyPostalCode.setPostalCode("Holding");
-    assertEquals("PostalCode", "Holding", spyPostalCode.getPostalCode());
+    spyPostalCode.setPostalCode("Folly words widow one downs few age every seven.");
+    assertEquals("PostalCode", "Folly words widow one downs few age every seven.", spyPostalCode.getPostalCode());
     verify(spyPostalCode, times(1)).setPostalCode(anyString());
   }
 }

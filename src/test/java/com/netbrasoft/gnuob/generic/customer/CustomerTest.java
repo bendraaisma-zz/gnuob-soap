@@ -27,6 +27,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Date;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -230,113 +232,114 @@ public class CustomerTest {
 
   @Test
   public void testSetBuyerEmail() {
-    spyCustomer.setBuyerEmail("Holding");
-    assertEquals("BuyerEmail", "Holding", spyCustomer.getBuyerEmail());
+    spyCustomer.setBuyerEmail("Folly words widow one downs few age every seven.");
+    assertEquals("BuyerEmail", "Folly words widow one downs few age every seven.", spyCustomer.getBuyerEmail());
     verify(spyCustomer, times(1)).setBuyerEmail(anyString());
   }
 
   @Test
   public void testSetBuyerMarketingEmail() {
-    spyCustomer.setBuyerMarketingEmail("Holding");
-    assertEquals("BuyerMarketingEmail", "Holding", spyCustomer.getBuyerMarketingEmail());
+    spyCustomer.setBuyerMarketingEmail("Folly words widow one downs few age every seven.");
+    assertEquals("BuyerMarketingEmail", "Folly words widow one downs few age every seven.",
+        spyCustomer.getBuyerMarketingEmail());
     verify(spyCustomer, times(1)).setBuyerMarketingEmail(anyString());
   }
 
   @Test
   public void testSetContactPhone() {
-    spyCustomer.setContactPhone("Holding");
-    assertEquals("ContactPhone", "Holding", spyCustomer.getContactPhone());
+    spyCustomer.setContactPhone("Folly words widow one downs few age every seven.");
+    assertEquals("ContactPhone", "Folly words widow one downs few age every seven.", spyCustomer.getContactPhone());
     verify(spyCustomer, times(1)).setContactPhone(anyString());
   }
 
   @Test
   public void testSetDateOfBirth() {
-    spyCustomer.setDateOfBirth(null);
-    assertNull("DateOfBirth", spyCustomer.getDateOfBirth());
-    verify(spyCustomer, times(1)).setDateOfBirth(null);
+    spyCustomer.setDateOfBirth(new Date());
+    assertNotNull("DateOfBirth", spyCustomer.getDateOfBirth());
+    verify(spyCustomer, times(1)).setDateOfBirth(any());
   }
 
   @Test
   public void testSetFirstName() {
-    spyCustomer.setFirstName("Holding");
-    assertEquals("FirstName", "Holding", spyCustomer.getFirstName());
+    spyCustomer.setFirstName("Folly words widow one downs few age every seven.");
+    assertEquals("FirstName", "Folly words widow one downs few age every seven.", spyCustomer.getFirstName());
     verify(spyCustomer, times(1)).setFirstName(anyString());
   }
 
   @Test
   public void testSetFriendlyName() {
-    spyCustomer.setFriendlyName("Holding");
-    assertEquals("FriendlyName", "Holding", spyCustomer.getFriendlyName());
+    spyCustomer.setFriendlyName("Folly words widow one downs few age every seven.");
+    assertEquals("FriendlyName", "Folly words widow one downs few age every seven.", spyCustomer.getFriendlyName());
     verify(spyCustomer, times(1)).setFriendlyName(anyString());
   }
 
   @Test
   public void testSetLastName() {
-    spyCustomer.setLastName("Holding");
-    assertEquals("LastName", "Holding", spyCustomer.getLastName());
+    spyCustomer.setLastName("Folly words widow one downs few age every seven.");
+    assertEquals("LastName", "Folly words widow one downs few age every seven.", spyCustomer.getLastName());
     verify(spyCustomer, times(1)).setLastName(anyString());
   }
 
   @Test
   public void testSetMiddleName() {
-    spyCustomer.setMiddleName("Holding");
-    assertEquals("MiddleName", "Holding", spyCustomer.getMiddleName());
+    spyCustomer.setMiddleName("Folly words widow one downs few age every seven.");
+    assertEquals("MiddleName", "Folly words widow one downs few age every seven.", spyCustomer.getMiddleName());
     verify(spyCustomer, times(1)).setMiddleName(anyString());
   }
 
   @Test
   public void testSetPayer() {
-    spyCustomer.setPayer("Holding");
-    assertEquals("Payer", "Holding", spyCustomer.getPayer());
+    spyCustomer.setPayer("Folly words widow one downs few age every seven.");
+    assertEquals("Payer", "Folly words widow one downs few age every seven.", spyCustomer.getPayer());
     verify(spyCustomer, times(1)).setPayer(anyString());
   }
 
   @Test
   public void testSetPayerBusiness() {
-    spyCustomer.setPayerBusiness("Holding");
-    assertEquals("PayerBusiness", "Holding", spyCustomer.getPayerBusiness());
+    spyCustomer.setPayerBusiness("Folly words widow one downs few age every seven.");
+    assertEquals("PayerBusiness", "Folly words widow one downs few age every seven.", spyCustomer.getPayerBusiness());
     verify(spyCustomer, times(1)).setPayerBusiness(anyString());
   }
 
   @Test
   public void testSetPayerId() {
-    spyCustomer.setPayerId("Holding");
-    assertEquals("PayerId", "Holding", spyCustomer.getPayerId());
+    spyCustomer.setPayerId("Folly words widow one downs few age every seven.");
+    assertEquals("PayerId", "Folly words widow one downs few age every seven.", spyCustomer.getPayerId());
     verify(spyCustomer, times(1)).setPayerId(anyString());
   }
 
   @Test
   public void testSetPayerStatus() {
-    spyCustomer.setPayerStatus("Holding");
-    assertEquals("PayerStatus", "Holding", spyCustomer.getPayerStatus());
+    spyCustomer.setPayerStatus("Folly words widow one downs few age every seven.");
+    assertEquals("PayerStatus", "Folly words widow one downs few age every seven.", spyCustomer.getPayerStatus());
     verify(spyCustomer, times(1)).setPayerStatus(anyString());
   }
 
   @Test
   public void testSetSalutation() {
-    spyCustomer.setSalutation("Holding");
-    assertEquals("Salutation", "Holding", spyCustomer.getSalutation());
+    spyCustomer.setSalutation("Folly words widow one downs few age every seven.");
+    assertEquals("Salutation", "Folly words widow one downs few age every seven.", spyCustomer.getSalutation());
     verify(spyCustomer, times(1)).setSalutation(anyString());
   }
 
   @Test
   public void testSetSuffix() {
-    spyCustomer.setSuffix("Holding");
-    assertEquals("Suffix", "Holding", spyCustomer.getSuffix());
+    spyCustomer.setSuffix("Folly words widow one downs few age every seven.");
+    assertEquals("Suffix", "Folly words widow one downs few age every seven.", spyCustomer.getSuffix());
     verify(spyCustomer, times(1)).setSuffix(anyString());
   }
 
   @Test
   public void testSetTaxId() {
-    spyCustomer.setTaxId("Holding");
-    assertEquals("TaxId", "Holding", spyCustomer.getTaxId());
+    spyCustomer.setTaxId("Folly words widow one downs few age every seven.");
+    assertEquals("TaxId", "Folly words widow one downs few age every seven.", spyCustomer.getTaxId());
     verify(spyCustomer, times(1)).setTaxId(anyString());
   }
 
   @Test
   public void testSetTaxIdType() {
-    spyCustomer.setTaxIdType("Holding");
-    assertEquals("TaxIdType", "Holding", spyCustomer.getTaxIdType());
+    spyCustomer.setTaxIdType("Folly words widow one downs few age every seven.");
+    assertEquals("TaxIdType", "Folly words widow one downs few age every seven.", spyCustomer.getTaxIdType());
     verify(spyCustomer, times(1)).setTaxIdType(anyString());
   }
 }

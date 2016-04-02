@@ -12,16 +12,15 @@
  * the License.
  */
 
-package com.netbrasoft.gnuob.generic.order;
+package com.netbrasoft.gnuob.generic.product;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({OrderWebServiceImplTest.class, OrderTest.class, OrderRecordTest.class, ShipmentTest.class,
-    InvoiceTest.class, PaymentTest.class, PagseguroCheckOutWebServiceImplTest.class,
-    PayPalExpressCheckOutWebServiceImplTest.class})
-public class OrderSuite {
+@SuiteClasses({ProductTest.class, StockTest.class, OptionTest.class, SubOptionTest.class,
+    ProductWebServiceImplTest.class})
+public class ProductSuite {
 
 }

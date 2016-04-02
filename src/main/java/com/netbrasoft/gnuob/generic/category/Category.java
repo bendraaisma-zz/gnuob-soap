@@ -93,8 +93,7 @@ public class Category extends AbstractAccess {
 
   @Override
   public void preUpdate() {
-    reinitAllSubCategoryPositions(START_POSITION_VALUE);
-    reinitAllContentPositions(START_POSITION_VALUE);
+    prePersist();
   }
 
   private void reinitAllContentPositions(int startingByPositionValue) {

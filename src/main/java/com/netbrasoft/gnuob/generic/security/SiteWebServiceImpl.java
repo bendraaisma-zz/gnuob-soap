@@ -108,14 +108,18 @@ public class SiteWebServiceImpl<T extends Site> implements IGenericTypeWebServic
   public T persist(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = SITE_PARAM_NAME) final T type) {
     try {
-      if (type.isDetached()) {
-        return securedGenericSiteService.merge(credentials, type);
-      }
-      securedGenericSiteService.persist(credentials, type);
-      return type;
+      return processPersist(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processPersist(final MetaData credentials, final T type) {
+    if (type.isDetached()) {
+      return securedGenericSiteService.merge(credentials, type);
+    }
+    securedGenericSiteService.persist(credentials, type);
+    return type;
   }
 
   @Override

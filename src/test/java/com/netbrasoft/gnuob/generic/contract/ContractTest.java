@@ -69,7 +69,7 @@ public class ContractTest {
   public void testContractIsDetached() {
     spyContract.setId(1L);
     when(mockCustomer.isDetached()).thenReturn(false);
-    assertTrue("Contract", spyContract.isDetached());
+    assertTrue("Detached", spyContract.isDetached());
     verify(spyContract, times(1)).isDetached();
   }
 
@@ -77,7 +77,7 @@ public class ContractTest {
   public void testContractIsDetachedByCustomer() {
     spyContract.setId(0L);
     when(mockCustomer.isDetached()).thenReturn(true);
-    assertTrue("Contract", spyContract.isDetached());
+    assertTrue("Detached", spyContract.isDetached());
     verify(spyContract, times(1)).isDetached();
     verify(mockCustomer, times(1)).isDetached();
   }
@@ -86,7 +86,7 @@ public class ContractTest {
   public void testContractIsNotDetached() {
     spyContract.setId(0L);
     when(mockCustomer.isDetached()).thenReturn(false);
-    assertFalse("Contract", spyContract.isDetached());
+    assertFalse("Detached", spyContract.isDetached());
     verify(spyContract, times(1)).isDetached();
     verify(mockCustomer, times(1)).isDetached();
   }
@@ -95,7 +95,7 @@ public class ContractTest {
   public void testContractIsNotDetachedWithCustomerIsNull() {
     spyContract.setId(0L);
     spyContract.setCustomer(null);
-    assertFalse("Contract", spyContract.isDetached());
+    assertFalse("Detached", spyContract.isDetached());
     verify(spyContract, times(1)).isDetached();
   }
 
@@ -144,8 +144,8 @@ public class ContractTest {
 
   @Test
   public void testSetContractId() {
-    spyContract.setContractId("Id");
-    assertEquals("ContractId", "Id", spyContract.getContractId());
+    spyContract.setContractId("Folly words widow one downs few age every seven.");
+    assertEquals("ContractId", "Folly words widow one downs few age every seven.", spyContract.getContractId());
     verify(spyContract, times(1)).setContractId(anyString());
   }
 

@@ -79,7 +79,7 @@ public abstract class AbstractAccess extends AbstractType implements IContextEle
   private Permission permission;
   private Site site;
 
-  @XmlElement(required = true/* , defaultValue = "true" */)
+  @XmlElement(required = true)
   @Column(name = ACTIVE_COLUMN_NAME, nullable = false)
   public Boolean getActive() {
     return active;

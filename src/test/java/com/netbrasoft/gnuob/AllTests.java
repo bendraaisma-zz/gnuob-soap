@@ -26,10 +26,11 @@ import com.netbrasoft.gnuob.generic.contract.ContractSuite;
 import com.netbrasoft.gnuob.generic.customer.CustomerSuite;
 import com.netbrasoft.gnuob.generic.offer.OfferSuite;
 import com.netbrasoft.gnuob.generic.order.OrderSuite;
+import com.netbrasoft.gnuob.generic.product.ProductSuite;
 
 @RunWith(Suite.class)
 @SuiteClasses({GenericSuite.class, CategorySuite.class, ContentSuite.class, ContextSuite.class, ContractSuite.class,
-    CustomerSuite.class, OfferSuite.class, OrderSuite.class})
+    CustomerSuite.class, OfferSuite.class, OrderSuite.class, ProductSuite.class})
 public class AllTests {
 
 }

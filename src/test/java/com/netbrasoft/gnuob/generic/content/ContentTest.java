@@ -105,15 +105,15 @@ public class ContentTest {
 
   @Test
   public void testSetFormat() {
-    spyContent.setFormat("Holding");
-    assertEquals("Format", "Holding", spyContent.getFormat());
+    spyContent.setFormat("Folly words widow one downs few age every seven.");
+    assertEquals("Format", "Folly words widow one downs few age every seven.", spyContent.getFormat());
     verify(spyContent, times(1)).setFormat(any());
   }
 
   @Test
   public void testSetName() {
-    spyContent.setName("Holding");
-    assertEquals("Name", "Holding", spyContent.getName());
+    spyContent.setName("Folly words widow one downs few age every seven.");
+    assertEquals("Name", "Folly words widow one downs few age every seven.", spyContent.getName());
     verify(spyContent, times(1)).setName(any());
   }
 

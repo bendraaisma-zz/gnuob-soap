@@ -66,9 +66,11 @@ public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckO
 
   public PagseguroCheckOutWebServiceImpl() {}
 
-  PagseguroCheckOutWebServiceImpl(ISecuredGenericTypeService<T> securedGenericOrderService,
+  PagseguroCheckOutWebServiceImpl(ISecuredGenericTypeCheckOutService<T> securedGenericTypeCheckOutService,
+      ISecuredGenericTypeService<T> securedGenericOrderService,
       ISecuredGenericTypeService<Contract> securedGenericContractService,
       ISecuredGenericTypeService<Customer> securedGenericCustomerService) {
+    this.securedGenericTypeCheckOutService = securedGenericTypeCheckOutService;
     this.securedGenericOrderService = securedGenericOrderService;
     this.securedGenericContractService = securedGenericContractService;
     this.securedGenericCustomerService = securedGenericCustomerService;

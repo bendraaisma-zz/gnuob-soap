@@ -199,7 +199,7 @@ public class Order extends AbstractAccess {
   @XmlElement
   @Column(name = CHECKOUT_STATUS_COLUMN_NAME)
   public String getCheckoutStatus() {
-    return checkoutStatus == null ? checkoutStatus = PENDING : checkoutStatus;
+    return checkoutStatus == null || "".equals(checkoutStatus.trim()) ? checkoutStatus = PENDING : checkoutStatus;
   }
 
   @XmlElement(required = true)

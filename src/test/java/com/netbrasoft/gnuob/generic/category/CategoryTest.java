@@ -22,15 +22,12 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
-
-import java.util.Set;
 
 import org.junit.After;
 import org.junit.Before;
@@ -140,8 +137,7 @@ public class CategoryTest {
   @Test
   public void testPrePersist() {
     spyCategory.prePersist();
-    assertNotNull("Content position", mockContent.getPosition());
-    assertNotNull("SubCategory position", mockSubCategory.getPosition());
+    verify(spyCategory, times(1)).prePersist();
     verify(mockContent, times(1)).setPosition(anyInt());
     verify(mockSubCategory, times(1)).setPosition(anyInt());
   }
@@ -149,18 +145,14 @@ public class CategoryTest {
   @Test
   public void testPreUpdate() {
     spyCategory.preUpdate();
-    assertNotNull("Content position", mockContent.getPosition());
-    assertNotNull("SubCategory position", mockSubCategory.getPosition());
-    verify(mockContent, times(1)).setPosition(anyInt());
-    verify(mockSubCategory, times(1)).setPosition(anyInt());
+    verify(spyCategory, times(1)).preUpdate();
   }
 
   @Test
   public void testSetContents() {
-    final Set<Content> mockContents = newSet(mockContent);
-    spyCategory.setContents(mockContents);
-    assertEquals("Contents", mockContents, spyCategory.getContents());
-    verify(spyCategory, atLeastOnce()).setContents(any());
+    spyCategory.setContents(null);
+    assertNull("Contents", spyCategory.getContents());
+    verify(spyCategory, times(1)).setContents(null);
   }
 
   @Test
@@ -172,8 +164,8 @@ public class CategoryTest {
 
   @Test
   public void testSetName() {
-    spyCategory.setName("Holding");
-    assertEquals("Name", "Holding", spyCategory.getName());
+    spyCategory.setName("Folly words widow one downs few age every seven.");
+    assertEquals("Name", "Folly words widow one downs few age every seven.", spyCategory.getName());
     verify(spyCategory, times(1)).setName(anyString());
   }
 
@@ -186,9 +178,8 @@ public class CategoryTest {
 
   @Test
   public void testSetSubCategories() {
-    final Set<SubCategory> mockSubCategories = newSet(mockSubCategory);
-    spyCategory.setSubCategories(mockSubCategories);
-    assertEquals("SubCategories", mockSubCategories, spyCategory.getSubCategories());
-    verify(spyCategory, atLeastOnce()).setSubCategories(any());
+    spyCategory.setSubCategories(null);
+    assertNull("SubCategories", spyCategory.getSubCategories());
+    verify(spyCategory, times(1)).setSubCategories(null);
   }
 }

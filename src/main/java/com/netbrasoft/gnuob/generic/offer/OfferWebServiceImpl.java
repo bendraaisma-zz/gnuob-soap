@@ -79,8 +79,7 @@ public class OfferWebServiceImpl<T extends Offer> implements IGenericTypeWebServ
 
   @Override
   @WebMethod(operationName = COUNT_OFFER_OPERATION_NAME)
-  public long count(
-      @WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+  public long count(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = OFFER_PARAM_NAME) final T type) {
     try {
       return processCount(credentials, type);
@@ -123,10 +122,8 @@ public class OfferWebServiceImpl<T extends Offer> implements IGenericTypeWebServ
 
   @Override
   @WebMethod(operationName = FIND_OFFER_OPERATION_NAME)
-  public List<T> find(
-      @WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
-      @WebParam(name = OFFER_PARAM_NAME) final T type,
-      @WebParam(name = PAGING_PARAM_NAME) final Paging paging,
+  public List<T> find(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+      @WebParam(name = OFFER_PARAM_NAME) final T type, @WebParam(name = PAGING_PARAM_NAME) final Paging paging,
       @WebParam(name = ORDER_BY_PARAM_NAME) final OrderByEnum orderBy) {
     try {
       return processFind(credentials, type, paging, orderBy);
@@ -149,8 +146,8 @@ public class OfferWebServiceImpl<T extends Offer> implements IGenericTypeWebServ
     return securedGenericOfferService.find(credentials, type, paging, orderBy);
   }
 
-  private List<T> findByOfferAndContract(final MetaData credentials, final T type,
-      final Paging paging, final OrderByEnum orderingProperty) {
+  private List<T> findByOfferAndContract(final MetaData credentials, final T type, final Paging paging,
+      final OrderByEnum orderingProperty) {
     return securedGenericOfferService.find(credentials, type, paging, orderingProperty,
         new Parameter(CONTRACT_PARAM_NAME, Restrictions.or(Example.create(type.getContract()))));
   }
@@ -250,8 +247,7 @@ public class OfferWebServiceImpl<T extends Offer> implements IGenericTypeWebServ
 
   @Override
   @WebMethod(operationName = REMOVE_OFFER_OPERATION_NAME)
-  public void remove(
-      @WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+  public void remove(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = OFFER_PARAM_NAME) final T type) {
     try {
       processRemove(credentials, type);
