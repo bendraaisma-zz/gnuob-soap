@@ -82,11 +82,15 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
   public long count(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
-      readContract(credentials, type.getContract());
-      return countByOrder(credentials, type);
+      return processCount(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private long processCount(final MetaData credentials, final T type) {
+    readContract(credentials, type.getContract());
+    return countByOrder(credentials, type);
   }
 
   private void readContract(final MetaData credentials, final Contract contract) {
@@ -118,11 +122,16 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
       @WebParam(name = ORDER_PARAM_NAME) final T type, @WebParam(name = PAGING_PARAM_NAME) final Paging paging,
       @WebParam(name = ORDER_BY_PARAM_NAME) final OrderByEnum orderingProperty) {
     try {
-      readContract(credentials, type.getContract());
-      return findByOrder(credentials, type, paging, orderingProperty);
+      return processFind(credentials, type, paging, orderingProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private List<T> processFind(final MetaData credentials, final T type, final Paging paging,
+      final OrderByEnum orderingProperty) {
+    readContract(credentials, type.getContract());
+    return findByOrder(credentials, type, paging, orderingProperty);
   }
 
   private List<T> findByOrder(final MetaData credentials, final T type, final Paging paging,
@@ -144,11 +153,15 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
   public T find(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
-      readContract(credentials, type.getContract());
-      return securedGenericOrderService.find(credentials, type, type.getId());
+      return processFindById(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processFindById(final MetaData credentials, final T type) {
+    readContract(credentials, type.getContract());
+    return securedGenericOrderService.find(credentials, type, type.getId());
   }
 
   @Override
@@ -189,11 +202,15 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
   public T persist(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
-      createUpdateContract(credentials, type.getContract());
-      return mergePersistOrderType(credentials, type);
+      return processPersist(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processPersist(final MetaData credentials, final T type) {
+    createUpdateContract(credentials, type.getContract());
+    return mergePersistOrderType(credentials, type);
   }
 
   private T mergePersistOrderType(final MetaData credentials, final T type) {
@@ -209,11 +226,15 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
   public T refresh(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
-      readContract(credentials, type.getContract());
-      return securedGenericOrderService.refresh(credentials, type, type.getId());
+      return processRefresh(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processRefresh(final MetaData credentials, final T type) {
+    readContract(credentials, type.getContract());
+    return securedGenericOrderService.refresh(credentials, type, type.getId());
   }
 
   @Override
@@ -221,11 +242,15 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
   public void remove(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
-      deleteContract(credentials, type.getContract());
-      securedGenericOrderService.remove(credentials, type);
+      processRemove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private void processRemove(final MetaData credentials, final T type) {
+    deleteContract(credentials, type.getContract());
+    securedGenericOrderService.remove(credentials, type);
   }
 
   private void deleteContract(final MetaData credentials, final Contract contract) {

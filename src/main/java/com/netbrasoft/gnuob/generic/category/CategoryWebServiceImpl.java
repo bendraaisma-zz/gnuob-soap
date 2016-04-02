@@ -78,11 +78,15 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
   public long count(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = CATEGORY_PARAM_NAME) final T type) {
     try {
-      readContents(credentials, type);
-      return countByCategory(credentials, type);
+      return processCount(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private long processCount(final MetaData credentials, final T type) {
+    readContents(credentials, type);
+    return countByCategory(credentials, type);
   }
 
   private void readContents(final MetaData credentials, final T type) {
@@ -130,11 +134,16 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
       @WebParam(name = CATEGORY_PARAM_NAME) final T type, @WebParam(name = PAGING_PARAM_NAME) final Paging paging,
       @WebParam(name = ORDER_BY_PARAM_NAME) final OrderByEnum orderingByProperty) {
     try {
-      readContents(credentials, type);
-      return findByCategory(credentials, type, paging, orderingByProperty);
+      return processFind(credentials, type, paging, orderingByProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private List<T> processFind(final MetaData credentials, final T type, final Paging paging,
+      final OrderByEnum orderingByProperty) {
+    readContents(credentials, type);
+    return findByCategory(credentials, type, paging, orderingByProperty);
   }
 
   private List<T> findByCategory(final MetaData credentials, final T type, final Paging paging,
@@ -157,11 +166,15 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
   public T find(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = CATEGORY_PARAM_NAME) final T type) {
     try {
-      readContents(credentials, type);
-      return securedGenericCategoryService.find(credentials, type, type.getId());
+      return processFindById(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processFindById(final MetaData credentials, final T type) {
+    readContents(credentials, type);
+    return securedGenericCategoryService.find(credentials, type, type.getId());
   }
 
   @Override
@@ -202,11 +215,15 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
   public T persist(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = CATEGORY_PARAM_NAME) final T type) {
     try {
-      createUpdateContents(credentials, type);
-      return mergePersistCategory(credentials, type);
+      return processPersist(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processPersist(final MetaData credentials, final T type) {
+    createUpdateContents(credentials, type);
+    return mergePersistCategory(credentials, type);
   }
 
   private T mergePersistCategory(final MetaData credentials, final T type) {
@@ -222,11 +239,15 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
   public T refresh(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = CATEGORY_PARAM_NAME) final T type) {
     try {
-      readContents(credentials, type);
-      return securedGenericCategoryService.refresh(credentials, type, type.getId());
+      return processRefresh(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processRefresh(final MetaData credentials, final T type) {
+    readContents(credentials, type);
+    return securedGenericCategoryService.refresh(credentials, type, type.getId());
   }
 
   @Override
@@ -234,11 +255,15 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
   public void remove(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = CATEGORY_PARAM_NAME) final T type) {
     try {
-      deleteContents(credentials, type);
-      securedGenericCategoryService.remove(credentials, type);
+      processRemove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private void processRemove(final MetaData credentials, final T type) {
+    deleteContents(credentials, type);
+    securedGenericCategoryService.remove(credentials, type);
   }
 
   private void deleteContents(final MetaData credentials, final T type) {

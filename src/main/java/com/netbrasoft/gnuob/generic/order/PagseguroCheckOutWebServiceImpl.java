@@ -27,8 +27,6 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAGSEGURO_CHE
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_PAGSEGURO_CHECK_OUT_SERVICE_IMPL_NAME;
 
-import java.util.Iterator;
-
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
@@ -79,16 +77,19 @@ public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckO
   @Override
   @WebMethod(operationName = DO_CHECKOUT_OPERATION_NAME)
   @MailAction(operation = MailEnum.NO_MAIL)
-  public T doCheckout(
-      @WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+  public T doCheckout(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
-      createUpdateContract(credentials, type.getContract());
-      securedGenericTypeCheckOutService.doCheckout(credentials, type);
-      return mergePersistOrder(credentials, type);
+      return processCheckout(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processCheckout(final MetaData credentials, final T type) {
+    createUpdateContract(credentials, type.getContract());
+    securedGenericTypeCheckOutService.doCheckout(credentials, type);
+    return mergePersistOrder(credentials, type);
   }
 
   private void createUpdateContract(final MetaData credentials, final Contract contract) {
@@ -123,100 +124,112 @@ public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckO
   @Override
   @WebMethod(operationName = DO_CHECKOUT_DETAILS_OPERATION_NAME)
   @MailAction(operation = MailEnum.NO_MAIL)
-  public T doCheckoutDetails(
-      @WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+  public T doCheckoutDetails(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
-      createUpdateContract(credentials, type.getContract());
-      securedGenericTypeCheckOutService.doCheckoutDetails(credentials, type);
-      return mergePersistOrder(credentials, type);
+      return processCheckoutDetails(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processCheckoutDetails(final MetaData credentials, final T type) {
+    createUpdateContract(credentials, type.getContract());
+    securedGenericTypeCheckOutService.doCheckoutDetails(credentials, type);
+    return mergePersistOrder(credentials, type);
   }
 
   @Override
   @WebMethod(operationName = DO_CHECKOUT_PAYMENT_OPERATION_NAME)
   @MailAction(operation = MailEnum.CONFIRMATION_NEW_ORDER_MAIL)
-  public T doCheckoutPayment(
-      @WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+  public T doCheckoutPayment(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
-      createUpdateContract(credentials, type.getContract());
-      securedGenericTypeCheckOutService.doCheckoutPayment(credentials, type);
-      return mergePersistOrder(credentials, type);
+      return processCheckoutPayment(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processCheckoutPayment(final MetaData credentials, final T type) {
+    createUpdateContract(credentials, type.getContract());
+    securedGenericTypeCheckOutService.doCheckoutPayment(credentials, type);
+    return mergePersistOrder(credentials, type);
   }
 
   @Override
   @WebMethod(operationName = DO_NOTIFICATION_OPERATION_NAME)
   @MailAction(operation = MailEnum.NO_MAIL)
-  public T doNotification(
-      @WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+  public T doNotification(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) T type) {
     try {
-      // Lege order met getNotificationId code gezet
-
-      type = securedGenericTypeCheckOutService.doNotification(credentials, type);
-
-      // Lege order met getNotificationId + TransactionId + OrderId
-
-      final String transactionId = type.getTransactionId();
-
-      type.setActive(true);
-      type.setTransactionId(null);
-      type.setNotificationId(null);
-
-      if (securedGenericOrderService.count(credentials, type) > 0) {
-
-        final Iterator<T> iterator = securedGenericOrderService
-            .find(credentials, type, Paging.getInstance(0, 1), OrderByEnum.NONE).iterator();
-
-
-        type = iterator.next();
-        type.setTransactionId(transactionId);
-
-        createUpdateContract(credentials, type.getContract());
-        securedGenericTypeCheckOutService.doTransactionDetails(credentials, type);
-        return mergePersistOrder(credentials, type);
-      } else {
-        throw new GNUOpenBusinessServiceException(
-            "No order available based on the received notification code.");
-      }
+      return processNotification(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processNotification(final MetaData credentials, T type) {
+    type = securedGenericTypeCheckOutService.doNotification(credentials, type);
+    final String transactionId = type.getTransactionId();
+    type.setTransactionId(null);
+    if (containsOrder(credentials, type)) {
+      return mergePersistOrder(credentials,
+          doTransactionDetails(credentials, findOrder(credentials, type), transactionId));
+    } else {
+      throw new GNUOpenBusinessServiceException("No order available based on the received notification code.");
+    }
+  }
+
+  private boolean containsOrder(final MetaData credentials, T type) {
+    return securedGenericOrderService.count(credentials, type) > 0;
+  }
+
+  private T doTransactionDetails(final MetaData credentials, T type, final String transactionId) {
+    type.setTransactionId(transactionId);
+    createUpdateContract(credentials, type.getContract());
+    securedGenericTypeCheckOutService.doTransactionDetails(credentials, type);
+    return type;
+  }
+
+  private T findOrder(final MetaData credentials, T type) {
+    return securedGenericOrderService.find(credentials, type, Paging.getInstance(0, 1), OrderByEnum.NONE).iterator()
+        .next();
   }
 
   @Override
   @WebMethod(operationName = DO_REFUND_TRANSACTION_OPERATION_NAME)
   @MailAction(operation = MailEnum.NO_MAIL)
-  public T doRefundTransaction(
-      @WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+  public T doRefundTransaction(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
-      createUpdateContract(credentials, type.getContract());
-      securedGenericTypeCheckOutService.doRefundTransaction(credentials, type);
-      return mergePersistOrder(credentials, type);
+      return processRefundTransaction(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
   }
 
+  private T processRefundTransaction(final MetaData credentials, final T type) {
+    createUpdateContract(credentials, type.getContract());
+    securedGenericTypeCheckOutService.doRefundTransaction(credentials, type);
+    return mergePersistOrder(credentials, type);
+  }
+
   @Override
   @WebMethod(operationName = DO_TRANSACTION_DETAILS_OPERATION_NAME)
   @MailAction(operation = MailEnum.NO_MAIL)
-  public T doTransactionDetails(
-      @WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
+  public T doTransactionDetails(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
-      createUpdateContract(credentials, type.getContract());
-      securedGenericTypeCheckOutService.doTransactionDetails(credentials, type);
-      return mergePersistOrder(credentials, type);
+      return processTransactionDetails(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processTransactionDetails(final MetaData credentials, final T type) {
+    createUpdateContract(credentials, type.getContract());
+    securedGenericTypeCheckOutService.doTransactionDetails(credentials, type);
+    return mergePersistOrder(credentials, type);
   }
 }

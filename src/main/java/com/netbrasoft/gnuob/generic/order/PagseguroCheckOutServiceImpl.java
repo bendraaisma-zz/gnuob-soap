@@ -205,6 +205,7 @@ public abstract class PagseguroCheckOutServiceImpl<O extends Order> implements I
       // Information about the order and transaction.
       order.setTransactionId(transaction.getCode());
       order.setOrderId(transaction.getReference());
+      order.setNotificationId(null);
 
       return order;
     } catch (final PagSeguroServiceException e) {

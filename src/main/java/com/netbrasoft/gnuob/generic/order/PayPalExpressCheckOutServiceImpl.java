@@ -402,6 +402,8 @@ public abstract class PayPalExpressCheckOutServiceImpl<O extends Order> implemen
           + getParameterErrors(getTransactionDetailsResponseType.getErrors()) + "], please try again.");
     }
 
+    order.setNotificationId(null);
+
     return order;
   }
 

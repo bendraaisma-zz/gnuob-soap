@@ -39,18 +39,6 @@ public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T>
     return super.count(type, param);
   }
 
-  /*@Override
-  @OperationAccess(operation = Operation.CREATE)
-  public void create(final MetaData credentials, final T type) {
-    // Method is used by access control to test if type can be created.
-  }*/
-
-  /*@Override
-  @OperationAccess(operation = Operation.DELETE)
-  public void delete(final MetaData credentials, final T type) {
-    // Method is used by access control to test if type can be deleted.
-  }*/
-
   @Override
   @OperationAccess(operation = Operation.READ)
   public T find(final MetaData credentials, final T type, final long id) {
@@ -76,12 +64,6 @@ public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T>
     super.persist(type);
   }
 
-  /*@Override
-  @OperationAccess(operation = Operation.READ)
-  public void read(final MetaData credentials, final T type) {
-    // Method is used by access control to test if type is readable.
-  }*/
-
   @Override
   @OperationAccess(operation = Operation.READ)
   public T refresh(final MetaData credentials, final T type, final long id) {
@@ -93,10 +75,4 @@ public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T>
   public void remove(final MetaData credentials, final T type) {
     super.remove(type);
   }
-
-  /*@Override
-  @OperationAccess(operation = Operation.UPDATE)
-  public void update(final MetaData credentials, final T type) {
-    // Method is used by access control to test if type is updatable.
-  }*/
 }

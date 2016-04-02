@@ -78,11 +78,15 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
   public long count(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = PRODUCT_PARAM_NAME) final T type) {
     try {
-      readContents(credentials, type);
-      return countByProduct(credentials, type);
+      return processCount(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private long processCount(final MetaData credentials, final T type) {
+    readContents(credentials, type);
+    return countByProduct(credentials, type);
   }
 
   private void readContents(final MetaData credentials, final T type) {
@@ -131,11 +135,16 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
       @WebParam(name = PRODUCT_PARAM_NAME) final T type, @WebParam(name = PAGING_PARAM_NAME) final Paging paging,
       @WebParam(name = ORDER_BY_PARAM_NAME) final OrderByEnum orderingProperty) {
     try {
-      readContents(credentials, type);
-      return findByProduct(credentials, type, paging, orderingProperty);
+      return processFind(credentials, type, paging, orderingProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private List<T> processFind(final MetaData credentials, final T type, final Paging paging,
+      final OrderByEnum orderingProperty) {
+    readContents(credentials, type);
+    return findByProduct(credentials, type, paging, orderingProperty);
   }
 
   private List<T> findByProduct(final MetaData credentials, final T type, final Paging paging,
@@ -158,11 +167,15 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
   public T find(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = PRODUCT_PARAM_NAME) final T type) {
     try {
-      readContents(credentials, type);
-      return securedGenericProductService.find(credentials, type, type.getId());
+      return processFindById(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processFindById(final MetaData credentials, final T type) {
+    readContents(credentials, type);
+    return securedGenericProductService.find(credentials, type, type.getId());
   }
 
   @Override
@@ -170,11 +183,15 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
   public T merge(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = PRODUCT_PARAM_NAME) final T type) {
     try {
-      createUpdateContents(credentials, type);
-      return securedGenericProductService.merge(credentials, type);
+      return processMerge(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processMerge(final MetaData credentials, final T type) {
+    createUpdateContents(credentials, type);
+    return securedGenericProductService.merge(credentials, type);
   }
 
   private void createUpdateContents(final MetaData credentials, final T type) {
@@ -203,11 +220,15 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
   public T persist(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = PRODUCT_PARAM_NAME) final T type) {
     try {
-      createUpdateContents(credentials, type);
-      return mergePersistProductType(credentials, type);
+      return processPersist(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processPersist(final MetaData credentials, final T type) {
+    createUpdateContents(credentials, type);
+    return mergePersistProductType(credentials, type);
   }
 
   private T mergePersistProductType(final MetaData credentials, final T type) {
@@ -223,11 +244,15 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
   public T refresh(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = PRODUCT_PARAM_NAME) final T type) {
     try {
-      readContents(credentials, type);
-      return securedGenericProductService.refresh(credentials, type, type.getId());
+      return processRefresh(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processRefresh(final MetaData credentials, final T type) {
+    readContents(credentials, type);
+    return securedGenericProductService.refresh(credentials, type, type.getId());
   }
 
   @Override
@@ -235,11 +260,15 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
   public void remove(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = PRODUCT_PARAM_NAME) final T type) {
     try {
-      deleteContents(credentials, type);
-      securedGenericProductService.remove(credentials, type);
+      processRemove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private void processRemove(final MetaData credentials, final T type) {
+    deleteContents(credentials, type);
+    securedGenericProductService.remove(credentials, type);
   }
 
   private void deleteContents(final MetaData credentials, final T type) {
