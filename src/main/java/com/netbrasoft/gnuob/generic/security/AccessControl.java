@@ -37,8 +37,8 @@ import de.rtner.security.auth.spi.SimplePBKDF2;
 public class AccessControl<A extends AbstractAccess, U extends User, S extends Site> {
 
   private class Subject {
-    private Site site = new Site();
-    private User user = new User();
+    private Site site = Site.getInstance();
+    private User user = User.getInstance();
 
     private Subject() {
       // Empty constructor.
@@ -73,9 +73,9 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
         final MetaData metaData = (MetaData) parameter;
 
         // Check site credentials
-        if (siteServiceImpl.count((S) new Site(metaData.getSite())) > 0) {
+        if (siteServiceImpl.count((S) Site.getInstance(metaData.getSite())) > 0) {
           subject.site = siteServiceImpl
-              .find((S) new Site(metaData.getSite()), Paging.getInstance(-1, -1), OrderByEnum.NONE).get(0);
+              .find((S) Site.getInstance(metaData.getSite()), Paging.getInstance(-1, -1), OrderByEnum.NONE).get(0);
         } else {
           split.stop();
           throw new GNUOpenBusinessServiceException(
@@ -84,9 +84,9 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
         }
 
         // Check user credentials
-        if (userServiceImpl.count((U) new User(metaData.getUser())) > 0) {
+        if (userServiceImpl.count((U) User.getInstance(metaData.getUser())) > 0) {
           subject.user = userServiceImpl
-              .find((U) new User(metaData.getUser()), Paging.getInstance(-1, -1), OrderByEnum.NONE).get(0);
+              .find((U) User.getInstance(metaData.getUser()), Paging.getInstance(-1, -1), OrderByEnum.NONE).get(0);
 
           if (!simplePBKDF2.verifyKeyFormatted(subject.user.getPassword(), metaData.getPassword())) {
             split.stop();

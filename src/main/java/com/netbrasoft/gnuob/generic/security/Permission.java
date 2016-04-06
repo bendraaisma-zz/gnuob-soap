@@ -56,14 +56,10 @@ public class Permission extends AbstractType {
   }
 
   @Override
-  public void prePersist() {
-    return;
-  }
+  public void prePersist() {}
 
   @Override
-  public void preUpdate() {
-    return;
-  }
+  public void preUpdate() {}
 
   @XmlElement(required = true)
   @Column(name = GROUP_COLUMN_NAME, nullable = false)

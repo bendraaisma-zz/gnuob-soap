@@ -19,7 +19,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ SettingTest.class, SettingWebServiceImplTest.class })
+@SuiteClasses({SettingTest.class, SettingWebServiceImplTest.class})
 public class SettingSuite {
 
 }

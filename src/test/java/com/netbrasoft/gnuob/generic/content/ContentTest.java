@@ -20,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -107,14 +108,14 @@ public class ContentTest {
   public void testSetFormat() {
     spyContent.setFormat("Folly words widow one downs few age every seven.");
     assertEquals("Format", "Folly words widow one downs few age every seven.", spyContent.getFormat());
-    verify(spyContent, times(1)).setFormat(any());
+    verify(spyContent, times(1)).setFormat(anyString());
   }
 
   @Test
   public void testSetName() {
     spyContent.setName("Folly words widow one downs few age every seven.");
     assertEquals("Name", "Folly words widow one downs few age every seven.", spyContent.getName());
-    verify(spyContent, times(1)).setName(any());
+    verify(spyContent, times(1)).setName(anyString());
   }
 
   @Test

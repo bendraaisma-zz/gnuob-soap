@@ -66,18 +66,26 @@ public class User extends AbstractAccess {
 
   private static final long serialVersionUID = 2439569681567208145L;
 
-  private Rule access;
+  public static User getInstance() {
+    return new User();
+  }
+
+  public static User getInstance(String name) {
+    return new User(name);
+  }
+
+  private Rule access = Rule.READ_ACCESS;
   private String description;
   private Set<Group> groups = new HashSet<Group>();
   private String name;
   private String password;
-  private Set<Role> roles;
-  private Boolean root;
+  private Set<Role> roles = new HashSet<Role>();
+  private Boolean root = Boolean.FALSE;
   private Set<Site> sites = new HashSet<Site>();
 
   public User() {}
 
-  public User(final String name) {
+  private User(final String name) {
     this.name = name;
   }
 
@@ -89,17 +97,17 @@ public class User extends AbstractAccess {
 
   @Transient
   private boolean isSitesDetached() {
-    return sites.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
+    return sites != null && sites.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
   @Transient
   private boolean isGroupsDetached() {
-    return groups.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
+    return groups != null && groups.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
   @Override
   public void prePersist() {
-    if (!(password.length() == PASSWORD_LENGTH && password.matches(PASSWORD_REGEX))) {
+    if (!(password.matches(PASSWORD_REGEX))) {
       throw new GNUOpenBusinessServiceException(String
           .format("Given user [%s] doesn't contain a valid password, verify that the given password is valid", name));
     }

@@ -74,12 +74,16 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
   public long count(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = USER_PARAM_NAME) final T type) {
     try {
-      readSites(credentials, type.getSites());
-      readGroups(credentials, type.getGroups());
-      return securedGenericUserService.count(credentials, type);
+      return processCount(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private long processCount(final MetaData credentials, final T type) {
+    readSites(credentials, type.getSites());
+    readGroups(credentials, type.getGroups());
+    return securedGenericUserService.count(credentials, type);
   }
 
   private void readSites(final MetaData credentials, final Set<Site> sites) {
@@ -99,12 +103,16 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
   public T find(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = USER_PARAM_NAME) final T type) {
     try {
-      readSites(credentials, type.getSites());
-      readGroups(credentials, type.getGroups());
-      return securedGenericUserService.find(credentials, type, type.getId());
+      return processFindById(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processFindById(final MetaData credentials, final T type) {
+    readSites(credentials, type.getSites());
+    readGroups(credentials, type.getGroups());
+    return securedGenericUserService.find(credentials, type, type.getId());
   }
 
   @Override
@@ -113,12 +121,17 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
       @WebParam(name = USER_PARAM_NAME) final T type, @WebParam(name = PAGING_PARAM_NAME) final Paging paging,
       @WebParam(name = ORDER_BY_PARAM_NAME) final OrderByEnum orderingProperty) {
     try {
-      readSites(credentials, type.getSites());
-      readGroups(credentials, type.getGroups());
-      return securedGenericUserService.find(credentials, type, paging, orderingProperty);
+      return processFind(credentials, type, paging, orderingProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private List<T> processFind(final MetaData credentials, final T type, final Paging paging,
+      final OrderByEnum orderingProperty) {
+    readSites(credentials, type.getSites());
+    readGroups(credentials, type.getGroups());
+    return securedGenericUserService.find(credentials, type, paging, orderingProperty);
   }
 
   @Override
@@ -126,12 +139,16 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
   public T merge(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = USER_PARAM_NAME) final T type) {
     try {
-      createUpdateSites(credentials, type.getSites());
-      createUpdateGroups(credentials, type.getGroups());
-      return securedGenericUserService.merge(credentials, type);
+      return processMerge(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processMerge(final MetaData credentials, final T type) {
+    createUpdateSites(credentials, type.getSites());
+    createUpdateGroups(credentials, type.getGroups());
+    return securedGenericUserService.merge(credentials, type);
   }
 
   private void createUpdateSites(final MetaData credentials, final Set<Site> sites) {
@@ -153,12 +170,16 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
   public T persist(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = USER_PARAM_NAME) final T type) {
     try {
-      createUpdateSites(credentials, type.getSites());
-      createUpdateGroups(credentials, type.getGroups());
-      return mergeOrPersistUser(credentials, type);
+      return processPersist(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processPersist(final MetaData credentials, final T type) {
+    createUpdateSites(credentials, type.getSites());
+    createUpdateGroups(credentials, type.getGroups());
+    return mergeOrPersistUser(credentials, type);
   }
 
   private T mergeOrPersistUser(final MetaData credentials, final T type) {
@@ -174,12 +195,16 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
   public T refresh(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = USER_PARAM_NAME) final T type) {
     try {
-      readSites(credentials, type.getSites());
-      readGroups(credentials, type.getGroups());
-      return securedGenericUserService.refresh(credentials, type, type.getId());
+      return processRefresh(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private T processRefresh(final MetaData credentials, final T type) {
+    readSites(credentials, type.getSites());
+    readGroups(credentials, type.getGroups());
+    return securedGenericUserService.refresh(credentials, type, type.getId());
   }
 
   @Override
@@ -187,12 +212,16 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
   public void remove(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = USER_PARAM_NAME) final T type) {
     try {
-      deleteSites(credentials, type.getSites());
-      deleteGroups(credentials, type.getGroups());
-      securedGenericUserService.remove(credentials, type);
+      processRemove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
     }
+  }
+
+  private void processRemove(final MetaData credentials, final T type) {
+    deleteSites(credentials, type.getSites());
+    deleteGroups(credentials, type.getGroups());
+    securedGenericUserService.remove(credentials, type);
   }
 
   private void deleteSites(final MetaData credentials, final Set<Site> sites) {

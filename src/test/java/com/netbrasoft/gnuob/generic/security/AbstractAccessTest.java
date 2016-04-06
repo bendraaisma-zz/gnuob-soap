@@ -26,92 +26,91 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class AbstractAccessTest {
-    
-    private Permission mockPermission;
-    private User mockUser;
-    private Group mockGroup;
-    private Site mockSite;
-    private AbstractAccess spyAbstractAccess;
-    
-    @Before
-    public void setUp() throws Exception {
-        mockPermission = mock(Permission.class);
-        mockUser = mock(User.class);
-        mockGroup = mock(Group.class);
-        mockSite = mock(Site.class);
-        spyAbstractAccess = spy(AbstractAccess.class);
-        spyAbstractAccess.setPermission(mockPermission);
-        spyAbstractAccess.setOwner(mockUser);
-        spyAbstractAccess.setSite(mockSite);
-        spyAbstractAccess.setGroup(mockGroup);
-    }
-    
-    @After
-    public void tearDown() throws Exception {
-    }
-    
-    @Test
-    public void testGetActive() {
-        assertNotNull("Active", spyAbstractAccess.getActive());
-        verify(spyAbstractAccess, times(1)).getActive();
-    }
-    
-    @Test
-    public void testGetGroup() {
-        assertNotNull("Group", spyAbstractAccess.getGroup());
-        verify(spyAbstractAccess, times(1)).getGroup();
-    }
-    
-    @Test
-    public void testGetOwner() {
-        assertNotNull("Owner", spyAbstractAccess.getOwner());
-        verify(spyAbstractAccess, times(1)).getOwner();
-    }
-    
-    @Test
-    public void testGetPermission() {
-        assertNotNull("Permission", spyAbstractAccess.getPermission());
-        verify(spyAbstractAccess, times(1)).getPermission();
-    }
-    
-    @Test
-    public void testGetSite() {
-        assertNotNull("Site", spyAbstractAccess.getSite());
-        verify(spyAbstractAccess, times(1)).getSite();
-    }
-    
-    @Test
-    public void testSetActive() {
-        spyAbstractAccess.setActive(null);
-        assertNull("Active", spyAbstractAccess.getActive());
-        verify(spyAbstractAccess, times(1)).setActive(null);
-    }
-    
-    @Test
-    public void testSetGroup() {
-        spyAbstractAccess.setGroup(null);
-        assertNull("Group", spyAbstractAccess.getGroup());
-        verify(spyAbstractAccess, times(1)).setGroup(null);
-    }
-    
-    @Test
-    public void testSetOwner() {
-        spyAbstractAccess.setOwner(null);
-        assertNull("Owner", spyAbstractAccess.getOwner());
-        verify(spyAbstractAccess, times(1)).setOwner(null);
-    }
-    
-    @Test
-    public void testSetPermission() {
-        spyAbstractAccess.setPermission(null);
-        assertNull("Permission", spyAbstractAccess.getPermission());
-        verify(spyAbstractAccess, times(1)).setPermission(null);
-    }
-    
-    @Test
-    public void testSetSite() {
-        spyAbstractAccess.setSite(null);
-        assertNull("Site", spyAbstractAccess.getSite());
-        verify(spyAbstractAccess, times(1)).setSite(null);
-    }
+
+  private Permission mockPermission;
+  private User mockUser;
+  private Group mockGroup;
+  private Site mockSite;
+  private AbstractAccess spyAbstractAccess;
+
+  @Before
+  public void setUp() throws Exception {
+    mockPermission = mock(Permission.class);
+    mockUser = mock(User.class);
+    mockGroup = mock(Group.class);
+    mockSite = mock(Site.class);
+    spyAbstractAccess = spy(AbstractAccess.class);
+    spyAbstractAccess.setPermission(mockPermission);
+    spyAbstractAccess.setOwner(mockUser);
+    spyAbstractAccess.setSite(mockSite);
+    spyAbstractAccess.setGroup(mockGroup);
+  }
+
+  @After
+  public void tearDown() throws Exception {}
+
+  @Test
+  public void testGetActive() {
+    assertNotNull("Active", spyAbstractAccess.getActive());
+    verify(spyAbstractAccess, times(1)).getActive();
+  }
+
+  @Test
+  public void testGetGroup() {
+    assertNotNull("Group", spyAbstractAccess.getGroup());
+    verify(spyAbstractAccess, times(1)).getGroup();
+  }
+
+  @Test
+  public void testGetOwner() {
+    assertNotNull("Owner", spyAbstractAccess.getOwner());
+    verify(spyAbstractAccess, times(1)).getOwner();
+  }
+
+  @Test
+  public void testGetPermission() {
+    assertNotNull("Permission", spyAbstractAccess.getPermission());
+    verify(spyAbstractAccess, times(1)).getPermission();
+  }
+
+  @Test
+  public void testGetSite() {
+    assertNotNull("Site", spyAbstractAccess.getSite());
+    verify(spyAbstractAccess, times(1)).getSite();
+  }
+
+  @Test
+  public void testSetActive() {
+    spyAbstractAccess.setActive(null);
+    assertNull("Active", spyAbstractAccess.getActive());
+    verify(spyAbstractAccess, times(1)).setActive(null);
+  }
+
+  @Test
+  public void testSetGroup() {
+    spyAbstractAccess.setGroup(null);
+    assertNull("Group", spyAbstractAccess.getGroup());
+    verify(spyAbstractAccess, times(1)).setGroup(null);
+  }
+
+  @Test
+  public void testSetOwner() {
+    spyAbstractAccess.setOwner(null);
+    assertNull("Owner", spyAbstractAccess.getOwner());
+    verify(spyAbstractAccess, times(1)).setOwner(null);
+  }
+
+  @Test
+  public void testSetPermission() {
+    spyAbstractAccess.setPermission(null);
+    assertNull("Permission", spyAbstractAccess.getPermission());
+    verify(spyAbstractAccess, times(1)).setPermission(null);
+  }
+
+  @Test
+  public void testSetSite() {
+    spyAbstractAccess.setSite(null);
+    assertNull("Site", spyAbstractAccess.getSite());
+    verify(spyAbstractAccess, times(1)).setSite(null);
+  }
 }

@@ -173,14 +173,16 @@ public class AddressTest {
   @Test
   public void testSetInternationalStateAndCity() {
     spyAddress.setInternationalStateAndCity("Folly words widow one downs few age every seven.");
-    assertEquals("InternationalStateAndCity", "Folly words widow one downs few age every seven.", spyAddress.getInternationalStateAndCity());
+    assertEquals("InternationalStateAndCity", "Folly words widow one downs few age every seven.",
+        spyAddress.getInternationalStateAndCity());
     verify(spyAddress, times(1)).setInternationalStateAndCity(anyString());
   }
 
   @Test
   public void testSetInternationalStreet() {
     spyAddress.setInternationalStreet("Folly words widow one downs few age every seven.");
-    assertEquals("InternationalStreet", "Folly words widow one downs few age every seven.", spyAddress.getInternationalStreet());
+    assertEquals("InternationalStreet", "Folly words widow one downs few age every seven.",
+        spyAddress.getInternationalStreet());
     verify(spyAddress, times(1)).setInternationalStreet(anyString());
   }
 
@@ -208,7 +210,8 @@ public class AddressTest {
   @Test
   public void testSetStateOrProvince() {
     spyAddress.setStateOrProvince("Folly words widow one downs few age every seven.");
-    assertEquals("StateOrProvince", "Folly words widow one downs few age every seven.", spyAddress.getStateOrProvince());
+    assertEquals("StateOrProvince", "Folly words widow one downs few age every seven.",
+        spyAddress.getStateOrProvince());
     verify(spyAddress, times(1)).setStateOrProvince(anyString());
   }
 
