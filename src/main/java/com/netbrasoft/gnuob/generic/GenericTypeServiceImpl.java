@@ -126,7 +126,7 @@ public class GenericTypeServiceImpl<T> implements IGenericTypeService<T> {
   public T find(final T type, final long id) {
     final List<T> list = findTypeById(type, id);
     if (list.isEmpty()) {
-      throw new GNUOpenBusinessServiceException("No entity found by the given id and type.");
+      throw new GNUOpenBusinessServiceException("No entity found by the given id and type (ERR01)");
     }
     return list.iterator().next();
   }

@@ -31,6 +31,7 @@ import static org.mockito.internal.util.collections.Sets.newSet;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
@@ -39,7 +40,7 @@ import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitorImpl;
 
 public class UserTest {
 
-  @org.junit.Rule
+  @Rule
   public ExpectedException expectedException = ExpectedException.none();
   private Group mockGroup;
   private Site mockSite;
@@ -66,7 +67,7 @@ public class UserTest {
 
   @Test
   public void testGetAccess() {
-    assertNotNull("Access", spyUser.getAccess());
+    assertNull("Access", spyUser.getAccess());
     verify(spyUser, times(1)).getAccess();
   }
 
@@ -86,12 +87,12 @@ public class UserTest {
   public void testGetInstance() {
     User instance = User.getInstance();
     assertNotNull("Instance", instance);
-    assertNotNull("Access", instance.getAccess());
+    assertNull("Access", instance.getAccess());
     assertNull("Name", instance.getName());
     assertNull("Password", instance.getPassword());
     assertNotNull("Groups", instance.getGroups());
     assertNotNull("Roles", instance.getRoles());
-    assertNotNull("Root", instance.getRoot());
+    assertNull("Root", instance.getRoot());
     assertNotNull("Sites", instance.getSites());
   }
 
@@ -99,12 +100,12 @@ public class UserTest {
   public void testGetInstanceByName() {
     User instance = User.getInstance("Name");
     assertNotNull("Instance", instance);
-    assertNotNull("Access", instance.getAccess());
+    assertNull("Access", instance.getAccess());
     assertEquals("Name", "Name", instance.getName());
     assertNull("Password", instance.getPassword());
     assertNotNull("Groups", instance.getGroups());
     assertNotNull("Roles", instance.getRoles());
-    assertNotNull("Root", instance.getRoot());
+    assertNull("Root", instance.getRoot());
     assertNotNull("Sites", instance.getSites());
   }
 
@@ -128,7 +129,7 @@ public class UserTest {
 
   @Test
   public void testGetRoot() {
-    assertNotNull("Root", spyUser.getRoot());
+    assertNull("Root", spyUser.getRoot());
     verify(spyUser, times(1)).getRoot();
   }
 

@@ -24,7 +24,6 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUPS_ID_COL
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ID_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NAME_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_COLUMN_NAME;
-import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_LENGTH;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_REGEX;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ROOT_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITES_ID_COLUMN_NAME;
@@ -74,13 +73,13 @@ public class User extends AbstractAccess {
     return new User(name);
   }
 
-  private Rule access = Rule.READ_ACCESS;
+  private Rule access;
   private String description;
   private Set<Group> groups = new HashSet<Group>();
   private String name;
   private String password;
   private Set<Role> roles = new HashSet<Role>();
-  private Boolean root = Boolean.FALSE;
+  private Boolean root;
   private Set<Site> sites = new HashSet<Site>();
 
   public User() {}

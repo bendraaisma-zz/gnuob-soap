@@ -16,6 +16,7 @@ package com.netbrasoft.gnuob.generic;
 
 public final class NetbrasoftSoapConstants {
 
+  public static final String UNCHECKED = "unchecked";
   public static final String PAY_PAL_EXPRESS_CHECK_OUT_WEB_SERVICE_IMPL_NAME = "PayPalExpressCheckOutWebServiceImpl";
   public static final String ACCESS_COLUMN_NAME = "ACCESS";
   public static final String ACCESS_ENTITY_NAME = "Access";

@@ -56,30 +56,36 @@ public class Permission extends AbstractType {
   }
 
   @Override
-  public void prePersist() {}
+  public void prePersist() {
+    getGroup();
+    getOwner();
+    getOthers();
+  }
 
   @Override
-  public void preUpdate() {}
+  public void preUpdate() {
+    prePersist();
+  }
 
   @XmlElement(required = true)
   @Column(name = GROUP_COLUMN_NAME, nullable = false)
   @Enumerated(EnumType.STRING)
   public Rule getGroup() {
-    return group;
+    return group == null ? group = Rule.READ_ACCESS : group;
   }
 
   @XmlElement(required = true)
   @Column(name = OTHERS_COLUMN_NAME, nullable = false)
   @Enumerated(EnumType.STRING)
   public Rule getOthers() {
-    return others;
+    return others == null ? others = Rule.READ_ACCESS : others;
   }
 
   @XmlElement(required = true)
   @Column(name = OWNER_COLUMN_NAME, nullable = false)
   @Enumerated(EnumType.STRING)
   public Rule getOwner() {
-    return owner;
+    return owner == null ? owner = Rule.READ_ACCESS : owner;
   }
 
   public void setGroup(final Rule group) {

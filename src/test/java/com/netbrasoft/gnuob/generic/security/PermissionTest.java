@@ -16,7 +16,7 @@ package com.netbrasoft.gnuob.generic.security;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -85,21 +85,21 @@ public class PermissionTest {
   @Test
   public void testSetGroup() {
     spyPermission.setGroup(null);
-    assertNull("Group", spyPermission.getGroup());
+    assertNotNull("Group", spyPermission.getGroup());
     verify(spyPermission, times(1)).setGroup(null);
   }
 
   @Test
   public void testSetOthers() {
     spyPermission.setOthers(null);
-    assertNull("Others", spyPermission.getOthers());
+    assertNotNull("Others", spyPermission.getOthers());
     verify(spyPermission, times(1)).setOthers(null);
   }
 
   @Test
   public void testSetOwner() {
     spyPermission.setOwner(null);
-    assertNull("Owner", spyPermission.getOwner());
+    assertNotNull("Owner", spyPermission.getOwner());
     verify(spyPermission, times(1)).setOwner(null);
   }
 }
