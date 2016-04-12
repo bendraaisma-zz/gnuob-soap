@@ -14,9 +14,16 @@
 
 package com.netbrasoft.gnuob.generic.security;
 
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CREATION_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GENERIC_TYPE_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ID_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MODIFICATION_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_ID;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.UNCHECKED;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_ID;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VERSION_COLUMN_NAME;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import javax.ejb.EJB;
@@ -26,6 +33,7 @@ import javax.persistence.LockModeType;
 
 import org.javasimon.SimonManager;
 import org.javasimon.Split;
+import org.springframework.beans.BeanUtils;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.AbstractType;
@@ -92,18 +100,10 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
   private Object processCreateOperationAccess(final InvocationContext ctx, final Subject subject,
       AbstractType abstractType) {
     if (isRoot(subject) || isAllowedTo(subject, Operation.CREATE)) {
-      if (abstractType instanceof AbstractAccess) {
-        ((A) abstractType).setGroup(subject.user.getGroup());
-        ((A) abstractType).setSite(subject.site);
-        ((A) abstractType).setOwner(subject.user);
-        if (((A) abstractType).getPermission() == null) {
-          ((A) abstractType).setPermission(new Permission());
-          ((A) abstractType).getPermission().setOwner(subject.user.getPermission().getOwner());
-          ((A) abstractType).getPermission().setGroup(subject.user.getPermission().getGroup());
-          ((A) abstractType).getPermission().setOthers(subject.user.getPermission().getOthers());
-        }
-      }
       try {
+        if (abstractType instanceof AbstractAccess) {
+          createAccess(subject, (A) abstractType);
+        }
         return ctx.proceed();
       } catch (final Exception e) {
         throw new GNUOpenBusinessServiceException(e.getMessage(), e);
@@ -112,6 +112,18 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
       throw new GNUOpenBusinessServiceException(String.format(
           "Given user [%s] doesn't have the right access to create this entity object, verify that the given user has access (ERR01)",
           subject.user.getName()));
+    }
+  }
+
+  private void createAccess(final Subject subject, A access)
+      throws IllegalAccessException, InvocationTargetException {
+    access.setGroup(subject.user.getGroup());
+    access.setSite(subject.site);
+    access.setOwner(subject.user);
+    if (access.getPermission() == null) {
+      access.setPermission(Permission.getInstance());
+      BeanUtils.copyProperties(subject.user.getPermission(), access,
+          new String[] {ID_COLUMN_NAME, VERSION_COLUMN_NAME, CREATION_COLUMN_NAME, MODIFICATION_COLUMN_NAME});
     }
   }
 
@@ -143,8 +155,8 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
   }
 
   private void enableAccessFilter(final Subject subject) {
-    accessTypeService.enableFilter(AbstractAccess.NFQ1, new Parameter("userId", subject.user.getId()));
-    accessTypeService.enableFilter(AbstractAccess.NFQ2, new Parameter("siteId", subject.site.getId()));
+    accessTypeService.enableFilter(AbstractAccess.NFQ1, new Parameter(USER_ID, subject.user.getId()));
+    accessTypeService.enableFilter(AbstractAccess.NFQ2, new Parameter(SITE_ID, subject.site.getId()));
   }
 
   private void disableAccessFilter() {
@@ -197,11 +209,20 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
         .get();
   }
 
+  @SuppressWarnings(UNCHECKED)
   private Object processOperationAccess(final InvocationContext ctx, final Subject subject, AbstractType abstractType,
       Operation operation) {
     if (isRoot(subject) || isAllowedTo(subject, operation)) {
       if (abstractType instanceof AbstractAccess) {
-        updateAbstractAccess(subject, abstractType, operation);
+        final A access = getAbstractAccessObject(abstractType);
+        if (isRoot(subject) || hasOwnership(subject, access, operation) || hasGroupOwnership(subject, access, operation)
+            || hasOtherOwnership(access, operation)) {
+          updateAccess((A) abstractType, access);
+        } else {
+          throw new GNUOpenBusinessServiceException(String.format(
+              "Given user [%s] doesn't have the right access to %s this entity object, verify that the given user has access (ERR02)",
+              subject.user.getName(), operation.toString().toLowerCase()));
+        }
       }
       try {
         return ctx.proceed();
@@ -223,24 +244,15 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
     return subject.user.getAccess().getOperations().contains(operation);
   }
 
-  @SuppressWarnings(UNCHECKED)
-  private void updateAbstractAccess(final Subject subject, AbstractType abstractType, Operation operation) {
-    final A access = getAbstractAccessObject(abstractType);
-    if (isRoot(subject) || hasOwnership(subject, access, operation) || hasGroupOwnership(subject, access, operation)
-        || hasOtherOwnership(access, operation)) {
-      if (((A) abstractType).getPermission() == null) {
-        ((A) abstractType).setPermission(access.getPermission());
-      }
-      ((A) abstractType).setGroup(access.getGroup());
-      ((A) abstractType).setSite(access.getSite());
-      ((A) abstractType).setOwner(access.getOwner());
-      ((A) abstractType).setCreation(access.getCreation());
-      ((A) abstractType).setModification(access.getModification());
-    } else {
-      throw new GNUOpenBusinessServiceException(String.format(
-          "Given user [%s] doesn't have the right access to %s this entity object, verify that the given user has access (ERR02)",
-          subject.user.getName(), operation.toString().toLowerCase()));
+  private void updateAccess(final A source, A target) {
+    if (target.getPermission() == null) {
+      target.setPermission(source.getPermission());
     }
+    target.setGroup(source.getGroup());
+    target.setSite(source.getSite());
+    target.setOwner(source.getOwner());
+    target.setCreation(source.getCreation());
+    target.setModification(source.getModification());
   }
 
   private boolean hasOwnership(final Subject subject, final A access, Operation operation) {

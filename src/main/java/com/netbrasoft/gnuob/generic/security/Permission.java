@@ -43,9 +43,13 @@ public class Permission extends AbstractType {
 
   private static final long serialVersionUID = 3108374497171836688L;
 
-  private Rule group = Rule.READ_ACCESS;
-  private Rule others = Rule.READ_ACCESS;
-  private Rule owner = Rule.DELETE_ACCESS;
+  public static Permission getInstance() {
+    return new Permission();
+  }
+  
+  private Rule group;
+  private Rule others;
+  private Rule owner;
 
   public Permission() {}
 

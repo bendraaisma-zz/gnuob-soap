@@ -75,14 +75,18 @@ public class User extends AbstractAccess {
 
   private Rule access;
   private String description;
-  private Set<Group> groups = new HashSet<Group>();
+  private Set<Group> groups;
   private String name;
   private String password;
-  private Set<Role> roles = new HashSet<Role>();
+  private Set<Role> roles;
   private Boolean root;
-  private Set<Site> sites = new HashSet<Site>();
+  private Set<Site> sites;
 
-  public User() {}
+  public User() {
+    groups = new HashSet<Group>();
+    roles = new HashSet<Role>();
+    sites = new HashSet<Site>();
+  }
 
   private User(final String name) {
     this.name = name;

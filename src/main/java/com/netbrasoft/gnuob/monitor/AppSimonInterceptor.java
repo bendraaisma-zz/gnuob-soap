@@ -22,6 +22,7 @@ public class AppSimonInterceptor extends SimonInterceptor {
 
   @Override
   protected String getSimonName(final InvocationContext context) {
-    return context.getMethod().getDeclaringClass().getName() + "." + context.getMethod().getName();
+    return new StringBuilder(context.getMethod().getDeclaringClass().getName()).append(".")
+        .append(context.getMethod().getName()).toString();
   }
 }

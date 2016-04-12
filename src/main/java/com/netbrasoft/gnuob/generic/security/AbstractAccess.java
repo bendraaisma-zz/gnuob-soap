@@ -17,6 +17,8 @@ package com.netbrasoft.gnuob.generic.security;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ACCESS_ENTITY_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ACCESS_TABLE_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ACTIVE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_ID;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_ID;
 
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -44,8 +46,8 @@ import com.netbrasoft.gnuob.generic.content.contexts.IContextElement;
 @Table(name = ACCESS_TABLE_NAME)
 @Inheritance(strategy = InheritanceType.JOINED)
 // @formatter:off
-@FilterDefs({@FilterDef(name = AbstractAccess.NFQ1, parameters = @ParamDef(name = "userId", type = "long") ),
-    @FilterDef(name = AbstractAccess.NFQ2, parameters = @ParamDef(name = "siteId", type = "long") )})
+@FilterDefs({@FilterDef(name = AbstractAccess.NFQ1, parameters = @ParamDef(name = USER_ID, type = "long") ),
+    @FilterDef(name = AbstractAccess.NFQ2, parameters = @ParamDef(name = SITE_ID, type = "long") )})
 @Filters({@Filter(
     // Select based on user ownership.
     name = AbstractAccess.NFQ1, condition = "((owner_ID = (SELECT GNUOB_USERS.ID FROM GNUOB_USERS "

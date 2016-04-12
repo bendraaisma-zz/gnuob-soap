@@ -50,5 +50,5 @@ public abstract interface ISecuredGenericTypeService<T> {
   public abstract void remove(MetaData credentials, T type);
 
   @OperationAccess(operation = Operation.UPDATE)
-  public default void update(MetaData credentials, T type) {};
+  public default void update(MetaData credentials, T type) {}
 }

@@ -16,8 +16,6 @@ package com.netbrasoft.gnuob.generic;
 
 public final class NetbrasoftSoapConstants {
 
-  public static final String UNCHECKED = "unchecked";
-  public static final String PAY_PAL_EXPRESS_CHECK_OUT_WEB_SERVICE_IMPL_NAME = "PayPalExpressCheckOutWebServiceImpl";
   public static final String ACCESS_COLUMN_NAME = "ACCESS";
   public static final String ACCESS_ENTITY_NAME = "Access";
   public static final String ACCESS_TABLE_NAME = "GNUOB_ACCESS";
@@ -281,6 +279,7 @@ public final class NetbrasoftSoapConstants {
   public static final String PASSWORD_PARAM_NAME = "password";
   public static final String PASSWORD_PROPERTY = System.getProperty("paypal.password", "UU9AJQJYE2CAMP54");
   public static final String PASSWORD_REGEX = "^[0-9A-F]{16}:\\d{4}:[0-9A-F]{40}";
+  public static final String PAY_PAL_EXPRESS_CHECK_OUT_WEB_SERVICE_IMPL_NAME = "PayPalExpressCheckOutWebServiceImpl";
   public static final String PAYER_BUSINESS_COLUMN_NAME = "PAYER_BUSINESS";
   public static final String PAYER_COLUMN_NAME = "PAYER";
   public static final String PAYER_ID_COLUMN_NAME = "PAYER_ID";
@@ -381,6 +380,7 @@ public final class NetbrasoftSoapConstants {
   public static final String SIGNATURE_PROPERTY =
       System.getProperty("paypal.signature", "AFcWxV21C7fd0v3bYYYRCpSSRl31A7mmuIDpb.xZccUUAyCy0P.XGaWg");
   public static final String SITE_ENTITY_NAME = "Site";
+  public static final String SITE_ID = "siteId";
   public static final String SITE_PARAM_NAME = "site";
   public static final String SITE_PROPERTY =
       System.getProperty("paypal.site", "https://api-3t.sandbox.paypal.com/2.0/");
@@ -413,8 +413,10 @@ public final class NetbrasoftSoapConstants {
   public static final String TOKEN_COLUMN_NAME = "TOKEN";
   public static final String TRANSACTION_ID_COLUMN_NAME = "TRANSACTION_ID";
   public static final String TRANSACTION_TYPE_COLUMN_NAME = "TRANSACTION_TYPE";
+  public static final String UNCHECKED = "unchecked";
   public static final String UNCHECKED_VALUE = "unchecked";
   public static final String USER_ENTITY_NAME = "User";
+  public static final String USER_ID = "userId";
   public static final String USER_PARAM_NAME = "user";
   public static final String USER_TABLE_NAME = "GNUOB_USERS";
   public static final String USER_WEB_SERVICE_IMPL_NAME = "UserWebServiceImpl";
