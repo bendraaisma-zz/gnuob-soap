@@ -89,6 +89,9 @@ public class User extends AbstractAccess {
   }
 
   private User(final String name) {
+    groups = new HashSet<Group>();
+    roles = new HashSet<Role>();
+    sites = new HashSet<Site>();
     this.name = name;
   }
 

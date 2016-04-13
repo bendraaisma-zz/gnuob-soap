@@ -38,7 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 @Cacheable(value = false)
 @MappedSuperclass
-public abstract class AbstractType implements Serializable {
+public abstract class AbstractType implements Serializable, ICallback {
 
   private static final long serialVersionUID = 7895247154381678321L;
 
@@ -50,18 +50,12 @@ public abstract class AbstractType implements Serializable {
   @Transient
   public abstract boolean isDetached();
 
-  @Transient
-  public abstract void prePersist();
-
   @PrePersist
   protected void prePersistType() {
     creation = new Timestamp(System.currentTimeMillis());
     modification = new Timestamp(System.currentTimeMillis());
     prePersist();
   }
-
-  @Transient
-  public abstract void preUpdate();
 
   @PreUpdate
   protected void preUpdateType() {

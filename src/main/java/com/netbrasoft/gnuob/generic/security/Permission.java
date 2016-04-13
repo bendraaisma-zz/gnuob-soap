@@ -46,7 +46,7 @@ public class Permission extends AbstractType {
   public static Permission getInstance() {
     return new Permission();
   }
-  
+
   private Rule group;
   private Rule others;
   private Rule owner;
@@ -89,7 +89,7 @@ public class Permission extends AbstractType {
   @Column(name = OWNER_COLUMN_NAME, nullable = false)
   @Enumerated(EnumType.STRING)
   public Rule getOwner() {
-    return owner == null ? owner = Rule.READ_ACCESS : owner;
+    return owner == null ? owner = Rule.DELETE_ACCESS : owner;
   }
 
   public void setGroup(final Rule group) {

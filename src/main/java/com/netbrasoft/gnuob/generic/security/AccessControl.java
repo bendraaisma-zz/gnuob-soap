@@ -14,16 +14,11 @@
 
 package com.netbrasoft.gnuob.generic.security;
 
-import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CREATION_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GENERIC_TYPE_SERVICE_IMPL_NAME;
-import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ID_COLUMN_NAME;
-import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MODIFICATION_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_ID;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.UNCHECKED;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_ID;
-import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VERSION_COLUMN_NAME;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import javax.ejb.EJB;
@@ -33,7 +28,6 @@ import javax.persistence.LockModeType;
 
 import org.javasimon.SimonManager;
 import org.javasimon.Split;
-import org.springframework.beans.BeanUtils;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.AbstractType;
@@ -78,11 +72,11 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
         return readOperationAccess(ctx);
       case UPDATE:
         return updateOperationAccess(ctx);
-      case NONE:
-        return noneOperationAccess(ctx);
       case DELETE:
-      default:
         return deleteOperationAccess(ctx);
+      case NONE:
+      default:
+        return noneOperationAccess(ctx);
     }
   }
 
@@ -99,10 +93,10 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
   @SuppressWarnings(UNCHECKED)
   private Object processCreateOperationAccess(final InvocationContext ctx, final Subject subject,
       AbstractType abstractType) {
-    if (isRoot(subject) || isAllowedTo(subject, Operation.CREATE)) {
+    if (isRoot(subject) || isAllowedToUpdate(subject, Operation.CREATE)) {
       try {
         if (abstractType instanceof AbstractAccess) {
-          createAccess(subject, (A) abstractType);
+          createAccess((A) abstractType, subject);
         }
         return ctx.proceed();
       } catch (final Exception e) {
@@ -115,15 +109,15 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
     }
   }
 
-  private void createAccess(final Subject subject, A access)
-      throws IllegalAccessException, InvocationTargetException {
-    access.setGroup(subject.user.getGroup());
-    access.setSite(subject.site);
-    access.setOwner(subject.user);
-    if (access.getPermission() == null) {
-      access.setPermission(Permission.getInstance());
-      BeanUtils.copyProperties(subject.user.getPermission(), access,
-          new String[] {ID_COLUMN_NAME, VERSION_COLUMN_NAME, CREATION_COLUMN_NAME, MODIFICATION_COLUMN_NAME});
+  private void createAccess(A detachedAccess, final Subject subject) {
+    detachedAccess.setGroup(subject.user.getGroup());
+    detachedAccess.setSite(subject.site);
+    detachedAccess.setOwner(subject.user);
+    if (detachedAccess.getPermission() == null) {
+      detachedAccess.setPermission(Permission.getInstance());
+      detachedAccess.getPermission().setOwner(subject.user.getPermission().getOwner());
+      detachedAccess.getPermission().setGroup(subject.user.getPermission().getGroup());
+      detachedAccess.getPermission().setOthers(subject.user.getPermission().getOthers());
     }
   }
 
@@ -138,7 +132,7 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
   }
 
   private Object processReadOperationAccess(final InvocationContext ctx, Subject subject) {
-    if (isRoot(subject) || isAllowedTo(subject, Operation.READ)) {
+    if (isRoot(subject) || isAllowedToUpdate(subject, Operation.READ)) {
       enableAccessFilter(subject);
       try {
         return ctx.proceed();
@@ -209,21 +203,10 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
         .get();
   }
 
-  @SuppressWarnings(UNCHECKED)
   private Object processOperationAccess(final InvocationContext ctx, final Subject subject, AbstractType abstractType,
       Operation operation) {
-    if (isRoot(subject) || isAllowedTo(subject, operation)) {
-      if (abstractType instanceof AbstractAccess) {
-        final A access = getAbstractAccessObject(abstractType);
-        if (isRoot(subject) || hasOwnership(subject, access, operation) || hasGroupOwnership(subject, access, operation)
-            || hasOtherOwnership(access, operation)) {
-          updateAccess((A) abstractType, access);
-        } else {
-          throw new GNUOpenBusinessServiceException(String.format(
-              "Given user [%s] doesn't have the right access to %s this entity object, verify that the given user has access (ERR02)",
-              subject.user.getName(), operation.toString().toLowerCase()));
-        }
-      }
+    if (isRoot(subject) || isAllowedToUpdate(subject, operation)) {
+      verifyOperationAccess(subject, abstractType, operation);
       try {
         return ctx.proceed();
       } catch (final Exception e) {
@@ -236,49 +219,60 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
     }
   }
 
+  @SuppressWarnings(UNCHECKED)
+  private void verifyOperationAccess(final Subject subject, AbstractType abstractType, Operation operation) {
+    if (abstractType instanceof AbstractAccess) {
+      A attachedAccess = getAbstractAccess(abstractType);
+      if (isAllowedToUpdateAccess(subject, operation, attachedAccess)) {
+        updateAccess((A) abstractType, attachedAccess);
+      } else {
+        throw new GNUOpenBusinessServiceException(String.format(
+            "Given user [%s] doesn't have the right access to %s this entity object, verify that the given user has access (ERR02)",
+            subject.user.getName(), operation.toString().toLowerCase()));
+      }
+    }
+  }
+
+  private boolean isAllowedToUpdateAccess(final Subject subject, Operation operation, final A attachedAccess) {
+    return isRoot(subject) || hasOwnership(subject, attachedAccess, operation)
+        || hasGroupOwnership(subject, attachedAccess, operation) || hasOtherOwnership(attachedAccess, operation);
+  }
+
   private boolean isRoot(final Subject subject) {
     return subject.user.getRoot() == null ? false : subject.user.getRoot();
   }
 
-  private boolean isAllowedTo(final Subject subject, Operation operation) {
+  private boolean isAllowedToUpdate(final Subject subject, Operation operation) {
     return subject.user.getAccess().getOperations().contains(operation);
   }
 
-  private void updateAccess(final A source, A target) {
-    if (target.getPermission() == null) {
-      target.setPermission(source.getPermission());
+  private void updateAccess(final A detachedAccess, A attachedAccess) {
+    if (detachedAccess.getPermission() == null) {
+      detachedAccess.setPermission(attachedAccess.getPermission());
     }
-    target.setGroup(source.getGroup());
-    target.setSite(source.getSite());
-    target.setOwner(source.getOwner());
-    target.setCreation(source.getCreation());
-    target.setModification(source.getModification());
+    detachedAccess.setGroup(attachedAccess.getGroup());
+    detachedAccess.setSite(attachedAccess.getSite());
+    detachedAccess.setOwner(attachedAccess.getOwner());
+    detachedAccess.setCreation(attachedAccess.getCreation());
+    detachedAccess.setModification(attachedAccess.getModification());
   }
 
-  private boolean hasOwnership(final Subject subject, final A access, Operation operation) {
-    return access.getOwner() != null && access.getOwner().equals(subject.user) && access.getPermission() != null
-        && access.getPermission().getOwner().getOperations().contains(operation);
+  private boolean hasOwnership(final Subject subject, final A attachedAccess, Operation operation) {
+    return attachedAccess.getOwner().equals(subject.user)
+        && attachedAccess.getPermission().getOwner().getOperations().contains(operation);
   }
 
-  private boolean hasGroupOwnership(final Subject subject, final A access, Operation operation) {
-    for (final Group group : subject.user.getGroups()) {
-      if (access.getGroup() != null && access.getGroup().equals(group) && access.getPermission() != null
-          && access.getPermission().getGroup().getOperations().contains(operation)) {
-        return true;
-      }
-    }
-    return false;
+  private boolean hasGroupOwnership(final Subject subject, final A attachedAccess, Operation operation) {
+    return subject.user.getGroups().stream().filter(e -> e.equals(attachedAccess.getGroup())
+        && attachedAccess.getPermission().getGroup().getOperations().contains(operation)).count() > 0;
   }
 
-  private boolean hasOtherOwnership(final A access, Operation operation) {
-    if (access.getPermission() != null && access.getPermission().getOthers().getOperations().contains(operation)) {
-      return true;
-    }
-    return false;
+  private boolean hasOtherOwnership(final A attachedAccess, Operation operation) {
+    return attachedAccess.getPermission().getOthers().getOperations().contains(operation);
   }
 
   @SuppressWarnings(UNCHECKED)
-  private A getAbstractAccessObject(AbstractType abstractType) {
+  private A getAbstractAccess(AbstractType abstractType) {
     A abstractAccess = accessTypeService.find((A) abstractType, abstractType.getId(), LockModeType.NONE);
     if (abstractAccess != null) {
       return abstractAccess;
