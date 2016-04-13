@@ -42,8 +42,6 @@ public class Group extends AbstractAccess {
   private String description;
   private String name;
 
-  public Group() {}
-
   @Override
   @Transient
   public boolean isDetached() {

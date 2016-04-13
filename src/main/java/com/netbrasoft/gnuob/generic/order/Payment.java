@@ -82,19 +82,11 @@ public class Payment extends AbstractType {
   private String transactionId;
   private String transactionType;
 
-  public Payment() {}
-
   @Override
   @Transient
   public boolean isDetached() {
     return isAbstractTypeDetached();
   }
-
-  @Override
-  public void prePersist() {}
-
-  @Override
-  public void preUpdate() {}
 
   @XmlElement
   @Column(name = EXCHANGE_RATE_COLUMN_NAME)

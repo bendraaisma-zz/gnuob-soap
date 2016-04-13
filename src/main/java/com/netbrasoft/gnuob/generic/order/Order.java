@@ -116,7 +116,7 @@ public class Order extends AbstractAccess {
   private String orderDescription;
   private String orderId;
   private BigDecimal orderTotal;
-  private Set<OrderRecord> records = new HashSet<OrderRecord>();
+  private Set<OrderRecord> records;
   private Shipment shipment;
   private BigDecimal shippingDiscount;
   private BigDecimal shippingTotal;
@@ -124,7 +124,9 @@ public class Order extends AbstractAccess {
   private String token;
   private String transactionId;
 
-  public Order() {}
+  public Order() {
+    records = new HashSet<OrderRecord>();
+  }
 
   @Override
   @Transient

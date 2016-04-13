@@ -63,12 +63,17 @@ public class Category extends AbstractAccess {
 
   private static final long serialVersionUID = 8531470310780646179L;
 
-  private Set<Content> contents = new LinkedHashSet<Content>();
+  private Set<Content> contents;
   private String description;
   private String name;
   private Integer position;
-  private Set<SubCategory> subCategories = new LinkedHashSet<SubCategory>();
+  private Set<SubCategory> subCategories;
 
+  public Category() {
+    contents = new LinkedHashSet<Content>();
+    subCategories = new LinkedHashSet<SubCategory>(); 
+  }
+  
   @Override
   @Transient
   public boolean isDetached() {

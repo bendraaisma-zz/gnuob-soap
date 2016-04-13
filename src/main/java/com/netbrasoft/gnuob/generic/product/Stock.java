@@ -52,19 +52,11 @@ public class Stock extends AbstractType {
   private Product product;
   private BigInteger quantity;
 
-  public Stock() {}
-
   @Override
   @Transient
   public boolean isDetached() {
     return isAbstractTypeDetached();
   }
-
-  @Override
-  public void prePersist() {}
-
-  @Override
-  public void preUpdate() {}
 
   @XmlElement(required = true)
   @Column(name = MAX_QUANTITY_COLUMN_NAME, nullable = false)

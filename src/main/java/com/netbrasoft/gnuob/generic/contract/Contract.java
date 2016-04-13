@@ -54,10 +54,13 @@ public class Contract extends AbstractAccess {
 
   private String contractId;
   private Customer customer;
-  private Set<Offer> offers = new HashSet<Offer>();
-  private Set<Order> orders = new HashSet<Order>();
+  private Set<Offer> offers;
+  private Set<Order> orders;
 
-  public Contract() {}
+  public Contract() {
+    offers = new HashSet<Offer>();
+    orders = new HashSet<Order>();
+  }
 
   @Override
   @Transient

@@ -68,9 +68,14 @@ public class SubCategory extends AbstractType {
   private Integer position;
   private String name;
   private String description;
-  private Set<Content> contents = new LinkedHashSet<Content>();
-  private Set<SubCategory> subCategories = new LinkedHashSet<SubCategory>();
+  private Set<Content> contents;
+  private Set<SubCategory> subCategories;
 
+  public SubCategory() {
+    contents = new LinkedHashSet<Content>();
+    subCategories = new LinkedHashSet<SubCategory>();
+  }
+  
   @Override
   @Transient
   public boolean isDetached() {

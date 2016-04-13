@@ -76,8 +76,6 @@ public class Customer extends AbstractAccess {
   private String taxId;
   private String taxIdType;
 
-  public Customer() {}
-
   @Override
   @Transient
   public boolean isDetached() {
@@ -88,12 +86,6 @@ public class Customer extends AbstractAccess {
   private boolean isAddressAttached() {
     return address != null && address.isDetached();
   }
-
-  @Override
-  public void prePersist() {}
-
-  @Override
-  public void preUpdate() {}
 
   @Override
   public Context accept(final IContextVisitor visitor) {

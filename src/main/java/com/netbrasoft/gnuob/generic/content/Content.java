@@ -69,12 +69,6 @@ public class Content extends AbstractAccess {
   }
 
   @Override
-  public void prePersist() {}
-
-  @Override
-  public void preUpdate() {}
-
-  @Override
   public Context accept(final IContextVisitor visitor) {
     return visitor.visit(this);
   }

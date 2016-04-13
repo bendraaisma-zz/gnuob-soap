@@ -65,19 +65,11 @@ public class Address extends AbstractType {
   private String street1;
   private String street2;
 
-  public Address() {}
-
   @Override
   @Transient
   public boolean isDetached() {
     return isAbstractTypeDetached();
   }
-
-  @Override
-  public void prePersist() {}
-
-  @Override
-  public void preUpdate() {}
 
   @XmlElement(required = true)
   @Column(name = CITY_NAME_COLUMN_NAME, nullable = false)

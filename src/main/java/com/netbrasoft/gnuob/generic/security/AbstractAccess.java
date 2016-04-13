@@ -51,7 +51,7 @@ import com.netbrasoft.gnuob.generic.content.contexts.IContextElement;
 @Filters({@Filter(
     // Select based on user ownership.
     name = AbstractAccess.NFQ1, condition = "((owner_ID = (SELECT GNUOB_USERS.ID FROM GNUOB_USERS "
-        + " WHERE GNUOB_USERS.ID = :userId) "
+        + " WHERE GNUOB_USERS.ID = :" + USER_ID + ") "
         + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
         + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OWNER != 'NONE_ACCESS')) "
         // Or select based on group ownership.
@@ -66,7 +66,7 @@ import com.netbrasoft.gnuob.generic.content.contexts.IContextElement;
         // Or select based on other ownership.
         + " OR (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
         + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OTHERS != 'NONE_ACCESS')) "),
-    @Filter(name = AbstractAccess.NFQ2, condition = "site_ID = :siteId")})
+    @Filter(name = AbstractAccess.NFQ2, condition = "site_ID = :" + SITE_ID)})
 // @formatter:on
 public abstract class AbstractAccess extends AbstractType implements IContextElement {
 

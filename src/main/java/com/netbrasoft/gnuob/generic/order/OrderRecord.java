@@ -98,8 +98,8 @@ public class OrderRecord extends AbstractType {
   private String itemWidthUnit;
   private String name;
   private String option;
-  private Set<Option> options = new HashSet<Option>();
-  private String orderRecordId = UUID.randomUUID().toString();
+  private Set<Option> options;
+  private String orderRecordId;
   private Integer position;
   private Product product;
   private String productNumber;
@@ -107,7 +107,9 @@ public class OrderRecord extends AbstractType {
   private BigDecimal shippingCost;
   private BigDecimal tax;
 
-  public OrderRecord() {}
+  public OrderRecord() {
+    options = new HashSet<Option>();
+  }
 
   @Override
   @Transient

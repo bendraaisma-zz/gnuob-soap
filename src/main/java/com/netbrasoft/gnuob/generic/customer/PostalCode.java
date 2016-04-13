@@ -65,19 +65,11 @@ public class PostalCode extends AbstractType {
   private String placeName;
   private String postalCode;
 
-  public PostalCode() {}
-
   @Override
   @Transient
   public boolean isDetached() {
     return isAbstractTypeDetached();
   }
-
-  @Override
-  public void prePersist() {}
-
-  @Override
-  public void preUpdate() {}
 
   @XmlElement
   @Column(name = ACCURACY_COLUMN_NAME)

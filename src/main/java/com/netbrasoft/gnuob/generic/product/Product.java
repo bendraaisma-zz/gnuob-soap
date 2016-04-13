@@ -87,7 +87,7 @@ public class Product extends AbstractAccess {
 
   private BigDecimal amount;
   private Boolean bestsellers;
-  private Set<Content> contents = new HashSet<Content>();
+  private Set<Content> contents;
   private String description;
   private BigDecimal discount;
   private BigDecimal itemHeight;
@@ -102,15 +102,19 @@ public class Product extends AbstractAccess {
   private Boolean latestCollection;
   private String name;
   private String number;
-  private Set<Option> options = new HashSet<Option>();
+  private Set<Option> options;
   private Integer rating;
   private Boolean recommended;
   private BigDecimal shippingCost;
   private Stock stock;
-  private Set<SubCategory> subCategories = new LinkedHashSet<SubCategory>();
+  private Set<SubCategory> subCategories;
   private BigDecimal tax;
 
-  public Product() {}
+  public Product() {
+    contents = new HashSet<Content>();
+    options = new HashSet<Option>();
+    subCategories = new LinkedHashSet<SubCategory>();
+  }
 
   @Override
   @Transient

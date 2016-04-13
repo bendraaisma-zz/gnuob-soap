@@ -96,7 +96,7 @@ public class OfferRecord extends AbstractType {
   private String name;
   private String offerRecordId;
   private String option;
-  private Set<Option> options = new HashSet<Option>();
+  private Set<Option> options;
   private Integer position;
   private Product product;
   private String productNumber;
@@ -104,7 +104,9 @@ public class OfferRecord extends AbstractType {
   private BigDecimal shippingCost;
   private BigDecimal tax;
 
-  public OfferRecord() {}
+  public OfferRecord() {
+    options = new HashSet<Option>();
+  }
 
   @Override
   @Transient

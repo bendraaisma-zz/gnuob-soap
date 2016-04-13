@@ -62,10 +62,12 @@ public class Option extends AbstractType {
   private String description;
   private boolean disabled;
   private Integer position;
-  private Set<SubOption> subOptions = new HashSet<SubOption>();
+  private Set<SubOption> subOptions;
   private String value;
 
-  public Option() {}
+  public Option() {
+    subOptions = new HashSet<SubOption>();
+  }
 
   @Override
   @Transient

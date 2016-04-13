@@ -46,8 +46,6 @@ public class Shipment extends AbstractType {
   private Address address;
   private String shipmentType;
 
-  public Shipment() {}
-
   @Override
   @Transient
   public boolean isDetached() {
@@ -58,12 +56,6 @@ public class Shipment extends AbstractType {
   private boolean isAddressDetached() {
     return address != null && address.isDetached();
   }
-
-  @Override
-  public void prePersist() {}
-
-  @Override
-  public void preUpdate() {}
 
   @XmlElement(required = true)
   @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},

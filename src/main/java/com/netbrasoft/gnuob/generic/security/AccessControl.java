@@ -47,8 +47,6 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
     private S site = (S) Site.getInstance();
     private U user = (U) User.getInstance();
 
-    Subject() {}
-
     public boolean isUserLinkedToSite() {
       return user.getSites().contains(site);
     }

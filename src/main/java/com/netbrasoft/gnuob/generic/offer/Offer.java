@@ -81,12 +81,14 @@ public class Offer extends AbstractAccess {
   private String offerDescription;
   private String offerId;
   private BigDecimal offerTotal;
-  private Set<OfferRecord> records = new HashSet<OfferRecord>();
+  private Set<OfferRecord> records;
   private BigDecimal shippingDiscount;
   private BigDecimal shippingTotal;
   private BigDecimal taxTotal;
 
-  public Offer() {}
+  public Offer() {
+    records = new HashSet<OfferRecord>();
+  }
 
   @Override
   @Transient

@@ -45,19 +45,11 @@ public class Setting extends AbstractAccess {
   private String property;
   private String value;
 
-  public Setting() {}
-
   @Override
   @Transient
   public boolean isDetached() {
     return isAbstractTypeDetached();
   }
-
-  @Override
-  public void prePersist() {}
-
-  @Override
-  public void preUpdate() {}
 
   @Override
   public Context accept(final IContextVisitor visitor) {

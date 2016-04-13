@@ -48,19 +48,11 @@ public class SubOption extends AbstractType {
   private Integer position;
   private String value;
 
-  public SubOption() {}
-
   @Override
   @Transient
   public boolean isDetached() {
     return isAbstractTypeDetached();
   }
-
-  @Override
-  public void prePersist() {}
-
-  @Override
-  public void preUpdate() {}
 
   @XmlElement(required = true)
   @Column(name = DESCRIPTION_COLUMN_NAME, nullable = false)

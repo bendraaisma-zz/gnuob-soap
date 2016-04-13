@@ -61,9 +61,11 @@ public class Invoice extends AbstractType {
 
   private Address address;
   private String invoiceId;
-  private Set<Payment> payments = new HashSet<Payment>();
+  private Set<Payment> payments;
 
-  public Invoice() {}
+  public Invoice() {
+    payments = new HashSet<Payment>();
+  }
 
   @Override
   @Transient
