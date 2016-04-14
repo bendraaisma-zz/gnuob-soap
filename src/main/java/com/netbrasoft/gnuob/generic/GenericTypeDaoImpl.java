@@ -64,6 +64,9 @@ public class GenericTypeDaoImpl<T> implements IGenericTypeDao<T> {
 
   @Override
   public T refresh(final T type, final long id, final LockModeType lockModeType) {
+    if (!entityManager.contains(type)) {
+      return find(type, id, lockModeType);
+    }
     entityManager.refresh(type);
     return type;
   }
