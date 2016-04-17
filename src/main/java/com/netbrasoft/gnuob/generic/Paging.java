@@ -22,18 +22,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = PAGING_NAME)
 public class Paging {
 
-  public static Paging getInstance(final int first, final int max) {
-    return new Paging(first, max);
-  }
-
   private int first;
   private int max;
 
-  public Paging() {}
+  public Paging() {
+    this(0, 0);
+  }
 
   private Paging(final int first, final int max) {
     this.first = first;
     this.max = max;
+  }
+
+  public static Paging getInstance(final int first, final int max) {
+    return new Paging(first, max);
   }
 
   @XmlElement

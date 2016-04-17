@@ -33,6 +33,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUFFIX_COLUMN
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_ID_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_ID_TYPE_COLUMN_NAME;
 
+import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Cacheable;
@@ -45,6 +46,7 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.context.Context;
 
 import com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
@@ -79,11 +81,12 @@ public class Customer extends AbstractAccess {
   @Override
   @Transient
   public boolean isDetached() {
-    return isAbstractTypeDetached() || isAddressAttached();
+    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isAddressDetached()}).stream()
+        .filter(e -> e.booleanValue()).count() > 0;
   }
 
   @Transient
-  private boolean isAddressAttached() {
+  private boolean isAddressDetached() {
     return address != null && address.isDetached();
   }
 
@@ -131,9 +134,14 @@ public class Customer extends AbstractAccess {
   @XmlElement
   @Column(name = FRIENDLY_NAME_COLUMN_NAME)
   public String getFriendlyName() {
-    return friendlyName == null ? friendlyName = getFirstName()
-        + (getMiddleName() == null || "".equals(getMiddleName().trim()) ? " " : " " + getMiddleName() + " ")
-        + getLastName() : friendlyName;
+    if (StringUtils.isBlank(friendlyName)) {
+      if (StringUtils.isNotBlank(getMiddleName())) {
+        friendlyName = getFirstName() + " " + getMiddleName() + " " + getLastName();
+      } else {
+        friendlyName = getFirstName() + " " + getLastName();
+      }
+    }
+    return friendlyName;
   }
 
   @XmlElement(required = true)

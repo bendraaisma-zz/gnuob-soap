@@ -42,8 +42,8 @@ import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.IGenericTypeWebService;
 import com.netbrasoft.gnuob.generic.OrderByEnum;
 import com.netbrasoft.gnuob.generic.Paging;
-import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeService;
+import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = GNUOB_WEB_SERVICE_TARGET_NAMESPACE)
@@ -54,7 +54,9 @@ public class ContentWebServiceImpl<T extends Content> implements IGenericTypeWeb
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericContentService;
 
-  public ContentWebServiceImpl() {}
+  public ContentWebServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
 
   ContentWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericContentService) {
     this.securedGenericContentService = securedGenericContentService;

@@ -49,8 +49,8 @@ import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.generic.Parameter;
 import com.netbrasoft.gnuob.generic.contract.Contract;
 import com.netbrasoft.gnuob.generic.customer.Customer;
-import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeService;
+import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = GNUOB_WEB_SERVICE_TARGET_NAMESPACE)
@@ -67,7 +67,9 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<Customer> securedGenericCustomerService;
 
-  public OrderWebServiceImpl() {}
+  public OrderWebServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
 
   OrderWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericOrderService,
       final ISecuredGenericTypeService<Contract> securedGenericContractService,

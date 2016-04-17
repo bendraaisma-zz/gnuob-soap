@@ -43,15 +43,13 @@ public class Permission extends AbstractType {
 
   private static final long serialVersionUID = 3108374497171836688L;
 
-  public static Permission getInstance() {
-    return new Permission();
-  }
-
   private Rule group;
   private Rule others;
   private Rule owner;
 
-  public Permission() {}
+  public static Permission getInstance() {
+    return new Permission();
+  }
 
   @Override
   @Transient
@@ -75,21 +73,30 @@ public class Permission extends AbstractType {
   @Column(name = GROUP_COLUMN_NAME, nullable = false)
   @Enumerated(EnumType.STRING)
   public Rule getGroup() {
-    return group == null ? group = Rule.READ_ACCESS : group;
+    if (group == null) {
+      group = Rule.READ_ACCESS;
+    }
+    return group;
   }
 
   @XmlElement(required = true)
   @Column(name = OTHERS_COLUMN_NAME, nullable = false)
   @Enumerated(EnumType.STRING)
   public Rule getOthers() {
-    return others == null ? others = Rule.READ_ACCESS : others;
+    if (others == null) {
+      others = Rule.READ_ACCESS;
+    }
+    return others;
   }
 
   @XmlElement(required = true)
   @Column(name = OWNER_COLUMN_NAME, nullable = false)
   @Enumerated(EnumType.STRING)
   public Rule getOwner() {
-    return owner == null ? owner = Rule.DELETE_ACCESS : owner;
+    if (owner == null) {
+      owner = Rule.DELETE_ACCESS;
+    }
+    return owner;
   }
 
   public void setGroup(final Rule group) {

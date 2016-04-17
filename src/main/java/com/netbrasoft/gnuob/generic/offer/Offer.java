@@ -38,6 +38,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 import static java.util.stream.Collectors.counting;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -57,6 +58,7 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.context.Context;
 
 import com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
@@ -87,13 +89,14 @@ public class Offer extends AbstractAccess {
   private BigDecimal taxTotal;
 
   public Offer() {
-    records = new HashSet<OfferRecord>();
+    records = new HashSet<>();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return isAbstractTypeDetached() || isContractDetached() || isOfferRecordsDetached();
+    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isContractDetached(), isOfferRecordsDetached()})
+        .stream().filter(e -> e.booleanValue()).count() > 0;
   }
 
   @Transient
@@ -115,15 +118,16 @@ public class Offer extends AbstractAccess {
     getItemTotal();
     getMaxTotal();
     getDiscountTotal();
-    reinitAllPositionRecords(START_POSITION_VALUE);
+    reinitAllPositionRecords();
   }
 
   @Override
   public void preUpdate() {
-    reinitAllPositionRecords(START_POSITION_VALUE);
+    reinitAllPositionRecords();
   }
 
-  private void reinitAllPositionRecords(int startPositionValue) {
+  private void reinitAllPositionRecords() {
+    int startPositionValue = START_POSITION_VALUE;
     for (final OfferRecord record : records) {
       record.setPosition(Integer.valueOf(startPositionValue++));
     }
@@ -153,20 +157,28 @@ public class Offer extends AbstractAccess {
   @XmlElement(required = true)
   @Column(name = EXTRA_AMOUNT_COLUMN_NAME, nullable = false)
   public BigDecimal getExtraAmount() {
-    return extraAmount == null ? extraAmount = getHandlingTotal().add(getTaxTotal()).add(getInsuranceTotal())
-        : extraAmount;
+    if (extraAmount == null) {
+      extraAmount = getHandlingTotal().add(getTaxTotal()).add(getInsuranceTotal());
+    }
+    return extraAmount;
   }
 
   @XmlElement(required = true)
   @Column(name = HANDLING_TOTAL_COLUMN_NAME, nullable = false)
   public BigDecimal getHandlingTotal() {
-    return handlingTotal == null ? handlingTotal = BigDecimal.ZERO : handlingTotal;
+    if (handlingTotal == null) {
+      handlingTotal = BigDecimal.ZERO;
+    }
+    return handlingTotal;
   }
 
   @XmlElement(required = true)
   @Column(name = INSURANCE_TOTAL_COLUMN_NAME, nullable = false)
   public BigDecimal getInsuranceTotal() {
-    return insuranceTotal == null ? insuranceTotal = BigDecimal.ZERO : insuranceTotal;
+    if (insuranceTotal == null) {
+      insuranceTotal = BigDecimal.ZERO;
+    }
+    return insuranceTotal;
   }
 
   @XmlElement
@@ -182,7 +194,10 @@ public class Offer extends AbstractAccess {
   @XmlElement
   @Column(name = MAX_TOTAL_COLUMN_NAME)
   public BigDecimal getMaxTotal() {
-    return maxTotal == null ? maxTotal = getOfferTotal() : maxTotal;
+    if (maxTotal == null) {
+      maxTotal = getOfferTotal();
+    }
+    return maxTotal;
   }
 
   @XmlElement
@@ -194,15 +209,19 @@ public class Offer extends AbstractAccess {
   @XmlElement(required = true)
   @Column(name = OFFER_ID_COLUMN_NAME, nullable = false)
   public String getOfferId() {
-    return offerId == null || "".equals(offerId.trim()) ? offerId = UUID.randomUUID().toString() : offerId;
+    if (StringUtils.isBlank(offerId)) {
+      offerId = UUID.randomUUID().toString();
+    }
+    return offerId;
   }
 
   @XmlElement
   @Column(name = OFFER_TOTAL_COLUMN_NAME)
   public BigDecimal getOfferTotal() {
-    return offerTotal == null
-        ? offerTotal = getItemTotal().add(getShippingTotal()).subtract(getShippingDiscount()).add(getExtraAmount())
-        : offerTotal;
+    if (offerTotal == null) {
+      offerTotal = getItemTotal().add(getShippingTotal()).subtract(getShippingDiscount()).add(getExtraAmount());
+    }
+    return offerTotal;
   }
 
   @OrderBy(POSITION_ASC)
@@ -218,7 +237,10 @@ public class Offer extends AbstractAccess {
   @XmlElement(required = true)
   @Column(name = SHIPPING_DISCOUNT_COLUMN_NAME, nullable = false)
   public BigDecimal getShippingDiscount() {
-    return shippingDiscount == null ? shippingDiscount = BigDecimal.ZERO : shippingDiscount;
+    if (shippingDiscount == null) {
+      shippingDiscount = BigDecimal.ZERO;
+    }
+    return shippingDiscount;
   }
 
   @XmlElement

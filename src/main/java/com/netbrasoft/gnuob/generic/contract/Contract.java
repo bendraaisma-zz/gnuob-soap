@@ -19,6 +19,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_ID_C
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_PARAM_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_TABLE_NAME;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -36,6 +37,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.context.Context;
 
 import com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
@@ -58,14 +60,15 @@ public class Contract extends AbstractAccess {
   private Set<Order> orders;
 
   public Contract() {
-    offers = new HashSet<Offer>();
-    orders = new HashSet<Order>();
+    offers = new HashSet<>();
+    orders = new HashSet<>();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return isAbstractTypeDetached() || isCustomerAttached();
+    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isCustomerAttached()}).stream()
+        .filter(e -> e.booleanValue()).count() > 0;
   }
 
   @Transient
@@ -91,7 +94,10 @@ public class Contract extends AbstractAccess {
   @XmlElement(required = true)
   @Column(name = CONTRACT_ID_COLUMN_NAME, nullable = false)
   public String getContractId() {
-    return contractId == null || "".equals(contractId.trim()) ? contractId = UUID.randomUUID().toString() : contractId;
+    if (StringUtils.isBlank(contractId)) {
+      contractId = UUID.randomUUID().toString();
+    }
+    return contractId;
   }
 
   @XmlElement(required = true)

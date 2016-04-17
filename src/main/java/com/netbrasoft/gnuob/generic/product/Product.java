@@ -50,6 +50,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 import static java.util.stream.Collectors.counting;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -111,16 +112,16 @@ public class Product extends AbstractAccess {
   private BigDecimal tax;
 
   public Product() {
-    contents = new HashSet<Content>();
-    options = new HashSet<Option>();
-    subCategories = new LinkedHashSet<SubCategory>();
+    contents = new HashSet<>();
+    options = new HashSet<>();
+    subCategories = new LinkedHashSet<>();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return isAbstractTypeDetached() || isStockDetached() || isSubCategoriesDetached() || isContentsDetached()
-        || isOptionsDetached();
+    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isStockDetached(), isSubCategoriesDetached(),
+        isContentsDetached(), isOptionsDetached()}).stream().filter(e -> e.booleanValue()).count() > 0;
   }
 
   @Transient
@@ -146,9 +147,9 @@ public class Product extends AbstractAccess {
 
   @Override
   public void prePersist() {
-    reinitAllPositionContents(START_POSITION_VALUE);
-    reinitAllPositionOptions(START_POSITION_VALUE);
-    reinitAllPositionSubCategories(START_POSITION_VALUE);
+    reinitAllPositionContents();
+    reinitAllPositionOptions();
+    reinitAllPositionSubCategories();
   }
 
   @Override
@@ -156,21 +157,24 @@ public class Product extends AbstractAccess {
     prePersist();
   }
 
-  private void reinitAllPositionContents(int startPositionValue) {
+  private void reinitAllPositionContents() {
+    int startPosition = START_POSITION_VALUE;
     for (final Content content : contents) {
-      content.setPosition(Integer.valueOf(startPositionValue++));
+      content.setPosition(Integer.valueOf(startPosition++));
     }
   }
 
-  private void reinitAllPositionOptions(int startPositionValue) {
+  private void reinitAllPositionOptions() {
+    int startPosition = START_POSITION_VALUE;
     for (final Option option : options) {
-      option.setPosition(Integer.valueOf(startPositionValue++));
+      option.setPosition(Integer.valueOf(startPosition++));
     }
   }
 
-  private void reinitAllPositionSubCategories(int startPositionValue) {
+  private void reinitAllPositionSubCategories() {
+    int startPosition = START_POSITION_VALUE;
     for (final SubCategory subCategory : subCategories) {
-      subCategory.setPosition(Integer.valueOf(startPositionValue++));
+      subCategory.setPosition(Integer.valueOf(startPosition++));
     }
   }
 

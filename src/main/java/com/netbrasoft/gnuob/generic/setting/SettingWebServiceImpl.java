@@ -54,7 +54,9 @@ public class SettingWebServiceImpl<T extends Setting> implements IGenericTypeWeb
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericSettingService;
 
-  public SettingWebServiceImpl() {}
+  public SettingWebServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
 
   SettingWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericSettingService) {
     this.securedGenericSettingService = securedGenericSettingService;

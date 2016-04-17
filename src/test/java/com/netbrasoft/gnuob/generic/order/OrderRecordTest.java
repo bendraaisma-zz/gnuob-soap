@@ -425,7 +425,7 @@ public class OrderRecordTest {
     when(mockOption.isDetached()).thenReturn(false);
     assertTrue("Order", spyOrderRecord.isDetached());
     verify(spyOrderRecord, times(1)).isDetached();
-    verify(mockOption, never()).isDetached();
+    verify(mockOption, times(1)).isDetached();
   }
 
   @Test

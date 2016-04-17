@@ -166,8 +166,8 @@ public class OfferTest {
     when(mockOfferRecord.isDetached()).thenReturn(false);
     assertTrue("Offer", spyOffer.isDetached());
     verify(spyOffer, times(1)).isDetached();
-    verify(mockContract, never()).isDetached();
-    verify(mockOfferRecord, never()).isDetached();
+    verify(mockContract, times(1)).isDetached();
+    verify(mockOfferRecord, times(1)).isDetached();
   }
 
   @Test
@@ -178,7 +178,7 @@ public class OfferTest {
     assertTrue("Offer", spyOffer.isDetached());
     verify(spyOffer, times(1)).isDetached();
     verify(mockContract, times(1)).isDetached();
-    verify(mockOfferRecord, never()).isDetached();
+    verify(mockOfferRecord, times(1)).isDetached();
   }
 
   @Test

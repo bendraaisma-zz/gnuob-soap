@@ -59,7 +59,9 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<Site> securedGenericSiteService;
 
-  public UserWebServiceImpl() {}
+  public UserWebServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
 
   UserWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericUserService,
       final ISecuredGenericTypeService<Group> securedGenericGroupService,

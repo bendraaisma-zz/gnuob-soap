@@ -50,7 +50,9 @@ public class GenericTypeServiceImpl<T> implements IGenericTypeService<T> {
   @EJB(beanName = GENERIC_TYPE_DAO_IMPL_NAME)
   private IGenericTypeDao<T> genericTypeDao;
 
-  public GenericTypeServiceImpl() {}
+  public GenericTypeServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
 
   GenericTypeServiceImpl(final IGenericTypeDao<T> genericTypeDao) {
     this.genericTypeDao = genericTypeDao;

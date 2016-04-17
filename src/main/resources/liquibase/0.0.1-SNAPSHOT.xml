@@ -197,13 +197,13 @@
          <column name="ITEM_HEIGHT_UNIT" type="VARCHAR(20)" />
          <column name="ITEM_LENGTH" type="DECIMAL(19, 2)" />
          <column name="ITEM_LENGTH_UNIT" type="VARCHAR(20)" />
-         <column name="ITEM_URL" type="VARCHAR(255)" />
+         <column name="ITEM_URL" type="VARCHAR(128)" />
          <column name="ITEM_WEIGHT" type="DECIMAL(19, 2)" />
          <column name="ITEM_WEIGHT_UNIT" type="VARCHAR(20)" />
          <column name="ITEM_WIDTH" type="DECIMAL(19, 2)" />
          <column name="ITEM_WIDTH_UNIT" type="VARCHAR(20)" />
          <column name="NAME" type="VARCHAR(128)" />
-         <column name="OFFER_RECORD_ID" type="VARCHAR(64)">
+         <column name="OFFER_RECORD_ID" type="VARCHAR(127)">
             <constraints nullable="false" />
          </column>
          <column name="OPTION" type="VARCHAR(128)" />
@@ -324,7 +324,7 @@
          <column name="ITEM_HEIGHT_UNIT" type="VARCHAR(20)" />
          <column name="ITEM_LENGTH" type="DECIMAL(19, 2)" />
          <column name="ITEM_LENGTH_UNIT" type="VARCHAR(20)" />
-         <column name="ITEM_URL" type="VARCHAR(255)" />
+         <column name="ITEM_URL" type="VARCHAR(128)" />
          <column name="ITEM_WEIGHT" type="DECIMAL(19, 2)" />
          <column name="ITEM_WEIGHT_UNIT" type="VARCHAR(20)" />
          <column name="ITEM_WIDTH" type="DECIMAL(19, 2)" />
@@ -523,7 +523,7 @@
          <column name="ITEM_HEIGHT_UNIT" type="VARCHAR(20)" />
          <column name="ITEM_LENGTH" type="DECIMAL(19, 2)" />
          <column name="ITEM_LENGTH_UNIT" type="VARCHAR(20)" />
-         <column name="ITEM_URL" type="VARCHAR(20)" />
+         <column name="ITEM_URL" type="VARCHAR(128)" />
          <column name="ITEM_WEIGHT" type="DECIMAL(19, 2)">
             <constraints nullable="false" />
          </column>

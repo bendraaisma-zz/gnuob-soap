@@ -43,14 +43,10 @@ public enum Rule {
   private List<Operation> operations;
 
   private Rule(final List<Operation> operations) {
-    setOperations(operations);
+    this.operations = operations;
   }
 
   public List<Operation> getOperations() {
     return operations;
-  }
-
-  public void setOperations(final List<Operation> operations) {
-    this.operations = operations;
   }
 }

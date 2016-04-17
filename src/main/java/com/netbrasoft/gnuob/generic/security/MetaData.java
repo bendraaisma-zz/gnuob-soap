@@ -27,24 +27,26 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(propOrder = {SITE_PARAM_NAME, USER_PARAM_NAME, PASSWORD_PARAM_NAME})
 public class MetaData {
 
+  private String password;
+  private String site;
+  private String user;
+
+  public MetaData() {
+    this(null, null, null);
+  }
+
+  private MetaData(final String site, final String user, final String password) {
+    this.site = site;
+    this.user = user;
+    this.password = password;
+  }
+
   public static MetaData getInstance() {
     return new MetaData();
   }
 
   public static MetaData getInstance(final String site, final String user, final String password) {
     return new MetaData(site, user, password);
-  }
-
-  private String password;
-  private String site;
-  private String user;
-
-  public MetaData() {}
-
-  private MetaData(final String site, final String user, final String password) {
-    this.site = site;
-    this.user = user;
-    this.password = password;
   }
 
   @XmlElement(required = true)

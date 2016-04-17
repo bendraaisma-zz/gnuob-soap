@@ -39,21 +39,23 @@ public class Site extends AbstractAccess {
 
   private static final long serialVersionUID = 985676314568291633L;
 
+  private String description;
+  private String name;
+
+  public Site() {
+    this(null);
+  }
+
+  private Site(final String name) {
+    this.name = name;
+  }
+
   public static Site getInstance() {
     return new Site();
   }
 
   public static Site getInstance(String name) {
     return new Site(name);
-  }
-
-  private String description;
-  private String name;
-
-  public Site() {}
-
-  private Site(final String name) {
-    this.name = name;
   }
 
   @Override

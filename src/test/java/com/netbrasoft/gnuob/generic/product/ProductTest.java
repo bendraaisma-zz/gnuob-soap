@@ -240,10 +240,10 @@ public class ProductTest {
     when(mockOption.isDetached()).thenReturn(false);
     assertTrue("Detached", spyProduct.isDetached());
     verify(spyProduct, times(1)).isDetached();
-    verify(mockStock, never()).isDetached();
-    verify(mockSubCategory, never()).isDetached();
-    verify(mockContent, never()).isDetached();
-    verify(mockOption, never()).isDetached();
+    verify(mockStock, times(1)).isDetached();
+    verify(mockSubCategory, times(1)).isDetached();
+    verify(mockContent, times(1)).isDetached();
+    verify(mockOption, times(1)).isDetached();
   }
 
   @Test
@@ -258,7 +258,7 @@ public class ProductTest {
     verify(mockStock, times(1)).isDetached();
     verify(mockSubCategory, times(1)).isDetached();
     verify(mockContent, times(1)).isDetached();
-    verify(mockOption, never()).isDetached();
+    verify(mockOption, times(1)).isDetached();
   }
 
   @Test
@@ -286,9 +286,9 @@ public class ProductTest {
     assertTrue("Detached", spyProduct.isDetached());
     verify(spyProduct, times(1)).isDetached();
     verify(mockStock, times(1)).isDetached();
-    verify(mockSubCategory, never()).isDetached();
-    verify(mockContent, never()).isDetached();
-    verify(mockOption, never()).isDetached();
+    verify(mockSubCategory, times(1)).isDetached();
+    verify(mockContent, times(1)).isDetached();
+    verify(mockOption, times(1)).isDetached();
   }
 
   @Test
@@ -302,8 +302,8 @@ public class ProductTest {
     verify(spyProduct, times(1)).isDetached();
     verify(mockStock, times(1)).isDetached();
     verify(mockSubCategory, times(1)).isDetached();
-    verify(mockContent, never()).isDetached();
-    verify(mockOption, never()).isDetached();
+    verify(mockContent, times(1)).isDetached();
+    verify(mockOption, times(1)).isDetached();
   }
 
   @Test

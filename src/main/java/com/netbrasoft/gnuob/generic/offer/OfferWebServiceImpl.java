@@ -67,7 +67,9 @@ public class OfferWebServiceImpl<T extends Offer> implements IGenericTypeWebServ
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<Customer> securedGenericCustomerService;
 
-  public OfferWebServiceImpl() {}
+  public OfferWebServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
 
   OfferWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericOfferService,
       final ISecuredGenericTypeService<Contract> securedGenericContractService,

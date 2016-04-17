@@ -19,6 +19,8 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_ENTI
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_TABLE_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_TYPE_COLUMN_NAME;
 
+import java.util.Arrays;
+
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,6 +32,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
 import com.netbrasoft.gnuob.generic.customer.Address;
@@ -49,7 +53,8 @@ public class Shipment extends AbstractType {
   @Override
   @Transient
   public boolean isDetached() {
-    return isAbstractTypeDetached() || isAddressDetached();
+    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isAddressDetached()}).stream()
+        .filter(e -> e.booleanValue()).count() > 0;
   }
 
   @Transient
@@ -67,7 +72,10 @@ public class Shipment extends AbstractType {
   @XmlElement
   @Column(name = SHIPMENT_TYPE_COLUMN_NAME)
   public String getShipmentType() {
-    return shipmentType == null || "".equals(shipmentType.trim()) ? shipmentType = NOT_SPECIFIED : shipmentType;
+    if (StringUtils.isBlank(shipmentType)) {
+      shipmentType = NOT_SPECIFIED;
+    }
+    return shipmentType;
   }
 
   public void setAddress(final Address address) {

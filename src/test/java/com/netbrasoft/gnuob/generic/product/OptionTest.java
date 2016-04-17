@@ -79,7 +79,7 @@ public class OptionTest {
     when(mockSubOption.isDetached()).thenReturn(false);
     assertTrue("Detached", spyOption.isDetached());
     verify(spyOption, times(1)).isDetached();
-    verify(mockSubOption, never()).isDetached();
+    verify(mockSubOption, times(1)).isDetached();
   }
 
   @Test

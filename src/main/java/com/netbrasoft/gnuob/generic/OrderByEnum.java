@@ -85,12 +85,4 @@ public enum OrderByEnum {
   public OrderEnum getOrder() {
     return order;
   }
-
-  public void setColumn(final String column) {
-    this.column = column;
-  }
-
-  public void setOrder(final OrderEnum order) {
-    this.order = order;
-  }
 }

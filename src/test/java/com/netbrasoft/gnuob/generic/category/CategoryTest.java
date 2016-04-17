@@ -67,8 +67,8 @@ public class CategoryTest {
     when(mockSubCategory.isDetached()).thenReturn(false);
     assertTrue("Detached", spyCategory.isDetached());
     verify(spyCategory, times(1)).isDetached();
-    verify(mockContent, times(0)).isDetached();
-    verify(mockSubCategory, times(0)).isDetached();
+    verify(mockContent, times(1)).isDetached();
+    verify(mockSubCategory, times(1)).isDetached();
   }
 
   @Test
@@ -79,7 +79,7 @@ public class CategoryTest {
     assertTrue("Detached", spyCategory.isDetached());
     verify(spyCategory, times(1)).isDetached();
     verify(mockContent, times(1)).isDetached();
-    verify(mockSubCategory, times(0)).isDetached();
+    verify(mockSubCategory, times(1)).isDetached();
   }
 
   @Test

@@ -789,9 +789,8 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
 
     final StringBuilder stringBuilder = new StringBuilder();
 
-    PayPalError payPalError = null;
     for (final ErrorType errorType : errors) {
-      payPalError = new PayPalError(errorType);
+      final PayPalError payPalError = new PayPalError(errorType);
       stringBuilder.append(payPalError.toString());
     }
 
@@ -818,7 +817,7 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
     final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
     customSecurityHeaderType.setCredentials(userIdPasswordType);
 
-    final List<Header> headers = new ArrayList<Header>();
+    final List<Header> headers = new ArrayList<>();
     try {
       final Header header = new Header(new QName("urn:ebay:api:PayPalAPI", "RequesterCredentials"),
           customSecurityHeaderType, new JAXBDataBinding(CustomSecurityHeaderType.class));
@@ -855,7 +854,7 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
     final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
     customSecurityHeaderType.setCredentials(userIdPasswordType);
 
-    final List<Header> headers = new ArrayList<Header>();
+    final List<Header> headers = new ArrayList<>();
     try {
       final Header header = new Header(new QName("urn:ebay:api:PayPalAPI", "RequesterCredentials"),
           customSecurityHeaderType, new JAXBDataBinding(CustomSecurityHeaderType.class));

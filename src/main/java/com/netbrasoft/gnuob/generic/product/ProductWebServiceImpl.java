@@ -50,8 +50,8 @@ import com.netbrasoft.gnuob.generic.Paging;
 import com.netbrasoft.gnuob.generic.Parameter;
 import com.netbrasoft.gnuob.generic.category.SubCategory;
 import com.netbrasoft.gnuob.generic.content.Content;
-import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeService;
+import com.netbrasoft.gnuob.generic.security.MetaData;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @WebService(targetNamespace = GNUOB_WEB_SERVICE_TARGET_NAMESPACE)
@@ -65,7 +65,9 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericProductService;
 
-  public ProductWebServiceImpl() {}
+  public ProductWebServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
 
   ProductWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericProductService,
       final ISecuredGenericTypeService<Content> securedGenericContentService) {
@@ -124,7 +126,7 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
   }
 
   private List<Example> getSubCategoryExamples(final Set<SubCategory> subCategories) {
-    final List<Example> examples = new ArrayList<Example>();
+    final List<Example> examples = new ArrayList<>();
     subCategories.stream().forEach(e -> examples.add(Example.create(e)));
     return examples;
   }

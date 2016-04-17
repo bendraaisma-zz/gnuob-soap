@@ -66,7 +66,7 @@ public class ShipmentTest {
     when(mockAddress.isDetached()).thenReturn(false);
     assertTrue("Detached", spyShipment.isDetached());
     verify(spyShipment, times(1)).isDetached();
-    verify(mockAddress, never()).isDetached();
+    verify(mockAddress, times(1)).isDetached();
   }
 
   @Test

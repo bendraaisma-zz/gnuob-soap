@@ -30,6 +30,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_CATEGORIE
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 import static java.util.stream.Collectors.counting;
 
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -70,14 +71,15 @@ public class Category extends AbstractAccess {
   private Set<SubCategory> subCategories;
 
   public Category() {
-    contents = new LinkedHashSet<Content>();
-    subCategories = new LinkedHashSet<SubCategory>(); 
+    contents = new LinkedHashSet<>();
+    subCategories = new LinkedHashSet<>();
   }
-  
+
   @Override
   @Transient
   public boolean isDetached() {
-    return isAbstractTypeDetached() || isContentsDetached() || isSubCategoriesDetached();
+    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isContentsDetached(), isSubCategoriesDetached()})
+        .stream().filter(e -> e.booleanValue()).count() > 0;
   }
 
   @Transient
@@ -92,8 +94,8 @@ public class Category extends AbstractAccess {
 
   @Override
   public void prePersist() {
-    reinitAllSubCategoryPositions(START_POSITION_VALUE);
-    reinitAllContentPositions(START_POSITION_VALUE);
+    reinitAllSubCategoryPositions();
+    reinitAllContentPositions();
   }
 
   @Override
@@ -101,15 +103,17 @@ public class Category extends AbstractAccess {
     prePersist();
   }
 
-  private void reinitAllContentPositions(int startingByPositionValue) {
+  private void reinitAllContentPositions() {
+    int startingByPosition = START_POSITION_VALUE;
     for (final Content content : contents) {
-      content.setPosition(Integer.valueOf(startingByPositionValue++));
+      content.setPosition(Integer.valueOf(startingByPosition++));
     }
   }
 
-  private void reinitAllSubCategoryPositions(int startingByPositionValue) {
+  private void reinitAllSubCategoryPositions() {
+    int startingByPosition = START_POSITION_VALUE;
     for (final SubCategory subCategory : subCategories) {
-      subCategory.setPosition(Integer.valueOf(startingByPositionValue++));
+      subCategory.setPosition(Integer.valueOf(startingByPosition++));
     }
   }
 

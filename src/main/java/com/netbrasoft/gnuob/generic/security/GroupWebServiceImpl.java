@@ -52,7 +52,9 @@ public class GroupWebServiceImpl<T extends Group> implements IGenericTypeWebServ
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericGroupService;
 
-  public GroupWebServiceImpl() {}
+  public GroupWebServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
 
   GroupWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericGroupService) {
     this.securedGenericGroupService = securedGenericGroupService;

@@ -424,7 +424,7 @@ public class OfferRecordTest {
     when(mockOption.isDetached()).thenReturn(false);
     assertTrue("Offer", spyOfferRecord.isDetached());
     verify(spyOfferRecord, times(1)).isDetached();
-    verify(mockOption, never()).isDetached();
+    verify(mockOption, times(1)).isDetached();
   }
 
   @Test

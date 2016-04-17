@@ -85,7 +85,7 @@ public class UserTest {
 
   @Test
   public void testGetInstance() {
-    User instance = User.getInstance();
+    final User instance = User.getInstance();
     assertNotNull("Instance", instance);
     assertNull("Access", instance.getAccess());
     assertNull("Name", instance.getName());
@@ -98,7 +98,7 @@ public class UserTest {
 
   @Test
   public void testGetInstanceByName() {
-    User instance = User.getInstance("Name");
+    final User instance = User.getInstance("Name");
     assertNotNull("Instance", instance);
     assertNull("Access", instance.getAccess());
     assertEquals("Name", "Name", instance.getName());
@@ -259,8 +259,8 @@ public class UserTest {
     when(mockGroup.isDetached()).thenReturn(false);
     assertTrue("Detached", spyUser.isDetached());
     verify(spyUser, times(1)).isDetached();
-    verify(mockSite, never()).isDetached();
-    verify(mockGroup, never()).isDetached();
+    verify(mockSite, times(1)).isDetached();
+    verify(mockGroup, times(1)).isDetached();
   }
 
   @Test
@@ -282,6 +282,6 @@ public class UserTest {
     assertTrue("Detached", spyUser.isDetached());
     verify(spyUser, times(1)).isDetached();
     verify(mockSite, times(1)).isDetached();
-    verify(mockGroup, never()).isDetached();
+    verify(mockGroup, times(1)).isDetached();
   }
 }

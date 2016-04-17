@@ -64,7 +64,9 @@ public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckO
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<Customer> securedGenericCustomerService;
 
-  public PagseguroCheckOutWebServiceImpl() {}
+  public PagseguroCheckOutWebServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
 
   PagseguroCheckOutWebServiceImpl(ISecuredGenericTypeCheckOutService<T> securedGenericTypeCheckOutService,
       ISecuredGenericTypeService<T> securedGenericOrderService,
@@ -172,12 +174,12 @@ public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckO
   }
 
   private T processNotification(final MetaData credentials, T type) {
-    type = securedGenericTypeCheckOutService.doNotification(credentials, type);
-    final String transactionId = type.getTransactionId();
-    type.setTransactionId(null);
-    if (containsOrder(credentials, type)) {
+    final T notified = securedGenericTypeCheckOutService.doNotification(credentials, type);
+    final String transactionId = notified.getTransactionId();
+    notified.setTransactionId(null);
+    if (containsOrder(credentials, notified)) {
       return mergePersistOrder(credentials,
-          doTransactionDetails(credentials, findOrder(credentials, type), transactionId));
+          doTransactionDetails(credentials, findOrder(credentials, notified), transactionId));
     } else {
       throw new GNUOpenBusinessServiceException("No order available based on the received notification code.");
     }

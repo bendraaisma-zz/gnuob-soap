@@ -72,7 +72,6 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
         return updateOperationAccess(ctx);
       case DELETE:
         return deleteOperationAccess(ctx);
-      case NONE:
       default:
         return noneOperationAccess(ctx);
     }
@@ -220,7 +219,7 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
   @SuppressWarnings(UNCHECKED)
   private void verifyOperationAccess(final Subject subject, AbstractType abstractType, Operation operation) {
     if (abstractType instanceof AbstractAccess) {
-      A attachedAccess = getAbstractAccess(abstractType);
+      final A attachedAccess = getAbstractAccess(abstractType);
       if (isAllowedToUpdateAccess(subject, operation, attachedAccess)) {
         updateAccess((A) abstractType, attachedAccess);
       } else {
@@ -271,7 +270,7 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
 
   @SuppressWarnings(UNCHECKED)
   private A getAbstractAccess(AbstractType abstractType) {
-    A abstractAccess = accessTypeService.find((A) abstractType, abstractType.getId(), LockModeType.NONE);
+    final A abstractAccess = accessTypeService.find((A) abstractType, abstractType.getId(), LockModeType.NONE);
     if (abstractAccess != null) {
       return abstractAccess;
     }

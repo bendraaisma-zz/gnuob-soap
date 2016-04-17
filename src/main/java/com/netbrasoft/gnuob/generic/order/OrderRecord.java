@@ -48,6 +48,7 @@ import static java.util.stream.Collectors.counting;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -69,6 +70,8 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
 import com.netbrasoft.gnuob.generic.product.Option;
@@ -108,13 +111,14 @@ public class OrderRecord extends AbstractType {
   private BigDecimal tax;
 
   public OrderRecord() {
-    options = new HashSet<Option>();
+    options = new HashSet<>();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return isAbstractTypeDetached() || isOptionsDetached();
+    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isOptionsDetached()}).stream()
+        .filter(e -> e.booleanValue()).count() > 0;
   }
 
   @Transient
@@ -140,7 +144,7 @@ public class OrderRecord extends AbstractType {
     getItemHeight();
     getItemHeightUnit();
     getItemUrl();
-    reinitAllPositionOptions(START_POSITION_VALUE);
+    reinitAllPositionOptions();
   }
 
   @Override
@@ -148,16 +152,20 @@ public class OrderRecord extends AbstractType {
     prePersist();
   }
 
-  private void reinitAllPositionOptions(int startPositionValue) {
-    for (final Option option : options) {
-      option.setPosition(Integer.valueOf(startPositionValue++));
+  private void reinitAllPositionOptions() {
+    int startPositionValue = START_POSITION_VALUE;
+    for (final Option opt : options) {
+      opt.setPosition(Integer.valueOf(startPositionValue++));
     }
   }
 
   @XmlElement
   @Column(name = AMOUNT_COLUMN_NAME, nullable = false)
   public BigDecimal getAmount() {
-    return product != null && amount == null ? amount = product.getAmount().subtract(getDiscount()) : amount;
+    if (product != null && amount == null) {
+      amount = product.getAmount().subtract(getDiscount());
+    }
+    return amount;
   }
 
   @XmlElement
@@ -169,13 +177,19 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = DESCRIPTION_COLUMN_NAME)
   public String getDescription() {
-    return product != null && description == null ? description = product.getDescription() : description;
+    if (product != null && StringUtils.isBlank(description)) {
+      description = product.getDescription();
+    }
+    return description;
   }
 
   @XmlElement
   @Column(name = DISCOUNT_COLUMN_NAME)
   public BigDecimal getDiscount() {
-    return product != null && discount == null ? discount = product.getDiscount() : discount;
+    if (product != null && discount == null) {
+      discount = product.getDiscount();
+    }
+    return discount;
   }
 
   @Transient
@@ -190,25 +204,37 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = ITEM_HEIGHT_COLUMN_NAME)
   public BigDecimal getItemHeight() {
-    return product != null && itemHeight == null ? itemHeight = product.getItemHeight() : itemHeight;
+    if (product != null && itemHeight == null) {
+      itemHeight = product.getItemHeight();
+    }
+    return itemHeight;
   }
 
   @XmlElement
   @Column(name = ITEM_HEIGHT_UNIT_COLUMN_NAME)
   public String getItemHeightUnit() {
-    return product != null && itemHeightUnit == null ? itemHeightUnit = product.getItemHeightUnit() : itemHeightUnit;
+    if (product != null && StringUtils.isBlank(itemHeightUnit)) {
+      itemHeightUnit = product.getItemHeightUnit();
+    }
+    return itemHeightUnit;
   }
 
   @XmlElement
   @Column(name = ITEM_LENGTH_COLUMN_NAME)
   public BigDecimal getItemLength() {
-    return product != null && itemLength == null ? itemLength = product.getItemLength() : itemLength;
+    if (product != null && itemLength == null) {
+      itemLength = product.getItemLength();
+    }
+    return itemLength;
   }
 
   @XmlElement
   @Column(name = ITEM_LENGTH_UNIT_COLUMN_NAME)
   public String getItemLengthUnit() {
-    return product != null && itemLengthUnit == null ? itemLengthUnit = product.getItemLengthUnit() : itemLengthUnit;
+    if (product != null && StringUtils.isBlank(itemLengthUnit)) {
+      itemLengthUnit = product.getItemLengthUnit();
+    }
+    return itemLengthUnit;
   }
 
   @Transient
@@ -223,37 +249,55 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = ITEM_URL_COLUMN_NAME)
   public String getItemUrl() {
-    return product != null && itemUrl == null ? itemUrl = product.getItemUrl() : itemUrl;
+    if (product != null && StringUtils.isBlank(itemUrl)) {
+      itemUrl = product.getItemUrl();
+    }
+    return itemUrl;
   }
 
   @XmlElement
   @Column(name = ITEM_WEIGHT_COLUMN_NAME)
   public BigDecimal getItemWeight() {
-    return product != null && itemWeight == null ? itemWeight = product.getItemWeight() : itemWeight;
+    if (product != null && itemWeight == null) {
+      itemWeight = product.getItemWeight();
+    }
+    return itemWeight;
   }
 
   @XmlElement
   @Column(name = ITEM_WEIGHT_UNIT_COLUMN_NAME)
   public String getItemWeightUnit() {
-    return product != null && itemWeightUnit == null ? itemWeightUnit = product.getItemWeightUnit() : itemWeightUnit;
+    if (product != null && StringUtils.isBlank(itemWeightUnit)) {
+      itemWeightUnit = product.getItemWeightUnit();
+    }
+    return itemWeightUnit;
   }
 
   @XmlElement
   @Column(name = ITEM_WIDTH_COLUMN_NAME)
   public BigDecimal getItemWidth() {
-    return product != null && itemWidth == null ? itemWidth = product.getItemWidth() : itemWidth;
+    if (product != null && itemWidth == null) {
+      itemWidth = product.getItemWidth();
+    }
+    return itemWidth;
   }
 
   @XmlElement
   @Column(name = ITEM_WIDTH_UNIT_COLUMN_NAME)
   public String getItemWidthUnit() {
-    return product != null && itemWidthUnit == null ? itemWidthUnit = product.getItemWidthUnit() : itemWidthUnit;
+    if (product != null && StringUtils.isBlank(itemWidthUnit)) {
+      itemWidthUnit = product.getItemWidthUnit();
+    }
+    return itemWidthUnit;
   }
 
   @XmlElement
   @Column(name = NAME_COLUMN_NAME)
   public String getName() {
-    return product != null && name == null ? name = product.getName() : name;
+    if (product != null && StringUtils.isBlank(name)) {
+      name = product.getName();
+    }
+    return name;
   }
 
   @XmlElement
@@ -274,8 +318,10 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = ORDER_RECORD_ID_COLUMN_NAME, nullable = false)
   public String getOrderRecordId() {
-    return orderRecordId == null || "".equals(orderRecordId.trim()) ? orderRecordId = UUID.randomUUID().toString()
-        : orderRecordId;
+    if (orderRecordId == null || StringUtils.isBlank(orderRecordId)) {
+      orderRecordId = UUID.randomUUID().toString();
+    }
+    return orderRecordId;
   }
 
   @XmlTransient
@@ -292,7 +338,10 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = PRODUCT_NUMBER_COLUMN_NAME, nullable = false)
   public String getProductNumber() {
-    return product != null && productNumber == null ? productNumber = product.getNumber() : productNumber;
+    if (product != null && StringUtils.isBlank(productNumber)) {
+      productNumber = product.getNumber();
+    }
+    return productNumber;
   }
 
   @XmlElement(required = true)
@@ -304,7 +353,10 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = SHIPPING_COST_COLUMN_NAME)
   public BigDecimal getShippingCost() {
-    return product != null && shippingCost == null ? shippingCost = product.getShippingCost() : shippingCost;
+    if (product != null && shippingCost == null) {
+      shippingCost = product.getShippingCost();
+    }
+    return shippingCost;
   }
 
   @Transient
@@ -319,7 +371,10 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = TAX_COLUMN_NAME)
   public BigDecimal getTax() {
-    return product != null && tax == null ? tax = product.getTax() : tax;
+    if (product != null && tax == null) {
+      tax = product.getTax();
+    }
+    return tax;
   }
 
   @Transient

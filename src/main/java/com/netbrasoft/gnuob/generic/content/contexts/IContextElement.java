@@ -16,6 +16,7 @@ package com.netbrasoft.gnuob.generic.content.contexts;
 
 import org.apache.velocity.context.Context;
 
+@FunctionalInterface
 public abstract interface IContextElement {
 
   public abstract Context accept(IContextVisitor visitor);

@@ -29,6 +29,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VALUE_COLUMN_
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 import static java.util.stream.Collectors.counting;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -66,13 +67,14 @@ public class Option extends AbstractType {
   private String value;
 
   public Option() {
-    subOptions = new HashSet<SubOption>();
+    subOptions = new HashSet<>();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return isAbstractTypeDetached() || isSubOptionsDetached();
+    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isSubOptionsDetached()}).stream()
+        .filter(e -> e.booleanValue()).count() > 0;
   }
 
   @Transient
@@ -82,7 +84,7 @@ public class Option extends AbstractType {
 
   @Override
   public void prePersist() {
-    reinitAllPositionSubOptions(START_POSITION_VALUE);
+    reinitAllPositionSubOptions();
   }
 
   @Override
@@ -90,9 +92,10 @@ public class Option extends AbstractType {
     prePersist();
   }
 
-  private void reinitAllPositionSubOptions(int startPositionValue) {
+  private void reinitAllPositionSubOptions() {
+    int startPosition = START_POSITION_VALUE;
     for (final SubOption subOption : subOptions) {
-      subOption.setPosition(Integer.valueOf(startPositionValue++));
+      subOption.setPosition(Integer.valueOf(startPosition++));
     }
   }
 

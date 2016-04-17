@@ -56,6 +56,7 @@ import static java.util.stream.Collectors.counting;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -76,6 +77,7 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.context.Context;
 
 import com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
@@ -125,14 +127,14 @@ public class Order extends AbstractAccess {
   private String transactionId;
 
   public Order() {
-    records = new HashSet<OrderRecord>();
+    records = new HashSet<>();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return isAbstractTypeDetached() || isContractDetached() || isInvoiceDetached() || isShipmentDetachted()
-        || isOrderRecordsDetached();
+    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isContractDetached(), isInvoiceDetached(),
+        isShipmentDetachted(), isOrderRecordsDetached()}).stream().filter(e -> e.booleanValue()).count() > 0;
   }
 
   @Transient
@@ -159,7 +161,6 @@ public class Order extends AbstractAccess {
   public void prePersist() {
     getOrderId();
     getCustom();
-    getOrderDate();
     getCheckoutStatus();
     getTaxTotal();
     getShippingTotal();
@@ -167,17 +168,18 @@ public class Order extends AbstractAccess {
     getItemTotal();
     getMaxTotal();
     getDiscountTotal();
-    reinitAllPositionRecords(START_POSITION_VALUE);
+    reinitAllPositionRecords();
   }
 
   @Override
   public void preUpdate() {
-    reinitAllPositionRecords(START_POSITION_VALUE);
+    reinitAllPositionRecords();
   }
 
-  private void reinitAllPositionRecords(int startPositionValue) {
+  private void reinitAllPositionRecords() {
+    int startPosition = START_POSITION_VALUE;
     for (final OrderRecord record : records) {
-      record.setPosition(Integer.valueOf(startPositionValue++));
+      record.setPosition(Integer.valueOf(startPosition++));
     }
   }
 
@@ -201,7 +203,10 @@ public class Order extends AbstractAccess {
   @XmlElement
   @Column(name = CHECKOUT_STATUS_COLUMN_NAME)
   public String getCheckoutStatus() {
-    return checkoutStatus == null || "".equals(checkoutStatus.trim()) ? checkoutStatus = PENDING : checkoutStatus;
+    if (StringUtils.isBlank(checkoutStatus)) {
+      checkoutStatus = PENDING;
+    }
+    return checkoutStatus;
   }
 
   @XmlElement(required = true)
@@ -213,7 +218,10 @@ public class Order extends AbstractAccess {
   @XmlElement
   @Column(name = CUSTOM_COLUMN_NAME)
   public String getCustom() {
-    return custom == null || "".equals(custom.trim()) ? custom = UUID.randomUUID().toString() : custom;
+    if (StringUtils.isBlank(custom)) {
+      custom = UUID.randomUUID().toString();
+    }
+    return custom;
   }
 
   @XmlElement
@@ -229,8 +237,10 @@ public class Order extends AbstractAccess {
   @XmlElement(required = true)
   @Column(name = EXTRA_AMOUNT_COLUMN_NAME, nullable = false)
   public BigDecimal getExtraAmount() {
-    return extraAmount == null ? extraAmount = getHandlingTotal().add(getTaxTotal()).add(getInsuranceTotal())
-        : extraAmount;
+    if (extraAmount == null) {
+      extraAmount = getHandlingTotal().add(getTaxTotal()).add(getInsuranceTotal());
+    }
+    return extraAmount;
   }
 
   @XmlElement
@@ -272,7 +282,10 @@ public class Order extends AbstractAccess {
   @XmlElement(required = true)
   @Column(name = HANDLING_TOTAL_COLUMN_NAME, nullable = false)
   public BigDecimal getHandlingTotal() {
-    return handlingTotal == null ? handlingTotal = BigDecimal.ZERO : handlingTotal;
+    if (handlingTotal == null) {
+      handlingTotal = BigDecimal.ZERO;
+    }
+    return handlingTotal;
   }
 
   @XmlElement
@@ -284,7 +297,10 @@ public class Order extends AbstractAccess {
   @XmlElement(required = true)
   @Column(name = INSURANCE_TOTAL_COLUMN_NAME, nullable = false)
   public BigDecimal getInsuranceTotal() {
-    return insuranceTotal == null ? insuranceTotal = BigDecimal.ZERO : insuranceTotal;
+    if (insuranceTotal == null) {
+      insuranceTotal = BigDecimal.ZERO;
+    }
+    return insuranceTotal;
   }
 
   @XmlElement(required = true)
@@ -307,7 +323,10 @@ public class Order extends AbstractAccess {
   @XmlElement
   @Column(name = MAX_TOTAL_COLUMN_NAME)
   public BigDecimal getMaxTotal() {
-    return maxTotal == null ? maxTotal = getOrderTotal() : maxTotal;
+    if (maxTotal == null) {
+      maxTotal = getOrderTotal();
+    }
+    return maxTotal;
   }
 
   @XmlElement
@@ -331,7 +350,7 @@ public class Order extends AbstractAccess {
   @XmlElement
   @Column(name = ORDER_DATE_COLUMN_NAME)
   public Date getOrderDate() {
-    return orderDate == null ? orderDate = new Date() : orderDate;
+    return orderDate;
   }
 
   @XmlElement
@@ -343,15 +362,19 @@ public class Order extends AbstractAccess {
   @XmlElement(required = true)
   @Column(name = ORDER_ID_COLUMN_NAME, nullable = false)
   public String getOrderId() {
-    return orderId == null || "".equals(orderId.trim()) ? orderId = UUID.randomUUID().toString() : orderId;
+    if (StringUtils.isBlank(orderId)) {
+      orderId = UUID.randomUUID().toString();
+    }
+    return orderId;
   }
 
   @XmlElement
   @Column(name = ORDER_TOTAL_COLUMN_NAME)
   public BigDecimal getOrderTotal() {
-    return orderTotal == null
-        ? orderTotal = getItemTotal().add(getShippingTotal()).subtract(getShippingDiscount()).add(getExtraAmount())
-        : orderTotal;
+    if (orderTotal == null) {
+      orderTotal = getItemTotal().add(getShippingTotal()).subtract(getShippingDiscount()).add(getExtraAmount());
+    }
+    return orderTotal;
   }
 
   @OrderBy(POSITION_ASC)
@@ -374,7 +397,10 @@ public class Order extends AbstractAccess {
   @XmlElement(required = true)
   @Column(name = SHIPPING_DISCOUNT_COLUMN_NAME, nullable = false)
   public BigDecimal getShippingDiscount() {
-    return shippingDiscount == null ? shippingDiscount = BigDecimal.ZERO : shippingDiscount;
+    if (shippingDiscount == null) {
+      shippingDiscount = BigDecimal.ZERO;
+    }
+    return shippingDiscount;
   }
 
   @XmlElement

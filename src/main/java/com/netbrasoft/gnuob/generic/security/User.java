@@ -32,6 +32,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_TABLE_NA
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 import static java.util.stream.Collectors.counting;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,14 +66,6 @@ public class User extends AbstractAccess {
 
   private static final long serialVersionUID = 2439569681567208145L;
 
-  public static User getInstance() {
-    return new User();
-  }
-
-  public static User getInstance(String name) {
-    return new User(name);
-  }
-
   private Rule access;
   private String description;
   private Set<Group> groups;
@@ -83,22 +76,31 @@ public class User extends AbstractAccess {
   private Set<Site> sites;
 
   public User() {
-    groups = new HashSet<Group>();
-    roles = new HashSet<Role>();
-    sites = new HashSet<Site>();
+    groups = new HashSet<>();
+    roles = new HashSet<>();
+    sites = new HashSet<>();
   }
 
   private User(final String name) {
-    groups = new HashSet<Group>();
-    roles = new HashSet<Role>();
-    sites = new HashSet<Site>();
+    groups = new HashSet<>();
+    roles = new HashSet<>();
+    sites = new HashSet<>();
     this.name = name;
+  }
+
+  public static User getInstance() {
+    return new User();
+  }
+
+  public static User getInstance(String name) {
+    return new User(name);
   }
 
   @Transient
   @Override
   public boolean isDetached() {
-    return isAbstractTypeDetached() || isSitesDetached() || isGroupsDetached();
+    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isSitesDetached(), isGroupsDetached()}).stream()
+        .filter(e -> e.booleanValue()).count() > 0;
   }
 
   @Transient

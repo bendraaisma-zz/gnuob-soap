@@ -45,6 +45,11 @@ public class Content extends AbstractAccess {
 
   private static final long serialVersionUID = -6963744731098668340L;
 
+  private byte[] data;
+  private String format;
+  private String name;
+  private Integer position;
+
   public static Content getInstance() {
     final Content content = new Content();
     content.setActive(true);
@@ -56,11 +61,6 @@ public class Content extends AbstractAccess {
     content.setName(name);
     return content;
   }
-
-  private byte[] data;
-  private String format;
-  private String name;
-  private Integer position;
 
   @Override
   @Transient

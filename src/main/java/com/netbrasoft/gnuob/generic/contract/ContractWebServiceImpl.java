@@ -60,7 +60,9 @@ public class ContractWebServiceImpl<T extends Contract> implements IGenericTypeW
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<Customer> securedGenericCustomerService;
 
-  public ContractWebServiceImpl() {}
+  public ContractWebServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
 
   ContractWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericContractService,
       final ISecuredGenericTypeService<Customer> securedGenericCustomerService) {

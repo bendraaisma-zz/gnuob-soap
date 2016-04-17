@@ -26,6 +26,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.START_POSITIO
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 import static java.util.stream.Collectors.counting;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -47,6 +48,8 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.netbrasoft.gnuob.generic.AbstractType;
 import com.netbrasoft.gnuob.generic.customer.Address;
 
@@ -64,13 +67,14 @@ public class Invoice extends AbstractType {
   private Set<Payment> payments;
 
   public Invoice() {
-    payments = new HashSet<Payment>();
+    payments = new HashSet<>();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return isAbstractTypeDetached() || isAddressDetached() || isPaymentsDetached();
+    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isAddressDetached(), isPaymentsDetached()}).stream()
+        .filter(e -> e.booleanValue()).count() > 0;
   }
 
   @Transient
@@ -86,17 +90,18 @@ public class Invoice extends AbstractType {
   @Override
   public void prePersist() {
     getInvoiceId();
-    reinitAllPositionPaymentss(START_POSITION_VALUE);
+    reinitAllPositionPayments();
   }
 
   @Override
   public void preUpdate() {
-    reinitAllPositionPaymentss(START_POSITION_VALUE);
+    reinitAllPositionPayments();
   }
 
-  private void reinitAllPositionPaymentss(int startPositionValue) {
+  private void reinitAllPositionPayments() {
+    int startPosition = START_POSITION_VALUE;
     for (final Payment payment : payments) {
-      payment.setPosition(Integer.valueOf(startPositionValue++));
+      payment.setPosition(Integer.valueOf(startPosition++));
     }
   }
 
@@ -110,7 +115,10 @@ public class Invoice extends AbstractType {
   @XmlElement
   @Column(name = INVOICE_ID_COLUMN_NAME, nullable = false)
   public String getInvoiceId() {
-    return invoiceId == null || "".equals(invoiceId.trim()) ? invoiceId = UUID.randomUUID().toString() : invoiceId;
+    if (invoiceId == null || StringUtils.isBlank(invoiceId)) {
+      invoiceId = UUID.randomUUID().toString();
+    }
+    return invoiceId;
   }
 
   @XmlElement

@@ -79,8 +79,8 @@ public class InvoiceTest {
     when(mockPayment.isDetached()).thenReturn(false);
     assertTrue("Order", spyInvoice.isDetached());
     verify(spyInvoice, times(1)).isDetached();
-    verify(mockAddress, never()).isDetached();
-    verify(mockPayment, never()).isDetached();
+    verify(mockAddress, times(1)).isDetached();
+    verify(mockPayment, times(1)).isDetached();
   }
 
   @Test
@@ -91,7 +91,7 @@ public class InvoiceTest {
     assertTrue("Order", spyInvoice.isDetached());
     verify(spyInvoice, times(1)).isDetached();
     verify(mockAddress, times(1)).isDetached();
-    verify(mockPayment, never()).isDetached();
+    verify(mockPayment, times(1)).isDetached();
   }
 
   @Test

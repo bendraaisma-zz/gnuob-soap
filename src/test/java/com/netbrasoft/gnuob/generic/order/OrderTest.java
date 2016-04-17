@@ -188,7 +188,7 @@ public class OrderTest {
 
   @Test
   public void testGetOrderDate() {
-    assertNotNull("OrderDate", spyOrder.getOrderDate());
+    assertNull("OrderDate", spyOrder.getOrderDate());
     verify(spyOrder, times(1)).getOrderDate();
   }
 
@@ -292,10 +292,10 @@ public class OrderTest {
     when(mockOrderRecord.isDetached()).thenReturn(false);
     assertTrue("Detached", spyOrder.isDetached());
     verify(spyOrder, times(1)).isDetached();
-    verify(mockContract, never()).isDetached();
-    verify(mockInvoice, never()).isDetached();
-    verify(mockShipment, never()).isDetached();
-    verify(mockOrderRecord, never()).isDetached();
+    verify(mockContract, times(1)).isDetached();
+    verify(mockInvoice, times(1)).isDetached();
+    verify(mockShipment, times(1)).isDetached();
+    verify(mockOrderRecord, times(1)).isDetached();
   }
 
   @Test
@@ -308,9 +308,9 @@ public class OrderTest {
     assertTrue("Detached", spyOrder.isDetached());
     verify(spyOrder, times(1)).isDetached();
     verify(mockContract, times(1)).isDetached();
-    verify(mockInvoice, never()).isDetached();
-    verify(mockShipment, never()).isDetached();
-    verify(mockOrderRecord, never()).isDetached();
+    verify(mockInvoice, times(1)).isDetached();
+    verify(mockShipment, times(1)).isDetached();
+    verify(mockOrderRecord, times(1)).isDetached();
   }
 
   @Test
@@ -324,8 +324,8 @@ public class OrderTest {
     verify(spyOrder, times(1)).isDetached();
     verify(mockContract, times(1)).isDetached();
     verify(mockInvoice, times(1)).isDetached();
-    verify(mockShipment, never()).isDetached();
-    verify(mockOrderRecord, never()).isDetached();
+    verify(mockShipment, times(1)).isDetached();
+    verify(mockOrderRecord, times(1)).isDetached();
   }
 
   @Test
@@ -355,7 +355,7 @@ public class OrderTest {
     verify(mockContract, times(1)).isDetached();
     verify(mockInvoice, times(1)).isDetached();
     verify(mockShipment, times(1)).isDetached();
-    verify(mockOrderRecord, never()).isDetached();
+    verify(mockOrderRecord, times(1)).isDetached();
   }
 
   @Test
@@ -628,7 +628,7 @@ public class OrderTest {
   @Test
   public void testSetOrderDateIsNull() {
     spyOrder.setOrderDate(null);
-    assertNotNull(spyOrder.getOrderDate());
+    assertNull(spyOrder.getOrderDate());
     verify(spyOrder, times(1)).setOrderDate(null);
   }
 

@@ -73,7 +73,9 @@ public class MailControl<A extends AbstractAccess> {
   @Resource(mappedName = JAVA_JBOSS_MAIL_DEFAULT)
   private Session session;
 
-  public MailControl() {}
+  public MailControl() {
+    // This constructor will be used by the EBJ container.
+  }
 
   MailControl(final IGenericTypeService<A> accessTypeService, final IContextVisitor contextVisitor,
       final Session session) {

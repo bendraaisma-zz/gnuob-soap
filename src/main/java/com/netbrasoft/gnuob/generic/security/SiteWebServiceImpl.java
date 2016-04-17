@@ -52,7 +52,9 @@ public class SiteWebServiceImpl<T extends Site> implements IGenericTypeWebServic
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericSiteService;
 
-  public SiteWebServiceImpl() {}
+  public SiteWebServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
 
   SiteWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericSiteService) {
     this.securedGenericSiteService = securedGenericSiteService;

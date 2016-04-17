@@ -18,6 +18,8 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GENERIC_TYPE_
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PRIMARY_UNIT_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.UNCHECKED_VALUE;
 
+import java.util.Arrays;
+
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
@@ -97,9 +99,7 @@ public class GenericTypeDaoImpl<T> implements IGenericTypeDao<T> {
   }
 
   private void setFilterParameters(final Filter filter, final Parameter... param) {
-    for (final Parameter p : param) {
-      filter.setParameter(p.getName(), p.getValue());
-    }
+    Arrays.asList(param).stream().forEach(e -> filter.setParameter(e.getName(), e.getValue()));
   }
 
   @Override

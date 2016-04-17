@@ -186,7 +186,7 @@ public abstract class AbstractPagseguroCheckOutServiceImpl<O extends Order> impl
 
   private List<Item> doItems(final O order) {
 
-    final List<Item> items = new ArrayList<Item>();
+    final List<Item> items = new ArrayList<>();
 
     // Details about each individual item included in the order.
     for (final OrderRecord orderRecord : order.getRecords()) {
