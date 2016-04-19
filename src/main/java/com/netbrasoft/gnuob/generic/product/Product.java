@@ -72,6 +72,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.velocity.context.Context;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import com.netbrasoft.gnuob.generic.category.SubCategory;
 import com.netbrasoft.gnuob.generic.content.Content;
@@ -195,6 +197,7 @@ public class Product extends AbstractAccess {
     return bestsellers;
   }
 
+  @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
   @OrderBy(POSITION_ASC)
   @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
   @JoinTable(name = GNUOB_PRODUCTS_GNUOB_CONTENTS_TABLE_NAME,
