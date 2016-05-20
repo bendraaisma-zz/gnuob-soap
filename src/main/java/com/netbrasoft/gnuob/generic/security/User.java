@@ -76,15 +76,13 @@ public class User extends AbstractAccess {
   private Set<Site> sites;
 
   public User() {
-    groups = new HashSet<>();
-    roles = new HashSet<>();
-    sites = new HashSet<>();
+    groups = new HashSet<>(0);
+    roles = new HashSet<>(0);
+    sites = new HashSet<>(0);
   }
 
   private User(final String name) {
-    groups = new HashSet<>();
-    roles = new HashSet<>();
-    sites = new HashSet<>();
+    this();
     this.name = name;
   }
 
@@ -92,7 +90,7 @@ public class User extends AbstractAccess {
     return new User();
   }
 
-  public static User getInstance(String name) {
+  public static User getInstance(final String name) {
     return new User(name);
   }
 
@@ -115,7 +113,7 @@ public class User extends AbstractAccess {
 
   @Override
   public void prePersist() {
-    if (!(password.matches(PASSWORD_REGEX))) {
+    if (!password.matches(PASSWORD_REGEX)) {
       throw new GNUOpenBusinessServiceException(String
           .format("Given user [%s] doesn't contain a valid password, verify that the given password is valid", name));
     }

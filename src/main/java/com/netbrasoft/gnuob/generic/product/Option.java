@@ -28,6 +28,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_OPTIONS_I
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VALUE_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 import static java.util.stream.Collectors.counting;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -49,6 +50,8 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+
 import com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = false)
@@ -67,7 +70,7 @@ public class Option extends AbstractType {
   private String value;
 
   public Option() {
-    subOptions = new HashSet<>();
+    subOptions = new HashSet<>(0);
   }
 
   @Override
@@ -151,5 +154,10 @@ public class Option extends AbstractType {
 
   public void setValue(final String value) {
     this.value = value;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

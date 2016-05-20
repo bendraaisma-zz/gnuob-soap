@@ -45,6 +45,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.START_POSITIO
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 import static java.util.stream.Collectors.counting;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -72,6 +73,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
 import com.netbrasoft.gnuob.generic.product.Option;
@@ -111,7 +113,7 @@ public class OrderRecord extends AbstractType {
   private BigDecimal tax;
 
   public OrderRecord() {
-    options = new HashSet<>();
+    options = new HashSet<>(0);
   }
 
   @Override
@@ -476,5 +478,10 @@ public class OrderRecord extends AbstractType {
 
   public void setTax(final BigDecimal tax) {
     this.tax = tax;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

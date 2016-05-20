@@ -28,6 +28,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_SITE_O
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_PARAM_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_WEB_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
 
 import java.util.List;
 
@@ -37,6 +38,9 @@ import javax.interceptor.Interceptors;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.IGenericTypeWebService;
@@ -48,6 +52,8 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Stateless(name = SITE_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
 public class SiteWebServiceImpl<T extends Site> implements IGenericTypeWebService<T> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(SiteWebServiceImpl.class);
 
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericSiteService;
@@ -68,6 +74,8 @@ public class SiteWebServiceImpl<T extends Site> implements IGenericTypeWebServic
       return securedGenericSiteService.count(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(COUNT_SITE_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -79,6 +87,8 @@ public class SiteWebServiceImpl<T extends Site> implements IGenericTypeWebServic
       return securedGenericSiteService.find(credentials, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_SITE_BY_ID_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -91,6 +101,8 @@ public class SiteWebServiceImpl<T extends Site> implements IGenericTypeWebServic
       return securedGenericSiteService.find(credentials, type, paging, orderingProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_SITE_OPERATION_NAME, credentials, type, paging, orderingProperty));
     }
   }
 
@@ -102,6 +114,8 @@ public class SiteWebServiceImpl<T extends Site> implements IGenericTypeWebServic
       return securedGenericSiteService.merge(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(MERGE_SITE_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -113,6 +127,8 @@ public class SiteWebServiceImpl<T extends Site> implements IGenericTypeWebServic
       return processPersist(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(PERSIST_SITE_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -132,6 +148,8 @@ public class SiteWebServiceImpl<T extends Site> implements IGenericTypeWebServic
       return securedGenericSiteService.refresh(credentials, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REFRESH_SITE_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -143,6 +161,8 @@ public class SiteWebServiceImpl<T extends Site> implements IGenericTypeWebServic
       securedGenericSiteService.remove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REMOVE_SITE_OPERATION_NAME, credentials, type));
     }
   }
 }

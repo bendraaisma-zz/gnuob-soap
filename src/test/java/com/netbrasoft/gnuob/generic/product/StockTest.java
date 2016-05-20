@@ -14,6 +14,7 @@
 
 package com.netbrasoft.gnuob.generic.product;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.verify;
 
 import java.math.BigInteger;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -122,5 +124,10 @@ public class StockTest {
     spyStock.setQuantity(BigInteger.ZERO);
     assertEquals("Quantity", BigInteger.ZERO, spyStock.getQuantity());
     verify(spyStock, times(1)).setQuantity(any());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spyStock, SHORT_PREFIX_STYLE), spyStock.toString());
   }
 }

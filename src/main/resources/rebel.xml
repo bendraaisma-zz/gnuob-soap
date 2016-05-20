@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.zeroturnaround.com" xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
+<application generated-by="eclipse" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.zeroturnaround.com" xsi:schemaLocation="http://www.zeroturnaround.com http://update.zeroturnaround.com/jrebel/rebel-2_1.xsd">
 
 	<classpath>
 		<dir name="/home/bernard/Projects/gnuob/gnuob-soap/target/classes">
@@ -7,6 +7,11 @@
 	</classpath>
 
 	<web>
+		<link target="/">
+			<dir name="/home/bernard/Projects/gnuob/gnuob-soap/target/m2e-wtp/web-resources">
+				<exclude name="/"/>
+			</dir>
+		</link>
 		<link target="/">
 			<dir name="/home/bernard/Projects/gnuob/gnuob-soap/src/main/webapp">
 			</dir>

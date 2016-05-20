@@ -38,6 +38,7 @@
       <version.graphene-webdriver>2.0.3.Final</version.graphene-webdriver>
       <version.wildfly.plugin>10.0.0.Final</version.wildfly.plugin>
       <version.jasper.report>RELEASE</version.jasper.report>
+      <version.liquibase>3.5.1</version.liquibase>
       <version.commons-lang3>3.4</version.commons-lang3>
       <maven.compiler.target>1.8</maven.compiler.target>
       <maven.compiler.source>1.8</maven.compiler.source>
@@ -183,6 +184,60 @@
          <artifactId>jasperreports-fonts</artifactId>
          <version>${version.jasper.report}</version>
       </dependency>
+      <dependency>
+      	<groupId>org.hibernate</groupId>
+      	<artifactId>hibernate-core</artifactId>
+      	<scope>provided</scope>
+      	<exclusions>
+      		<exclusion>
+      			<artifactId>xml-apis</artifactId>
+      			<groupId>xml-apis</groupId>
+      		</exclusion>
+      	</exclusions>
+      </dependency>
+      <dependency>
+      	<groupId>org.hibernate</groupId>
+      	<artifactId>hibernate-entitymanager</artifactId>
+      	<scope>provided</scope>
+      </dependency>
+      <dependency>
+      	<groupId>org.hibernate</groupId>
+      	<artifactId>hibernate-validator</artifactId>
+      	<scope>provided</scope>
+      </dependency>
+      <dependency>
+      	<groupId>org.hibernate</groupId>
+      	<artifactId>hibernate-search</artifactId>
+      </dependency>
+      <dependency>
+      	<groupId>org.hibernate</groupId>
+      	<artifactId>hibernate-core</artifactId>
+      	<scope>provided</scope>
+      	<exclusions>
+      		<exclusion>
+      			<artifactId>xml-apis</artifactId>
+      			<groupId>xml-apis</groupId>
+      		</exclusion>
+      	</exclusions>
+      	<optional>false</optional>
+      </dependency>
+      <dependency>
+      	<groupId>org.hibernate</groupId>
+      	<artifactId>hibernate-entitymanager</artifactId>
+      	<scope>provided</scope>
+      	<optional>false</optional>
+      </dependency>
+      <dependency>
+      	<groupId>org.hibernate</groupId>
+      	<artifactId>hibernate-validator</artifactId>
+      	<scope>provided</scope>
+      	<optional>false</optional>
+      </dependency>
+      <dependency>
+      	<groupId>org.hibernate</groupId>
+      	<artifactId>hibernate-search</artifactId>
+      	<optional>false</optional>
+      </dependency>
    </dependencies>
    <build>
       <!-- Maven will append the version to the finalName (which is the name 
@@ -222,7 +277,7 @@
          <plugin>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-maven-plugin</artifactId>
-            <version>3.3.2</version>
+            <version>${version.liquibase}</version>
             <configuration>
                <driver>com.mysql.jdbc.Driver</driver>
                <url>${liquibase.url}</url>

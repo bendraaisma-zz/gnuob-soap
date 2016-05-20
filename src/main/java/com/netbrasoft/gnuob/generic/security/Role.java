@@ -15,10 +15,18 @@
 package com.netbrasoft.gnuob.generic.security;
 
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ROLE_ENTITY_NAME;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 @XmlRootElement(name = ROLE_ENTITY_NAME)
 public enum Role {
   ADMINISTRATOR, EMPLOYEE, GUEST, MANAGER;
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
+  }
 }

@@ -29,6 +29,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REFRESH_CATEG
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_CATEGORY_OPERATION_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_CATEGORIES_PROPERTY_NAME;
+import static com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,8 @@ import javax.jws.WebService;
 
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.IGenericTypeWebService;
@@ -58,6 +61,8 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Stateless(name = CATEGORY_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
 public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeWebService<T> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(CategoryWebServiceImpl.class);
 
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericCategoryService;
@@ -83,6 +88,8 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
       return processCount(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(COUNT_CATEGORY_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -139,6 +146,8 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
       return processFind(credentials, type, paging, orderingByProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_CATEGORY_OPERATION_NAME, credentials, type, paging, orderingByProperty));
     }
   }
 
@@ -171,6 +180,8 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
       return processFindById(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_CATEGORY_BY_ID_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -188,6 +199,8 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
       return securedGenericCategoryService.merge(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(MERGE_CATEGORY_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -220,6 +233,8 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
       return processPersist(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(PERSIST_CATEGORY_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -244,6 +259,8 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
       return processRefresh(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REFRESH_CATEGORY_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -260,6 +277,8 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
       processRemove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REMOVE_CATEGORY_OPERATION_NAME, credentials, type));
     }
   }
 

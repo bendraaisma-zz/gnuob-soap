@@ -28,6 +28,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_SETTIN
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SETTING_PARAM_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SETTING_WEB_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
 
 import java.util.List;
 
@@ -37,6 +38,9 @@ import javax.interceptor.Interceptors;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.IGenericTypeWebService;
@@ -50,6 +54,8 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Stateless(name = SETTING_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
 public class SettingWebServiceImpl<T extends Setting> implements IGenericTypeWebService<T> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(SettingWebServiceImpl.class);
 
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericSettingService;
@@ -70,6 +76,8 @@ public class SettingWebServiceImpl<T extends Setting> implements IGenericTypeWeb
       return securedGenericSettingService.count(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(COUNT_SETTING_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -81,6 +89,8 @@ public class SettingWebServiceImpl<T extends Setting> implements IGenericTypeWeb
       return securedGenericSettingService.find(credentials, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_SETTING_BY_ID_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -88,11 +98,13 @@ public class SettingWebServiceImpl<T extends Setting> implements IGenericTypeWeb
   @WebMethod(operationName = FIND_SETTING_OPERATION_NAME)
   public List<T> find(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = SETTING_PARAM_NAME) final T type, @WebParam(name = PAGING_PARAM_NAME) final Paging paging,
-      @WebParam(name = ORDER_BY_PARAM_NAME) final OrderByEnum orderBy) {
+      @WebParam(name = ORDER_BY_PARAM_NAME) final OrderByEnum orderingProperty) {
     try {
-      return securedGenericSettingService.find(credentials, type, paging, orderBy);
+      return securedGenericSettingService.find(credentials, type, paging, orderingProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_SETTING_OPERATION_NAME, credentials, type, paging, orderingProperty));
     }
   }
 
@@ -104,6 +116,8 @@ public class SettingWebServiceImpl<T extends Setting> implements IGenericTypeWeb
       return securedGenericSettingService.merge(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(MERGE_SETTING_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -119,6 +133,8 @@ public class SettingWebServiceImpl<T extends Setting> implements IGenericTypeWeb
       return type;
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(PERSIST_SETTING_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -130,6 +146,8 @@ public class SettingWebServiceImpl<T extends Setting> implements IGenericTypeWeb
       return securedGenericSettingService.refresh(credentials, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REFRESH_SETTING_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -141,6 +159,8 @@ public class SettingWebServiceImpl<T extends Setting> implements IGenericTypeWeb
       securedGenericSettingService.remove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REMOVE_SETTING_OPERATION_NAME, credentials, type));
     }
   }
 }

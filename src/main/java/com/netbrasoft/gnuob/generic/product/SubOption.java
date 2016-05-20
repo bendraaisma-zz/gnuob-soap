@@ -20,6 +20,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSITION_COLU
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_OPTION_ENTITY_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_OPTION_TABLE_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VALUE_COLUMN_NAME;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -31,6 +32,8 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
 
@@ -92,5 +95,10 @@ public class SubOption extends AbstractType {
 
   public void setValue(final String value) {
     this.value = value;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

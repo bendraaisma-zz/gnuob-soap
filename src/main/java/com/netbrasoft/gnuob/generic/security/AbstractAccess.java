@@ -17,8 +17,12 @@ package com.netbrasoft.gnuob.generic.security;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ACCESS_ENTITY_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ACCESS_TABLE_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ACTIVE_COLUMN_NAME;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_ID;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_ID;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
@@ -32,6 +36,7 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.FilterDefs;
@@ -128,5 +133,10 @@ public abstract class AbstractAccess extends AbstractType implements IContextEle
 
   public void setSite(final Site site) {
     this.site = site;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).setExcludeFieldNames(SITE, USER, GROUP).toString();
   }
 }

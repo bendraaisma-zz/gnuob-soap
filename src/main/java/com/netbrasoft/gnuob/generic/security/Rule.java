@@ -20,11 +20,14 @@ import static com.netbrasoft.gnuob.generic.security.Rule.Operation.DELETE;
 import static com.netbrasoft.gnuob.generic.security.Rule.Operation.NONE;
 import static com.netbrasoft.gnuob.generic.security.Rule.Operation.READ;
 import static com.netbrasoft.gnuob.generic.security.Rule.Operation.UPDATE;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 @XmlRootElement(name = RULE_ENTITY_NAME)
 public enum Rule {
@@ -48,5 +51,10 @@ public enum Rule {
 
   public List<Operation> getOperations() {
     return operations;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

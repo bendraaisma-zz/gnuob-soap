@@ -28,6 +28,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PERSIST_CUSTO
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REFRESH_CUSTOMER_OPERATION_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_CUSTOMER_OPERATION_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
 
 import java.util.List;
 
@@ -37,6 +38,9 @@ import javax.interceptor.Interceptors;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.IGenericTypeWebService;
@@ -50,6 +54,8 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Stateless(name = CUSTOMER_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
 public class CustomerWebServiceImpl<T extends Customer> implements IGenericTypeWebService<T> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(CustomerWebServiceImpl.class);
 
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericCustomerService;
@@ -70,6 +76,8 @@ public class CustomerWebServiceImpl<T extends Customer> implements IGenericTypeW
       return securedGenericCustomerService.count(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(COUNT_CUSTOMER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -81,6 +89,8 @@ public class CustomerWebServiceImpl<T extends Customer> implements IGenericTypeW
       return securedGenericCustomerService.find(credentials, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_CUSTOMER_BY_ID_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -93,6 +103,8 @@ public class CustomerWebServiceImpl<T extends Customer> implements IGenericTypeW
       return securedGenericCustomerService.find(credentials, type, paging, orderingProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_CUSTOMER_OPERATION_NAME, credentials, type, paging, orderingProperty));
     }
   }
 
@@ -104,6 +116,8 @@ public class CustomerWebServiceImpl<T extends Customer> implements IGenericTypeW
       return securedGenericCustomerService.merge(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(MERGE_CUSTOMER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -115,6 +129,8 @@ public class CustomerWebServiceImpl<T extends Customer> implements IGenericTypeW
       return persistMergeCustomer(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(PERSIST_CUSTOMER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -134,6 +150,8 @@ public class CustomerWebServiceImpl<T extends Customer> implements IGenericTypeW
       return securedGenericCustomerService.refresh(credentials, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REFRESH_CUSTOMER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -145,6 +163,8 @@ public class CustomerWebServiceImpl<T extends Customer> implements IGenericTypeW
       securedGenericCustomerService.remove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REMOVE_CUSTOMER_OPERATION_NAME, credentials, type));
     }
   }
 }

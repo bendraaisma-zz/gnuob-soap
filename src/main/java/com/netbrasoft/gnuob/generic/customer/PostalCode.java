@@ -28,6 +28,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PLACE_NAME_CO
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSTAL_CODE_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSTAL_CODE_ENTITY_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSTAL_CODE_TABLE_NAME;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.math.BigDecimal;
 
@@ -40,6 +41,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
 
@@ -189,5 +192,10 @@ public class PostalCode extends AbstractType {
 
   public void setPostalCode(final String postalCode) {
     this.postalCode = postalCode;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

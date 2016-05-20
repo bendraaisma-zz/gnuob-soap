@@ -14,6 +14,7 @@
 
 package com.netbrasoft.gnuob.generic.category;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -29,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -174,5 +176,10 @@ public class SubCategoryTest {
     verify(spySubCategory, times(1)).isDetached();
     verify(mockContent, times(1)).isDetached();
     verify(mockSubCategory, times(1)).isDetached();
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spySubCategory, SHORT_PREFIX_STYLE), spySubCategory.toString());
   }
 }

@@ -1,5 +1,6 @@
 package com.netbrasoft.gnuob.generic.security;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -8,6 +9,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +28,7 @@ public class MetaDataTest {
 
   @Test
   public void testGetInstance() {
-    MetaData instance = MetaData.getInstance();
+    final MetaData instance = MetaData.getInstance();
     assertNotNull("Instance", instance);
     assertNull("User", instance.getUser());
     assertNull("Password", instance.getPassword());
@@ -35,7 +37,7 @@ public class MetaDataTest {
 
   @Test
   public void testGetInstanceByUserPasswordAndSite() {
-    MetaData instance = MetaData.getInstance("Site", "User", "Password");
+    final MetaData instance = MetaData.getInstance("Site", "User", "Password");
     assertNotNull("Instance", instance);
     assertEquals("User", "User", instance.getUser());
     assertEquals("Password", "Password", instance.getPassword());
@@ -79,5 +81,10 @@ public class MetaDataTest {
     spyMetaData.setUser("Folly words widow one downs few age every seven.");
     assertEquals("User", "Folly words widow one downs few age every seven.", spyMetaData.getUser());
     verify(spyMetaData, times(1)).setUser(anyString());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spyMetaData, SHORT_PREFIX_STYLE), spyMetaData.toString());
   }
 }

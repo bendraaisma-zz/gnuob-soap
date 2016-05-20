@@ -35,6 +35,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_AMOUNT_CO
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TERMINAL_ID_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TRANSACTION_ID_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TRANSACTION_TYPE_COLUMN_NAME;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -50,6 +51,8 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
 
@@ -276,5 +279,10 @@ public class Payment extends AbstractType {
 
   public void setTransactionType(final String transactionType) {
     this.transactionType = transactionType;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

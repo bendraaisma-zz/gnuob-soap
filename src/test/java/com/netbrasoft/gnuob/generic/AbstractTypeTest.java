@@ -14,6 +14,7 @@
 
 package com.netbrasoft.gnuob.generic;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -28,6 +29,7 @@ import static org.mockito.Mockito.verify;
 
 import java.sql.Timestamp;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -124,5 +126,10 @@ public class AbstractTypeTest {
     spyAbstractType.setVersion(1);
     assertEquals("Version", 1, spyAbstractType.getVersion());
     verify(spyAbstractType, times(1)).setVersion(anyInt());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spyAbstractType, SHORT_PREFIX_STYLE), spyAbstractType.toString());
   }
 }

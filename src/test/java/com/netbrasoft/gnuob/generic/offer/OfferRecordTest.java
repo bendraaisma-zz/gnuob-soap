@@ -14,6 +14,7 @@
 
 package com.netbrasoft.gnuob.generic.offer;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -34,6 +35,7 @@ import static org.mockito.internal.util.collections.Sets.newSet;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -651,5 +653,10 @@ public class OfferRecordTest {
     spyOfferRecord.setTax(BigDecimal.ZERO);
     assertEquals("Tax", BigDecimal.ZERO, spyOfferRecord.getTax());
     verify(spyOfferRecord, times(1)).setTax(any());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spyOfferRecord, SHORT_PREFIX_STYLE), spyOfferRecord.toString());
   }
 }

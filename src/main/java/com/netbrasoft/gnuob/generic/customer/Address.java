@@ -29,6 +29,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSTAL_CODE_C
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STATE_OR_PROVINCE_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STREET1_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STREET2_COLUMN_NAME;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -39,6 +40,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
 
@@ -199,5 +202,10 @@ public class Address extends AbstractType {
 
   public void setStreet2(final String street2) {
     this.street2 = street2;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

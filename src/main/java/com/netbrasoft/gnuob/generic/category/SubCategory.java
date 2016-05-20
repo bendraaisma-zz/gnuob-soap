@@ -29,6 +29,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_CATEGORY_
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_CATEGORY_TABLE_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 import static java.util.stream.Collectors.counting;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -51,6 +52,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -73,8 +75,8 @@ public class SubCategory extends AbstractType {
   private Set<SubCategory> subCategories;
 
   public SubCategory() {
-    contents = new LinkedHashSet<>();
-    subCategories = new LinkedHashSet<>();
+    contents = new LinkedHashSet<>(0);
+    subCategories = new LinkedHashSet<>(0);
   }
 
   @Override
@@ -176,5 +178,10 @@ public class SubCategory extends AbstractType {
 
   public void setSubCategories(final Set<SubCategory> subCategories) {
     this.subCategories = subCategories;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

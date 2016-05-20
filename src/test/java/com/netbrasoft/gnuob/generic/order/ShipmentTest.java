@@ -14,6 +14,7 @@
 
 package com.netbrasoft.gnuob.generic.order;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -27,6 +28,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -127,5 +129,10 @@ public class ShipmentTest {
     spyShipment.setShipmentType(" ");
     assertEquals("ShipmentType", "NOT_SPECIFIED", spyShipment.getShipmentType());
     verify(spyShipment, times(1)).setShipmentType(anyString());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spyShipment, SHORT_PREFIX_STYLE), spyShipment.toString());
   }
 }

@@ -14,6 +14,7 @@
 
 package com.netbrasoft.gnuob.generic.product;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -26,6 +27,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -118,5 +120,10 @@ public class SubOptionTest {
     spySubOption.setValue("Folly words widow one downs few age every seven.");
     assertEquals("Value", "Folly words widow one downs few age every seven.", spySubOption.getValue());
     verify(spySubOption, times(1)).setValue(any());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spySubOption, SHORT_PREFIX_STYLE), spySubOption.toString());
   }
 }

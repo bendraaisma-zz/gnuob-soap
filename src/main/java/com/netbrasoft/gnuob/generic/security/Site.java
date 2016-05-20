@@ -54,7 +54,7 @@ public class Site extends AbstractAccess {
     return new Site();
   }
 
-  public static Site getInstance(String name) {
+  public static Site getInstance(final String name) {
     return new Site(name);
   }
 

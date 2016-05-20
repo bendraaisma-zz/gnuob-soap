@@ -71,8 +71,8 @@ public class Category extends AbstractAccess {
   private Set<SubCategory> subCategories;
 
   public Category() {
-    contents = new LinkedHashSet<>();
-    subCategories = new LinkedHashSet<>();
+    contents = new LinkedHashSet<>(0);
+    subCategories = new LinkedHashSet<>(0);
   }
 
   @Override

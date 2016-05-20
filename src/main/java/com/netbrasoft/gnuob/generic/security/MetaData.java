@@ -18,10 +18,13 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.META_DATA_ENT
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_PARAM_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_PARAM_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_PARAM_NAME;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 @XmlRootElement(name = META_DATA_ENTITY_NAME)
 @XmlType(propOrder = {SITE_PARAM_NAME, USER_PARAM_NAME, PASSWORD_PARAM_NAME})
@@ -74,5 +77,10 @@ public class MetaData {
 
   public void setUser(final String user) {
     this.user = user;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

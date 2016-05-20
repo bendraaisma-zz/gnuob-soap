@@ -89,7 +89,7 @@ public class Offer extends AbstractAccess {
   private BigDecimal taxTotal;
 
   public Offer() {
-    records = new HashSet<>();
+    records = new HashSet<>(0);
   }
 
   @Override

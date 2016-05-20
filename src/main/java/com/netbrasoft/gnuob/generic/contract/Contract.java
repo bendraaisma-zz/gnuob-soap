@@ -60,8 +60,8 @@ public class Contract extends AbstractAccess {
   private Set<Order> orders;
 
   public Contract() {
-    offers = new HashSet<>();
-    orders = new HashSet<>();
+    offers = new HashSet<>(0);
+    orders = new HashSet<>(0);
   }
 
   @Override

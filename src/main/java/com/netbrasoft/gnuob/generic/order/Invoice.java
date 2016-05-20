@@ -25,6 +25,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSITION_ASC;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.START_POSITION_VALUE;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 import static java.util.stream.Collectors.counting;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -49,6 +50,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
 import com.netbrasoft.gnuob.generic.customer.Address;
@@ -67,7 +69,7 @@ public class Invoice extends AbstractType {
   private Set<Payment> payments;
 
   public Invoice() {
-    payments = new HashSet<>();
+    payments = new HashSet<>(0);
   }
 
   @Override
@@ -142,5 +144,10 @@ public class Invoice extends AbstractType {
 
   public void setPayments(final Set<Payment> payments) {
     this.payments = payments;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

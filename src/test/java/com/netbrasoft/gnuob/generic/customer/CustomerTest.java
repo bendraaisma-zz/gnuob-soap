@@ -14,6 +14,10 @@
 
 package com.netbrasoft.gnuob.generic.customer;
 
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -29,6 +33,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.Date;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -341,5 +346,11 @@ public class CustomerTest {
     spyCustomer.setTaxIdType("Folly words widow one downs few age every seven.");
     assertEquals("TaxIdType", "Folly words widow one downs few age every seven.", spyCustomer.getTaxIdType());
     verify(spyCustomer, times(1)).setTaxIdType(anyString());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(new ReflectionToStringBuilder(spyCustomer, SHORT_PREFIX_STYLE).setExcludeFieldNames(SITE, USER, GROUP)
+        .toString(), spyCustomer.toString());
   }
 }

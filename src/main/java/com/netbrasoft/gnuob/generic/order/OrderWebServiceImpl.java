@@ -29,6 +29,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PERSIST_ORDER
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REFRESH_ORDER_OPERATION_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_ORDER_OPERATION_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
 
 import java.util.List;
 
@@ -41,6 +42,8 @@ import javax.jws.WebService;
 
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.IGenericTypeWebService;
@@ -57,6 +60,8 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Stateless(name = ORDER_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
 public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebService<T> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(OrderWebServiceImpl.class);
 
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericOrderService;
@@ -87,6 +92,8 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
       return processCount(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(COUNT_ORDER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -127,6 +134,8 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
       return processFind(credentials, type, paging, orderingProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_ORDER_OPERATION_NAME, credentials, type, paging, orderingProperty));
     }
   }
 
@@ -158,6 +167,8 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
       return processFindById(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_ORDER_BY_ID_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -175,6 +186,8 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
       return securedGenericOrderService.merge(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(MERGE_ORDER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -207,6 +220,8 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
       return processPersist(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(PERSIST_ORDER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -231,6 +246,8 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
       return processRefresh(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REFRESH_ORDER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -247,6 +264,8 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
       processRemove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REMOVE_ORDER_OPERATION_NAME, credentials, type));
     }
   }
 

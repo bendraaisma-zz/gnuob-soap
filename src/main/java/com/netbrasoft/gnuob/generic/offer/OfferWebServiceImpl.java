@@ -29,6 +29,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PERSIST_OFFER
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REFRESH_OFFER_OPERATION_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_OFFER_OPERATION_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
 
 import java.util.List;
 
@@ -41,6 +42,8 @@ import javax.jws.WebService;
 
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.IGenericTypeWebService;
@@ -57,6 +60,8 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Stateless(name = OFFER_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
 public class OfferWebServiceImpl<T extends Offer> implements IGenericTypeWebService<T> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(OfferWebServiceImpl.class);
 
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericOfferService;
@@ -87,6 +92,8 @@ public class OfferWebServiceImpl<T extends Offer> implements IGenericTypeWebServ
       return processCount(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(COUNT_OFFER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -126,11 +133,13 @@ public class OfferWebServiceImpl<T extends Offer> implements IGenericTypeWebServ
   @WebMethod(operationName = FIND_OFFER_OPERATION_NAME)
   public List<T> find(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = OFFER_PARAM_NAME) final T type, @WebParam(name = PAGING_PARAM_NAME) final Paging paging,
-      @WebParam(name = ORDER_BY_PARAM_NAME) final OrderByEnum orderBy) {
+      @WebParam(name = ORDER_BY_PARAM_NAME) final OrderByEnum orderingProperty) {
     try {
-      return processFind(credentials, type, paging, orderBy);
+      return processFind(credentials, type, paging, orderingProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_OFFER_OPERATION_NAME, credentials, type, paging, orderingProperty));
     }
   }
 
@@ -162,6 +171,8 @@ public class OfferWebServiceImpl<T extends Offer> implements IGenericTypeWebServ
       return processFindById(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_OFFER_BY_ID_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -178,6 +189,8 @@ public class OfferWebServiceImpl<T extends Offer> implements IGenericTypeWebServ
       return processMerge(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(MERGE_OFFER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -215,6 +228,8 @@ public class OfferWebServiceImpl<T extends Offer> implements IGenericTypeWebServ
       return processPersist(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(PERSIST_OFFER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -239,6 +254,8 @@ public class OfferWebServiceImpl<T extends Offer> implements IGenericTypeWebServ
       return processRefresh(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REFRESH_OFFER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -255,6 +272,8 @@ public class OfferWebServiceImpl<T extends Offer> implements IGenericTypeWebServ
       processRemove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REMOVE_OFFER_OPERATION_NAME, credentials, type));
     }
   }
 

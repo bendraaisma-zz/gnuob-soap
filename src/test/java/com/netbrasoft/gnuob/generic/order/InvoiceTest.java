@@ -14,6 +14,7 @@
 
 package com.netbrasoft.gnuob.generic.order;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -179,5 +181,10 @@ public class InvoiceTest {
     spyInvoice.setPayments(null);
     assertNull("Payments", spyInvoice.getPayments());
     verify(spyInvoice, times(1)).setPayments(null);
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spyInvoice, SHORT_PREFIX_STYLE), spyInvoice.toString());
   }
 }

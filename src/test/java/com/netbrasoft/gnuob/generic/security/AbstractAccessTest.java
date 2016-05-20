@@ -14,6 +14,11 @@
 
 package com.netbrasoft.gnuob.generic.security;
 
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.mock;
@@ -21,6 +26,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -112,5 +118,11 @@ public class AbstractAccessTest {
     spyAbstractAccess.setSite(null);
     assertNull("Site", spyAbstractAccess.getSite());
     verify(spyAbstractAccess, times(1)).setSite(null);
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(new ReflectionToStringBuilder(spyAbstractAccess, SHORT_PREFIX_STYLE)
+        .setExcludeFieldNames(SITE, USER, GROUP).toString(), spyAbstractAccess.toString());
   }
 }

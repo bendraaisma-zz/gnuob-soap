@@ -19,6 +19,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OTHERS_COLUMN
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OWNER_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PERMISSION_ENTITY_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PERMISSION_TABLE_NAME;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -31,6 +32,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
 
@@ -109,5 +112,10 @@ public class Permission extends AbstractType {
 
   public void setOwner(final Rule owner) {
     this.owner = owner;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

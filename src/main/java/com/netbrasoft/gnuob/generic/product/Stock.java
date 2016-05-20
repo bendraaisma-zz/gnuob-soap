@@ -20,6 +20,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.QUANTITY_COLU
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STOCK_ENTITY_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STOCK_PARAM_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.STOCK_TABLE_NAME;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.math.BigInteger;
 
@@ -35,6 +36,8 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
 
@@ -96,5 +99,10 @@ public class Stock extends AbstractType {
 
   public void setQuantity(final BigInteger quantity) {
     this.quantity = quantity;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

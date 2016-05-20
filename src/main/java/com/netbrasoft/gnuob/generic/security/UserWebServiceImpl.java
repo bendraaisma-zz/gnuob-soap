@@ -28,6 +28,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_USER_O
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_PARAM_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_WEB_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
 
 import java.util.List;
 import java.util.Set;
@@ -39,6 +40,9 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.IGenericTypeWebService;
 import com.netbrasoft.gnuob.generic.OrderByEnum;
@@ -49,6 +53,8 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Stateless(name = USER_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
 public class UserWebServiceImpl<T extends User> implements IGenericTypeWebService<T> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserWebServiceImpl.class);
 
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericUserService;
@@ -79,6 +85,8 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
       return processCount(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(COUNT_USER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -108,6 +116,8 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
       return processFindById(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_USER_BY_ID_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -126,6 +136,8 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
       return processFind(credentials, type, paging, orderingProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_USER_OPERATION_NAME, credentials, type, paging, orderingProperty));
     }
   }
 
@@ -144,6 +156,8 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
       return processMerge(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(MERGE_USER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -175,6 +189,8 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
       return processPersist(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(PERSIST_USER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -200,6 +216,8 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
       return processRefresh(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REFRESH_USER_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -217,6 +235,8 @@ public class UserWebServiceImpl<T extends User> implements IGenericTypeWebServic
       processRemove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REMOVE_USER_OPERATION_NAME, credentials, type));
     }
   }
 

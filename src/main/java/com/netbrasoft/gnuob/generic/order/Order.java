@@ -127,7 +127,7 @@ public class Order extends AbstractAccess {
   private String transactionId;
 
   public Order() {
-    records = new HashSet<>();
+    records = new HashSet<>(0);
   }
 
   @Override

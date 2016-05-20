@@ -28,6 +28,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PRODUCT_WEB_S
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REFRESH_PRODUCT_OPERATION_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_PRODUCT_OPERATION_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,8 @@ import javax.jws.WebService;
 
 import org.hibernate.criterion.Example;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.IGenericTypeWebService;
@@ -58,6 +61,8 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Stateless(name = PRODUCT_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
 public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWebService<T> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(ProductWebServiceImpl.class);
 
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<Content> securedGenericContentService;
@@ -83,6 +88,8 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
       return processCount(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(COUNT_PRODUCT_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -140,6 +147,8 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
       return processFind(credentials, type, paging, orderingProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_PRODUCT_OPERATION_NAME, credentials, type, paging, orderingProperty));
     }
   }
 
@@ -172,6 +181,8 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
       return processFindById(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_PRODUCT_BY_ID_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -188,6 +199,8 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
       return processMerge(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(MERGE_PRODUCT_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -225,6 +238,8 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
       return processPersist(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(PERSIST_PRODUCT_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -249,6 +264,8 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
       return processRefresh(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REFRESH_PRODUCT_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -265,6 +282,8 @@ public class ProductWebServiceImpl<T extends Product> implements IGenericTypeWeb
       processRemove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REMOVE_PRODUCT_OPERATION_NAME, credentials, type));
     }
   }
 

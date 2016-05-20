@@ -14,6 +14,7 @@
 
 package com.netbrasoft.gnuob.generic.customer;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -26,6 +27,7 @@ import static org.mockito.Mockito.verify;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -220,5 +222,10 @@ public class PostalCodeTest {
     spyPostalCode.setPostalCode("Folly words widow one downs few age every seven.");
     assertEquals("PostalCode", "Folly words widow one downs few age every seven.", spyPostalCode.getPostalCode());
     verify(spyPostalCode, times(1)).setPostalCode(anyString());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spyPostalCode, SHORT_PREFIX_STYLE), spyPostalCode.toString());
   }
 }

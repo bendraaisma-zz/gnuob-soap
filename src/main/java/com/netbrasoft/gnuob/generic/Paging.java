@@ -15,9 +15,12 @@
 package com.netbrasoft.gnuob.generic;
 
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAGING_NAME;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @XmlRootElement(name = PAGING_NAME)
 public class Paging {
@@ -54,5 +57,10 @@ public class Paging {
 
   public void setMax(final int max) {
     this.max = max;
+  }
+
+  @Override
+  public String toString() {
+    return ToStringBuilder.reflectionToString(this, SHORT_PREFIX_STYLE);
   }
 }

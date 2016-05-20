@@ -14,6 +14,7 @@
 
 package com.netbrasoft.gnuob.generic.customer;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -227,5 +229,10 @@ public class AddressTest {
     spyAddress.setStreet2("Folly words widow one downs few age every seven.");
     assertEquals("Street2", "Folly words widow one downs few age every seven.", spyAddress.getStreet2());
     verify(spyAddress, times(1)).setStreet2(anyString());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spyAddress, SHORT_PREFIX_STYLE), spyAddress.toString());
   }
 }

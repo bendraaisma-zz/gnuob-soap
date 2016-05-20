@@ -1,5 +1,6 @@
 package com.netbrasoft.gnuob.generic;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.anyInt;
@@ -7,6 +8,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,8 +46,13 @@ public class PagingTest {
 
   @Test
   public void testSetMax() {
-    spyPaging.setMax(Integer.MAX_VALUE);;
+    spyPaging.setMax(Integer.MAX_VALUE);
     assertEquals("Max", Integer.MAX_VALUE, spyPaging.getMax());
     verify(spyPaging, times(1)).setMax(anyInt());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spyPaging, SHORT_PREFIX_STYLE), spyPaging.toString());
   }
 }

@@ -14,7 +14,11 @@
 
 package com.netbrasoft.gnuob.generic;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+
 import javax.xml.bind.annotation.XmlType;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 @XmlType(name = "orderBy")
 public enum OrderByEnum {
@@ -84,5 +88,10 @@ public enum OrderByEnum {
 
   public OrderEnum getOrder() {
     return order;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

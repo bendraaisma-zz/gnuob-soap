@@ -28,6 +28,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSTAL_CODE_W
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REFRESH_POSTAL_CODE_OPERATION_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_POSTAL_CODE_OPERATION_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
+import static com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
 
 import java.util.List;
 
@@ -37,6 +38,9 @@ import javax.interceptor.Interceptors;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.IGenericTypeWebService;
@@ -50,6 +54,8 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Stateless(name = POSTAL_CODE_WEB_SERVICE_IMPL_NAME)
 @Interceptors(value = {AppSimonInterceptor.class})
 public class PostalCodeWebServiceImpl<T extends PostalCode> implements IGenericTypeWebService<T> {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(PostalCodeWebServiceImpl.class);
 
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericPostalCodeService;
@@ -70,6 +76,8 @@ public class PostalCodeWebServiceImpl<T extends PostalCode> implements IGenericT
       return securedGenericPostalCodeService.count(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(COUNT_POSTAL_CODE_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -81,6 +89,8 @@ public class PostalCodeWebServiceImpl<T extends PostalCode> implements IGenericT
       return securedGenericPostalCodeService.find(credentials, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_POSTAL_CODE_BY_ID_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -93,6 +103,8 @@ public class PostalCodeWebServiceImpl<T extends PostalCode> implements IGenericT
       return securedGenericPostalCodeService.find(credentials, type, paging, orderingProperty);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(FIND_POSTAL_CODE_OPERATION_NAME, credentials, type, paging, orderingProperty));
     }
   }
 
@@ -104,6 +116,8 @@ public class PostalCodeWebServiceImpl<T extends PostalCode> implements IGenericT
       return securedGenericPostalCodeService.merge(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(COUNT_POSTAL_CODE_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -115,6 +129,8 @@ public class PostalCodeWebServiceImpl<T extends PostalCode> implements IGenericT
       return persistMergePostalCode(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(PERSIST_POSTAL_CODE_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -134,6 +150,8 @@ public class PostalCodeWebServiceImpl<T extends PostalCode> implements IGenericT
       return securedGenericPostalCodeService.refresh(credentials, type, type.getId());
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REFRESH_POSTAL_CODE_OPERATION_NAME, credentials, type));
     }
   }
 
@@ -145,6 +163,8 @@ public class PostalCodeWebServiceImpl<T extends PostalCode> implements IGenericT
       securedGenericPostalCodeService.remove(credentials, type);
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+    } finally {
+      LOGGER.debug(createMessage(REMOVE_POSTAL_CODE_OPERATION_NAME, credentials, type));
     }
   }
 }

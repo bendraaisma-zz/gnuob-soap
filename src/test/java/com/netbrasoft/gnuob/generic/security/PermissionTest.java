@@ -14,6 +14,7 @@
 
 package com.netbrasoft.gnuob.generic.security;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -101,5 +103,10 @@ public class PermissionTest {
     spyPermission.setOwner(null);
     assertNotNull("Owner", spyPermission.getOwner());
     verify(spyPermission, times(1)).setOwner(null);
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spyPermission, SHORT_PREFIX_STYLE), spyPermission.toString());
   }
 }

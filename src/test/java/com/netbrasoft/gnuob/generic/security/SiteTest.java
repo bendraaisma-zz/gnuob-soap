@@ -14,6 +14,10 @@
 
 package com.netbrasoft.gnuob.generic.security;
 
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -24,6 +28,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +61,7 @@ public class SiteTest {
 
   @Test
   public void testGetInstance() {
-    Site instance = Site.getInstance();
+    final Site instance = Site.getInstance();
     assertNotNull("Instance", instance);
     assertNull("Instance", instance.getName());
     assertNull("Desciption", instance.getDescription());
@@ -64,7 +69,7 @@ public class SiteTest {
 
   @Test
   public void testGetInstanceByName() {
-    Site instance = Site.getInstance("Name");
+    final Site instance = Site.getInstance("Name");
     assertNotNull("Instance", instance);
     assertEquals("Name", "Name", instance.getName());
     assertNull("Desciption", instance.getDescription());
@@ -113,5 +118,12 @@ public class SiteTest {
     spySite.setId(0L);
     assertTrue("Detached", spySite.isDetached());
     verify(spySite, times(1)).isDetached();
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(
+        new ReflectionToStringBuilder(spySite, SHORT_PREFIX_STYLE).setExcludeFieldNames(SITE, USER, GROUP).toString(),
+        spySite.toString());
   }
 }

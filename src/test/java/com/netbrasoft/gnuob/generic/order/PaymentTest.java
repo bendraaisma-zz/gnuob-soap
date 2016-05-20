@@ -14,6 +14,7 @@
 
 package com.netbrasoft.gnuob.generic.order;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -30,6 +31,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -320,5 +322,10 @@ public class PaymentTest {
     assertEquals("TransactionType", "Folly words widow one downs few age every seven.",
         spyPayment.getTransactionType());
     verify(spyPayment, times(1)).setTransactionType(anyString());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spyPayment, SHORT_PREFIX_STYLE), spyPayment.toString());
   }
 }

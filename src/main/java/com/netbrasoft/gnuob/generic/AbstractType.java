@@ -19,6 +19,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ID_COLUMN_NAM
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MODIFICATION_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VERSION_COLUMN_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -35,6 +36,8 @@ import javax.persistence.Transient;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
+
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 @Cacheable(value = false)
 @MappedSuperclass
@@ -109,5 +112,10 @@ public abstract class AbstractType implements Serializable, ICallback {
 
   public void setVersion(final int version) {
     this.version = version;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

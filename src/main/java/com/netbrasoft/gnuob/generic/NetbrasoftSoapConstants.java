@@ -16,6 +16,9 @@ package com.netbrasoft.gnuob.generic;
 
 public final class NetbrasoftSoapConstants {
 
+  public static final String SITE = "site";
+  public static final String GROUP = "group";
+  public static final String USER = "user";
   public static final String ACCESS_COLUMN_NAME = "ACCESS";
   public static final String ACCESS_ENTITY_NAME = "Access";
   public static final String ACCESS_TABLE_NAME = "GNUOB_ACCESS";

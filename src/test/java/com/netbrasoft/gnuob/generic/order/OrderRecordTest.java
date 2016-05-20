@@ -14,6 +14,7 @@
 
 package com.netbrasoft.gnuob.generic.order;
 
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -35,6 +36,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -659,5 +661,10 @@ public class OrderRecordTest {
     spyOrderRecord.setTax(BigDecimal.ZERO);
     assertEquals("Tax", BigDecimal.ZERO, spyOrderRecord.getTax());
     verify(spyOrderRecord, times(1)).setTax(any());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(ToStringBuilder.reflectionToString(spyOrderRecord, SHORT_PREFIX_STYLE), spyOrderRecord.toString());
   }
 }

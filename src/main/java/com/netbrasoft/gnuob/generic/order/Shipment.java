@@ -18,6 +18,7 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NOT_SPECIFIED
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_ENTITY_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_TABLE_NAME;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_TYPE_COLUMN_NAME;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.util.Arrays;
 
@@ -34,6 +35,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import com.netbrasoft.gnuob.generic.AbstractType;
 import com.netbrasoft.gnuob.generic.customer.Address;
@@ -84,5 +86,10 @@ public class Shipment extends AbstractType {
 
   public void setShipmentType(final String shipmentType) {
     this.shipmentType = shipmentType;
+  }
+
+  @Override
+  public String toString() {
+    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
   }
 }

@@ -114,9 +114,9 @@ public class Product extends AbstractAccess {
   private BigDecimal tax;
 
   public Product() {
-    contents = new HashSet<>();
-    options = new HashSet<>();
-    subCategories = new LinkedHashSet<>();
+    contents = new HashSet<>(0);
+    options = new HashSet<>(0);
+    subCategories = new LinkedHashSet<>(0);
   }
 
   @Override

@@ -14,6 +14,10 @@
 
 package com.netbrasoft.gnuob.generic.product;
 
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -32,6 +36,7 @@ import static org.mockito.internal.util.collections.Sets.newSet;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -547,5 +552,11 @@ public class ProductTest {
     spyProduct.setTax(BigDecimal.ZERO);
     assertEquals("Tax", BigDecimal.ZERO, spyProduct.getTax());
     verify(spyProduct, times(1)).setTax(any());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(new ReflectionToStringBuilder(spyProduct, SHORT_PREFIX_STYLE).setExcludeFieldNames(SITE, USER, GROUP)
+        .toString(), spyProduct.toString());
   }
 }

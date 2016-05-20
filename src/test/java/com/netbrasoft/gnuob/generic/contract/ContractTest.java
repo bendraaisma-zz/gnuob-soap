@@ -14,6 +14,10 @@
 
 package com.netbrasoft.gnuob.generic.contract;
 
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -29,6 +33,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -168,5 +173,11 @@ public class ContractTest {
     spyContract.setOrders(null);
     assertNull("Orders", spyContract.getOrders());
     verify(spyContract, times(1)).setOrders(null);
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(new ReflectionToStringBuilder(spyContract, SHORT_PREFIX_STYLE).setExcludeFieldNames(SITE, USER, GROUP)
+        .toString(), spyContract.toString());
   }
 }

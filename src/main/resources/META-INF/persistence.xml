@@ -19,4 +19,14 @@
             value="true" />
       </properties>
    </persistence-unit>
+   <persistence-unit name="secondary">
+      <properties>
+         <property
+            name="hibernate.cache.use_second_level_cache"
+            value="false" />
+         <property
+            name="hibernate.dialect"
+            value="org.hibernate.dialect.MySQLDialect" />
+      </properties>
+   </persistence-unit>
 </persistence>

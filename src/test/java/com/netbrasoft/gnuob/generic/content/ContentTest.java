@@ -14,6 +14,10 @@
 
 package com.netbrasoft.gnuob.generic.content;
 
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
+import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -25,6 +29,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -123,5 +128,11 @@ public class ContentTest {
     spyContent.setPosition(Integer.MAX_VALUE);
     assertEquals("Position", Integer.MAX_VALUE, spyContent.getPosition().intValue());
     verify(spyContent, times(1)).setPosition(any());
+  }
+
+  @Test
+  public void testToString() {
+    assertEquals(new ReflectionToStringBuilder(spyContent, SHORT_PREFIX_STYLE).setExcludeFieldNames(SITE, USER, GROUP)
+        .toString(), spyContent.toString());
   }
 }
