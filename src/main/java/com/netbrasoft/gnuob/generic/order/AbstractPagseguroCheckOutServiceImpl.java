@@ -14,14 +14,9 @@
 
 package com.netbrasoft.gnuob.generic.order;
 
-import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.EMAIL_PROPERTY;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_SITE_NOTIFICATION_PROPERTY_VALUE;
 import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_SITE_REDIRECT_PROPERTY_VALUE;
-import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE;
-import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PRODUCTION_TOKEN_PROPERTY;
-import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SANDBOX_TOKEN_PROPERTY;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Date;
@@ -30,15 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
 import com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import com.netbrasoft.gnuob.generic.security.OperationAccess;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
 
-import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Address;
 import br.com.uol.pagseguro.domain.Item;
 import br.com.uol.pagseguro.domain.Sender;
@@ -48,27 +38,17 @@ import br.com.uol.pagseguro.domain.checkout.Checkout;
 import br.com.uol.pagseguro.enums.Currency;
 import br.com.uol.pagseguro.enums.ShippingType;
 import br.com.uol.pagseguro.exception.PagSeguroServiceException;
-import br.com.uol.pagseguro.properties.PagSeguroConfig;
-import br.com.uol.pagseguro.service.NotificationService;
-import br.com.uol.pagseguro.service.TransactionSearchService;
-import br.com.uol.pagseguro.service.checkout.CheckoutService;
 
 public abstract class AbstractPagseguroCheckOutServiceImpl<O extends Order> implements ICheckOutService<O> {
 
+  private final IPagseguroCheckOutService pagseguroCheckOutService;
+
   public AbstractPagseguroCheckOutServiceImpl() {
-    if (!PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE.equals(PRODUCTION_TOKEN_PROPERTY)) {
-      PagSeguroConfig.setProductionEnvironment();
-    }
+    this(new PagseguroCheckOutServiceImp());
   }
 
-  private String createCheckoutRequest(final Checkout checkout)
-      throws PagSeguroServiceException, ParserConfigurationException, SAXException, IOException {
-    final String email = EMAIL_PROPERTY;
-    final String productionToken = PRODUCTION_TOKEN_PROPERTY;
-    final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
-
-    return CheckoutService.createCheckoutRequest(new AccountCredentials(email, productionToken, sandboxToken), checkout,
-        false);
+  protected AbstractPagseguroCheckOutServiceImpl(final IPagseguroCheckOutService pagseguroCheckOutService) {
+    this.pagseguroCheckOutService = pagseguroCheckOutService;
   }
 
   private Address doAddress(final com.netbrasoft.gnuob.generic.customer.Address address) {
@@ -77,7 +57,7 @@ public abstract class AbstractPagseguroCheckOutServiceImpl<O extends Order> impl
     addressType.setStreet(address.getStreet1());
     addressType.setComplement(address.getComplement());
     addressType.setCountry(address.getCountry());
-    address.setDistrict(address.getDistrict());
+    addressType.setDistrict(address.getDistrict());
     addressType.setNumber(address.getNumber());
     addressType.setPostalCode(address.getPostalCode());
     addressType.setState(address.getStateOrProvince());
@@ -121,9 +101,9 @@ public abstract class AbstractPagseguroCheckOutServiceImpl<O extends Order> impl
 
     try {
       // Do checkout call.
-      final String response = createCheckoutRequest(checkout);
+      final String response = pagseguroCheckOutService.createCheckoutRequest(checkout, false);
       order.setToken(response.split("code=")[1]);
-    } catch (PagSeguroServiceException | ParserConfigurationException | SAXException | IOException e) {
+    } catch (final PagSeguroServiceException e) {
       throw new GNUOpenBusinessServiceException("Exception from Pagseguro Checkout, please try again.", e);
     }
   }
@@ -132,7 +112,7 @@ public abstract class AbstractPagseguroCheckOutServiceImpl<O extends Order> impl
   @OperationAccess(operation = Operation.NONE)
   public void doCheckoutDetails(final O order) {
     try {
-      final Transaction transaction = searchByOrderTransactionId(order);
+      final Transaction transaction = pagseguroCheckOutService.searchByCode(order.getTransactionId());
 
       // Information about the payer.
       doSender(order, transaction.getSender());
@@ -153,7 +133,7 @@ public abstract class AbstractPagseguroCheckOutServiceImpl<O extends Order> impl
   @OperationAccess(operation = Operation.NONE)
   public void doCheckoutPayment(final O order) {
     try {
-      final Transaction transaction = searchByOrderTransactionId(order);
+      final Transaction transaction = pagseguroCheckOutService.searchByCode(order.getTransactionId());
 
       // Information about the payment.
       order.getInvoice().getPayments().add(doPaymentInfo(transaction));
@@ -173,7 +153,7 @@ public abstract class AbstractPagseguroCheckOutServiceImpl<O extends Order> impl
     item.setDescription(orderRecord.getDescription());
     item.setId(orderRecord.getOrderRecordId());
     item.setQuantity(orderRecord.getQuantity().intValue());
-    item.setShippingCost(orderRecord.getShippingCost());
+    item.setShippingCost(orderRecord.getShippingCost().setScale(2));
     item.setWeight(orderRecord.getItemWeight().longValue());
     return item;
   }
@@ -200,7 +180,7 @@ public abstract class AbstractPagseguroCheckOutServiceImpl<O extends Order> impl
   @OperationAccess(operation = Operation.NONE)
   public O doNotification(final O order) {
     try {
-      final Transaction transaction = searchByOrderNotificationCode(order);
+      final Transaction transaction = pagseguroCheckOutService.checkTransaction(order.getNotificationId());
 
       // Information about the order and transaction.
       order.setTransactionId(transaction.getCode());
@@ -313,7 +293,7 @@ public abstract class AbstractPagseguroCheckOutServiceImpl<O extends Order> impl
   @OperationAccess(operation = Operation.NONE)
   public void doTransactionDetails(final O order) {
     try {
-      final Transaction transaction = searchByOrderTransactionId(order);
+      final Transaction transaction = pagseguroCheckOutService.searchByCode(order.getTransactionId());
 
       // Information about the payer.
       doSender(order, transaction.getSender());
@@ -332,23 +312,5 @@ public abstract class AbstractPagseguroCheckOutServiceImpl<O extends Order> impl
     } catch (final PagSeguroServiceException e) {
       throw new GNUOpenBusinessServiceException("Exception from Pagseguro Transaction Details, please try again.", e);
     }
-  }
-
-  private Transaction searchByOrderNotificationCode(final O order) throws PagSeguroServiceException {
-    final String email = EMAIL_PROPERTY;
-    final String productionToken = PRODUCTION_TOKEN_PROPERTY;
-    final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
-
-    return NotificationService.checkTransaction(new AccountCredentials(email, productionToken, sandboxToken),
-        order.getNotificationId());
-  }
-
-  private Transaction searchByOrderTransactionId(final O order) throws PagSeguroServiceException {
-    final String email = EMAIL_PROPERTY;
-    final String productionToken = PRODUCTION_TOKEN_PROPERTY;
-    final String sandboxToken = SANDBOX_TOKEN_PROPERTY;
-
-    return TransactionSearchService.searchByCode(new AccountCredentials(email, productionToken, sandboxToken),
-        order.getTransactionId());
   }
 }

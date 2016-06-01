@@ -38,7 +38,6 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.WebServiceRef;
 
-import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.headers.Header;
 import org.apache.cxf.jaxb.JAXBDataBinding;
@@ -94,6 +93,18 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
 
   @WebServiceRef(wsdlLocation = "https://www.paypalobjects.com/wsdl/PayPalSvc.wsdl")
   private PayPalAPIInterfaceService payPalAPIInterfaceService;
+  private PayPalAPIAAInterface palAPIAAInterface;
+  private PayPalAPIInterface palAPIInterface;
+
+  public AbstractPayPalExpressCheckOutServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
+
+  protected AbstractPayPalExpressCheckOutServiceImpl(final PayPalAPIAAInterface palAPIAAInterface,
+      final PayPalAPIInterface palAPIInterface) {
+    this.palAPIAAInterface = palAPIAAInterface;
+    this.palAPIInterface = palAPIInterface;
+  }
 
   private AddressType doAddress(final Address address) {
     final AddressType addressType = new AddressType();
@@ -102,7 +113,9 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
     addressType.setAddressOwner(AddressOwnerCodeType.PAY_PAL);
     addressType.setAddressStatus(AddressStatusCodeType.NONE);
     addressType.setCityName(address.getCityName());
-    addressType.setCountry(Enum.valueOf(CountryCodeType.class, address.getCountry()));
+    if (address.getCountry() != null) {
+      addressType.setCountry(Enum.valueOf(CountryCodeType.class, address.getCountry()));
+    }
     addressType.setCountryName(address.getCountryName());
     addressType.setExternalAddressID(String.valueOf(address.getId()));
     addressType.setInternationalName("International shipment address");
@@ -119,9 +132,7 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
 
   private void doAddressType(final Address address, final AddressType addressType) {
     address.setCityName(addressType.getCityName());
-    if (addressType.getCountry() != null) {
-      address.setCountry(addressType.getCountry().value());
-    }
+    address.setCountry(addressType.getCountry().value());
     address.setCountryName(addressType.getCountryName());
     address.setInternationalStateAndCity(addressType.getInternationalStateAndCity());
     address.setInternationalStreet(addressType.getInternationalStreet());
@@ -133,7 +144,7 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
   }
 
   private BigDecimal doBasicAmountType(final BasicAmountType basicAmountType) {
-    return basicAmountType == null ? BigDecimal.ZERO : new BigDecimal(basicAmountType.getValue());
+    return new BigDecimal(basicAmountType.getValue());
   }
 
   private BasicAmountType doBasicAmountType(final BigDecimal value) {
@@ -200,6 +211,7 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
     final GetExpressCheckoutDetailsResponseType getExpressCheckoutDetailsResponseType =
         getPayPalAPIAAInterface().getExpressCheckoutDetails(getExpressCheckoutDetailsReq);
 
+    // TODO make better error handling for this test.
     if (getExpressCheckoutDetailsResponseType.getAck() == AckCodeType.SUCCESS) {
 
       final GetExpressCheckoutDetailsResponseDetailsType getExpressCheckoutDetailsResponseDetailsType =
@@ -225,8 +237,9 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
       // Buyer's contact phone number.
       order.getContract().getCustomer().setContactPhone(getExpressCheckoutDetailsResponseDetailsType.getContactPhone());
 
-      // Information about the payment.
-      doPaymentDetailsTypes(order, getExpressCheckoutDetailsResponseDetailsType.getPaymentDetails().get(0));
+      // When implementing parallel payments, you can create up to 10 sets of payment details type
+      // parameter fields, each representing one payment you are hosting on your marketplace.
+      doPaymentDetailsTypes(order, getExpressCheckoutDetailsResponseDetailsType.getPaymentDetails().iterator().next());
 
       // Text entered by the buyer on the PayPal website if you set the
       // AllowNote field to 1 in SetExpressCheckout.
@@ -416,19 +429,17 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
     order.getContract().getCustomer().setMiddleName(payerInfo.getPayerName().getMiddleName());
     order.getContract().getCustomer().setLastName(payerInfo.getPayerName().getLastName());
     order.getContract().getCustomer().setSalutation(payerInfo.getPayerName().getSalutation());
-    if (payerInfo.getPayerCountry() != null) {
-      order.getContract().getCustomer().getAddress().setCountry(payerInfo.getPayerCountry().value());
-    }
+    /*
+     * if (payerInfo.getPayerCountry() != null) {
+     * order.getContract().getCustomer().getAddress().setCountry(payerInfo.getPayerCountry().value()
+     * ); }
+     */
     order.getContract().getCustomer().setPayerBusiness(payerInfo.getPayerBusiness());
-    if (payerInfo.getTaxIdDetails() != null) {
-      order.getContract().getCustomer().setTaxIdType(payerInfo.getTaxIdDetails().getTaxIdType());
-    }
-    if (payerInfo.getTaxIdDetails() != null) {
-      order.getContract().getCustomer().setTaxId(payerInfo.getTaxIdDetails().getTaxId());
-    }
+    order.getContract().getCustomer().setTaxIdType(payerInfo.getTaxIdDetails().getTaxIdType());
+    order.getContract().getCustomer().setTaxId(payerInfo.getTaxIdDetails().getTaxId());
     order.getContract().getCustomer().setContactPhone(payerInfo.getContactPhone());
 
-    doAddressType(order.getShipment().getAddress(), payerInfo.getAddress());
+    doAddressType(order.getContract().getCustomer().getAddress(), payerInfo.getAddress());
   }
 
   private PaymentDetailsItemType doPaymentDetailsItemType(final OrderRecord orderRecord) {
@@ -798,75 +809,72 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
   }
 
   private PayPalAPIAAInterface getPayPalAPIAAInterface() {
-    final PayPalAPIAAInterface port = payPalAPIInterfaceService.getPayPalAPIAA();
-    final Client client = ClientProxy.getClient(port);
-    final HTTPConduit http = (HTTPConduit) client.getConduit();
-    final HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
-    final UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
+    if (palAPIAAInterface == null) {
+      palAPIAAInterface = payPalAPIInterfaceService.getPayPalAPIAA();
+      final HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+      final UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
 
-    userIdPasswordType.setUsername(USERNAME_PROPERTY);
-    userIdPasswordType.setPassword(PASSWORD_PROPERTY);
-    userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
+      userIdPasswordType.setUsername(USERNAME_PROPERTY);
+      userIdPasswordType.setPassword(PASSWORD_PROPERTY);
+      userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
 
-    httpClientPolicy.setConnectionTimeout(36000);
-    httpClientPolicy.setAllowChunking(false);
-    httpClientPolicy.setReceiveTimeout(32000);
+      httpClientPolicy.setConnectionTimeout(36000);
+      httpClientPolicy.setAllowChunking(false);
+      httpClientPolicy.setReceiveTimeout(32000);
 
-    http.setClient(httpClientPolicy);
+      ((HTTPConduit) ClientProxy.getClient(palAPIAAInterface).getConduit()).setClient(httpClientPolicy);
 
-    final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
-    customSecurityHeaderType.setCredentials(userIdPasswordType);
+      final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
+      customSecurityHeaderType.setCredentials(userIdPasswordType);
 
-    final List<Header> headers = new ArrayList<>();
-    try {
-      final Header header = new Header(new QName("urn:ebay:api:PayPalAPI", "RequesterCredentials"),
-          customSecurityHeaderType, new JAXBDataBinding(CustomSecurityHeaderType.class));
-      headers.add(header);
-    } catch (final JAXBException e) {
-      throw new GNUOpenBusinessServiceException(
-          "Exception from Paypal Express Requester Credentials, please try again.", e);
+      final List<Header> headers = new ArrayList<>();
+      try {
+        final Header header = new Header(new QName("urn:ebay:api:PayPalAPI", "RequesterCredentials"),
+            customSecurityHeaderType, new JAXBDataBinding(CustomSecurityHeaderType.class));
+        headers.add(header);
+      } catch (final JAXBException e) {
+        throw new GNUOpenBusinessServiceException(
+            "Exception from Paypal Express Requester Credentials, please try again.", e);
+      }
+
+      ((BindingProvider) palAPIAAInterface).getRequestContext().put(Header.HEADER_LIST, headers);
+      ((BindingProvider) palAPIAAInterface).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+          SITE_PROPERTY);
     }
-
-    ((BindingProvider) port).getRequestContext().put(Header.HEADER_LIST, headers);
-
-    ((BindingProvider) port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, SITE_PROPERTY);
-
-    return port;
+    return palAPIAAInterface;
   }
 
   private PayPalAPIInterface getPayPalAPIInterface() {
-    final PayPalAPIInterface port = payPalAPIInterfaceService.getPayPalAPI();
-    final Client client = ClientProxy.getClient(port);
-    final HTTPConduit http = (HTTPConduit) client.getConduit();
-    final HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
-    final UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
+    if (palAPIInterface == null) {
+      palAPIInterface = payPalAPIInterfaceService.getPayPalAPI();
+      final HTTPClientPolicy httpClientPolicy = new HTTPClientPolicy();
+      httpClientPolicy.setConnectionTimeout(36000);
+      httpClientPolicy.setAllowChunking(false);
+      httpClientPolicy.setReceiveTimeout(32000);
 
-    userIdPasswordType.setUsername(USERNAME_PROPERTY);
-    userIdPasswordType.setPassword(PASSWORD_PROPERTY);
-    userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
+      ((HTTPConduit) ClientProxy.getClient(palAPIInterface).getConduit()).setClient(httpClientPolicy);
 
-    httpClientPolicy.setConnectionTimeout(36000);
-    httpClientPolicy.setAllowChunking(false);
-    httpClientPolicy.setReceiveTimeout(32000);
+      final UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
+      userIdPasswordType.setUsername(USERNAME_PROPERTY);
+      userIdPasswordType.setPassword(PASSWORD_PROPERTY);
+      userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
 
-    http.setClient(httpClientPolicy);
+      final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
+      customSecurityHeaderType.setCredentials(userIdPasswordType);
 
-    final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();
-    customSecurityHeaderType.setCredentials(userIdPasswordType);
+      final List<Header> headers = new ArrayList<>();
+      try {
+        headers.add(new Header(new QName("urn:ebay:api:PayPalAPI", "RequesterCredentials"), customSecurityHeaderType,
+            new JAXBDataBinding(CustomSecurityHeaderType.class)));
+      } catch (final JAXBException e) {
+        throw new GNUOpenBusinessServiceException(
+            "Exception from Paypal Express Requester Credentials, please try again.", e);
+      }
 
-    final List<Header> headers = new ArrayList<>();
-    try {
-      final Header header = new Header(new QName("urn:ebay:api:PayPalAPI", "RequesterCredentials"),
-          customSecurityHeaderType, new JAXBDataBinding(CustomSecurityHeaderType.class));
-      headers.add(header);
-    } catch (final JAXBException e) {
-      throw new GNUOpenBusinessServiceException(
-          "Exception from Paypal Express Requester Credentials, please try again.", e);
+      ((BindingProvider) palAPIInterface).getRequestContext().put(Header.HEADER_LIST, headers);
+      ((BindingProvider) palAPIInterface).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+          SITE_PROPERTY);
     }
-
-    ((BindingProvider) port).getRequestContext().put(Header.HEADER_LIST, headers);
-    ((BindingProvider) port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, SITE_PROPERTY);
-
-    return port;
+    return palAPIInterface;
   }
 }

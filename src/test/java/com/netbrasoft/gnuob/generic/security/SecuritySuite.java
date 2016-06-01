@@ -20,7 +20,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({AbstractAccessTest.class, GroupTest.class, GroupWebServiceImplTest.class, MetaDataTest.class,
-    PermissionTest.class, SiteTest.class, SiteWebServiceImplTest.class, UserTest.class, UserWebServiceImplTest.class})
+    PermissionTest.class, SiteTest.class, SiteWebServiceImplTest.class, UserTest.class, UserWebServiceImplTest.class,
+    SecuredPayPalExpressCheckOutServiceImplTest.class, SecuredPagseguroCheckOutServiceImplTest.class})
 public class SecuritySuite {
 
 }

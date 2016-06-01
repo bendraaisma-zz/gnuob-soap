@@ -24,11 +24,23 @@ import com.netbrasoft.gnuob.generic.order.Order;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
+import ebay.api.paypalapi.PayPalAPIAAInterface;
+import ebay.api.paypalapi.PayPalAPIInterface;
+
 @Stateless(name = SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME,
     mappedName = SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME)
 @Interceptors(value = {AccessControl.class, AppSimonInterceptor.class})
 public class SecuredPayPalExpressCheckOutServiceImpl<T extends Order>
     extends AbstractPayPalExpressCheckOutServiceImpl<T> implements ISecuredGenericTypeCheckOutService<T> {
+
+  public SecuredPayPalExpressCheckOutServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
+
+  SecuredPayPalExpressCheckOutServiceImpl(final PayPalAPIAAInterface palAPIAAInterface,
+      final PayPalAPIInterface palAPIInterface) {
+    super(palAPIAAInterface, palAPIInterface);
+  }
 
   @Override
   @OperationAccess(operation = Operation.UPDATE)

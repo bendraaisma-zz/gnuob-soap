@@ -46,7 +46,7 @@ import com.netbrasoft.gnuob.generic.content.contexts.ContextVisitorImpl;
 public class UserTest {
 
   @Rule
-  public ExpectedException expectedException = ExpectedException.none();
+  public final ExpectedException expectedException = ExpectedException.none();
   private Group mockGroup;
   private Site mockSite;
 

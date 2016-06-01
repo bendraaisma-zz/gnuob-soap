@@ -49,7 +49,7 @@ public class PagseguroCheckOutWebServiceImplTest {
   private ISecuredGenericTypeService<Customer> mockSecuredGenericCustomerService;
   private ISecuredGenericTypeService<Order> mockSecuredGenericOrderService;
   private ISecuredGenericTypeCheckOutService<Order> mockSecuredGenericTypeCheckOutService;
-  private ICheckOutWebService<Order> pagseguroCheckOutWebServiceImpl = new PagseguroCheckOutWebServiceImpl<Order>();
+  private ICheckOutWebService<Order> pagseguroCheckOutWebServiceImpl = new PagseguroCheckOutWebServiceImpl<>();
   private Order spyOrder;
 
   @SuppressWarnings(UNCHECKED_VALUE)

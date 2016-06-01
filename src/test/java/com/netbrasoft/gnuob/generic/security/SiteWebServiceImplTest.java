@@ -36,7 +36,6 @@ import com.netbrasoft.gnuob.generic.IGenericTypeWebService;
 import com.netbrasoft.gnuob.generic.OrderByEnum;
 import com.netbrasoft.gnuob.generic.Paging;
 
-
 public class SiteWebServiceImplTest {
 
   private IGenericTypeWebService<Site> siteWebServiceImpl = new SiteWebServiceImpl<>();

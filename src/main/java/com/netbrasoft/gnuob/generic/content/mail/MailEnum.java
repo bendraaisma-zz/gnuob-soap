@@ -44,6 +44,6 @@ public enum MailEnum {
   }
 
   public boolean isEnabled() {
-    return NO_MAIL != this;
+    return !NO_MAIL.equals(this);
   }
 }

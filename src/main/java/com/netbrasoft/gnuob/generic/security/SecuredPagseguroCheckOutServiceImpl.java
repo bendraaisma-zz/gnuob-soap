@@ -19,8 +19,9 @@ import static com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_PAGSE
 import javax.ejb.Stateless;
 import javax.interceptor.Interceptors;
 
-import com.netbrasoft.gnuob.generic.order.Order;
 import com.netbrasoft.gnuob.generic.order.AbstractPagseguroCheckOutServiceImpl;
+import com.netbrasoft.gnuob.generic.order.IPagseguroCheckOutService;
+import com.netbrasoft.gnuob.generic.order.Order;
 import com.netbrasoft.gnuob.generic.security.Rule.Operation;
 import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
@@ -29,6 +30,14 @@ import com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Interceptors(value = {AccessControl.class, AppSimonInterceptor.class})
 public class SecuredPagseguroCheckOutServiceImpl<T extends Order> extends AbstractPagseguroCheckOutServiceImpl<T>
     implements ISecuredGenericTypeCheckOutService<T> {
+
+  public SecuredPagseguroCheckOutServiceImpl() {
+    // This constructor will be used by the EBJ container.
+  }
+
+  SecuredPagseguroCheckOutServiceImpl(final IPagseguroCheckOutService pagseguroCheckOutService) {
+    super(pagseguroCheckOutService);
+  }
 
   @Override
   @OperationAccess(operation = Operation.UPDATE)

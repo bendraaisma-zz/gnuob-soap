@@ -427,7 +427,7 @@ public final class NetbrasoftSoapConstants {
   public static final String VALUE_COLUMN_NAME = "VALUE";
   public static final String VELOCITY_CONTENT_RESOURCE_LOADER = "Velocity Content Resource Loader";
   public static final String VERSION_COLUMN_NAME = "VERSION";
-  public static final String VERSION_PROPERTY = System.getProperty("paypal.version", "121.0");
+  public static final String VERSION_PROPERTY = System.getProperty("paypal.version", "204.0");
   public static final int ZERO = 0;
 
   private NetbrasoftSoapConstants() {}
