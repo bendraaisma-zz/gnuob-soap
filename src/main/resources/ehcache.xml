@@ -68,7 +68,7 @@
       </terracotta>
    </cache>
    <cache
-      name="gnuob-soap.war#primary.com.netbrasoft.gnuob.generic.security.AbstractAccess"
+      name="gnuob-soap.war#primary.br.com.netbrasoft.gnuob.generic.security.AbstractAccess"
       maxElementsInMemory="1000"
       maxElementsOnDisk="10000"
       eternal="false"
@@ -85,7 +85,7 @@
       </terracotta>
    </cache>
    <cache
-      name="gnuob-soap.war#primary.com.netbrasoft.gnuob.generic.category.SubCategory"
+      name="gnuob-soap.war#primary.br.com.netbrasoft.gnuob.generic.category.SubCategory"
       maxElementsInMemory="1000"
       maxElementsOnDisk="10000"
       eternal="false"
@@ -102,7 +102,7 @@
       </terracotta>
    </cache>
    <cache
-      name="gnuob-soap.war#primary.com.netbrasoft.gnuob.generic.security.Permission"
+      name="gnuob-soap.war#primary.br.com.netbrasoft.gnuob.generic.security.Permission"
       maxElementsInMemory="1000"
       maxElementsOnDisk="10000"
       eternal="false"
@@ -119,7 +119,7 @@
       </terracotta>
    </cache>
    <cache
-      name="gnuob-soap.war#primary.com.netbrasoft.gnuob.generic.product.Product.contents"
+      name="gnuob-soap.war#primary.br.com.netbrasoft.gnuob.generic.product.Product.contents"
       maxElementsInMemory="1000"
       maxElementsOnDisk="10000"
       eternal="false"
@@ -136,7 +136,7 @@
       </terracotta>
    </cache>
    <cache
-      name="gnuob-soap.war#primary.com.netbrasoft.gnuob.generic.category.SubCategory.contents"
+      name="gnuob-soap.war#primary.br.com.netbrasoft.gnuob.generic.category.SubCategory.contents"
       maxElementsInMemory="1000"
       maxElementsOnDisk="10000"
       eternal="false"
@@ -153,7 +153,7 @@
       </terracotta>
    </cache>
    <cache
-      name="gnuob-soap.war#primary.com.netbrasoft.gnuob.generic.category.Category.contents"
+      name="gnuob-soap.war#primary.br.com.netbrasoft.gnuob.generic.category.Category.contents"
       maxElementsInMemory="1000"
       maxElementsOnDisk="10000"
       eternal="false"

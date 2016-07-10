@@ -8,11 +8,6 @@
 
 	<web>
 		<link target="/">
-			<dir name="/home/bernard/Projects/gnuob/gnuob-soap/target/m2e-wtp/web-resources">
-				<exclude name="/"/>
-			</dir>
-		</link>
-		<link target="/">
 			<dir name="/home/bernard/Projects/gnuob/gnuob-soap/src/main/webapp">
 			</dir>
 		</link>
