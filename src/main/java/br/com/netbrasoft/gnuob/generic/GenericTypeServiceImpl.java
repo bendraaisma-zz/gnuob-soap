@@ -89,9 +89,16 @@ public class GenericTypeServiceImpl<T> implements IGenericTypeService<T> {
   private Criteria setOrderingProperty(final OrderByEnum orderingProperty, final Criteria criteria) {
     switch (orderingProperty.getOrder()) {
       case ASC:
-        return criteria.addOrder(Order.asc(orderingProperty.getColumn()));
+        return orderingProperty.getAlias() != null
+            ? criteria.addOrder(Order.asc(orderingProperty.getColumn()))
+                .createAlias(orderingProperty.getAssociationPath(), orderingProperty.getAlias())
+            : criteria.addOrder(Order.asc(orderingProperty.getColumn()));
       case DESC:
-        return criteria.addOrder(Order.desc(orderingProperty.getColumn()));
+        return orderingProperty.getAlias() != null
+            ? criteria.addOrder(Order.desc(orderingProperty.getColumn()))
+                .createAlias(orderingProperty.getAssociationPath(), orderingProperty.getAlias())
+            : criteria.addOrder(Order.desc(orderingProperty.getColumn()));
+
       case NONE:
       default:
         return criteria;

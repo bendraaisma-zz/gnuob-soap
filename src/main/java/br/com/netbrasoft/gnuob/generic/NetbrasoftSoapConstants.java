@@ -16,6 +16,29 @@ package br.com.netbrasoft.gnuob.generic;
 
 public final class NetbrasoftSoapConstants {
 
+  public static final String RECOMMENDED_PROPERTY = "recommended";
+  public static final String DISCOUNT_PROPERTY = "discount";
+  public static final String AMOUNT_PROPERTY = "amount";
+  public static final String RATING_PROPERTY = "rating";
+  public static final String BESTSELLERS_PROPERTY = "bestsellers";
+  public static final String LATESTCOLLECTION_PROPERTY = "latestCollection";
+  public static final String NAME_PROPERTY = "name";
+  public static final String DESCRIPTION_PROPERTY = "description";
+  public static final String PROPERTY = "property";
+  public static final String PLACE_NAME_PROPERTY = "placeName";
+  public static final String COUNTRY_CODE_PROPERTY = "countryCode";
+  public static final String POSTAL_CODE_PROPERTY = "postalCode";
+  public static final String ADMIN_NAME_1_PROPERTY = "adminName1";
+  public static final String VALUE_PROPERTY = "value";
+  public static final String POSITION_PROPERTY = "position";
+  public static final String FIRST_NAME_PROPERTY = "firstName";
+  public static final String LAST_NAME_PROPERTY = "lastName";
+  public static final String CONTRACT_ID_PROPERTY = "contractId";
+  public static final String ORDER_ID_PROPERTY = "orderId";
+  public static final String OFFER_ID_PROPERTY = "offerId";
+  public static final String NUMBER_PROPERTY = "number";
+  public static final String CREATION_PROPERTY = "creation";
+  public static final String MODIFICATION_PROPERTY = "modification";
   public static final String SITE = "site";
   public static final String GROUP = "group";
   public static final String USER = "user";
