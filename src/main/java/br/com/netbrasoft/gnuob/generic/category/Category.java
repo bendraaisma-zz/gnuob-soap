@@ -28,17 +28,21 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSITION_C
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.START_POSITION_VALUE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_CATEGORIES_ID_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.lang.Integer.valueOf;
 import static java.util.stream.Collectors.counting;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.FetchType.EAGER;
+import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
@@ -50,7 +54,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.velocity.context.Context;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import br.com.netbrasoft.gnuob.generic.content.Content;
 import br.com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
@@ -71,15 +74,15 @@ public class Category extends AbstractAccess {
   private Set<SubCategory> subCategories;
 
   public Category() {
-    contents = new LinkedHashSet<>(0);
-    subCategories = new LinkedHashSet<>(0);
+    contents = newHashSet();
+    subCategories = newHashSet();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isContentsDetached(), isSubCategoriesDetached()})
-        .stream().filter(e -> e.booleanValue()).count() > 0;
+    return newArrayList(isAbstractTypeDetached(), isContentsDetached(), isSubCategoriesDetached()).stream()
+        .filter(e -> e.booleanValue()).count() > ZERO;
   }
 
   @Transient
@@ -106,14 +109,14 @@ public class Category extends AbstractAccess {
   private void reinitAllContentPositions() {
     int startingByPosition = START_POSITION_VALUE;
     for (final Content content : contents) {
-      content.setPosition(Integer.valueOf(startingByPosition++));
+      content.setPosition(valueOf(startingByPosition++));
     }
   }
 
   private void reinitAllSubCategoryPositions() {
     int startingByPosition = START_POSITION_VALUE;
     for (final SubCategory subCategory : subCategories) {
-      subCategory.setPosition(Integer.valueOf(startingByPosition++));
+      subCategory.setPosition(valueOf(startingByPosition++));
     }
   }
 
@@ -122,9 +125,9 @@ public class Category extends AbstractAccess {
     return visitor.visit(this);
   }
 
-  @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+  @Cache(usage = READ_ONLY)
   @OrderBy(ORDER_BY_PROPERTY_POSITION_ASC)
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+  @OneToMany(cascade = {PERSIST, MERGE}, fetch = EAGER)
   @JoinTable(name = GNUOB_CATEGORIES_GNUOB_CONTENTS_TABLE_NAME,
       joinColumns = {@JoinColumn(name = GNUOB_CATEGORIES_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
       inverseJoinColumns = {@JoinColumn(name = CONTENTS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
@@ -150,7 +153,7 @@ public class Category extends AbstractAccess {
     return position;
   }
 
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
+  @OneToMany(cascade = {PERSIST, MERGE, REMOVE}, fetch = EAGER)
   @OrderBy(ORDER_BY_PROPERTY_POSITION_ASC)
   @JoinTable(name = GNUOB_CATEGORIES_GNUOB_SUB_CATEGORIES_TABLE_NAME,
       joinColumns = {@JoinColumn(name = GNUOB_CATEGORIES_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},

@@ -31,12 +31,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.netbrasoft.gnuob.generic.security.AbstractAccess;
-import br.com.netbrasoft.gnuob.generic.security.Group;
-import br.com.netbrasoft.gnuob.generic.security.Permission;
-import br.com.netbrasoft.gnuob.generic.security.Site;
-import br.com.netbrasoft.gnuob.generic.security.User;
-
 public class AbstractAccessTest {
 
   private Permission mockPermission;

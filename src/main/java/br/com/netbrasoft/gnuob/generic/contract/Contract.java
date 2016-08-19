@@ -18,17 +18,21 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_E
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_ID_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_PARAM_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_TABLE_NAME;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.util.UUID.randomUUID;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.FetchType.EAGER;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -37,7 +41,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.context.Context;
 
 import br.com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
@@ -60,15 +63,15 @@ public class Contract extends AbstractAccess {
   private Set<Order> orders;
 
   public Contract() {
-    offers = new HashSet<>(0);
-    orders = new HashSet<>(0);
+    offers = newHashSet();
+    orders = newHashSet();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isCustomerAttached()}).stream()
-        .filter(e -> e.booleanValue()).count() > 0;
+    return newArrayList(isAbstractTypeDetached(), isCustomerAttached()).stream().filter(e -> e.booleanValue())
+        .count() > ZERO;
   }
 
   @Transient
@@ -94,27 +97,26 @@ public class Contract extends AbstractAccess {
   @XmlElement(required = true)
   @Column(name = CONTRACT_ID_COLUMN_NAME, nullable = false)
   public String getContractId() {
-    if (StringUtils.isBlank(contractId)) {
-      contractId = UUID.randomUUID().toString();
+    if (isBlank(contractId)) {
+      contractId = randomUUID().toString();
     }
     return contractId;
   }
 
   @XmlElement(required = true)
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, optional = false,
-      fetch = FetchType.EAGER)
+  @OneToOne(cascade = {PERSIST, MERGE, REFRESH}, optional = false, fetch = EAGER)
   public Customer getCustomer() {
     return customer;
   }
 
   @XmlTransient
-  @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER, mappedBy = CONTRACT_PARAM_NAME)
+  @OneToMany(cascade = {REFRESH}, fetch = EAGER, mappedBy = CONTRACT_PARAM_NAME)
   public Set<Offer> getOffers() {
     return offers;
   }
 
   @XmlTransient
-  @OneToMany(cascade = {CascadeType.REFRESH}, fetch = FetchType.EAGER, mappedBy = CONTRACT_PARAM_NAME)
+  @OneToMany(cascade = {REFRESH}, fetch = EAGER, mappedBy = CONTRACT_PARAM_NAME)
   public Set<Order> getOrders() {
     return orders;
   }

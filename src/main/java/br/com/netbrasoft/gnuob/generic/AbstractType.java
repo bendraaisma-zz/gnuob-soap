@@ -19,6 +19,8 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ID_COLUMN_
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MODIFICATION_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VERSION_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static java.lang.System.currentTimeMillis;
+import static javax.persistence.GenerationType.IDENTITY;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.io.Serializable;
@@ -27,7 +29,6 @@ import java.sql.Timestamp;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.PrePersist;
@@ -37,7 +38,7 @@ import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 @Cacheable(value = false)
 @MappedSuperclass
@@ -55,14 +56,14 @@ public abstract class AbstractType implements Serializable, ICallback {
 
   @PrePersist
   protected void prePersistType() {
-    creation = new Timestamp(System.currentTimeMillis());
-    modification = new Timestamp(System.currentTimeMillis());
+    creation = new Timestamp(currentTimeMillis());
+    modification = new Timestamp(currentTimeMillis());
     prePersist();
   }
 
   @PreUpdate
   protected void preUpdateType() {
-    modification = new Timestamp(System.currentTimeMillis());
+    modification = new Timestamp(currentTimeMillis());
     preUpdate();
   }
 
@@ -74,7 +75,7 @@ public abstract class AbstractType implements Serializable, ICallback {
 
   @XmlAttribute
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = IDENTITY)
   @Column(name = ID_COLUMN_NAME)
   public long getId() {
     return id;
@@ -116,6 +117,6 @@ public abstract class AbstractType implements Serializable, ICallback {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
+    return reflectionToString(this, SHORT_PREFIX_STYLE);
   }
 }

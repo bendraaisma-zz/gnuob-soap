@@ -24,21 +24,26 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAYMENTS_I
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSITION_ASC;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.START_POSITION_VALUE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.lang.Integer.valueOf;
+import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.counting;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
@@ -49,8 +54,7 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 import br.com.netbrasoft.gnuob.generic.customer.Address;
@@ -58,7 +62,7 @@ import br.com.netbrasoft.gnuob.generic.customer.Address;
 @Cacheable(value = false)
 @Entity(name = INVOICE_ENTITY_NAME)
 @Table(name = INVOICE_TABLE_NAME)
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = SINGLE_TABLE)
 @XmlRootElement(name = INVOICE_ENTITY_NAME)
 public class Invoice extends AbstractType {
 
@@ -69,14 +73,14 @@ public class Invoice extends AbstractType {
   private Set<Payment> payments;
 
   public Invoice() {
-    payments = new HashSet<>(0);
+    payments = newHashSet();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isAddressDetached(), isPaymentsDetached()}).stream()
-        .filter(e -> e.booleanValue()).count() > 0;
+    return newArrayList(isAbstractTypeDetached(), isAddressDetached(), isPaymentsDetached()).stream()
+        .filter(e -> e.booleanValue()).count() > ZERO;
   }
 
   @Transient
@@ -103,13 +107,12 @@ public class Invoice extends AbstractType {
   private void reinitAllPositionPayments() {
     int startPosition = START_POSITION_VALUE;
     for (final Payment payment : payments) {
-      payment.setPosition(Integer.valueOf(startPosition++));
+      payment.setPosition(valueOf(startPosition++));
     }
   }
 
   @XmlElement(required = true)
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
-      orphanRemoval = true, optional = false)
+  @OneToOne(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, orphanRemoval = true, optional = false)
   public Address getAddress() {
     return address;
   }
@@ -117,16 +120,15 @@ public class Invoice extends AbstractType {
   @XmlElement
   @Column(name = INVOICE_ID_COLUMN_NAME, nullable = false)
   public String getInvoiceId() {
-    if (invoiceId == null || StringUtils.isBlank(invoiceId)) {
-      invoiceId = UUID.randomUUID().toString();
+    if (invoiceId == null || isBlank(invoiceId)) {
+      invoiceId = randomUUID().toString();
     }
     return invoiceId;
   }
 
   @XmlElement
   @OrderBy(POSITION_ASC)
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
-      orphanRemoval = true, fetch = FetchType.EAGER)
+  @OneToMany(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, orphanRemoval = true, fetch = EAGER)
   @JoinTable(name = GNUOB_INVOICES_GNUOB_PAYMENTS_TABLE_NAME,
       joinColumns = {@JoinColumn(name = GNUOB_INVOICES_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
       inverseJoinColumns = {@JoinColumn(name = PAYMENTS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
@@ -148,6 +150,6 @@ public class Invoice extends AbstractType {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
+    return reflectionToString(this, SHORT_PREFIX_STYLE);
   }
 }

@@ -20,23 +20,23 @@ import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.DELETE;
 import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.NONE;
 import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.READ;
 import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.UPDATE;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 @XmlRootElement(name = RULE_ENTITY_NAME)
 public enum Rule {
 //@formatter:off
-  CREATE_ACCESS(Arrays.asList(CREATE, READ)),
-  DELETE_ACCESS(Arrays.asList(CREATE, READ, UPDATE, DELETE)),
-  NONE_ACCESS(Arrays.asList(NONE)),
-  READ_ACCESS(Arrays.asList(READ)),
-  UPDATE_ACCESS(Arrays.asList(CREATE, READ, UPDATE));
+  CREATE_ACCESS(newArrayList(CREATE, READ)),
+  DELETE_ACCESS(newArrayList(CREATE, READ, UPDATE, DELETE)),
+  NONE_ACCESS(newArrayList(NONE)),
+  READ_ACCESS(newArrayList(READ)),
+  UPDATE_ACCESS(newArrayList(CREATE, READ, UPDATE));
 //@formatter:on
 
   public enum Operation {
@@ -55,6 +55,6 @@ public enum Rule {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
+    return reflectionToString(this, SHORT_PREFIX_STYLE);
   }
 }

@@ -35,7 +35,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import br.com.netbrasoft.gnuob.generic.content.contexts.ContextVisitorImpl;
-import br.com.netbrasoft.gnuob.generic.setting.Setting;
 
 public class SettingTest {
 

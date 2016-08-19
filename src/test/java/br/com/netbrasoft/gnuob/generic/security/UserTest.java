@@ -42,9 +42,6 @@ import org.junit.rules.ExpectedException;
 
 import br.com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import br.com.netbrasoft.gnuob.generic.content.contexts.ContextVisitorImpl;
-import br.com.netbrasoft.gnuob.generic.security.Group;
-import br.com.netbrasoft.gnuob.generic.security.Site;
-import br.com.netbrasoft.gnuob.generic.security.User;
 
 public class UserTest {
 

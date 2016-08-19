@@ -15,6 +15,10 @@
 package br.com.netbrasoft.gnuob.generic.security;
 
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
+import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.CREATE;
+import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.DELETE;
+import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.READ;
+import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.UPDATE;
 
 import java.util.List;
 
@@ -25,7 +29,6 @@ import br.com.netbrasoft.gnuob.generic.GenericTypeServiceImpl;
 import br.com.netbrasoft.gnuob.generic.OrderByEnum;
 import br.com.netbrasoft.gnuob.generic.Paging;
 import br.com.netbrasoft.gnuob.generic.Parameter;
-import br.com.netbrasoft.gnuob.generic.security.Rule.Operation;
 import br.com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 
 @Stateless(name = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME, mappedName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
@@ -34,44 +37,44 @@ public class SecuredGenericTypeServiceImpl<T> extends GenericTypeServiceImpl<T>
     implements ISecuredGenericTypeService<T> {
 
   @Override
-  @OperationAccess(operation = Operation.READ)
+  @OperationAccess(operation = READ)
   public long count(final MetaData credentials, final T type, final Parameter... param) {
     return super.count(type, param);
   }
 
   @Override
-  @OperationAccess(operation = Operation.READ)
+  @OperationAccess(operation = READ)
   public T find(final MetaData credentials, final T type, final long id) {
     return super.find(type, id);
   }
 
   @Override
-  @OperationAccess(operation = Operation.READ)
+  @OperationAccess(operation = READ)
   public List<T> find(final MetaData credentials, final T type, final Paging paging, final OrderByEnum orderingProperty,
       final Parameter... param) {
     return super.find(type, paging, orderingProperty, param);
   }
 
   @Override
-  @OperationAccess(operation = Operation.UPDATE)
+  @OperationAccess(operation = UPDATE)
   public T merge(final MetaData credentials, final T type) {
     return super.merge(type);
   }
 
   @Override
-  @OperationAccess(operation = Operation.CREATE)
+  @OperationAccess(operation = CREATE)
   public void persist(final MetaData credentials, final T type) {
     super.persist(type);
   }
 
   @Override
-  @OperationAccess(operation = Operation.READ)
+  @OperationAccess(operation = READ)
   public T refresh(final MetaData credentials, final T type, final long id) {
     return super.refresh(type, id);
   }
 
   @Override
-  @OperationAccess(operation = Operation.DELETE)
+  @OperationAccess(operation = DELETE)
   public void remove(final MetaData credentials, final T type) {
     super.remove(type);
   }

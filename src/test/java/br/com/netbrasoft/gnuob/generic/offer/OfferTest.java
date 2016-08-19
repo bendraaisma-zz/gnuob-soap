@@ -44,8 +44,6 @@ import org.junit.Test;
 
 import br.com.netbrasoft.gnuob.generic.content.contexts.ContextVisitorImpl;
 import br.com.netbrasoft.gnuob.generic.contract.Contract;
-import br.com.netbrasoft.gnuob.generic.offer.Offer;
-import br.com.netbrasoft.gnuob.generic.offer.OfferRecord;
 
 public class OfferTest {
 

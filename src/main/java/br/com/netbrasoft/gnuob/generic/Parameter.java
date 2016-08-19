@@ -14,21 +14,25 @@
 
 package br.com.netbrasoft.gnuob.generic;
 
-public class Parameter {
+public final class Parameter {
 
   private final String name;
   private final Object value;
 
-  public Parameter(final String name, final Object value) {
+  private Parameter(final String name, final Object value) {
     this.name = name;
     this.value = value;
   }
 
+  public static Parameter getInstance(final String name, final Object value) {
+    return new Parameter(name, value);
+  }
+
   public String getName() {
-    return this.name;
+    return name;
   }
 
   public Object getValue() {
-    return this.value;
+    return value;
   }
 }

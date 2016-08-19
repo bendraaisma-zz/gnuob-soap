@@ -19,28 +19,30 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OTHERS_COL
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OWNER_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PERMISSION_ENTITY_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PERMISSION_TABLE_NAME;
+import static br.com.netbrasoft.gnuob.generic.security.Rule.DELETE_ACCESS;
+import static br.com.netbrasoft.gnuob.generic.security.Rule.READ_ACCESS;
+import static javax.persistence.EnumType.STRING;
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = true)
 @Entity(name = PERMISSION_ENTITY_NAME)
 @Table(name = PERMISSION_TABLE_NAME)
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = SINGLE_TABLE)
 @XmlRootElement(name = PERMISSION_ENTITY_NAME)
 public class Permission extends AbstractType {
 
@@ -74,30 +76,30 @@ public class Permission extends AbstractType {
 
   @XmlElement(required = true)
   @Column(name = GROUP_COLUMN_NAME, nullable = false)
-  @Enumerated(EnumType.STRING)
+  @Enumerated(STRING)
   public Rule getGroup() {
     if (group == null) {
-      group = Rule.READ_ACCESS;
+      group = READ_ACCESS;
     }
     return group;
   }
 
   @XmlElement(required = true)
   @Column(name = OTHERS_COLUMN_NAME, nullable = false)
-  @Enumerated(EnumType.STRING)
+  @Enumerated(STRING)
   public Rule getOthers() {
     if (others == null) {
-      others = Rule.READ_ACCESS;
+      others = READ_ACCESS;
     }
     return others;
   }
 
   @XmlElement(required = true)
   @Column(name = OWNER_COLUMN_NAME, nullable = false)
-  @Enumerated(EnumType.STRING)
+  @Enumerated(STRING)
   public Rule getOwner() {
     if (owner == null) {
-      owner = Rule.DELETE_ACCESS;
+      owner = DELETE_ACCESS;
     }
     return owner;
   }
@@ -116,6 +118,6 @@ public class Permission extends AbstractType {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
+    return reflectionToString(this, SHORT_PREFIX_STYLE);
   }
 }

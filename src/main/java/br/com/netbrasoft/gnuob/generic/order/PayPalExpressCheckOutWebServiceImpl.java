@@ -26,7 +26,10 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ORDER_PARA
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAY_PAL_EXPRESS_CHECK_OUT_WEB_SERVICE_IMPL_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME;
+import static br.com.netbrasoft.gnuob.generic.content.mail.MailEnum.CONFIRMATION_NEW_ORDER_MAIL;
+import static br.com.netbrasoft.gnuob.generic.content.mail.MailEnum.NO_MAIL;
 import static br.com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -36,14 +39,12 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import br.com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import br.com.netbrasoft.gnuob.generic.OrderByEnum;
 import br.com.netbrasoft.gnuob.generic.Paging;
 import br.com.netbrasoft.gnuob.generic.content.mail.MailAction;
 import br.com.netbrasoft.gnuob.generic.content.mail.MailControl;
-import br.com.netbrasoft.gnuob.generic.content.mail.MailEnum;
 import br.com.netbrasoft.gnuob.generic.contract.Contract;
 import br.com.netbrasoft.gnuob.generic.customer.Customer;
 import br.com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeCheckOutService;
@@ -56,7 +57,7 @@ import br.com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Interceptors(value = {AppSimonInterceptor.class, MailControl.class})
 public class PayPalExpressCheckOutWebServiceImpl<T extends Order> implements ICheckOutWebService<T> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(PayPalExpressCheckOutWebServiceImpl.class);
+  private static final Logger LOGGER = getLogger(PayPalExpressCheckOutWebServiceImpl.class);
 
   @EJB(beanName = SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeCheckOutService<T> securedGenericTypeCheckOutService;
@@ -71,7 +72,7 @@ public class PayPalExpressCheckOutWebServiceImpl<T extends Order> implements ICh
   private ISecuredGenericTypeService<Customer> securedGenericCustomerService;
 
   public PayPalExpressCheckOutWebServiceImpl() {
-    // This constructor will be used by the EBJ container.
+    // This constructor will be used by the EJB container.
   }
 
   PayPalExpressCheckOutWebServiceImpl(final ISecuredGenericTypeCheckOutService<T> securedGenericTypeCheckOutService,
@@ -86,7 +87,7 @@ public class PayPalExpressCheckOutWebServiceImpl<T extends Order> implements ICh
 
   @Override
   @WebMethod(operationName = DO_CHECKOUT_OPERATION_NAME)
-  @MailAction(operation = MailEnum.NO_MAIL)
+  @MailAction(operation = NO_MAIL)
   public T doCheckout(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
@@ -135,7 +136,7 @@ public class PayPalExpressCheckOutWebServiceImpl<T extends Order> implements ICh
 
   @Override
   @WebMethod(operationName = DO_CHECKOUT_DETAILS_OPERATION_NAME)
-  @MailAction(operation = MailEnum.NO_MAIL)
+  @MailAction(operation = NO_MAIL)
   public T doCheckoutDetails(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
@@ -155,7 +156,7 @@ public class PayPalExpressCheckOutWebServiceImpl<T extends Order> implements ICh
 
   @Override
   @WebMethod(operationName = DO_CHECKOUT_PAYMENT_OPERATION_NAME)
-  @MailAction(operation = MailEnum.CONFIRMATION_NEW_ORDER_MAIL)
+  @MailAction(operation = CONFIRMATION_NEW_ORDER_MAIL)
   public T doCheckoutPayment(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
@@ -175,7 +176,7 @@ public class PayPalExpressCheckOutWebServiceImpl<T extends Order> implements ICh
 
   @Override
   @WebMethod(operationName = DO_NOTIFICATION_OPERATION_NAME)
-  @MailAction(operation = MailEnum.NO_MAIL)
+  @MailAction(operation = NO_MAIL)
   public T doNotification(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
@@ -217,7 +218,7 @@ public class PayPalExpressCheckOutWebServiceImpl<T extends Order> implements ICh
 
   @Override
   @WebMethod(operationName = DO_REFUND_TRANSACTION_OPERATION_NAME)
-  @MailAction(operation = MailEnum.NO_MAIL)
+  @MailAction(operation = NO_MAIL)
   public T doRefundTransaction(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
@@ -237,7 +238,7 @@ public class PayPalExpressCheckOutWebServiceImpl<T extends Order> implements ICh
 
   @Override
   @WebMethod(operationName = DO_TRANSACTION_DETAILS_OPERATION_NAME)
-  @MailAction(operation = MailEnum.NO_MAIL)
+  @MailAction(operation = NO_MAIL)
   public T doTransactionDetails(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {

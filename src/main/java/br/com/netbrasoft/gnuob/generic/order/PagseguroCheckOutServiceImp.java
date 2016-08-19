@@ -18,12 +18,12 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.EMAIL_PROP
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PRODUCTION_TOKEN_PROPERTY;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SANDBOX_TOKEN_PROPERTY;
+import static br.com.uol.pagseguro.properties.PagSeguroConfig.setProductionEnvironment;
 
 import br.com.uol.pagseguro.domain.AccountCredentials;
 import br.com.uol.pagseguro.domain.Transaction;
 import br.com.uol.pagseguro.domain.checkout.Checkout;
 import br.com.uol.pagseguro.exception.PagSeguroServiceException;
-import br.com.uol.pagseguro.properties.PagSeguroConfig;
 import br.com.uol.pagseguro.service.NotificationService;
 import br.com.uol.pagseguro.service.TransactionSearchService;
 import br.com.uol.pagseguro.service.checkout.CheckoutService;
@@ -32,7 +32,7 @@ class PagseguroCheckOutServiceImp implements IPagseguroCheckOutService {
 
   PagseguroCheckOutServiceImp() {
     if (!PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE.equals(PRODUCTION_TOKEN_PROPERTY)) {
-      PagSeguroConfig.setProductionEnvironment();
+      setProductionEnvironment();
     }
   }
 
