@@ -39,6 +39,7 @@
       <version.wildfly.plugin>10.0.0.Final</version.wildfly.plugin>
       <version.jasper.report>RELEASE</version.jasper.report>
       <version.liquibase>3.5.1</version.liquibase>
+      <version.guava>18.0</version.guava>
       <version.commons-lang3>3.4</version.commons-lang3>
       <maven.compiler.target>1.8</maven.compiler.target>
       <maven.compiler.source>1.8</maven.compiler.source>
@@ -152,6 +153,12 @@
          <artifactId>commons-lang3</artifactId>
          <version>${version.commons-lang3}</version>
       </dependency>
+      <dependency>
+         <groupId>com.google.guava</groupId>
+         <artifactId>guava</artifactId>
+         <version>${version.guava}</version>
+         <scope>provided</scope>
+      </dependency>
       <!-- SIMON -->
       <dependency>
          <groupId>org.javasimon</groupId>
@@ -185,58 +192,58 @@
          <version>${version.jasper.report}</version>
       </dependency>
       <dependency>
-      	<groupId>org.hibernate</groupId>
-      	<artifactId>hibernate-core</artifactId>
-      	<scope>provided</scope>
-      	<exclusions>
-      		<exclusion>
-      			<artifactId>xml-apis</artifactId>
-      			<groupId>xml-apis</groupId>
-      		</exclusion>
-      	</exclusions>
+         <groupId>org.hibernate</groupId>
+         <artifactId>hibernate-core</artifactId>
+         <scope>provided</scope>
+         <exclusions>
+            <exclusion>
+               <artifactId>xml-apis</artifactId>
+               <groupId>xml-apis</groupId>
+            </exclusion>
+         </exclusions>
       </dependency>
       <dependency>
-      	<groupId>org.hibernate</groupId>
-      	<artifactId>hibernate-entitymanager</artifactId>
-      	<scope>provided</scope>
+         <groupId>org.hibernate</groupId>
+         <artifactId>hibernate-entitymanager</artifactId>
+         <scope>provided</scope>
       </dependency>
       <dependency>
-      	<groupId>org.hibernate</groupId>
-      	<artifactId>hibernate-validator</artifactId>
-      	<scope>provided</scope>
+         <groupId>org.hibernate</groupId>
+         <artifactId>hibernate-validator</artifactId>
+         <scope>provided</scope>
       </dependency>
       <dependency>
-      	<groupId>org.hibernate</groupId>
-      	<artifactId>hibernate-search</artifactId>
+         <groupId>org.hibernate</groupId>
+         <artifactId>hibernate-search</artifactId>
       </dependency>
       <dependency>
-      	<groupId>org.hibernate</groupId>
-      	<artifactId>hibernate-core</artifactId>
-      	<scope>provided</scope>
-      	<exclusions>
-      		<exclusion>
-      			<artifactId>xml-apis</artifactId>
-      			<groupId>xml-apis</groupId>
-      		</exclusion>
-      	</exclusions>
-      	<optional>false</optional>
+         <groupId>org.hibernate</groupId>
+         <artifactId>hibernate-core</artifactId>
+         <scope>provided</scope>
+         <exclusions>
+            <exclusion>
+               <artifactId>xml-apis</artifactId>
+               <groupId>xml-apis</groupId>
+            </exclusion>
+         </exclusions>
+         <optional>false</optional>
       </dependency>
       <dependency>
-      	<groupId>org.hibernate</groupId>
-      	<artifactId>hibernate-entitymanager</artifactId>
-      	<scope>provided</scope>
-      	<optional>false</optional>
+         <groupId>org.hibernate</groupId>
+         <artifactId>hibernate-entitymanager</artifactId>
+         <scope>provided</scope>
+         <optional>false</optional>
       </dependency>
       <dependency>
-      	<groupId>org.hibernate</groupId>
-      	<artifactId>hibernate-validator</artifactId>
-      	<scope>provided</scope>
-      	<optional>false</optional>
+         <groupId>org.hibernate</groupId>
+         <artifactId>hibernate-validator</artifactId>
+         <scope>provided</scope>
+         <optional>false</optional>
       </dependency>
       <dependency>
-      	<groupId>org.hibernate</groupId>
-      	<artifactId>hibernate-search</artifactId>
-      	<optional>false</optional>
+         <groupId>org.hibernate</groupId>
+         <artifactId>hibernate-search</artifactId>
+         <optional>false</optional>
       </dependency>
    </dependencies>
    <build>
@@ -257,7 +264,7 @@
                      <url>${project.url}</url>
                      <dependencies>org.apache.cxf services,
                         org.apache.cxf.impl, org.apache.velocity,
-                        org.apache.commons.collections</dependencies>
+                        org.apache.commons.collections, com.google.guava</dependencies>
                   </manifestEntries>
                   <manifest>
                      <addDefaultImplementationEntries>true</addDefaultImplementationEntries>

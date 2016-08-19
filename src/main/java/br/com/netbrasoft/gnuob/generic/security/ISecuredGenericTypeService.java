@@ -14,21 +14,25 @@
 
 package br.com.netbrasoft.gnuob.generic.security;
 
+import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.CREATE;
+import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.DELETE;
+import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.READ;
+import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.UPDATE;
+
 import java.util.List;
 
 import br.com.netbrasoft.gnuob.generic.OrderByEnum;
 import br.com.netbrasoft.gnuob.generic.Paging;
 import br.com.netbrasoft.gnuob.generic.Parameter;
-import br.com.netbrasoft.gnuob.generic.security.Rule.Operation;
 
 public abstract interface ISecuredGenericTypeService<T> {
 
   public abstract long count(MetaData credentials, T type, Parameter... param);
 
-  @OperationAccess(operation = Operation.CREATE)
+  @OperationAccess(operation = CREATE)
   public default void create(MetaData credentials, T type) {}
 
-  @OperationAccess(operation = Operation.DELETE)
+  @OperationAccess(operation = DELETE)
   public default void delete(MetaData credentials, T type) {}
 
   public abstract T find(MetaData credentials, T type, long id);
@@ -42,13 +46,13 @@ public abstract interface ISecuredGenericTypeService<T> {
 
   public abstract void persist(MetaData credentials, T type);
 
-  @OperationAccess(operation = Operation.READ)
+  @OperationAccess(operation = READ)
   public default void read(MetaData credentials, T type) {}
 
   public abstract T refresh(MetaData credentials, T type, long id);
 
   public abstract void remove(MetaData credentials, T type);
 
-  @OperationAccess(operation = Operation.UPDATE)
+  @OperationAccess(operation = UPDATE)
   public default void update(MetaData credentials, T type) {}
 }

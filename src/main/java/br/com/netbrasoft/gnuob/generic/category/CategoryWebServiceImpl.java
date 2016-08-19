@@ -30,8 +30,11 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_CAT
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_CATEGORIES_PROPERTY_NAME;
 import static br.com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.hibernate.criterion.Example.create;
+import static org.hibernate.criterion.Restrictions.or;
+import static org.slf4j.LoggerFactory.getLogger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -43,9 +46,7 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.hibernate.criterion.Example;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import br.com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import br.com.netbrasoft.gnuob.generic.IGenericTypeWebService;
@@ -62,7 +63,7 @@ import br.com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Interceptors(value = {AppSimonInterceptor.class})
 public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeWebService<T> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(CategoryWebServiceImpl.class);
+  private static final Logger LOGGER = getLogger(CategoryWebServiceImpl.class);
 
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericCategoryService;
@@ -71,7 +72,7 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
   private ISecuredGenericTypeService<Content> securedGenericContentService;
 
   public CategoryWebServiceImpl() {
-    // This constructor will be used by the EBJ container.
+    // This constructor will be used by the EJB container.
   }
 
   CategoryWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericCategoryService,
@@ -128,12 +129,12 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
   private long countByCategoryAndSubCategories(final MetaData credentials, final T type) {
     final List<Example> examples = getSubCategoryExamples(type.getSubCategories());
     return securedGenericCategoryService.count(credentials, type,
-        new Parameter(SUB_CATEGORIES_PROPERTY_NAME, Restrictions.or(examples.toArray(new Example[examples.size()]))));
+        Parameter.getInstance(SUB_CATEGORIES_PROPERTY_NAME, or(examples.toArray(new Example[examples.size()]))));
   }
 
   private List<Example> getSubCategoryExamples(final Set<SubCategory> subCategories) {
-    final List<Example> examples = new ArrayList<>();
-    subCategories.stream().forEach(e -> examples.add(Example.create(e)));
+    final List<Example> examples = newArrayList();
+    subCategories.stream().forEach(e -> examples.add(create(e)));
     return examples;
   }
 
@@ -169,7 +170,7 @@ public class CategoryWebServiceImpl<T extends Category> implements IGenericTypeW
       final OrderByEnum orderingByProperty) {
     final List<Example> examples = getSubCategoryExamples(type.getSubCategories());
     return securedGenericCategoryService.find(credentials, type, paging, orderingByProperty,
-        new Parameter(SUB_CATEGORIES_PROPERTY_NAME, Restrictions.or(examples.toArray(new Example[examples.size()]))));
+        Parameter.getInstance(SUB_CATEGORIES_PROPERTY_NAME, or(examples.toArray(new Example[examples.size()]))));
   }
 
   @Override

@@ -29,6 +29,7 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REFRESH_CO
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_CONTRACT_OPERATION_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
 import static br.com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.List;
 
@@ -40,7 +41,6 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import br.com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import br.com.netbrasoft.gnuob.generic.IGenericTypeWebService;
@@ -58,7 +58,7 @@ import br.com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Interceptors(value = {AppSimonInterceptor.class})
 public class ContractWebServiceImpl<T extends Contract> implements IGenericTypeWebService<T> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ContractWebServiceImpl.class);
+  private static final Logger LOGGER = getLogger(ContractWebServiceImpl.class);
 
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericContractService;
@@ -67,7 +67,7 @@ public class ContractWebServiceImpl<T extends Contract> implements IGenericTypeW
   private ISecuredGenericTypeService<Customer> securedGenericCustomerService;
 
   public ContractWebServiceImpl() {
-    // This constructor will be used by the EBJ container.
+    // This constructor will be used by the EJB container.
   }
 
   ContractWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericContractService,

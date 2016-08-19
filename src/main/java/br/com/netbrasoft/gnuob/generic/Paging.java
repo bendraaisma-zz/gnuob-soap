@@ -15,12 +15,12 @@
 package br.com.netbrasoft.gnuob.generic;
 
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAGING_NAME;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-
-import org.apache.commons.lang3.builder.ToStringBuilder;
 
 @XmlRootElement(name = PAGING_NAME)
 public class Paging {
@@ -29,7 +29,7 @@ public class Paging {
   private int max;
 
   public Paging() {
-    this(0, 0);
+    this(ZERO, ZERO);
   }
 
   private Paging(final int first, final int max) {
@@ -61,6 +61,6 @@ public class Paging {
 
   @Override
   public String toString() {
-    return ToStringBuilder.reflectionToString(this, SHORT_PREFIX_STYLE);
+    return reflectionToString(this, SHORT_PREFIX_STYLE);
   }
 }

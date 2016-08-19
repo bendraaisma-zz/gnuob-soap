@@ -45,10 +45,6 @@ import org.junit.Test;
 
 import br.com.netbrasoft.gnuob.generic.content.contexts.ContextVisitorImpl;
 import br.com.netbrasoft.gnuob.generic.contract.Contract;
-import br.com.netbrasoft.gnuob.generic.order.Invoice;
-import br.com.netbrasoft.gnuob.generic.order.Order;
-import br.com.netbrasoft.gnuob.generic.order.OrderRecord;
-import br.com.netbrasoft.gnuob.generic.order.Shipment;
 
 public class OrderTest {
 

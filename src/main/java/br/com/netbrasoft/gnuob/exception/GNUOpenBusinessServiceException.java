@@ -14,9 +14,11 @@
 
 package br.com.netbrasoft.gnuob.exception;
 
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNU_OPEN_BUSINESS_SERVICE_EXCEPTION;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "GNUOpenBusinessServiceException")
+@XmlRootElement(name = GNU_OPEN_BUSINESS_SERVICE_EXCEPTION)
 public class GNUOpenBusinessServiceException extends RuntimeException {
 
   private static final long serialVersionUID = 2962292431852550756L;

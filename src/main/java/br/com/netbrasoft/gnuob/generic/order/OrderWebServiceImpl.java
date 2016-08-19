@@ -30,6 +30,9 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REFRESH_OR
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_ORDER_OPERATION_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
 import static br.com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
+import static org.hibernate.criterion.Example.create;
+import static org.hibernate.criterion.Restrictions.or;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.List;
 
@@ -40,10 +43,7 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
-import org.hibernate.criterion.Example;
-import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import br.com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import br.com.netbrasoft.gnuob.generic.IGenericTypeWebService;
@@ -61,7 +61,7 @@ import br.com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Interceptors(value = {AppSimonInterceptor.class})
 public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebService<T> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(OrderWebServiceImpl.class);
+  private static final Logger LOGGER = getLogger(OrderWebServiceImpl.class);
 
   @EJB(beanName = SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeService<T> securedGenericOrderService;
@@ -73,7 +73,7 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
   private ISecuredGenericTypeService<Customer> securedGenericCustomerService;
 
   public OrderWebServiceImpl() {
-    // This constructor will be used by the EBJ container.
+    // This constructor will be used by the EJB container.
   }
 
   OrderWebServiceImpl(final ISecuredGenericTypeService<T> securedGenericOrderService,
@@ -120,7 +120,7 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
   private long countByOrder(final MetaData credentials, final T type) {
     if (type.getContract() != null) {
       return securedGenericOrderService.count(credentials, type,
-          new Parameter(CONTRACT_PARAM_NAME, Restrictions.or(Example.create(type.getContract()))));
+          Parameter.getInstance(CONTRACT_PARAM_NAME, or(create(type.getContract()))));
     }
     return securedGenericOrderService.count(credentials, type);
   }
@@ -156,7 +156,7 @@ public class OrderWebServiceImpl<T extends Order> implements IGenericTypeWebServ
   private List<T> findByOrderAndContract(final MetaData credentials, final T type, final Paging paging,
       final OrderByEnum orderingProperty) {
     return securedGenericOrderService.find(credentials, type, paging, orderingProperty,
-        new Parameter(CONTRACT_PARAM_NAME, Restrictions.or(Example.create(type.getContract()))));
+        Parameter.getInstance(CONTRACT_PARAM_NAME, or(create(type.getContract()))));
   }
 
   @Override

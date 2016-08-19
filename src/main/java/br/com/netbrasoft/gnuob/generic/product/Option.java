@@ -27,20 +27,23 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.START_POSI
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_OPTIONS_ID_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VALUE_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
 import static java.util.stream.Collectors.counting;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
@@ -50,14 +53,14 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = false)
 @Entity(name = OPTION_ENTITY_NAME)
 @Table(name = OPTION_TABLE_NAME)
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = SINGLE_TABLE)
 @XmlRootElement(name = OPTION_ENTITY_NAME)
 public class Option extends AbstractType {
 
@@ -70,14 +73,14 @@ public class Option extends AbstractType {
   private String value;
 
   public Option() {
-    subOptions = new HashSet<>(0);
+    subOptions = newHashSet();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isSubOptionsDetached()}).stream()
-        .filter(e -> e.booleanValue()).count() > 0;
+    return newArrayList(isAbstractTypeDetached(), isSubOptionsDetached()).stream().filter(e -> e.booleanValue())
+        .count() > ZERO;
   }
 
   @Transient
@@ -115,8 +118,7 @@ public class Option extends AbstractType {
   }
 
   @OrderBy(POSITION_ASC)
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
-      fetch = FetchType.EAGER)
+  @OneToMany(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, fetch = EAGER)
   @JoinTable(name = GNUOB_OPTIONS_GNUOB_SUB_OPTIONS_TABLE_NAME,
       joinColumns = {@JoinColumn(name = GNUOB_OPTIONS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
       inverseJoinColumns = {@JoinColumn(name = SUB_OPTIONS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
@@ -158,6 +160,6 @@ public class Option extends AbstractType {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
+    return reflectionToString(this, SHORT_PREFIX_STYLE);
   }
 }

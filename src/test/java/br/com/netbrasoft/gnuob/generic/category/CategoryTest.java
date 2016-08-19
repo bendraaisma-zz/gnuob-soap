@@ -38,8 +38,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.netbrasoft.gnuob.generic.category.Category;
-import br.com.netbrasoft.gnuob.generic.category.SubCategory;
 import br.com.netbrasoft.gnuob.generic.content.Content;
 import br.com.netbrasoft.gnuob.generic.content.contexts.ContextVisitorImpl;
 

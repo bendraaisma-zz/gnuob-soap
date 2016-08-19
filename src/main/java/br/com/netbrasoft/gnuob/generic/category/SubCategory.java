@@ -28,20 +28,26 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_CATEGO
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_CATEGORY_ENTITY_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_CATEGORY_TABLE_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.lang.Integer.valueOf;
 import static java.util.stream.Collectors.counting;
+import static javax.persistence.CascadeType.DETACH;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
@@ -52,9 +58,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 import br.com.netbrasoft.gnuob.generic.content.Content;
@@ -62,7 +67,7 @@ import br.com.netbrasoft.gnuob.generic.content.Content;
 @Cacheable(value = true)
 @Entity(name = SUB_CATEGORY_ENTITY_NAME)
 @Table(name = SUB_CATEGORY_TABLE_NAME)
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = SINGLE_TABLE)
 @XmlRootElement(name = SUB_CATEGORY_ENTITY_NAME)
 public class SubCategory extends AbstractType {
 
@@ -75,15 +80,15 @@ public class SubCategory extends AbstractType {
   private Set<SubCategory> subCategories;
 
   public SubCategory() {
-    contents = new LinkedHashSet<>(0);
-    subCategories = new LinkedHashSet<>(0);
+    contents = newHashSet();
+    subCategories = newHashSet();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isContentsAttached(), isSubCategoriesAttached()})
-        .stream().filter(e -> e.booleanValue()).count() > 0;
+    return newArrayList(isAbstractTypeDetached(), isContentsAttached(), isSubCategoriesAttached()).stream()
+        .filter(e -> e.booleanValue()).count() > ZERO;
   }
 
   @Transient
@@ -110,14 +115,14 @@ public class SubCategory extends AbstractType {
   private void reinitAllContentPositions() {
     int startingByPosition = START_POSITION_VALUE;
     for (final Content content : contents) {
-      content.setPosition(Integer.valueOf(startingByPosition++));
+      content.setPosition(valueOf(startingByPosition++));
     }
   }
 
   private void reinitAllSubCategoryPositions() {
     int startingByPosition = START_POSITION_VALUE;
     for (final SubCategory subCategory : subCategories) {
-      subCategory.setPosition(Integer.valueOf(startingByPosition++));
+      subCategory.setPosition(valueOf(startingByPosition++));
     }
   }
 
@@ -151,10 +156,9 @@ public class SubCategory extends AbstractType {
     this.description = description;
   }
 
-  @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+  @Cache(usage = READ_ONLY)
   @OrderBy(POSITION_ASC)
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH, CascadeType.DETACH},
-      fetch = FetchType.EAGER)
+  @OneToMany(cascade = {PERSIST, MERGE, REFRESH, DETACH}, fetch = EAGER)
   @JoinTable(name = GNUOB_SUB_CATEGORIES_GNUOB_CONTENTS_TABLE_NAME,
       joinColumns = {@JoinColumn(name = GNUOB_SUB_CATEGORIES_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
       inverseJoinColumns = {@JoinColumn(name = CONTENTS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
@@ -167,8 +171,7 @@ public class SubCategory extends AbstractType {
   }
 
   @OrderBy(POSITION_ASC)
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
-      fetch = FetchType.EAGER)
+  @OneToMany(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, fetch = EAGER)
   @JoinTable(name = GNUOB_SUB_CATEGORIES_GNUOB_SUB_CATEGORIES_TABLE_NAME,
       joinColumns = {@JoinColumn(name = GNUOB_SUB_CATEGORIES_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
       inverseJoinColumns = {@JoinColumn(name = SUB_CATEGORIES_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
@@ -182,6 +185,6 @@ public class SubCategory extends AbstractType {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
+    return reflectionToString(this, SHORT_PREFIX_STYLE);
   }
 }

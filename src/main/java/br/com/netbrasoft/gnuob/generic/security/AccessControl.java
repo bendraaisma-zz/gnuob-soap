@@ -145,8 +145,8 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
   }
 
   private void enableAccessFilter(final Subject subject) {
-    accessTypeService.enableFilter(AbstractAccess.NFQ1, new Parameter(USER_ID, subject.user.getId()));
-    accessTypeService.enableFilter(AbstractAccess.NFQ2, new Parameter(SITE_ID, subject.site.getId()));
+    accessTypeService.enableFilter(AbstractAccess.NFQ1, Parameter.getInstance(USER_ID, subject.user.getId()));
+    accessTypeService.enableFilter(AbstractAccess.NFQ2, Parameter.getInstance(SITE_ID, subject.site.getId()));
   }
 
   private void disableAccessFilter() {

@@ -47,19 +47,23 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.START_POSI
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_CATEGORIES_ID_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.lang.Integer.valueOf;
 import static java.util.stream.Collectors.counting;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.FetchType.EAGER;
+import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -73,7 +77,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.velocity.context.Context;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import br.com.netbrasoft.gnuob.generic.category.SubCategory;
 import br.com.netbrasoft.gnuob.generic.content.Content;
@@ -114,16 +117,16 @@ public class Product extends AbstractAccess {
   private BigDecimal tax;
 
   public Product() {
-    contents = new HashSet<>(0);
-    options = new HashSet<>(0);
-    subCategories = new LinkedHashSet<>(0);
+    contents = newHashSet();
+    options = newHashSet();
+    subCategories = newHashSet();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isStockDetached(), isSubCategoriesDetached(),
-        isContentsDetached(), isOptionsDetached()}).stream().filter(e -> e.booleanValue()).count() > 0;
+    return newArrayList(isAbstractTypeDetached(), isStockDetached(), isSubCategoriesDetached(), isContentsDetached(),
+        isOptionsDetached()).stream().filter(e -> e.booleanValue()).count() > ZERO;
   }
 
   @Transient
@@ -162,21 +165,21 @@ public class Product extends AbstractAccess {
   private void reinitAllPositionContents() {
     int startPosition = START_POSITION_VALUE;
     for (final Content content : contents) {
-      content.setPosition(Integer.valueOf(startPosition++));
+      content.setPosition(valueOf(startPosition++));
     }
   }
 
   private void reinitAllPositionOptions() {
     int startPosition = START_POSITION_VALUE;
     for (final Option option : options) {
-      option.setPosition(Integer.valueOf(startPosition++));
+      option.setPosition(valueOf(startPosition++));
     }
   }
 
   private void reinitAllPositionSubCategories() {
     int startPosition = START_POSITION_VALUE;
     for (final SubCategory subCategory : subCategories) {
-      subCategory.setPosition(Integer.valueOf(startPosition++));
+      subCategory.setPosition(valueOf(startPosition++));
     }
   }
 
@@ -197,9 +200,9 @@ public class Product extends AbstractAccess {
     return bestsellers;
   }
 
-  @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+  @Cache(usage = READ_ONLY)
   @OrderBy(POSITION_ASC)
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+  @OneToMany(cascade = {PERSIST, MERGE, REFRESH}, fetch = EAGER)
   @JoinTable(name = GNUOB_PRODUCTS_GNUOB_CONTENTS_TABLE_NAME,
       joinColumns = {@JoinColumn(name = GNUOB_PRODUCTS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
       inverseJoinColumns = {@JoinColumn(name = CONTENTS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
@@ -292,8 +295,7 @@ public class Product extends AbstractAccess {
   }
 
   @OrderBy(POSITION_ASC)
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
-      fetch = FetchType.EAGER)
+  @OneToMany(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, fetch = EAGER)
   @JoinTable(name = GNUOB_PRODUCTS_GNUOB_OPTIONS_TABLE_NAME,
       joinColumns = {@JoinColumn(name = GNUOB_PRODUCTS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
       inverseJoinColumns = {@JoinColumn(name = OPTIONS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
@@ -320,14 +322,13 @@ public class Product extends AbstractAccess {
   }
 
   @XmlElement(required = true)
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
-      optional = false)
+  @OneToOne(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, optional = false)
   public Stock getStock() {
     return stock;
   }
 
   @OrderBy(POSITION_ASC)
-  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+  @ManyToMany(cascade = {PERSIST, REMOVE, REFRESH}, fetch = EAGER)
   @JoinTable(name = GNUOB_PRODUCTS_GNUOB_SUB_CATEGORIES_TABLE_NAME,
       joinColumns = {@JoinColumn(name = GNUOB_PRODUCTS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
       inverseJoinColumns = {@JoinColumn(name = SUB_CATEGORIES_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})

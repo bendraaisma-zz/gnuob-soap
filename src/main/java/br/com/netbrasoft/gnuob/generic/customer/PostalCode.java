@@ -42,7 +42,7 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 
@@ -196,6 +196,6 @@ public class PostalCode extends AbstractType {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
+    return reflectionToString(this, SHORT_PREFIX_STYLE);
   }
 }

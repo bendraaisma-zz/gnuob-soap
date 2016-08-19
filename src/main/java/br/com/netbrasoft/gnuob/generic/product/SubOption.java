@@ -20,27 +20,27 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSITION_C
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_OPTION_ENTITY_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUB_OPTION_TABLE_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VALUE_COLUMN_NAME;
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 
 @Cacheable(value = false)
 @Entity(name = SUB_OPTION_ENTITY_NAME)
 @Table(name = SUB_OPTION_TABLE_NAME)
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = SINGLE_TABLE)
 @XmlRootElement(name = SUB_OPTION_ENTITY_NAME)
 public class SubOption extends AbstractType {
 
@@ -99,6 +99,6 @@ public class SubOption extends AbstractType {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
+    return reflectionToString(this, SHORT_PREFIX_STYLE);
   }
 }

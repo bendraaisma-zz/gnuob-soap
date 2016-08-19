@@ -18,24 +18,27 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NOT_SPECIF
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_ENTITY_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_TABLE_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_TYPE_COLUMN_NAME;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static com.google.common.collect.Lists.newArrayList;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
-import java.util.Arrays;
-
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 import br.com.netbrasoft.gnuob.generic.customer.Address;
@@ -43,7 +46,7 @@ import br.com.netbrasoft.gnuob.generic.customer.Address;
 @Cacheable(value = false)
 @Entity(name = SHIPMENT_ENTITY_NAME)
 @Table(name = SHIPMENT_TABLE_NAME)
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = SINGLE_TABLE)
 @XmlRootElement(name = SHIPMENT_ENTITY_NAME)
 public class Shipment extends AbstractType {
 
@@ -55,8 +58,8 @@ public class Shipment extends AbstractType {
   @Override
   @Transient
   public boolean isDetached() {
-    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isAddressDetached()}).stream()
-        .filter(e -> e.booleanValue()).count() > 0;
+    return newArrayList(isAbstractTypeDetached(), isAddressDetached()).stream().filter(e -> e.booleanValue())
+        .count() > ZERO;
   }
 
   @Transient
@@ -65,8 +68,7 @@ public class Shipment extends AbstractType {
   }
 
   @XmlElement(required = true)
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
-      orphanRemoval = true, optional = false)
+  @OneToOne(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, orphanRemoval = true, optional = false)
   public Address getAddress() {
     return address;
   }
@@ -74,7 +76,7 @@ public class Shipment extends AbstractType {
   @XmlElement
   @Column(name = SHIPMENT_TYPE_COLUMN_NAME)
   public String getShipmentType() {
-    if (StringUtils.isBlank(shipmentType)) {
+    if (isBlank(shipmentType)) {
       shipmentType = NOT_SPECIFIED;
     }
     return shipmentType;
@@ -90,6 +92,6 @@ public class Shipment extends AbstractType {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
+    return reflectionToString(this, SHORT_PREFIX_STYLE);
   }
 }

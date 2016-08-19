@@ -44,9 +44,6 @@ import org.junit.Test;
 import br.com.netbrasoft.gnuob.generic.category.SubCategory;
 import br.com.netbrasoft.gnuob.generic.content.Content;
 import br.com.netbrasoft.gnuob.generic.content.contexts.ContextVisitorImpl;
-import br.com.netbrasoft.gnuob.generic.product.Option;
-import br.com.netbrasoft.gnuob.generic.product.Product;
-import br.com.netbrasoft.gnuob.generic.product.Stock;
 
 public class ProductTest {
 

@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.content;
 
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.COULDN_T_FIND_CONTENT_WITH_GIVEN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.JAVA_MODULE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ONE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_PARAM_NAME;
@@ -22,12 +23,13 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_PARAM
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.UNCHECKED_VALUE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_PARAM_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static br.com.netbrasoft.gnuob.generic.OrderByEnum.NONE;
+import static javax.naming.InitialContext.doLookup;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.apache.commons.collections.ExtendedProperties;
@@ -35,25 +37,23 @@ import org.apache.velocity.runtime.resource.Resource;
 import org.apache.velocity.runtime.resource.loader.ResourceLoader;
 
 import br.com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
-import br.com.netbrasoft.gnuob.generic.OrderByEnum;
 import br.com.netbrasoft.gnuob.generic.Paging;
 import br.com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeService;
 import br.com.netbrasoft.gnuob.generic.security.MetaData;
 
 public class ContentResourceLoader<T extends Content> extends ResourceLoader {
 
-  private static final String COULDN_T_FIND_CONTENT_WITH_GIVEN_NAME = "Couldn't find content with given name: ";
-
-  private MetaData credentials = MetaData.getInstance();
+  private MetaData credentials;
   private ISecuredGenericTypeService<T> securedGenericContentService;
 
   @SuppressWarnings(UNCHECKED_VALUE)
   public ContentResourceLoader() throws NamingException {
-    this((ISecuredGenericTypeService<T>) InitialContext.doLookup(JAVA_MODULE + SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME));
+    this((ISecuredGenericTypeService<T>) doLookup(JAVA_MODULE + SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME));
   }
 
   ContentResourceLoader(final ISecuredGenericTypeService<T> securedGenericContentService) {
-    this.securedGenericContentService = securedGenericContentService;
+    setSecuredGenericContentService(securedGenericContentService);
+    setCredentials(MetaData.getInstance());
   }
 
   @Override
@@ -76,8 +76,8 @@ public class ContentResourceLoader<T extends Content> extends ResourceLoader {
   @SuppressWarnings(UNCHECKED_VALUE)
   private long getContentModificationTimeByName(final String contentName) {
     return securedGenericContentService
-        .find(credentials, (T) Content.getInstance(contentName), Paging.getInstance(ZERO, ONE), OrderByEnum.NONE)
-        .iterator().next().getModification().getTime();
+        .find(getCredentials(), (T) Content.getInstance(contentName), Paging.getInstance(ZERO, ONE), NONE).iterator()
+        .next().getModification().getTime();
   }
 
   @Override
@@ -95,18 +95,34 @@ public class ContentResourceLoader<T extends Content> extends ResourceLoader {
   @SuppressWarnings(UNCHECKED_VALUE)
   private InputStream getContentResourceBufferedInputStreamByName(final String sourceName) {
     return new BufferedInputStream(new ByteArrayInputStream(securedGenericContentService
-        .find(credentials, (T) Content.getInstance(sourceName), Paging.getInstance(ZERO, ONE), OrderByEnum.NONE)
-        .iterator().next().getData()));
+        .find(getCredentials(), (T) Content.getInstance(sourceName), Paging.getInstance(ZERO, ONE), NONE).iterator()
+        .next().getData()));
   }
 
   @Override
   public void init(final ExtendedProperties configuration) {
-    credentials = MetaData.getInstance(configuration.getString(SITE_PARAM_NAME),
-        configuration.getString(USER_PARAM_NAME), configuration.getString(PASSWORD_PARAM_NAME));
+    setCredentials(MetaData.getInstance(configuration.getString(SITE_PARAM_NAME),
+        configuration.getString(USER_PARAM_NAME), configuration.getString(PASSWORD_PARAM_NAME)));
   }
 
   @Override
   public boolean isSourceModified(final Resource resource) {
     return resource.getLastModified() != getLastModified(resource);
+  }
+
+  public ISecuredGenericTypeService<T> getSecuredGenericContentService() {
+    return securedGenericContentService;
+  }
+
+  public void setSecuredGenericContentService(ISecuredGenericTypeService<T> securedGenericContentService) {
+    this.securedGenericContentService = securedGenericContentService;
+  }
+
+  public MetaData getCredentials() {
+    return credentials;
+  }
+
+  public void setCredentials(MetaData credentials) {
+    this.credentials = credentials;
   }
 }

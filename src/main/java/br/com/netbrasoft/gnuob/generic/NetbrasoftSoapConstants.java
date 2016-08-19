@@ -16,32 +16,10 @@ package br.com.netbrasoft.gnuob.generic;
 
 public final class NetbrasoftSoapConstants {
 
-  public static final String RECOMMENDED_PROPERTY = "recommended";
-  public static final String DISCOUNT_PROPERTY = "discount";
-  public static final String AMOUNT_PROPERTY = "amount";
-  public static final String RATING_PROPERTY = "rating";
-  public static final String BESTSELLERS_PROPERTY = "bestsellers";
-  public static final String LATESTCOLLECTION_PROPERTY = "latestCollection";
-  public static final String NAME_PROPERTY = "name";
-  public static final String DESCRIPTION_PROPERTY = "description";
-  public static final String PROPERTY = "property";
-  public static final String PLACE_NAME_PROPERTY = "placeName";
-  public static final String COUNTRY_CODE_PROPERTY = "countryCode";
-  public static final String POSTAL_CODE_PROPERTY = "postalCode";
-  public static final String ADMIN_NAME_1_PROPERTY = "adminName1";
-  public static final String VALUE_PROPERTY = "value";
-  public static final String POSITION_PROPERTY = "position";
-  public static final String FIRST_NAME_PROPERTY = "firstName";
-  public static final String LAST_NAME_PROPERTY = "lastName";
-  public static final String CONTRACT_ID_PROPERTY = "contractId";
-  public static final String ORDER_ID_PROPERTY = "orderId";
-  public static final String OFFER_ID_PROPERTY = "offerId";
-  public static final String NUMBER_PROPERTY = "number";
-  public static final String CREATION_PROPERTY = "creation";
-  public static final String MODIFICATION_PROPERTY = "modification";
-  public static final String SITE = "site";
-  public static final String GROUP = "group";
-  public static final String USER = "user";
+  public static final int PASSWORD_LENGTH = 62;
+  public static final int ZERO = 0;
+  public static final int ONE = 1;
+  public static final int START_POSITION_VALUE = 0;
   public static final String ACCESS_COLUMN_NAME = "ACCESS";
   public static final String ACCESS_ENTITY_NAME = "Access";
   public static final String ACCESS_TABLE_NAME = "GNUOB_ACCESS";
@@ -53,11 +31,18 @@ public final class NetbrasoftSoapConstants {
   public static final String ADMIN_CODE_2_COLUMN_NAME = "ADMIN_CODE_2";
   public static final String ADMIN_CODE_3_COLUMN_NAME = "ADMIN_CODE_3";
   public static final String ADMIN_NAME_1_COLUMN_NAME = "ADMIN_NAME_1";
+  public static final String ADMIN_NAME_1_PROPERTY = "adminName1";
   public static final String ADMIN_NAME_2_COLUMN_NAME = "ADMIN_NAME_2";
   public static final String ADMIN_NAME_3_COLUMN_NAME = "ADMIN_NAME_3";
   public static final String AMOUNT_COLUMN_NAME = "AMOUNT";
+  public static final String AMOUNT_PROPERTY = "amount";
   public static final String BESTSELLERS_COLUMN_NAME = "BESTSELLERS";
+  public static final String BESTSELLERS_PROPERTY = "bestsellers";
   public static final String BILLING_AGREEMENT_ID_COLUMN_NAME = "BILLING_AGREEMENT_ID";
+  public static final String BR_COM_NETBRASOFT_GNUOB_GENERIC_CONTENT_CONTENT_RESOURCE_LOADER =
+      "br.com.netbrasoft.gnuob.generic.content.ContentResourceLoader";
+  public static final String BR_COM_NETBRASOFT_GNUOB_GENERIC_CONTENT_MAIL_MAIL_CONTROL_SEND_MAIL_ACTION =
+      "br.com.netbrasoft.gnuob.generic.content.mail.MailControl.sendMailAction";
   public static final String BUYER_EMAIL_COLUMN_NAME = "BUYER_EMAIL";
   public static final String BUYER_MARKETING_EMAIL_COLUMN_NAME = "BUYER_MARKETING_EMAIL";
   public static final String CATEGORY_ENTITY_NAME = "Category";
@@ -67,10 +52,6 @@ public final class NetbrasoftSoapConstants {
   public static final String CHECKOUT_COLUMN_NAME = "CHECKOUT";
   public static final String CHECKOUT_STATUS_COLUMN_NAME = "CHECKOUT_STATUS";
   public static final String CITY_NAME_COLUMN_NAME = "CITY_NAME";
-  public static final String BR_COM_NETBRASOFT_GNUOB_GENERIC_CONTENT_CONTENT_RESOURCE_LOADER =
-      "br.com.netbrasoft.gnuob.generic.content.ContentResourceLoader";
-  public static final String BR_COM_NETBRASOFT_GNUOB_GENERIC_CONTENT_MAIL_MAIL_CONTROL_SEND_MAIL_ACTION =
-      "br.com.netbrasoft.gnuob.generic.content.mail.MailControl.sendMailAction";
   public static final String COMPLEMENT_COLUMN_NAME = "COMPLEMENT";
   public static final String CONTACT_PHONE_COLUMN_NAME = "CONTACT_PHONE";
   public static final String CONTENT = "content";
@@ -92,6 +73,7 @@ public final class NetbrasoftSoapConstants {
   public static final String CONTEXT_VISITOR_IMPL_NAME = "ContextVisitorImpl";
   public static final String CONTRACT_ENTITY_NAME = "Contract";
   public static final String CONTRACT_ID_COLUMN_NAME = "CONTRACT_ID";
+  public static final String CONTRACT_ID_PROPERTY = "contractId";
   public static final String CONTRACT_PARAM_NAME = "contract";
   public static final String CONTRACT_TABLE_NAME = "GNUOB_CONTRACTS";
   public static final String CONTRACT_WEB_SERVICE_IMPL_NAME = "ContractWebServiceImpl";
@@ -108,9 +90,11 @@ public final class NetbrasoftSoapConstants {
   public static final String COUNT_SITE_OPERATION_NAME = "countSite";
   public static final String COUNT_USER_OPERATION_NAME = "countUser";
   public static final String COUNTRY_CODE_COLUMN_NAME = "COUNTRY_CODE";
+  public static final String COUNTRY_CODE_PROPERTY = "countryCode";
   public static final String COUNTRY_COLUMN_NAME = "COUNTRY";
   public static final String COUNTRY_NAME_COLUMN_NAME = "COUNTRY_NAME";
   public static final String CREATION_COLUMN_NAME = "CREATION";
+  public static final String CREATION_PROPERTY = "creation";
   public static final String CREATION_PROPERTY_NAME = "creation";
   public static final String CUSTOM_COLUMN_NAME = "CUSTOM";
   public static final String CUSTOMER_ENTITY_NAME = "Customer";
@@ -121,8 +105,10 @@ public final class NetbrasoftSoapConstants {
   public static final String DATE_OF_BIRTH_COLUMN_NAME = "DATE_OF_BIRTH";
   public static final String DELIVERY_DATE_COLUMN_NAME = "DELIVERY_DATE";
   public static final String DESCRIPTION_COLUMN_NAME = "DESCRIPTION";
+  public static final String DESCRIPTION_PROPERTY = "description";
   public static final String DISABLED_COLUMN_NAME = "DISABLED";
   public static final String DISCOUNT_COLUMN_NAME = "DISCOUNT";
+  public static final String DISCOUNT_PROPERTY = "discount";
   public static final String DISCOUNT_TOTAL_COLUMN_NAME = "DISCOUNT_TOTAL";
   public static final String DISTRICT_COLUMN_NAME = "DISTRICT";
   public static final String DO_CHECKOUT_DETAILS_OPERATION_NAME = "doCheckoutDetails";
@@ -161,7 +147,9 @@ public final class NetbrasoftSoapConstants {
   public static final String FIND_USER_BY_ID_OPERATION_NAME = "findUserById";
   public static final String FIND_USER_OPERATION_NAME = "findUser";
   public static final String FIRST_NAME_COLUMN_NAME = "FIRST_NAME";
+  public static final String FIRST_NAME_PROPERTY = "firstName";
   public static final String FORMAT_COLUMN_NAME = "FORMAT";
+  public static final String ORDER_BY = "orderBy";
   public static final String FRIENDLY_NAME_COLUMN_NAME = "FRIENDLY_NAME";
   public static final String GENERIC_TYPE_DAO_IMPL_NAME = "GenericTypeDaoImpl";
   public static final String GENERIC_TYPE_SERVICE_IMPL_NAME = "GenericTypeServiceImpl";
@@ -171,6 +159,7 @@ public final class NetbrasoftSoapConstants {
   public static final String GIFT_WRAP_AMOUNT_COLUMN_NAME = "GIFT_WRAP_AMOUNT";
   public static final String GIFT_WRAP_ENABLE_COLUMN_NAME = "GIFT_WRAP_ENABLE";
   public static final String GIFT_WRAP_NAME_COLUMN_NAME = "GIFT_WRAP_NAME";
+  public static final String GNU_OPEN_BUSINESS_SERVICE_EXCEPTION = "GNUOpenBusinessServiceException";
   public static final String GNUOB_CATEGORIES_GNUOB_CONTENTS_TABLE_NAME = "gnuob_categories_gnuob_contents";
   public static final String GNUOB_CATEGORIES_GNUOB_SUB_CATEGORIES_TABLE_NAME = "gnuob_categories_gnuob_sub_categories";
   public static final String GNUOB_CATEGORIES_ID_COLUMN_NAME = "GNUOB_CATEGORIES_ID";
@@ -204,6 +193,7 @@ public final class NetbrasoftSoapConstants {
   public static final String GNUOB_USERS_ID_COLUMN_NAME = "GNUOB_USERS_ID";
   public static final String GNUOB_WEB_SERVICE_TARGET_NAMESPACE = "http://gnuob.netbrasoft.com/";
   public static final String GROSS_AMOUNT_COLUMN_NAME = "GROSS_AMOUNT";
+  public static final String GROUP = "group";
   public static final String GROUP_COLUMN_NAME = "\"GROUP\"";
   public static final String GROUP_ENTITY_NAME = "Group";
   public static final String GROUP_PARAM_NAME = "group";
@@ -235,7 +225,9 @@ public final class NetbrasoftSoapConstants {
   public static final String JAVA_JBOSS_MAIL_DEFAULT = "java:jboss/mail/Default";
   public static final String JAVA_MODULE = "java:module/";
   public static final String LAST_NAME_COLUMN_NAME = "LAST_NAME";
+  public static final String LAST_NAME_PROPERTY = "lastName";
   public static final String LATEST_COLLECTION_COLUMN_NAME = "LATEST_COLLECTION";
+  public static final String LATESTCOLLECTION_PROPERTY = "latestCollection";
   public static final String LATITUDE_COLUMN_NAME = "LATITUDE";
   public static final String LONGITUDE_COLUMN_NAME = "LONGITUDE";
   public static final String MAX_QUANTITY_COLUMN_NAME = "MAX_QUANTITY";
@@ -259,15 +251,19 @@ public final class NetbrasoftSoapConstants {
   public static final String MIN_QUANTITY_COLUMN_NAME = "MIN_QUANTITY";
   public static final String MODIFICATION_CHECK_INTERVAL_IN_SEC = "60";
   public static final String MODIFICATION_COLUMN_NAME = "MODIFICATION";
+  public static final String MODIFICATION_PROPERTY = "modification";
   public static final String MODIFICATION_PROPERTY_NAME = "modification";
   public static final String NAME_COLUMN_NAME = "NAME";
+  public static final String NAME_PROPERTY = "name";
   public static final String NOT_SPECIFIED = "NOT_SPECIFIED";
   public static final String NOTE_COLUMN_NAME = "NOTE";
   public static final String NOTE_TEXT_COLUMN_NAME = "NOTE_TEXT";
   public static final String NUMBER_COLUMN_NAME = "NUMBER";
+  public static final String NUMBER_PROPERTY = "number";
   public static final String OFFER_DESCRIPTION_COLUMN_NAME = "OFFER_DESCRIPTION";
   public static final String OFFER_ENTITY_NAME = "Offer";
   public static final String OFFER_ID_COLUMN_NAME = "OFFER_ID";
+  public static final String OFFER_ID_PROPERTY = "offerId";
   public static final String OFFER_PARAM_NAME = "offer";
   public static final String OFFER_RECORD_ENTITY_NAME = "OfferRecord";
   public static final String OFFER_RECORD_ID_COLUMN_NAME = "OFFER_RECORD_ID";
@@ -275,7 +271,6 @@ public final class NetbrasoftSoapConstants {
   public static final String OFFER_TABLE_NAME = "GNUOB_OFFERS";
   public static final String OFFER_TOTAL_COLUMN_NAME = "OFFER_TOTAL";
   public static final String OFFER_WEB_SERVICE_IMPL_NAME = "OfferWebServiceImpl";
-  public static final int ONE = 1;
   public static final String OPTION_COLUMN_NAME = "`OPTION`";
   public static final String OPTION_ENTITY_NAME = "Option";
   public static final String OPTION_TABLE_NAME = "GNUOB_OPTIONS";
@@ -286,6 +281,7 @@ public final class NetbrasoftSoapConstants {
   public static final String ORDER_DESCRIPTION_COLUMN_NAME = "ORDER_DESCRIPTION";
   public static final String ORDER_ENTITY_NAME = "Order";
   public static final String ORDER_ID_COLUMN_NAME = "ORDER_ID";
+  public static final String ORDER_ID_PROPERTY = "orderId";
   public static final String ORDER_PARAM_NAME = "order";
   public static final String ORDER_RECORD_ENTITY_NAME = "OrderRecord";
   public static final String ORDER_RECORD_ID_COLUMN_NAME = "ORDER_RECORD_ID";
@@ -303,7 +299,7 @@ public final class NetbrasoftSoapConstants {
   public static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE = "NO_PRODUCTION_TOKEN";
   public static final String PAGSEGURO_REDIRECT_PROPERTY_VALUE = "http://localhost:8080/confirmation.html";
   public static final String PASSWORD_COLUMN_NAME = "PASSWORD";
-  public static final int PASSWORD_LENGTH = 62;
+
   public static final String PASSWORD_PARAM_NAME = "password";
   public static final String PASSWORD_PROPERTY = System.getProperty("paypal.password", "UU9AJQJYE2CAMP54");
   public static final String PASSWORD_REGEX = "^[0-9A-F]{16}:\\d{4}:[0-9A-F]{40}";
@@ -337,27 +333,34 @@ public final class NetbrasoftSoapConstants {
   public static final String PERSIST_USER_OPERATION_NAME = "persistUser";
   public static final String PHONE_COLUMN_NAME = "PHONE";
   public static final String PLACE_NAME_COLUMN_NAME = "PLACE_NAME";
+  public static final String PLACE_NAME_PROPERTY = "placeName";
   public static final String POSITION_ASC = "position asc";
   public static final String POSITION_COLUMN_NAME = "POSITION";
+  public static final String POSITION_PROPERTY = "position";
   public static final String POSTAL_CODE_COLUMN_NAME = "POSTAL_CODE";
   public static final String POSTAL_CODE_ENTITY_NAME = "PostalCode";
   public static final String POSTAL_CODE_PARAM_NAME = "postalCode";
+  public static final String POSTAL_CODE_PROPERTY = "postalCode";
   public static final String POSTAL_CODE_TABLE_NAME = "GNUOB_POSTAL_CODES";
   public static final String POSTAL_CODE_WEB_SERVICE_IMPL_NAME = "PostalCodeWebServiceImpl";
   public static final String PRIMARY_UNIT_NAME = "primary";
   public static final String PRODUCT_ENTITY_NAME = "Product";
+  public static final String SUB_CATEGORIES = "subCategories";
   public static final String PRODUCT_NUMBER_COLUMN_NAME = "PRODUCT_NUMBER";
   public static final String PRODUCT_PARAM_NAME = "product";
   public static final String PRODUCT_TABLE_NAME = "GNUOB_PRODUCTS";
   public static final String PRODUCT_WEB_SERVICE_IMPL_NAME = "ProductWebServiceImpl";
   public static final String PRODUCTION_TOKEN_PROPERTY =
       System.getProperty("pagseguro.production.token", "NO_PRODUCTION_TOKEN");
+  public static final String PROPERTY = "property";
   public static final String PROPERTY_COLUMN_NAME = "PROPERTY";
   public static final String PROTECTION_ELIGIBILITY_TYPE_COLUMN_NAME = "PROTECTION_ELIGIBILITY_TYPE";
   public static final String QUANTITY_COLUMN_NAME = "QUANTITY";
   public static final String RATING_COLUMN_NAME = "RATING";
+  public static final String RATING_PROPERTY = "rating";
   public static final String REASON_CODE_COLUMN_NAME = "REASON_CODE";
   public static final String RECOMMENDED_COLUMN_NAME = "RECOMMENDED";
+  public static final String RECOMMENDED_PROPERTY = "recommended";
   public static final String RECORDS_ID_COLUMN_NAME = "records_ID";
   public static final String REFRESH_CATEGORY_OPERATION_NAME = "refreshCategory";
   public static final String REFRESH_CONTENT_OPERATION_NAME = "refreshContent";
@@ -392,8 +395,10 @@ public final class NetbrasoftSoapConstants {
       System.getProperty("pagseguro.sandbox.token", "007D4EDFF33042E79EC7B8039B5F7FCE");
   public static final String SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME = "SecuredGenericTypeServiceImpl";
   public static final String SECURED_PAGSEGURO_CHECK_OUT_SERVICE_IMPL_NAME = "SecuredPagseguroCheckOutServiceImpl";
+  public static final String COULDN_T_FIND_CONTENT_WITH_GIVEN_NAME = "Couldn't find content with given name: ";
   public static final String SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME =
       "SecuredPayPalExpressCheckOutServiceImpl";
+  public static final String ROLE = "ROLE";
   public static final String SETTING_ENTITY_NAME = "Setting";
   public static final String SETTING_PARAM_NAME = "setting";
   public static final String SETTING_TABLE_NAME = "GNUOB_SETTINGS";
@@ -407,6 +412,7 @@ public final class NetbrasoftSoapConstants {
   public static final String SHIPPING_TOTAL_COLUMN_NAME = "SHIPPING_TOTAL";
   public static final String SIGNATURE_PROPERTY =
       System.getProperty("paypal.signature", "AFcWxV21C7fd0v3bYYYRCpSSRl31A7mmuIDpb.xZccUUAyCy0P.XGaWg");
+  public static final String SITE = "site";
   public static final String SITE_ENTITY_NAME = "Site";
   public static final String SITE_ID = "siteId";
   public static final String SITE_PARAM_NAME = "site";
@@ -415,7 +421,6 @@ public final class NetbrasoftSoapConstants {
   public static final String SITE_TABLE_NAME = "GNUOB_SITES";
   public static final String SITE_WEB_SERVICE_IMPL_NAME = "SiteWebServiceImpl";
   public static final String SITES_ID_COLUMN_NAME = "sites_ID";
-  public static final int START_POSITION_VALUE = 0;
   public static final String STATE_OR_PROVINCE_COLUMN_NAME = "STATE_OR_PROVINCE";
   public static final String STOCK_ENTITY_NAME = "Stock";
   public static final String STOCK_PARAM_NAME = "stock";
@@ -443,6 +448,7 @@ public final class NetbrasoftSoapConstants {
   public static final String TRANSACTION_TYPE_COLUMN_NAME = "TRANSACTION_TYPE";
   public static final String UNCHECKED = "unchecked";
   public static final String UNCHECKED_VALUE = "unchecked";
+  public static final String USER = "user";
   public static final String USER_ENTITY_NAME = "User";
   public static final String USER_ID = "userId";
   public static final String USER_PARAM_NAME = "user";
@@ -450,10 +456,10 @@ public final class NetbrasoftSoapConstants {
   public static final String USER_WEB_SERVICE_IMPL_NAME = "UserWebServiceImpl";
   public static final String USERNAME_PROPERTY = System.getProperty("paypal.username", "BR2GaGfg_api1.netbrasoft.com");
   public static final String VALUE_COLUMN_NAME = "VALUE";
+  public static final String VALUE_PROPERTY = "value";
   public static final String VELOCITY_CONTENT_RESOURCE_LOADER = "Velocity Content Resource Loader";
   public static final String VERSION_COLUMN_NAME = "VERSION";
   public static final String VERSION_PROPERTY = System.getProperty("paypal.version", "204.0");
-  public static final int ZERO = 0;
 
   private NetbrasoftSoapConstants() {}
 }

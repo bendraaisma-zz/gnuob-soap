@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 @XmlRootElement(name = META_DATA_ENTITY_NAME)
 @XmlType(propOrder = {SITE_PARAM_NAME, USER_PARAM_NAME, PASSWORD_PARAM_NAME})
@@ -81,6 +81,6 @@ public class MetaData {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
+    return reflectionToString(this, SHORT_PREFIX_STYLE);
   }
 }

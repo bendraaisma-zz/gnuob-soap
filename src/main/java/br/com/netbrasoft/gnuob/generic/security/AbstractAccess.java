@@ -22,14 +22,18 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_ID;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_ID;
+import static br.com.netbrasoft.gnuob.generic.security.AbstractAccess.NFQ1;
+import static br.com.netbrasoft.gnuob.generic.security.AbstractAccess.NFQ2;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.InheritanceType.JOINED;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -49,13 +53,13 @@ import br.com.netbrasoft.gnuob.generic.content.contexts.IContextElement;
 @Cacheable(value = true)
 @Entity(name = ACCESS_ENTITY_NAME)
 @Table(name = ACCESS_TABLE_NAME)
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = JOINED)
 // @formatter:off
-@FilterDefs({@FilterDef(name = AbstractAccess.NFQ1, parameters = @ParamDef(name = USER_ID, type = "long") ),
-    @FilterDef(name = AbstractAccess.NFQ2, parameters = @ParamDef(name = SITE_ID, type = "long") )})
+@FilterDefs({@FilterDef(name = NFQ1, parameters = @ParamDef(name = USER_ID, type = "long") ),
+    @FilterDef(name = NFQ2, parameters = @ParamDef(name = SITE_ID, type = "long") )})
 @Filters({@Filter(
     // Select based on user ownership.
-    name = AbstractAccess.NFQ1, condition = "((owner_ID = (SELECT GNUOB_USERS.ID FROM GNUOB_USERS "
+    name = NFQ1, condition = "((owner_ID = (SELECT GNUOB_USERS.ID FROM GNUOB_USERS "
         + " WHERE GNUOB_USERS.ID = :" + USER_ID + ") "
         + " AND (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
         + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OWNER != 'NONE_ACCESS')) "
@@ -71,7 +75,7 @@ import br.com.netbrasoft.gnuob.generic.content.contexts.IContextElement;
         // Or select based on other ownership.
         + " OR (SELECT GNUOB_PERMISSIONS.ID FROM GNUOB_PERMISSIONS "
         + " WHERE GNUOB_PERMISSIONS.ID = permission_ID AND GNUOB_PERMISSIONS.OTHERS != 'NONE_ACCESS')) "),
-    @Filter(name = AbstractAccess.NFQ2, condition = "site_ID = :" + SITE_ID)})
+    @Filter(name = NFQ2, condition = "site_ID = :" + SITE_ID)})
 // @formatter:on
 public abstract class AbstractAccess extends AbstractType implements IContextElement {
 
@@ -93,24 +97,24 @@ public abstract class AbstractAccess extends AbstractType implements IContextEle
   }
 
   @XmlTransient
-  @ManyToOne(cascade = {CascadeType.PERSIST}, optional = false)
+  @ManyToOne(cascade = {PERSIST}, optional = false)
   public Group getGroup() {
     return group;
   }
 
   @XmlTransient
-  @ManyToOne(cascade = {CascadeType.PERSIST}, optional = false)
+  @ManyToOne(cascade = {PERSIST}, optional = false)
   public User getOwner() {
     return owner;
   }
 
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE}, optional = false)
+  @OneToOne(cascade = {PERSIST, REMOVE, MERGE}, optional = false)
   public Permission getPermission() {
     return permission;
   }
 
   @XmlTransient
-  @ManyToOne(cascade = {CascadeType.PERSIST}, optional = false)
+  @ManyToOne(cascade = {PERSIST}, optional = false)
   public Site getSite() {
     return site;
   }

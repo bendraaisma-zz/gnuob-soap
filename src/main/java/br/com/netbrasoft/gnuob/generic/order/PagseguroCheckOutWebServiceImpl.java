@@ -22,11 +22,17 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DO_REFUND_
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DO_TRANSACTION_DETAILS_OPERATION_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_WEB_SERVICE_TARGET_NAMESPACE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.META_DATA_PARAM_NAME;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ONE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ORDER_PARAM_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAGSEGURO_CHECK_OUT_WEB_SERVICE_IMPL_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_PAGSEGURO_CHECK_OUT_SERVICE_IMPL_NAME;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static br.com.netbrasoft.gnuob.generic.OrderByEnum.NONE;
+import static br.com.netbrasoft.gnuob.generic.content.mail.MailEnum.CONFIRMATION_NEW_ORDER_MAIL;
+import static br.com.netbrasoft.gnuob.generic.content.mail.MailEnum.NO_MAIL;
 import static br.com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -36,14 +42,11 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import br.com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
-import br.com.netbrasoft.gnuob.generic.OrderByEnum;
 import br.com.netbrasoft.gnuob.generic.Paging;
 import br.com.netbrasoft.gnuob.generic.content.mail.MailAction;
 import br.com.netbrasoft.gnuob.generic.content.mail.MailControl;
-import br.com.netbrasoft.gnuob.generic.content.mail.MailEnum;
 import br.com.netbrasoft.gnuob.generic.contract.Contract;
 import br.com.netbrasoft.gnuob.generic.customer.Customer;
 import br.com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeCheckOutService;
@@ -56,7 +59,7 @@ import br.com.netbrasoft.gnuob.monitor.AppSimonInterceptor;
 @Interceptors(value = {AppSimonInterceptor.class, MailControl.class})
 public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckOutWebService<T> {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(PagseguroCheckOutWebServiceImpl.class);
+  private static final Logger LOGGER = getLogger(PagseguroCheckOutWebServiceImpl.class);
 
   @EJB(beanName = SECURED_PAGSEGURO_CHECK_OUT_SERVICE_IMPL_NAME)
   private ISecuredGenericTypeCheckOutService<T> securedGenericTypeCheckOutService;
@@ -71,7 +74,7 @@ public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckO
   private ISecuredGenericTypeService<Customer> securedGenericCustomerService;
 
   public PagseguroCheckOutWebServiceImpl() {
-    // This constructor will be used by the EBJ container.
+    // This constructor will be used by the EJB container.
   }
 
   PagseguroCheckOutWebServiceImpl(final ISecuredGenericTypeCheckOutService<T> securedGenericTypeCheckOutService,
@@ -86,7 +89,7 @@ public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckO
 
   @Override
   @WebMethod(operationName = DO_CHECKOUT_OPERATION_NAME)
-  @MailAction(operation = MailEnum.NO_MAIL)
+  @MailAction(operation = NO_MAIL)
   public T doCheckout(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
@@ -135,7 +138,7 @@ public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckO
 
   @Override
   @WebMethod(operationName = DO_CHECKOUT_DETAILS_OPERATION_NAME)
-  @MailAction(operation = MailEnum.NO_MAIL)
+  @MailAction(operation = NO_MAIL)
   public T doCheckoutDetails(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
@@ -155,7 +158,7 @@ public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckO
 
   @Override
   @WebMethod(operationName = DO_CHECKOUT_PAYMENT_OPERATION_NAME)
-  @MailAction(operation = MailEnum.CONFIRMATION_NEW_ORDER_MAIL)
+  @MailAction(operation = CONFIRMATION_NEW_ORDER_MAIL)
   public T doCheckoutPayment(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
@@ -175,7 +178,7 @@ public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckO
 
   @Override
   @WebMethod(operationName = DO_NOTIFICATION_OPERATION_NAME)
-  @MailAction(operation = MailEnum.NO_MAIL)
+  @MailAction(operation = NO_MAIL)
   public T doNotification(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
@@ -200,7 +203,7 @@ public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckO
   }
 
   private boolean containsOrder(final MetaData credentials, final T type) {
-    return securedGenericOrderService.count(credentials, type) > 0;
+    return securedGenericOrderService.count(credentials, type) > ZERO;
   }
 
   private T doTransactionDetails(final MetaData credentials, final T type, final String transactionId) {
@@ -211,13 +214,12 @@ public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckO
   }
 
   private T findOrder(final MetaData credentials, final T type) {
-    return securedGenericOrderService.find(credentials, type, Paging.getInstance(0, 1), OrderByEnum.NONE).iterator()
-        .next();
+    return securedGenericOrderService.find(credentials, type, Paging.getInstance(ZERO, ONE), NONE).iterator().next();
   }
 
   @Override
   @WebMethod(operationName = DO_REFUND_TRANSACTION_OPERATION_NAME)
-  @MailAction(operation = MailEnum.NO_MAIL)
+  @MailAction(operation = NO_MAIL)
   public T doRefundTransaction(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {
@@ -237,7 +239,7 @@ public class PagseguroCheckOutWebServiceImpl<T extends Order> implements ICheckO
 
   @Override
   @WebMethod(operationName = DO_TRANSACTION_DETAILS_OPERATION_NAME)
-  @MailAction(operation = MailEnum.NO_MAIL)
+  @MailAction(operation = NO_MAIL)
   public T doTransactionDetails(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = ORDER_PARAM_NAME) final T type) {
     try {

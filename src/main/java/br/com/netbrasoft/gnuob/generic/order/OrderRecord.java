@@ -44,24 +44,27 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPPING_C
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.START_POSITION_VALUE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.lang.Integer.valueOf;
+import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.counting;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.InheritanceType.SINGLE_TABLE;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
@@ -72,8 +75,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 import br.com.netbrasoft.gnuob.generic.product.Option;
@@ -82,7 +84,7 @@ import br.com.netbrasoft.gnuob.generic.product.Product;
 @Cacheable(value = false)
 @Entity(name = ORDER_RECORD_ENTITY_NAME)
 @Table(name = ORDER_RECORD_TABLE_NAME)
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = SINGLE_TABLE)
 @XmlRootElement(name = ORDER_RECORD_ENTITY_NAME)
 public class OrderRecord extends AbstractType {
 
@@ -113,14 +115,14 @@ public class OrderRecord extends AbstractType {
   private BigDecimal tax;
 
   public OrderRecord() {
-    options = new HashSet<>(0);
+    options = newHashSet();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isOptionsDetached()}).stream()
-        .filter(e -> e.booleanValue()).count() > 0;
+    return newArrayList(isAbstractTypeDetached(), isOptionsDetached()).stream().filter(e -> e.booleanValue())
+        .count() > ZERO;
   }
 
   @Transient
@@ -157,7 +159,7 @@ public class OrderRecord extends AbstractType {
   private void reinitAllPositionOptions() {
     int startPositionValue = START_POSITION_VALUE;
     for (final Option opt : options) {
-      opt.setPosition(Integer.valueOf(startPositionValue++));
+      opt.setPosition(valueOf(startPositionValue++));
     }
   }
 
@@ -179,7 +181,7 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = DESCRIPTION_COLUMN_NAME)
   public String getDescription() {
-    if (product != null && StringUtils.isBlank(description)) {
+    if (product != null && isBlank(description)) {
       description = product.getDescription();
     }
     return description;
@@ -215,7 +217,7 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = ITEM_HEIGHT_UNIT_COLUMN_NAME)
   public String getItemHeightUnit() {
-    if (product != null && StringUtils.isBlank(itemHeightUnit)) {
+    if (product != null && isBlank(itemHeightUnit)) {
       itemHeightUnit = product.getItemHeightUnit();
     }
     return itemHeightUnit;
@@ -233,7 +235,7 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = ITEM_LENGTH_UNIT_COLUMN_NAME)
   public String getItemLengthUnit() {
-    if (product != null && StringUtils.isBlank(itemLengthUnit)) {
+    if (product != null && isBlank(itemLengthUnit)) {
       itemLengthUnit = product.getItemLengthUnit();
     }
     return itemLengthUnit;
@@ -251,7 +253,7 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = ITEM_URL_COLUMN_NAME)
   public String getItemUrl() {
-    if (product != null && StringUtils.isBlank(itemUrl)) {
+    if (product != null && isBlank(itemUrl)) {
       itemUrl = product.getItemUrl();
     }
     return itemUrl;
@@ -269,7 +271,7 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = ITEM_WEIGHT_UNIT_COLUMN_NAME)
   public String getItemWeightUnit() {
-    if (product != null && StringUtils.isBlank(itemWeightUnit)) {
+    if (product != null && isBlank(itemWeightUnit)) {
       itemWeightUnit = product.getItemWeightUnit();
     }
     return itemWeightUnit;
@@ -287,7 +289,7 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = ITEM_WIDTH_UNIT_COLUMN_NAME)
   public String getItemWidthUnit() {
-    if (product != null && StringUtils.isBlank(itemWidthUnit)) {
+    if (product != null && isBlank(itemWidthUnit)) {
       itemWidthUnit = product.getItemWidthUnit();
     }
     return itemWidthUnit;
@@ -296,7 +298,7 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = NAME_COLUMN_NAME)
   public String getName() {
-    if (product != null && StringUtils.isBlank(name)) {
+    if (product != null && isBlank(name)) {
       name = product.getName();
     }
     return name;
@@ -309,7 +311,7 @@ public class OrderRecord extends AbstractType {
   }
 
   @OrderBy(POSITION_ASC)
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+  @OneToMany(cascade = {PERSIST, MERGE}, fetch = EAGER)
   @JoinTable(name = GNUOB_ORDER_RECORDS_GNUOB_OPTIONS_TABLE_NAME,
       joinColumns = {@JoinColumn(name = GNUOB_ORDER_RECORDS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
       inverseJoinColumns = {@JoinColumn(name = OPTIONS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
@@ -320,8 +322,8 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = ORDER_RECORD_ID_COLUMN_NAME, nullable = false)
   public String getOrderRecordId() {
-    if (orderRecordId == null || StringUtils.isBlank(orderRecordId)) {
-      orderRecordId = UUID.randomUUID().toString();
+    if (orderRecordId == null || isBlank(orderRecordId)) {
+      orderRecordId = randomUUID().toString();
     }
     return orderRecordId;
   }
@@ -340,7 +342,7 @@ public class OrderRecord extends AbstractType {
   @XmlElement
   @Column(name = PRODUCT_NUMBER_COLUMN_NAME, nullable = false)
   public String getProductNumber() {
-    if (product != null && StringUtils.isBlank(productNumber)) {
+    if (product != null && isBlank(productNumber)) {
       productNumber = product.getNumber();
     }
     return productNumber;
@@ -482,6 +484,6 @@ public class OrderRecord extends AbstractType {
 
   @Override
   public String toString() {
-    return new ReflectionToStringBuilder(this, SHORT_PREFIX_STYLE).toString();
+    return reflectionToString(this, SHORT_PREFIX_STYLE);
   }
 }

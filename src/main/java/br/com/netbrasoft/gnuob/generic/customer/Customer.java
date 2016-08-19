@@ -32,12 +32,17 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SALUTATION
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SUFFIX_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_ID_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_ID_TYPE_COLUMN_NAME;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static com.google.common.collect.Lists.newArrayList;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REMOVE;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.util.Arrays;
 import java.util.Date;
 
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -46,7 +51,6 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.context.Context;
 
 import br.com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
@@ -81,8 +85,8 @@ public class Customer extends AbstractAccess {
   @Override
   @Transient
   public boolean isDetached() {
-    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isAddressDetached()}).stream()
-        .filter(e -> e.booleanValue()).count() > 0;
+    return newArrayList(isAbstractTypeDetached(), isAddressDetached()).stream().filter(e -> e.booleanValue())
+        .count() > ZERO;
   }
 
   @Transient
@@ -96,7 +100,7 @@ public class Customer extends AbstractAccess {
   }
 
   @XmlElement(required = true)
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
+  @OneToOne(cascade = {PERSIST, MERGE, REMOVE}, orphanRemoval = true)
   public Address getAddress() {
     return address;
   }
@@ -134,8 +138,8 @@ public class Customer extends AbstractAccess {
   @XmlElement
   @Column(name = FRIENDLY_NAME_COLUMN_NAME)
   public String getFriendlyName() {
-    if (StringUtils.isBlank(friendlyName)) {
-      if (StringUtils.isNotBlank(getMiddleName())) {
+    if (isBlank(friendlyName)) {
+      if (isNotBlank(getMiddleName())) {
         friendlyName = getFirstName() + " " + getMiddleName() + " " + getLastName();
       } else {
         friendlyName = getFirstName() + " " + getLastName();

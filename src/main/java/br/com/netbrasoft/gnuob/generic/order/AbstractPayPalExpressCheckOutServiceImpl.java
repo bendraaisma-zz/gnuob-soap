@@ -96,7 +96,7 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
   private PayPalAPIInterface palAPIInterface;
 
   public AbstractPayPalExpressCheckOutServiceImpl() {
-    // This constructor will be used by the EBJ container.
+    // This constructor will be used by the EJB container.
   }
 
   protected AbstractPayPalExpressCheckOutServiceImpl(final PayPalAPIAAInterface palAPIAAInterface,

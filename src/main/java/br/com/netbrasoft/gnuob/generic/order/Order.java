@@ -52,21 +52,25 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TAX_TOTAL_
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TOKEN_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TRANSACTION_ID_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Sets.newHashSet;
+import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.counting;
+import static javax.persistence.CascadeType.MERGE;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REFRESH;
+import static javax.persistence.CascadeType.REMOVE;
+import static javax.persistence.FetchType.EAGER;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
@@ -77,7 +81,6 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.context.Context;
 
 import br.com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
@@ -127,14 +130,14 @@ public class Order extends AbstractAccess {
   private String transactionId;
 
   public Order() {
-    records = new HashSet<>(0);
+    records = newHashSet();
   }
 
   @Override
   @Transient
   public boolean isDetached() {
-    return Arrays.asList(new Boolean[] {isAbstractTypeDetached(), isContractDetached(), isInvoiceDetached(),
-        isShipmentDetachted(), isOrderRecordsDetached()}).stream().filter(e -> e.booleanValue()).count() > 0;
+    return newArrayList(isAbstractTypeDetached(), isContractDetached(), isInvoiceDetached(), isShipmentDetachted(),
+        isOrderRecordsDetached()).stream().filter(e -> e.booleanValue()).count() > ZERO;
   }
 
   @Transient
@@ -203,14 +206,14 @@ public class Order extends AbstractAccess {
   @XmlElement
   @Column(name = CHECKOUT_STATUS_COLUMN_NAME)
   public String getCheckoutStatus() {
-    if (StringUtils.isBlank(checkoutStatus)) {
+    if (isBlank(checkoutStatus)) {
       checkoutStatus = PENDING;
     }
     return checkoutStatus;
   }
 
   @XmlElement(required = true)
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+  @OneToOne(cascade = {PERSIST, MERGE, REFRESH})
   public Contract getContract() {
     return contract;
   }
@@ -218,8 +221,8 @@ public class Order extends AbstractAccess {
   @XmlElement
   @Column(name = CUSTOM_COLUMN_NAME)
   public String getCustom() {
-    if (StringUtils.isBlank(custom)) {
-      custom = UUID.randomUUID().toString();
+    if (isBlank(custom)) {
+      custom = randomUUID().toString();
     }
     return custom;
   }
@@ -304,8 +307,7 @@ public class Order extends AbstractAccess {
   }
 
   @XmlElement(required = true)
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
-      orphanRemoval = true, optional = false)
+  @OneToOne(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, orphanRemoval = true, optional = false)
   public Invoice getInvoice() {
     return invoice;
   }
@@ -362,8 +364,8 @@ public class Order extends AbstractAccess {
   @XmlElement(required = true)
   @Column(name = ORDER_ID_COLUMN_NAME, nullable = false)
   public String getOrderId() {
-    if (StringUtils.isBlank(orderId)) {
-      orderId = UUID.randomUUID().toString();
+    if (isBlank(orderId)) {
+      orderId = randomUUID().toString();
     }
     return orderId;
   }
@@ -378,8 +380,7 @@ public class Order extends AbstractAccess {
   }
 
   @OrderBy(POSITION_ASC)
-  @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
-      orphanRemoval = true, fetch = FetchType.EAGER)
+  @OneToMany(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, orphanRemoval = true, fetch = EAGER)
   @JoinTable(name = GNUOB_ORDERS_GNUOB_ORDER_RECORDS_TABLE_NAME,
       joinColumns = {@JoinColumn(name = GNUOB_ORDERS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)},
       inverseJoinColumns = {@JoinColumn(name = RECORDS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
@@ -388,8 +389,7 @@ public class Order extends AbstractAccess {
   }
 
   @XmlElement
-  @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.REFRESH},
-      orphanRemoval = true)
+  @OneToOne(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, orphanRemoval = true)
   public Shipment getShipment() {
     return shipment;
   }

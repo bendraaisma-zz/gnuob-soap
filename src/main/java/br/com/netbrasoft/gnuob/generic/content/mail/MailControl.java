@@ -33,9 +33,11 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.RESOURCE_L
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.TEXT_HTML_CHARSET_UTF_8;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.UNCHECKED_VALUE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VELOCITY_CONTENT_RESOURCE_LOADER;
+import static com.google.common.collect.Lists.newArrayList;
+import static javax.mail.Transport.send;
+import static javax.persistence.LockModeType.NONE;
 
 import java.io.StringWriter;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Properties;
 
@@ -46,10 +48,8 @@ import javax.interceptor.InvocationContext;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.persistence.LockModeType;
 
 import org.apache.velocity.Template;
 import org.apache.velocity.app.VelocityEngine;
@@ -74,7 +74,7 @@ public class MailControl<A extends AbstractAccess> {
   private Session session;
 
   public MailControl() {
-    // This constructor will be used by the EBJ container.
+    // This constructor will be used by the EJB container.
   }
 
   MailControl(final IGenericTypeService<A> accessTypeService, final IContextVisitor contextVisitor,
@@ -100,16 +100,16 @@ public class MailControl<A extends AbstractAccess> {
   }
 
   private MetaData getCredentials(final InvocationContext ctx) {
-    return (MetaData) Arrays.asList(ctx.getParameters()).stream().filter(e -> e instanceof MetaData).findFirst().get();
+    return (MetaData) newArrayList(ctx.getParameters()).stream().filter(e -> e instanceof MetaData).findFirst().get();
   }
 
   private A getAttachedTyp(final InvocationContext ctx) {
-    return accessTypeService.find(getType(ctx), getType(ctx).getId(), LockModeType.NONE);
+    return accessTypeService.find(getType(ctx), getType(ctx).getId(), NONE);
   }
 
   @SuppressWarnings(UNCHECKED_VALUE)
   private A getType(final InvocationContext ctx) {
-    return (A) Arrays.asList(ctx.getParameters()).stream().filter(e -> e instanceof AbstractAccess).findFirst().get();
+    return (A) newArrayList(ctx.getParameters()).stream().filter(e -> e instanceof AbstractAccess).findFirst().get();
   }
 
   private MailAction getMailAction(final InvocationContext ctx) {
@@ -119,7 +119,7 @@ public class MailControl<A extends AbstractAccess> {
   private void processMail(final MetaData credentials, final A type, final MailAction mailAction) {
     try {
       if (mailAction.operation().isEnabled()) {
-        Transport.send(mail(credentials, type, mailAction));
+        send(mail(credentials, type, mailAction));
       }
     } catch (final Exception e) {
       throw new GNUOpenBusinessServiceException("Mail control exception during email processing.", e);
@@ -148,7 +148,8 @@ public class MailControl<A extends AbstractAccess> {
   private Properties createVelocityEngineProperties(final MetaData credentials) {
     final Properties properties = new Properties();
     properties.setProperty(RESOURCE_LOADER, CONTENT);
-    properties.setProperty(CONTENT_RESOURCE_LOADER_CLASS, BR_COM_NETBRASOFT_GNUOB_GENERIC_CONTENT_CONTENT_RESOURCE_LOADER);
+    properties.setProperty(CONTENT_RESOURCE_LOADER_CLASS,
+        BR_COM_NETBRASOFT_GNUOB_GENERIC_CONTENT_CONTENT_RESOURCE_LOADER);
     properties.setProperty(CONTENT_RESOURCE_LOADER_DESCRIPTION, VELOCITY_CONTENT_RESOURCE_LOADER);
     properties.setProperty(CONTENT_RESOURCE_LOADER_CACHE, FALSE);
     properties.setProperty(CONTENT_RESOURCE_LOADER_MODIFICATION_CHECK_INTERVAL, MODIFICATION_CHECK_INTERVAL_IN_SEC);
