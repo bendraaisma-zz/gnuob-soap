@@ -15,6 +15,7 @@
 package br.com.netbrasoft.gnuob.generic.customer;
 
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.UNCHECKED_VALUE;
+import static br.com.netbrasoft.gnuob.generic.OrderByEnum.NONE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -34,10 +35,7 @@ import org.junit.Test;
 
 import br.com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import br.com.netbrasoft.gnuob.generic.IGenericTypeWebService;
-import br.com.netbrasoft.gnuob.generic.OrderByEnum;
 import br.com.netbrasoft.gnuob.generic.Paging;
-import br.com.netbrasoft.gnuob.generic.customer.PostalCode;
-import br.com.netbrasoft.gnuob.generic.customer.PostalCodeWebServiceImpl;
 import br.com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeService;
 import br.com.netbrasoft.gnuob.generic.security.MetaData;
 
@@ -100,8 +98,7 @@ public class PostalCodeWebServiceImplTest {
 
   @Test
   public void testFindPostalCodePaging() {
-    assertTrue("Find",
-        postalCodeWebServiceImpl.find(mockCredentials, spyPostalCode, mockPaging, OrderByEnum.NONE).isEmpty());
+    assertTrue("Find", postalCodeWebServiceImpl.find(mockCredentials, spyPostalCode, mockPaging, NONE).isEmpty());
     verify(mockSecuredGenericPostalCodeService, times(1)).find(any(), any(), any(), any(), anyVararg());
   }
 
@@ -109,7 +106,7 @@ public class PostalCodeWebServiceImplTest {
   public void testFindPostalCodePagingGetttingGNUOpenBusinessServiceException() {
     when(mockSecuredGenericPostalCodeService.find(any(), any(), any(), any(), anyVararg()))
         .thenThrow(new RuntimeException());
-    postalCodeWebServiceImpl.find(mockCredentials, spyPostalCode, mockPaging, OrderByEnum.NONE);
+    postalCodeWebServiceImpl.find(mockCredentials, spyPostalCode, mockPaging, NONE);
   }
 
   @Test(expected = GNUOpenBusinessServiceException.class)

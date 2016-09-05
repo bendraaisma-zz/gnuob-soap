@@ -14,9 +14,11 @@
 
 package br.com.netbrasoft.gnuob.generic.category;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getCategoryInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -32,6 +34,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.After;
@@ -58,6 +63,23 @@ public class CategoryTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonCategory() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Category category = getCategoryInstance();
+    final Category jsonCategory = Category.getInstanceByJson(mapper.writeValueAsString(category));
+    assertEquals(category.getActive(), jsonCategory.getActive());
+    assertEquals(category.getId(), jsonCategory.getId());
+    assertEquals(category.getVersion(), jsonCategory.getVersion());
+    assertEquals(category.getName(), jsonCategory.getName());
+    assertEquals(category.getDescription(), jsonCategory.getDescription());
+    assertEquals(category.getPermission().getGroup(), jsonCategory.getPermission().getGroup());
+    assertEquals(category.getPermission().getOthers(), jsonCategory.getPermission().getOthers());
+    assertEquals(category.getPermission().getOwner(), jsonCategory.getPermission().getOwner());
+    assertEquals(category.getPosition(), jsonCategory.getPosition());
+    assertFalse(jsonCategory.getContents().isEmpty());
+    assertFalse(jsonCategory.getSubCategories().isEmpty());
+  }
 
   @Test
   public void testAccept() {

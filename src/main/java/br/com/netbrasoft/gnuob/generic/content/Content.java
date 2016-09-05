@@ -14,14 +14,19 @@
 
 package br.com.netbrasoft.gnuob.generic.content;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_COLUMN_NAME;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_ELEMENT_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_ENTITY_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_TABLE_NAME;
-import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_XML_ELEMENT_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.FORMAT_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MEDIUMBLOB_COLUMN_DEFINITION;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NAME_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.POSITION_COLUMN_NAME;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -33,6 +38,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.velocity.context.Context;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import br.com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
 import br.com.netbrasoft.gnuob.generic.security.AbstractAccess;
@@ -50,6 +59,20 @@ public class Content extends AbstractAccess {
   private String name;
   private Integer position;
 
+  public Content() {
+    super();
+  }
+
+  public Content(String json)
+      throws JsonMappingException, IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, Content.class));
+  }
+
+  public static Content getInstanceByJson(String json)
+      throws IllegalAccessException, InvocationTargetException, IOException {
+    return new Content(json);
+  }
+
   public static Content getInstance() {
     final Content content = new Content();
     content.setActive(true);
@@ -63,6 +86,7 @@ public class Content extends AbstractAccess {
   }
 
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return isAbstractTypeDetached();
@@ -73,40 +97,44 @@ public class Content extends AbstractAccess {
     return visitor.visit(this);
   }
 
-  @XmlElement(name = CONTENT_XML_ELEMENT_NAME, required = true)
+  @JsonProperty(value = CONTENT_ELEMENT_NAME, required = true)
+  @XmlElement(name = CONTENT_ELEMENT_NAME, required = true)
   @Column(name = CONTENT_COLUMN_NAME, columnDefinition = MEDIUMBLOB_COLUMN_DEFINITION, nullable = false)
   public byte[] getData() {
     return data;
-  }
-
-  @XmlElement(required = true)
-  @Column(name = FORMAT_COLUMN_NAME, nullable = false)
-  public String getFormat() {
-    return format;
-  }
-
-  @XmlElement(required = true)
-  @Column(name = NAME_COLUMN_NAME, nullable = false)
-  public String getName() {
-    return name;
-  }
-
-  @XmlTransient
-  @Column(name = POSITION_COLUMN_NAME)
-  public Integer getPosition() {
-    return position;
   }
 
   public void setData(final byte[] data) {
     this.data = data;
   }
 
+  @JsonProperty(required = true)
+  @XmlElement(required = true)
+  @Column(name = FORMAT_COLUMN_NAME, nullable = false)
+  public String getFormat() {
+    return format;
+  }
+
   public void setFormat(final String format) {
     this.format = format;
   }
 
+  @JsonProperty(required = true)
+  @XmlElement(required = true)
+  @Column(name = NAME_COLUMN_NAME, nullable = false)
+  public String getName() {
+    return name;
+  }
+
   public void setName(final String name) {
     this.name = name;
+  }
+
+  @JsonIgnore
+  @XmlTransient
+  @Column(name = POSITION_COLUMN_NAME)
+  public Integer getPosition() {
+    return position;
   }
 
   public void setPosition(final Integer position) {

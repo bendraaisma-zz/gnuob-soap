@@ -21,7 +21,8 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({OrderWebServiceImplTest.class, OrderTest.class, OrderRecordTest.class, ShipmentTest.class,
     InvoiceTest.class, PaymentTest.class, PagseguroCheckOutWebServiceImplTest.class,
-    PayPalExpressCheckOutWebServiceImplTest.class})
+    PayPalExpressCheckOutWebServiceImplTest.class, OrderRESTfulServiceImplTest.class,
+    PayPalExpressCheckOutRESTfulServiceImplTest.class, PagseguroCheckOutRESTfulServiceImplTest.class})
 public class OrderSuite {
 
 }

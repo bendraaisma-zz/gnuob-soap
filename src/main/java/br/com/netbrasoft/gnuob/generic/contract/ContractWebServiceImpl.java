@@ -28,6 +28,7 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PERSIST_CO
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REFRESH_CONTRACT_OPERATION_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.REMOVE_CONTRACT_OPERATION_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
+import static br.com.netbrasoft.gnuob.generic.content.mail.MailEnum.WELCOME_NEW_CUSTOMER_MAIL;
 import static br.com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -47,7 +48,6 @@ import br.com.netbrasoft.gnuob.generic.IGenericTypeWebService;
 import br.com.netbrasoft.gnuob.generic.OrderByEnum;
 import br.com.netbrasoft.gnuob.generic.Paging;
 import br.com.netbrasoft.gnuob.generic.content.mail.MailAction;
-import br.com.netbrasoft.gnuob.generic.content.mail.MailEnum;
 import br.com.netbrasoft.gnuob.generic.customer.Customer;
 import br.com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeService;
 import br.com.netbrasoft.gnuob.generic.security.MetaData;
@@ -168,7 +168,7 @@ public class ContractWebServiceImpl<T extends Contract> implements IGenericTypeW
 
   @Override
   @WebMethod(operationName = PERSIST_CONTRACT_OPERATION_NAME)
-  @MailAction(operation = MailEnum.WELCOME_NEW_CUSTOMER_MAIL)
+  @MailAction(operation = WELCOME_NEW_CUSTOMER_MAIL)
   public T persist(@WebParam(name = META_DATA_PARAM_NAME, header = true) final MetaData credentials,
       @WebParam(name = CONTRACT_PARAM_NAME) final T type) {
     try {

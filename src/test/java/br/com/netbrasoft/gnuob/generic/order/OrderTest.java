@@ -14,9 +14,11 @@
 
 package br.com.netbrasoft.gnuob.generic.order;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getOrderInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -35,6 +37,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -69,6 +73,47 @@ public class OrderTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonOrder() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Order order = getOrderInstance();
+    final Order jsonOrder = Order.getInstanceByJson(mapper.writeValueAsString(order));
+    assertEquals(order.getActive(), jsonOrder.getActive());
+    assertEquals(order.getId(), jsonOrder.getId());
+    assertEquals(order.getVersion(), jsonOrder.getVersion());
+    assertEquals(order.getBillingAgreementId(), jsonOrder.getBillingAgreementId());
+    assertEquals(order.getCheckout(), jsonOrder.getCheckout());
+    assertEquals(order.getCheckoutStatus(), jsonOrder.getCheckoutStatus());
+    assertNotNull(order.getContract());
+    assertEquals(order.getCustom(), jsonOrder.getCustom());
+    assertEquals(order.getDiscountTotal(), jsonOrder.getDiscountTotal());
+    assertEquals(order.getExtraAmount(), jsonOrder.getExtraAmount());
+    assertEquals(order.getGiftMessage(), jsonOrder.getGiftMessage());
+    assertEquals(order.getGiftMessageEnable(), jsonOrder.getGiftMessageEnable());
+    assertEquals(order.getGiftReceiptEnable(), jsonOrder.getGiftReceiptEnable());
+    assertEquals(order.getGiftWrapAmount(), jsonOrder.getGiftWrapAmount());
+    assertEquals(order.getGiftWrapName(), jsonOrder.getGiftWrapName());
+    assertEquals(order.getGiftWrapEnable(), jsonOrder.getGiftWrapEnable());
+    assertEquals(order.getHandlingTotal(), jsonOrder.getHandlingTotal());
+    assertEquals(order.getInsuranceTotal(), jsonOrder.getInsuranceTotal());
+    assertEquals(order.getItemTotal(), jsonOrder.getItemTotal());
+    assertNotNull(order.getInvoice());
+    assertEquals(order.getItemTotal(), jsonOrder.getItemTotal());
+    assertEquals(order.getNote(), jsonOrder.getNote());
+    assertEquals(order.getNoteText(), jsonOrder.getNoteText());
+    assertEquals(order.getNotificationId(), jsonOrder.getNotificationId());
+    assertEquals(order.getOrderDescription(), jsonOrder.getOrderDescription());
+    assertEquals(order.getOrderId(), jsonOrder.getOrderId());
+    assertEquals(order.getOrderTotal(), jsonOrder.getOrderTotal());
+    assertEquals(order.getPermission().getGroup(), jsonOrder.getPermission().getGroup());
+    assertEquals(order.getPermission().getOthers(), jsonOrder.getPermission().getOthers());
+    assertEquals(order.getPermission().getOwner(), jsonOrder.getPermission().getOwner());
+    assertEquals(order.getShippingDiscount(), jsonOrder.getShippingDiscount());
+    assertEquals(order.getShippingTotal(), jsonOrder.getShippingTotal());
+    assertEquals(order.getTaxTotal(), jsonOrder.getTaxTotal());
+    assertEquals(order.getTransactionId(), jsonOrder.getTransactionId());
+    assertFalse(jsonOrder.getRecords().isEmpty());
+  }
 
   @Test
   public void testAccept() {

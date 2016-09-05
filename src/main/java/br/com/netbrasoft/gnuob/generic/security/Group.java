@@ -14,10 +14,15 @@
 
 package br.com.netbrasoft.gnuob.generic.security;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DESCRIPTION_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP_ENTITY_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP_TABLE_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NAME_COLUMN_NAME;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -28,6 +33,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.velocity.context.Context;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
 
@@ -42,7 +50,24 @@ public class Group extends AbstractAccess {
   private String description;
   private String name;
 
+  public Group() {
+    super();
+  }
+
+  public Group(String json) throws IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, Group.class));
+  }
+
+  public static Group getInstance() {
+    return new Group();
+  }
+
+  public static Group getInstanceByJson(String json) throws IllegalAccessException, InvocationTargetException, IOException {
+    return new Group(json);
+  }
+
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return isAbstractTypeDetached();
@@ -53,20 +78,22 @@ public class Group extends AbstractAccess {
     return visitor.visit(this);
   }
 
+  @JsonProperty
   @XmlElement
   @Column(name = DESCRIPTION_COLUMN_NAME)
   public String getDescription() {
     return description;
   }
 
+  public void setDescription(final String description) {
+    this.description = description;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = NAME_COLUMN_NAME, nullable = false, unique = true)
   public String getName() {
     return name;
-  }
-
-  public void setDescription(final String description) {
-    this.description = description;
   }
 
   public void setName(final String name) {

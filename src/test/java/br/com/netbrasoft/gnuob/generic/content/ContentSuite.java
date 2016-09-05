@@ -5,7 +5,8 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ContentTest.class, ContentWebServiceImplTest.class, ContentResourceLoaderTest.class})
+@SuiteClasses({ContentTest.class, ContentWebServiceImplTest.class, ContentRESTfulServiceImplTest.class,
+    ContentResourceLoaderTest.class})
 public class ContentSuite {
 
 }

@@ -20,6 +20,20 @@ public final class NetbrasoftSoapConstants {
   public static final int ZERO = 0;
   public static final int ONE = 1;
   public static final int START_POSITION_VALUE = 0;
+  public static final String USER_RESTFUL_SERVICE_IMPL = "UserRESTfulServiceImpl";
+  public static final String GROUP_RESTFUL_SERVICE_IMPL = "GroupRESTfulServiceImpl";
+  public static final String CUSTOMER_RESTFUL_SERVICE_IMPL = "CustomerRESTFulServiceImpl";
+  public static final String CONTRACT_RESTFUL_SERVICE_IMPL = "ContractRESTfulServiceImpl";
+  public static final String CATEGORY_RESTFUL_SERVICE_IMPL = "CategoryRESTfulServiceImpl";
+  public static final String CONTENT_RESTFUL_SERVICE_IMPL = "ContentRESTfulServiceImpl";
+  public static final String POSTAL_CODE_RESTFUL_SERVICE_IMPL = "PostalCodeRESTFulServiceImpl";
+  public static final String OFFER_RESTFUL_SERVICE_IMPL = "OfferRESTfulServiceImpl";
+  public static final String ORDER_RESTFUL_SERVICE_IMPL = "OrderRESTfulServiceImpl";
+  public static final String PAGSEGURO_CHECK_OUT_RESTFUL_SERVICE_IMPL = "PagseguroCheckOutRESTfulServiceImpl";
+  public static final String PAY_PAL_EXPRESS_CHECK_OUT_RESTFUL_SERVICE_IMPL = "PayPalExpressCheckOutRESTfulServiceImpl";
+  public static final String PRODUCT_RESTFUL_SERVICE_IMPL = "ProductRESTfulServiceImpl";
+  public static final String SETTING_RESTFUL_SERVICE_IMPL = "SettingRESTfulServiceImpl";
+  public static final String SITE_RESTFUL_SERVICE_IMPL = "SiteRESTfulServiceImpl";
   public static final String ACCESS_COLUMN_NAME = "ACCESS";
   public static final String ACCESS_ENTITY_NAME = "Access";
   public static final String ACCESS_TABLE_NAME = "GNUOB_ACCESS";
@@ -63,12 +77,12 @@ public final class NetbrasoftSoapConstants {
   public static final String CONTENT_RESOURCE_LOADER_DESCRIPTION = "content.resource.loader.description";
   public static final String CONTENT_RESOURCE_LOADER_MODIFICATION_CHECK_INTERVAL =
       "content.resource.loader.modificationCheckInterval";
-  public static final String CONTENT_RESOURCE_LOADER_PASSWORD = "content.resource.loader.password";
+  public static final String CONTENT_RESOURCE_LOADER_PSWD = "content.resource.loader.password";
   public static final String CONTENT_RESOURCE_LOADER_SITE = "content.resource.loader.site";
   public static final String CONTENT_RESOURCE_LOADER_USER = "content.resource.loader.user";
   public static final String CONTENT_TABLE_NAME = "GNUOB_CONTENTS";
   public static final String CONTENT_WEB_SERVICE_IMPL_NAME = "ContentWebServiceImpl";
-  public static final String CONTENT_XML_ELEMENT_NAME = "content";
+  public static final String CONTENT_ELEMENT_NAME = "content";
   public static final String CONTENTS_ID_COLUMN_NAME = "contents_ID";
   public static final String CONTEXT_VISITOR_IMPL_NAME = "ContextVisitorImpl";
   public static final String CONTRACT_ENTITY_NAME = "Contract";
@@ -298,11 +312,11 @@ public final class NetbrasoftSoapConstants {
       "http://netbrasoft.duckdns.org/pagseguro_notifications";
   public static final String PAGSEGURO_PRODUCTION_TOKEN_PROPERTY_VALUE = "NO_PRODUCTION_TOKEN";
   public static final String PAGSEGURO_REDIRECT_PROPERTY_VALUE = "http://localhost:8080/confirmation.html";
-  public static final String PASSWORD_COLUMN_NAME = "PASSWORD";
+  public static final String PSWD_COLUMN_NAME = "PASSWORD";
 
-  public static final String PASSWORD_PARAM_NAME = "password";
-  public static final String PASSWORD_PROPERTY = System.getProperty("paypal.password", "UU9AJQJYE2CAMP54");
-  public static final String PASSWORD_REGEX = "^[0-9A-F]{16}:\\d{4}:[0-9A-F]{40}";
+  public static final String PSWD_PARAM_NAME = "password";
+  public static final String PSWD_PROPERTY = System.getProperty("paypal.password", "UU9AJQJYE2CAMP54");
+  public static final String PSWD_REGEX = "^[0-9A-F]{16}:\\d{4}:[0-9A-F]{40}";
   public static final String PAY_PAL_EXPRESS_CHECK_OUT_WEB_SERVICE_IMPL_NAME = "PayPalExpressCheckOutWebServiceImpl";
   public static final String PAYER_BUSINESS_COLUMN_NAME = "PAYER_BUSINESS";
   public static final String PAYER_COLUMN_NAME = "PAYER";

@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.category;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENTS_ID_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DESCRIPTION_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_SUB_CATEGORIES_GNUOB_CONTENTS_TABLE_NAME;
@@ -39,9 +40,13 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import javax.persistence.Cacheable;
@@ -58,8 +63,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import org.hibernate.annotations.Cache;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 import br.com.netbrasoft.gnuob.generic.content.Content;
@@ -84,18 +91,35 @@ public class SubCategory extends AbstractType {
     subCategories = newHashSet();
   }
 
+
+  public SubCategory(String json) throws IllegalAccessException, InvocationTargetException, IOException {
+    copyProperties(this, mapper.readValue(json, SubCategory.class));
+  }
+
+  public static SubCategory getInstance() {
+    return new SubCategory();
+  }
+
+  public static SubCategory getInstanceByJson(String json)
+      throws IllegalAccessException, InvocationTargetException, IOException {
+    return new SubCategory(json);
+  }
+
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return newArrayList(isAbstractTypeDetached(), isContentsAttached(), isSubCategoriesAttached()).stream()
         .filter(e -> e.booleanValue()).count() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isContentsAttached() {
     return contents.stream().filter(e -> e.isDetached()).collect(counting()).longValue() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isSubCategoriesAttached() {
     return subCategories.stream().filter(e -> e.isDetached()).collect(counting()).longValue() > ZERO;
@@ -126,6 +150,7 @@ public class SubCategory extends AbstractType {
     }
   }
 
+  @JsonIgnore
   @XmlTransient
   @Column(name = POSITION_COLUMN_NAME)
   public Integer getPosition() {
@@ -136,6 +161,7 @@ public class SubCategory extends AbstractType {
     this.position = position;
   }
 
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = NAME_COLUMN_NAME, nullable = false)
   public String getName() {
@@ -146,6 +172,7 @@ public class SubCategory extends AbstractType {
     this.name = name;
   }
 
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = DESCRIPTION_COLUMN_NAME, nullable = false)
   public String getDescription() {

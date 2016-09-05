@@ -14,9 +14,11 @@
 
 package br.com.netbrasoft.gnuob.generic.offer;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getOfferInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -35,6 +37,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -62,6 +66,32 @@ public class OfferTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonOffer() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Offer offer = getOfferInstance();
+    final Offer jsonOffer = Offer.getInstanceByJson(mapper.writeValueAsString(offer));
+    assertEquals(offer.getActive(), jsonOffer.getActive());
+    assertEquals(offer.getId(), jsonOffer.getId());
+    assertEquals(offer.getVersion(), jsonOffer.getVersion());
+    assertNotNull(offer.getContract());
+    assertEquals(offer.getDiscountTotal(), jsonOffer.getDiscountTotal());
+    assertEquals(offer.getExtraAmount(), jsonOffer.getExtraAmount());
+    assertEquals(offer.getHandlingTotal(), jsonOffer.getHandlingTotal());
+    assertEquals(offer.getInsuranceTotal(), jsonOffer.getInsuranceTotal());
+    assertEquals(offer.getItemTotal(), jsonOffer.getItemTotal());
+    assertEquals(offer.getMaxTotal(), jsonOffer.getMaxTotal());
+    assertEquals(offer.getOfferDescription(), jsonOffer.getOfferDescription());
+    assertEquals(offer.getOfferId(), jsonOffer.getOfferId());
+    assertEquals(offer.getOfferTotal(), jsonOffer.getOfferTotal());
+    assertEquals(offer.getPermission().getGroup(), jsonOffer.getPermission().getGroup());
+    assertEquals(offer.getPermission().getOthers(), jsonOffer.getPermission().getOthers());
+    assertEquals(offer.getPermission().getOwner(), jsonOffer.getPermission().getOwner());
+    assertEquals(offer.getShippingDiscount(), jsonOffer.getShippingDiscount());
+    assertEquals(offer.getShippingTotal(), jsonOffer.getShippingTotal());
+    assertEquals(offer.getTaxTotal(), jsonOffer.getTaxTotal());
+    assertFalse(jsonOffer.getRecords().isEmpty());
+  }
 
   @Test
   public void testAccept() {

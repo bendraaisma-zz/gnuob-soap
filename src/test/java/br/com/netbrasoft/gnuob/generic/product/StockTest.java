@@ -14,6 +14,8 @@
 
 package br.com.netbrasoft.gnuob.generic.product;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getStockInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -26,6 +28,8 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -50,6 +54,17 @@ public class StockTest {
 
   @After
   public void tearDown() throws Exception {}
+  
+  @Test
+  public void testJsonStock() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Stock stock = getStockInstance();
+    final Stock jsonStock = Stock.getInstanceByJson(mapper.writeValueAsString(stock));
+    assertEquals(stock.getId(), jsonStock.getId());
+    assertEquals(stock.getVersion(), jsonStock.getVersion());
+    assertEquals(stock.getMaxQuantity(), jsonStock.getMaxQuantity());
+    assertEquals(stock.getMinQuantity(), jsonStock.getMinQuantity());
+    assertEquals(stock.getQuantity(), jsonStock.getQuantity());
+  }
 
   @Test
   public void testGetMaxQuantity() {

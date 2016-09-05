@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.product;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DESCRIPTION_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DISABLED_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_OPTIONS_GNUOB_SUB_OPTIONS_TABLE_NAME;
@@ -36,8 +37,12 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import javax.persistence.Cacheable;
@@ -53,7 +58,8 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 
@@ -76,13 +82,27 @@ public class Option extends AbstractType {
     subOptions = newHashSet();
   }
 
+  public Option(String json) throws IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, Option.class));
+  }
+
+  public static Option getInstance() {
+    return new Option();
+  }
+
+  public static Option getInstanceByJson(String json) throws IllegalAccessException, InvocationTargetException, IOException {
+    return new Option(json);
+  }
+
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return newArrayList(isAbstractTypeDetached(), isSubOptionsDetached()).stream().filter(e -> e.booleanValue())
         .count() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isSubOptionsDetached() {
     return subOptions != null && subOptions.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
@@ -105,16 +125,26 @@ public class Option extends AbstractType {
     }
   }
 
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = DESCRIPTION_COLUMN_NAME, nullable = false)
   public String getDescription() {
     return description;
   }
 
+  public void setDescription(final String description) {
+    this.description = description;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = POSITION_COLUMN_NAME)
   public Integer getPosition() {
     return position;
+  }
+
+  public void setPosition(final Integer position) {
+    this.position = position;
   }
 
   @OrderBy(POSITION_ASC)
@@ -126,36 +156,30 @@ public class Option extends AbstractType {
     return subOptions;
   }
 
+  public void setSubOptions(final Set<SubOption> subOptions) {
+    this.subOptions = subOptions;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = VALUE_COLUMN_NAME, nullable = false)
   public String getValue() {
     return value;
   }
 
+  public void setValue(final String value) {
+    this.value = value;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = DISABLED_COLUMN_NAME, nullable = false)
   public boolean isDisabled() {
     return disabled;
   }
 
-  public void setDescription(final String description) {
-    this.description = description;
-  }
-
   public void setDisabled(final boolean disabled) {
     this.disabled = disabled;
-  }
-
-  public void setPosition(final Integer position) {
-    this.position = position;
-  }
-
-  public void setSubOptions(final Set<SubOption> subOptions) {
-    this.subOptions = subOptions;
-  }
-
-  public void setValue(final String value) {
-    this.value = value;
   }
 
   @Override

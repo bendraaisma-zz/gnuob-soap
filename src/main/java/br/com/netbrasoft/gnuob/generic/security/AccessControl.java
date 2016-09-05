@@ -15,9 +15,19 @@
 package br.com.netbrasoft.gnuob.generic.security;
 
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GENERIC_TYPE_SERVICE_IMPL_NAME;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ONE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_ID;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.UNCHECKED;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_ID;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static br.com.netbrasoft.gnuob.generic.OrderByEnum.NONE;
+import static br.com.netbrasoft.gnuob.generic.security.AbstractAccess.NFQ1;
+import static br.com.netbrasoft.gnuob.generic.security.AbstractAccess.NFQ2;
+import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.CREATE;
+import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.DELETE;
+import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.READ;
+import static br.com.netbrasoft.gnuob.generic.security.Rule.Operation.UPDATE;
+import static org.javasimon.SimonManager.getStopwatch;
 
 import java.util.Arrays;
 
@@ -26,19 +36,30 @@ import javax.interceptor.AroundInvoke;
 import javax.interceptor.InvocationContext;
 import javax.persistence.LockModeType;
 
-import org.javasimon.SimonManager;
 import org.javasimon.Split;
 
 import br.com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 import br.com.netbrasoft.gnuob.generic.IGenericTypeService;
-import br.com.netbrasoft.gnuob.generic.OrderByEnum;
 import br.com.netbrasoft.gnuob.generic.Paging;
 import br.com.netbrasoft.gnuob.generic.Parameter;
 import br.com.netbrasoft.gnuob.generic.security.Rule.Operation;
 import de.rtner.security.auth.spi.SimplePBKDF2;
 
 public class AccessControl<A extends AbstractAccess, U extends User, S extends Site> {
+
+  private static final String ACCESS_CONTROL_AUTHENTICATE_SUBJECT =
+      "br.com.netbrasoft.gnuob.generic.security.AccessControl.authenticateSubject";
+  private static final String ACCESS_CONTROL_DELETE_OPERATION_ACCESS =
+      "br.com.netbrasoft.gnuob.generic.security.AccessControl.deleteOperationAccess";
+  private static final String ACCESS_CONTROL_UPDATE_OPERATION_ACCESS =
+      "br.com.netbrasoft.gnuob.generic.security.AccessControl.updateOperationAccess";
+  private static final String ACCESS_CONTROL_NONE_OPERATION_ACCESS =
+      "br.com.netbrasoft.gnuob.generic.security.AccessControl.noneOperationAccess";
+  private static final String ACCESS_CONTROL_READ_OPERATION_ACCESS =
+      "br.com.netbrasoft.gnuob.generic.security.AccessControl.readOperationAccess";
+  private static final String ACCESS_CONTROL_CREATE_OPERATION_ACCESS =
+      "br.com.netbrasoft.gnuob.generic.security.AccessControl.createOperationAccess";
 
   @SuppressWarnings(UNCHECKED)
   private class Subject {
@@ -77,10 +98,13 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
   }
 
   private Object createOperationAccess(final InvocationContext ctx) {
-    final Split split = SimonManager
-        .getStopwatch("br.com.netbrasoft.gnuob.generic.security.AccessControl.createOperationAccess").start();
+    final Split split = getStopwatch(ACCESS_CONTROL_CREATE_OPERATION_ACCESS).start();
     try {
       return processCreateOperationAccess(ctx, authenticateSubject(getMetaData(ctx)), getAbstractType(ctx));
+    } catch (final GNUOpenBusinessServiceException e) {
+      throw e;
+    } catch (final Exception e) {
+      throw new GNUOpenBusinessServiceException("Security error, access is denied (ERR06)", e);
     } finally {
       split.stop();
     }
@@ -89,7 +113,7 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
   @SuppressWarnings(UNCHECKED)
   private Object processCreateOperationAccess(final InvocationContext ctx, final Subject subject,
       final AbstractType abstractType) {
-    if (isRoot(subject) || isAllowedToUpdate(subject, Operation.CREATE)) {
+    if (isRoot(subject) || isAllowedToUpdate(subject, CREATE)) {
       try {
         if (abstractType instanceof AbstractAccess) {
           createAccess((A) abstractType, subject);
@@ -118,17 +142,20 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
   }
 
   private Object readOperationAccess(final InvocationContext ctx) {
-    final Split split =
-        SimonManager.getStopwatch("br.com.netbrasoft.gnuob.generic.security.AccessControl.readOperationAccess").start();
+    final Split split = getStopwatch(ACCESS_CONTROL_READ_OPERATION_ACCESS).start();
     try {
       return processReadOperationAccess(ctx, authenticateSubject(getMetaData(ctx)));
+    } catch (final GNUOpenBusinessServiceException e) {
+      throw e;
+    } catch (final Exception e) {
+      throw new GNUOpenBusinessServiceException("Security error, access is denied (ERR05)", e);
     } finally {
       split.stop();
     }
   }
 
   private Object processReadOperationAccess(final InvocationContext ctx, final Subject subject) {
-    if (isRoot(subject) || isAllowedToUpdate(subject, Operation.READ)) {
+    if (isRoot(subject) || isAllowedToUpdate(subject, READ)) {
       enableAccessFilter(subject);
       try {
         return ctx.proceed();
@@ -145,18 +172,17 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
   }
 
   private void enableAccessFilter(final Subject subject) {
-    accessTypeService.enableFilter(AbstractAccess.NFQ1, Parameter.getInstance(USER_ID, subject.user.getId()));
-    accessTypeService.enableFilter(AbstractAccess.NFQ2, Parameter.getInstance(SITE_ID, subject.site.getId()));
+    accessTypeService.enableFilter(NFQ1, Parameter.getInstance(USER_ID, subject.user.getId()));
+    accessTypeService.enableFilter(NFQ2, Parameter.getInstance(SITE_ID, subject.site.getId()));
   }
 
   private void disableAccessFilter() {
-    accessTypeService.disableFilter(AbstractAccess.NFQ1);
-    accessTypeService.disableFilter(AbstractAccess.NFQ2);
+    accessTypeService.disableFilter(NFQ1);
+    accessTypeService.disableFilter(NFQ2);
   }
 
   private Object noneOperationAccess(final InvocationContext ctx) {
-    final Split split =
-        SimonManager.getStopwatch("br.com.netbrasoft.gnuob.generic.security.AccessControl.noneOperationAccess").start();
+    final Split split = getStopwatch(ACCESS_CONTROL_NONE_OPERATION_ACCESS).start();
     try {
       return ctx.proceed();
     } catch (final Exception e) {
@@ -167,24 +193,26 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
   }
 
   private Object updateOperationAccess(final InvocationContext ctx) {
-    final Split split = SimonManager
-        .getStopwatch("br.com.netbrasoft.gnuob.generic.security.AccessControl.updateOperationAccess").start();
+    final Split split = getStopwatch(ACCESS_CONTROL_UPDATE_OPERATION_ACCESS).start();
     try {
-      return processOperationAccess(ctx, authenticateSubject(getMetaData(ctx)), getAbstractType(ctx), Operation.UPDATE);
+      return processOperationAccess(ctx, authenticateSubject(getMetaData(ctx)), getAbstractType(ctx), UPDATE);
+    } catch (final GNUOpenBusinessServiceException e) {
+      throw e;
     } catch (final Exception e) {
-      throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+      throw new GNUOpenBusinessServiceException("Security error, access is denied (ERR07)", e);
     } finally {
       split.stop();
     }
   }
 
   private Object deleteOperationAccess(final InvocationContext ctx) {
-    final Split split = SimonManager
-        .getStopwatch("br.com.netbrasoft.gnuob.generic.security.AccessControl.deleteOperationAccess").start();
+    final Split split = getStopwatch(ACCESS_CONTROL_DELETE_OPERATION_ACCESS).start();
     try {
-      return processOperationAccess(ctx, authenticateSubject(getMetaData(ctx)), getAbstractType(ctx), Operation.DELETE);
+      return processOperationAccess(ctx, authenticateSubject(getMetaData(ctx)), getAbstractType(ctx), DELETE);
+    } catch (final GNUOpenBusinessServiceException e) {
+      throw e;
     } catch (final Exception e) {
-      throw new GNUOpenBusinessServiceException(e.getMessage(), e);
+      throw new GNUOpenBusinessServiceException("Security error, access is denied (ERR08)", e);
     } finally {
       split.stop();
     }
@@ -261,7 +289,7 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
 
   private boolean hasGroupOwnership(final Subject subject, final A attachedAccess, final Operation operation) {
     return subject.user.getGroups().stream().filter(e -> e.equals(attachedAccess.getGroup())
-        && attachedAccess.getPermission().getGroup().getOperations().contains(operation)).count() > 0;
+        && attachedAccess.getPermission().getGroup().getOperations().contains(operation)).count() > ZERO;
   }
 
   private boolean hasOtherOwnership(final A attachedAccess, final Operation operation) {
@@ -278,8 +306,7 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
   }
 
   private Subject authenticateSubject(final MetaData metaData) {
-    final Split split =
-        SimonManager.getStopwatch("br.com.netbrasoft.gnuob.generic.security.AccessControl.authenticateSubject").start();
+    final Split split = getStopwatch(ACCESS_CONTROL_AUTHENTICATE_SUBJECT).start();
     try {
       return processAuthenticatedSubject(metaData);
     } finally {
@@ -317,7 +344,7 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
 
   @SuppressWarnings(UNCHECKED)
   private boolean containUser(final String user) {
-    return userServiceImpl.count((U) User.getInstance(user)) > 0;
+    return userServiceImpl.count((U) User.getInstance(user)) > ZERO;
   }
 
   private U verifyUserPassword(final U attachedUser, final String candidatePassword) {
@@ -331,16 +358,16 @@ public class AccessControl<A extends AbstractAccess, U extends User, S extends S
 
   @SuppressWarnings(UNCHECKED)
   private U findUser(final String userName) {
-    return userServiceImpl.find((U) User.getInstance(userName), Paging.getInstance(-1, -1), OrderByEnum.NONE).get(0);
+    return userServiceImpl.find((U) User.getInstance(userName), Paging.getInstance(ZERO, ONE), NONE).get(ZERO);
   }
 
   @SuppressWarnings(UNCHECKED)
   private boolean containSite(final String site) {
-    return siteServiceImpl.count((S) Site.getInstance(site)) > 0;
+    return siteServiceImpl.count((S) Site.getInstance(site)) > ZERO;
   }
 
   @SuppressWarnings(UNCHECKED)
   private S findSite(final String site) {
-    return siteServiceImpl.find((S) Site.getInstance(site), Paging.getInstance(-1, -1), OrderByEnum.NONE).get(0);
+    return siteServiceImpl.find((S) Site.getInstance(site), Paging.getInstance(ZERO, ONE), NONE).get(ZERO);
   }
 }

@@ -14,13 +14,20 @@
 
 package br.com.netbrasoft.gnuob.generic;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAGING_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 @XmlRootElement(name = PAGING_NAME)
 public class Paging {
@@ -30,6 +37,16 @@ public class Paging {
 
   public Paging() {
     this(ZERO, ZERO);
+  }
+
+  public Paging(String json)
+      throws JsonMappingException, IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, Paging.class));
+  }
+
+  public static Paging getInstance(String json)
+      throws JsonMappingException, IOException, IllegalAccessException, InvocationTargetException {
+    return new Paging(json);
   }
 
   private Paging(final int first, final int max) {
@@ -46,13 +63,13 @@ public class Paging {
     return first;
   }
 
+  public void setFirst(final int first) {
+    this.first = first;
+  }
+
   @XmlElement
   public int getMax() {
     return max;
-  }
-
-  public void setFirst(final int first) {
-    this.first = first;
   }
 
   public void setMax(final int max) {

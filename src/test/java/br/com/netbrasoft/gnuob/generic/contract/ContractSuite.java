@@ -19,7 +19,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ContractTest.class, ContractWebServiceImplTest.class})
+@SuiteClasses({ContractTest.class, ContractWebServiceImplTest.class, ContractRESTFulServiceImplTest.class})
 public class ContractSuite {
 
 }

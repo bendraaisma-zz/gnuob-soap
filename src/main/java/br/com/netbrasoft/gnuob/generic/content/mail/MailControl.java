@@ -21,7 +21,7 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RE
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_CLASS;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_DESCRIPTION;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_MODIFICATION_CHECK_INTERVAL;
-import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_PASSWORD;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_PSWD;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_SITE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENT_RESOURCE_LOADER_USER;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTEXT_VISITOR_IMPL_NAME;
@@ -154,7 +154,7 @@ public class MailControl<A extends AbstractAccess> {
     properties.setProperty(CONTENT_RESOURCE_LOADER_CACHE, FALSE);
     properties.setProperty(CONTENT_RESOURCE_LOADER_MODIFICATION_CHECK_INTERVAL, MODIFICATION_CHECK_INTERVAL_IN_SEC);
     properties.setProperty(CONTENT_RESOURCE_LOADER_USER, credentials.getUser());
-    properties.setProperty(CONTENT_RESOURCE_LOADER_PASSWORD, credentials.getPassword());
+    properties.setProperty(CONTENT_RESOURCE_LOADER_PSWD, credentials.getPassword());
     properties.setProperty(CONTENT_RESOURCE_LOADER_SITE, credentials.getSite());
     return properties;
   }

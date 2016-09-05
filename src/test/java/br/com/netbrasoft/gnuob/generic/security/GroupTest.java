@@ -14,9 +14,11 @@
 
 package br.com.netbrasoft.gnuob.generic.security;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getGroupInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -26,6 +28,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.After;
@@ -45,6 +50,20 @@ public class GroupTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonGroup() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Group group = getGroupInstance();
+    final Group jsonGroup = Group.getInstanceByJson(mapper.writeValueAsString(group));
+    assertEquals(group.getActive(), jsonGroup.getActive());
+    assertEquals(group.getVersion(), jsonGroup.getVersion());
+    assertEquals(group.getId(), jsonGroup.getId());
+    assertEquals(group.getName(), jsonGroup.getName());
+    assertEquals(group.getDescription(), jsonGroup.getDescription());
+    assertEquals(group.getPermission().getGroup(), jsonGroup.getPermission().getGroup());
+    assertEquals(group.getPermission().getOthers(), jsonGroup.getPermission().getOthers());
+    assertEquals(group.getPermission().getOwner(), jsonGroup.getPermission().getOwner());
+  }
 
   @Test
   public void testGroupIsDetached() {

@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.contract;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_ENTITY_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_ID_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTRACT_PARAM_NAME;
@@ -26,8 +27,11 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.FetchType.EAGER;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import javax.persistence.Cacheable;
@@ -42,6 +46,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.velocity.context.Context;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
 import br.com.netbrasoft.gnuob.generic.customer.Customer;
@@ -67,13 +74,28 @@ public class Contract extends AbstractAccess {
     orders = newHashSet();
   }
 
+  public Contract(String json) throws IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, Contract.class));
+  }
+
+  public static Contract getInstance() {
+    return new Contract();
+  }
+
+  public static Contract getInstanceByJson(String json)
+      throws IllegalAccessException, InvocationTargetException, IOException {
+    return new Contract(json);
+  }
+
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return newArrayList(isAbstractTypeDetached(), isCustomerAttached()).stream().filter(e -> e.booleanValue())
         .count() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isCustomerAttached() {
     return customer != null && customer.isDetached();
@@ -94,6 +116,7 @@ public class Contract extends AbstractAccess {
     return visitor.visit(this);
   }
 
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = CONTRACT_ID_COLUMN_NAME, nullable = false)
   public String getContractId() {
@@ -103,34 +126,37 @@ public class Contract extends AbstractAccess {
     return contractId;
   }
 
+  public void setContractId(final String contractId) {
+    this.contractId = contractId;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @OneToOne(cascade = {PERSIST, MERGE, REFRESH}, optional = false, fetch = EAGER)
   public Customer getCustomer() {
     return customer;
   }
 
+  public void setCustomer(final Customer customer) {
+    this.customer = customer;
+  }
+
+  @JsonIgnore
   @XmlTransient
   @OneToMany(cascade = {REFRESH}, fetch = EAGER, mappedBy = CONTRACT_PARAM_NAME)
   public Set<Offer> getOffers() {
     return offers;
   }
 
+  public void setOffers(final Set<Offer> offers) {
+    this.offers = offers;
+  }
+
+  @JsonIgnore
   @XmlTransient
   @OneToMany(cascade = {REFRESH}, fetch = EAGER, mappedBy = CONTRACT_PARAM_NAME)
   public Set<Order> getOrders() {
     return orders;
-  }
-
-  public void setContractId(final String contractId) {
-    this.contractId = contractId;
-  }
-
-  public void setCustomer(final Customer customer) {
-    this.customer = customer;
-  }
-
-  public void setOffers(final Set<Offer> offers) {
-    this.offers = offers;
   }
 
   public void setOrders(final Set<Order> orders) {

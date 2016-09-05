@@ -14,9 +14,11 @@
 
 package br.com.netbrasoft.gnuob.generic.product;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getProductInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -34,6 +36,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -44,6 +48,7 @@ import org.junit.Test;
 import br.com.netbrasoft.gnuob.generic.category.SubCategory;
 import br.com.netbrasoft.gnuob.generic.content.Content;
 import br.com.netbrasoft.gnuob.generic.content.contexts.ContextVisitorImpl;
+import br.com.netbrasoft.gnuob.generic.order.Order;
 
 public class ProductTest {
 
@@ -69,6 +74,40 @@ public class ProductTest {
 
   @After
   public void tearDown() throws Exception {}
+  
+  @Test
+  public void testJsonProduct() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Product product = getProductInstance();
+    final Product jsonProduct = Product.getInstanceByJson(mapper.writeValueAsString(product));
+    assertEquals(product.getActive(), jsonProduct.getActive());
+    assertEquals(product.getId(), jsonProduct.getId());
+    assertEquals(product.getVersion(), jsonProduct.getVersion());
+    assertEquals(product.getAmount(), jsonProduct.getAmount());
+    assertEquals(product.getBestsellers(), jsonProduct.getBestsellers());
+    assertEquals(product.getDescription(), jsonProduct.getDescription());
+    assertEquals(product.getDiscount(), jsonProduct.getDiscount());
+    assertEquals(product.getItemHeight(), jsonProduct.getItemHeight());
+    assertEquals(product.getItemHeightUnit(), jsonProduct.getItemHeightUnit());
+    assertEquals(product.getItemLength(), jsonProduct.getItemLength());
+    assertEquals(product.getItemLengthUnit(), jsonProduct.getItemLengthUnit());
+    assertEquals(product.getItemUrl(), jsonProduct.getItemUrl());
+    assertEquals(product.getItemWeight(), jsonProduct.getItemWeight());
+    assertEquals(product.getItemWeightUnit(), jsonProduct.getItemWeightUnit());
+    assertEquals(product.getItemWidth(), jsonProduct.getItemWidth());
+    assertEquals(product.getItemWidthUnit(), jsonProduct.getItemWidthUnit());
+    assertEquals(product.getName(), jsonProduct.getName());
+    assertEquals(product.getNumber(), jsonProduct.getNumber());
+    assertEquals(product.getPermission().getGroup(), jsonProduct.getPermission().getGroup());
+    assertEquals(product.getPermission().getOthers(), jsonProduct.getPermission().getOthers());
+    assertEquals(product.getPermission().getOwner(), jsonProduct.getPermission().getOwner());
+    assertEquals(product.getRating(), jsonProduct.getRating());
+    assertEquals(product.getRecommended(), jsonProduct.getRecommended());
+    assertEquals(product.getShippingCost(), jsonProduct.getShippingCost());
+    assertNotNull(jsonProduct.getStock());
+    assertEquals(product.getTax(), jsonProduct.getTax());
+    assertFalse(jsonProduct.getOptions().isEmpty());
+    assertFalse(jsonProduct.getSubCategories().isEmpty());
+  }
 
   @Test
   public void testAccept() {

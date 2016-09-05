@@ -1,5 +1,6 @@
 package br.com.netbrasoft.gnuob.generic.security;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -9,12 +10,13 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import br.com.netbrasoft.gnuob.generic.security.MetaData;
 
 public class MetaDataTest {
 
@@ -27,6 +29,15 @@ public class MetaDataTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonMetaData() throws IllegalAccessException, InvocationTargetException, IOException {
+    final MetaData metaData = MetaData.getInstance("site", "user", "password");
+    final MetaData jsonMetaData = MetaData.getInstanceByJson(mapper.writeValueAsString(metaData));
+    assertEquals(metaData.getSite(), jsonMetaData.getSite());
+    assertEquals(metaData.getUser(), jsonMetaData.getUser());
+    assertEquals(metaData.getPassword(), jsonMetaData.getPassword());
+  }
 
   @Test
   public void testGetInstance() {

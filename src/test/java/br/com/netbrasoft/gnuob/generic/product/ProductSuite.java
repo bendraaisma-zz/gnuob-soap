@@ -20,7 +20,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({ProductTest.class, StockTest.class, OptionTest.class, SubOptionTest.class,
-    ProductWebServiceImplTest.class})
+    ProductWebServiceImplTest.class, ProductRESTfulServiceImplTest.class})
 public class ProductSuite {
 
 }

@@ -14,11 +14,16 @@
 
 package br.com.netbrasoft.gnuob.generic.setting;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DESCRIPTION_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PROPERTY_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SETTING_ENTITY_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SETTING_TABLE_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VALUE_COLUMN_NAME;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -29,6 +34,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.velocity.context.Context;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
 import br.com.netbrasoft.gnuob.generic.security.AbstractAccess;
@@ -45,7 +53,24 @@ public class Setting extends AbstractAccess {
   private String property;
   private String value;
 
+  public Setting() {
+    super();
+  }
+
+  public Setting(String json) throws IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, Setting.class));
+  }
+
+  public static Setting getInstance() {
+    return new Setting();
+  }
+
+  public static Setting getInstanceByJson(String json) throws IllegalAccessException, InvocationTargetException, IOException {
+    return new Setting(json);
+  }
+
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return isAbstractTypeDetached();
@@ -56,30 +81,33 @@ public class Setting extends AbstractAccess {
     return visitor.visit(this);
   }
 
+  @JsonProperty
   @XmlElement
   @Column(name = DESCRIPTION_COLUMN_NAME, nullable = false)
   public String getDescription() {
     return description;
   }
 
+  public void setDescription(final String description) {
+    this.description = description;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = PROPERTY_COLUMN_NAME, nullable = false)
   public String getProperty() {
     return property;
   }
 
+  public void setProperty(final String property) {
+    this.property = property;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = VALUE_COLUMN_NAME, nullable = false)
   public String getValue() {
     return value;
-  }
-
-  public void setDescription(final String description) {
-    this.description = description;
-  }
-
-  public void setProperty(final String property) {
-    this.property = property;
   }
 
   public void setValue(final String value) {

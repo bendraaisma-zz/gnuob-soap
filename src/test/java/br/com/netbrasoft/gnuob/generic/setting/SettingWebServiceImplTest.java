@@ -38,12 +38,10 @@ import br.com.netbrasoft.gnuob.generic.OrderByEnum;
 import br.com.netbrasoft.gnuob.generic.Paging;
 import br.com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeService;
 import br.com.netbrasoft.gnuob.generic.security.MetaData;
-import br.com.netbrasoft.gnuob.generic.setting.Setting;
-import br.com.netbrasoft.gnuob.generic.setting.SettingWebServiceImpl;
 
 public class SettingWebServiceImplTest {
 
-  private IGenericTypeWebService<Setting> settingWebServiceImpl = new SettingWebServiceImpl<>();
+  private IGenericTypeWebService<Setting> settingRESTfulServiceImpl = new SettingRESTfulServiceImpl();
   private MetaData mockCredentials;
   private Paging mockPaging;
   private ISecuredGenericTypeService<Setting> mockSecuredGenericSettingService;
@@ -56,7 +54,7 @@ public class SettingWebServiceImplTest {
     mockPaging = mock(Paging.class);
     spySetting = spy(Setting.class);
     mockSecuredGenericSettingService = mock(ISecuredGenericTypeService.class);
-    settingWebServiceImpl = new SettingWebServiceImpl<Setting>(mockSecuredGenericSettingService);
+    settingRESTfulServiceImpl = new SettingRESTfulServiceImpl(mockSecuredGenericSettingService);
   }
 
   @After
@@ -64,43 +62,44 @@ public class SettingWebServiceImplTest {
 
   @Test
   public void testCountSetting() {
-    assertEquals("Count", 0, settingWebServiceImpl.count(mockCredentials, spySetting));
+    assertEquals("Count", 0, settingRESTfulServiceImpl.count(mockCredentials, spySetting));
     verify(mockSecuredGenericSettingService, times(1)).count(any(), any());
   }
 
   @Test(expected = GNUOpenBusinessServiceException.class)
   public void testCountSettingGettingGNUOpenBusinessServiceException() {
     when(mockSecuredGenericSettingService.count(any(), any())).thenThrow(new RuntimeException());
-    settingWebServiceImpl.count(mockCredentials, spySetting);
+    settingRESTfulServiceImpl.count(mockCredentials, spySetting);
   }
 
   @Test(expected = GNUOpenBusinessServiceException.class)
   public void testDeleteCategoryGettingGNUOpenBusinessServiceException() {
-    settingWebServiceImpl = new SettingWebServiceImpl<>();
-    settingWebServiceImpl.remove(mockCredentials, spySetting);
+    settingRESTfulServiceImpl = new SettingWebServiceImpl<>();
+    settingRESTfulServiceImpl.remove(mockCredentials, spySetting);
   }
 
   @Test
   public void testDeleteCategoryWithNullSettingsAndSubCategories() {
-    settingWebServiceImpl.remove(mockCredentials, spySetting);
+    settingRESTfulServiceImpl.remove(mockCredentials, spySetting);
     verify(mockSecuredGenericSettingService, times(1)).remove(any(), any());
   }
 
   @Test
   public void testFindSetting() {
-    assertNull("Find", settingWebServiceImpl.find(mockCredentials, spySetting));
+    assertNull("Find", settingRESTfulServiceImpl.find(mockCredentials, spySetting));
     verify(mockSecuredGenericSettingService, times(1)).find(any(), any(), anyLong());
   }
 
   @Test(expected = GNUOpenBusinessServiceException.class)
   public void testFindSettingGetttingGNUOpenBusinessServiceException() {
     when(mockSecuredGenericSettingService.find(any(), any(), anyLong())).thenThrow(new RuntimeException());
-    settingWebServiceImpl.find(mockCredentials, spySetting);
+    settingRESTfulServiceImpl.find(mockCredentials, spySetting);
   }
 
   @Test
   public void testFindSettingPaging() {
-    assertTrue("Find", settingWebServiceImpl.find(mockCredentials, spySetting, mockPaging, OrderByEnum.NONE).isEmpty());
+    assertTrue("Find",
+        settingRESTfulServiceImpl.find(mockCredentials, spySetting, mockPaging, OrderByEnum.NONE).isEmpty());
     verify(mockSecuredGenericSettingService, times(1)).find(any(), any(), any(), any(), anyVararg());
   }
 
@@ -108,27 +107,27 @@ public class SettingWebServiceImplTest {
   public void testFindSettingPagingGetttingGNUOpenBusinessServiceException() {
     when(mockSecuredGenericSettingService.find(any(), any(), any(), any(), anyVararg()))
         .thenThrow(new RuntimeException());
-    settingWebServiceImpl.find(mockCredentials, spySetting, mockPaging, OrderByEnum.NONE);
+    settingRESTfulServiceImpl.find(mockCredentials, spySetting, mockPaging, OrderByEnum.NONE);
   }
 
   @Test(expected = GNUOpenBusinessServiceException.class)
   public void testMergeSettingGettingGNUOpenBusinessServiceException() {
     when(spySetting.isDetached()).thenReturn(true);
     when(mockSecuredGenericSettingService.merge(any(), any())).thenThrow(new RuntimeException());
-    settingWebServiceImpl.merge(mockCredentials, spySetting);
+    settingRESTfulServiceImpl.merge(mockCredentials, spySetting);
   }
 
   @Test
   public void testMergeWithNoDetachedSettings() {
     when(spySetting.isDetached()).thenReturn(false);
-    assertNull("Merge", settingWebServiceImpl.merge(mockCredentials, spySetting));
+    assertNull("Merge", settingRESTfulServiceImpl.merge(mockCredentials, spySetting));
     verify(mockSecuredGenericSettingService, times(1)).merge(any(), any());
   }
 
   @Test
   public void testPersistWithDetachedSettings() {
     when(spySetting.isDetached()).thenReturn(true);
-    assertNull("Persist", settingWebServiceImpl.persist(mockCredentials, spySetting));
+    assertNull("Persist", settingRESTfulServiceImpl.persist(mockCredentials, spySetting));
     verify(mockSecuredGenericSettingService, times(1)).merge(any(), any());
   }
 
@@ -136,25 +135,25 @@ public class SettingWebServiceImplTest {
   public void testPersistCategoryGettingGNUOpenBusinessServiceException() {
     when(spySetting.isDetached()).thenReturn(true);
     when(mockSecuredGenericSettingService.merge(any(), any())).thenThrow(new RuntimeException());
-    settingWebServiceImpl.persist(mockCredentials, spySetting);
+    settingRESTfulServiceImpl.persist(mockCredentials, spySetting);
   }
 
   @Test
   public void testPersistWithNoDetachedSettings() {
     when(spySetting.isDetached()).thenReturn(false);
-    assertNotNull("Persist", settingWebServiceImpl.persist(mockCredentials, spySetting));
+    assertNotNull("Persist", settingRESTfulServiceImpl.persist(mockCredentials, spySetting));
     verify(mockSecuredGenericSettingService, times(1)).persist(any(), any());
   }
 
   @Test(expected = GNUOpenBusinessServiceException.class)
   public void testRefreshCategoryGettingGNUOpenBusinessServiceException() {
     when(mockSecuredGenericSettingService.refresh(any(), any(), anyLong())).thenThrow(new RuntimeException());
-    settingWebServiceImpl.refresh(mockCredentials, spySetting);
+    settingRESTfulServiceImpl.refresh(mockCredentials, spySetting);
   }
 
   @Test
   public void testRefreshCategoryWithDetachedSettings() {
-    assertNull("Refresh", settingWebServiceImpl.refresh(mockCredentials, spySetting));
+    assertNull("Refresh", settingRESTfulServiceImpl.refresh(mockCredentials, spySetting));
     verify(mockSecuredGenericSettingService, times(1)).refresh(any(), any(), anyLong());
   }
 }

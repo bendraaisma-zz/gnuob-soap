@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.order;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.BILLING_AGREEMENT_ID_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CHECKOUT_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CHECKOUT_STATUS_COLUMN_NAME;
@@ -61,10 +62,12 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 
@@ -82,6 +85,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.velocity.context.Context;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
 import br.com.netbrasoft.gnuob.generic.contract.Contract;
@@ -133,13 +139,28 @@ public class Order extends AbstractAccess {
     records = newHashSet();
   }
 
+  public Order(String json) throws IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, Order.class));
+  }
+
+  public static Order getInstance() {
+    return new Order();
+  }
+
+  public static Order getInstanceByJson(String json)
+      throws IllegalAccessException, InvocationTargetException, IOException {
+    return new Order(json);
+  }
+
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return newArrayList(isAbstractTypeDetached(), isContractDetached(), isInvoiceDetached(), isShipmentDetachted(),
         isOrderRecordsDetached()).stream().filter(e -> e.booleanValue()).count() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isContractDetached() {
     return contract != null && contract.isDetached();
@@ -150,11 +171,13 @@ public class Order extends AbstractAccess {
     return records != null && records.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isInvoiceDetached() {
     return invoice != null && invoice.isDetached();
   }
 
+  @JsonIgnore
   @Transient
   private boolean isShipmentDetachted() {
     return shipment != null && shipment.isDetached();
@@ -191,18 +214,29 @@ public class Order extends AbstractAccess {
     return visitor.visit(this);
   }
 
+  @JsonProperty
   @XmlElement
   @Column(name = BILLING_AGREEMENT_ID_COLUMN_NAME)
   public String getBillingAgreementId() {
     return billingAgreementId;
   }
 
+  public void setBillingAgreementId(final String billingAgreementId) {
+    this.billingAgreementId = billingAgreementId;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = CHECKOUT_COLUMN_NAME)
   public String getCheckout() {
     return checkout;
   }
 
+  public void setCheckout(final String checkout) {
+    this.checkout = checkout;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = CHECKOUT_STATUS_COLUMN_NAME)
   public String getCheckoutStatus() {
@@ -212,12 +246,22 @@ public class Order extends AbstractAccess {
     return checkoutStatus;
   }
 
+  public void setCheckoutStatus(final String checkoutStatus) {
+    this.checkoutStatus = checkoutStatus;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @OneToOne(cascade = {PERSIST, MERGE, REFRESH})
   public Contract getContract() {
     return contract;
   }
 
+  public void setContract(final Contract contract) {
+    this.contract = contract;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = CUSTOM_COLUMN_NAME)
   public String getCustom() {
@@ -227,6 +271,11 @@ public class Order extends AbstractAccess {
     return custom;
   }
 
+  public void setCustom(final String custom) {
+    this.custom = custom;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = DISCOUNT_TOTAL_COLUMN_NAME)
   public BigDecimal getDiscountTotal() {
@@ -237,6 +286,11 @@ public class Order extends AbstractAccess {
     return discountTotal;
   }
 
+  public void setDiscountTotal(final BigDecimal discountTotal) {
+    this.discountTotal = discountTotal;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = EXTRA_AMOUNT_COLUMN_NAME, nullable = false)
   public BigDecimal getExtraAmount() {
@@ -246,42 +300,77 @@ public class Order extends AbstractAccess {
     return extraAmount;
   }
 
+  public void setExtraAmount(final BigDecimal extraAmount) {
+    this.extraAmount = extraAmount;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = GIFT_MESSAGE_COLUMN_NAME)
   public String getGiftMessage() {
     return giftMessage;
   }
 
+  public void setGiftMessage(final String giftMessage) {
+    this.giftMessage = giftMessage;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = GIFT_MESSAGE_ENABLE_COLUMN_NAME)
   public Boolean getGiftMessageEnable() {
     return giftMessageEnable;
   }
 
+  public void setGiftMessageEnable(final Boolean giftMessageEnable) {
+    this.giftMessageEnable = giftMessageEnable;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = GIFT_RECEIPT_ENABLE_COLUMN_NAME)
   public Boolean getGiftReceiptEnable() {
     return giftReceiptEnable;
   }
 
+  public void setGiftReceiptEnable(final Boolean giftReceiptEnable) {
+    this.giftReceiptEnable = giftReceiptEnable;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = GIFT_WRAP_AMOUNT_COLUMN_NAME)
   public BigDecimal getGiftWrapAmount() {
     return giftWrapAmount;
   }
 
+  public void setGiftWrapAmount(final BigDecimal giftWrapAmount) {
+    this.giftWrapAmount = giftWrapAmount;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = GIFT_WRAP_ENABLE_COLUMN_NAME)
   public Boolean getGiftWrapEnable() {
     return giftWrapEnable;
   }
 
+  public void setGiftWrapEnable(final Boolean giftWrapEnable) {
+    this.giftWrapEnable = giftWrapEnable;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = GIFT_WRAP_NAME_COLUMN_NAME)
   public String getGiftWrapName() {
     return giftWrapName;
   }
 
+  public void setGiftWrapName(final String giftWrapName) {
+    this.giftWrapName = giftWrapName;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = HANDLING_TOTAL_COLUMN_NAME, nullable = false)
   public BigDecimal getHandlingTotal() {
@@ -291,12 +380,22 @@ public class Order extends AbstractAccess {
     return handlingTotal;
   }
 
+  public void setHandlingTotal(final BigDecimal handlingTotal) {
+    this.handlingTotal = handlingTotal;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = INSURANCE_OPTION_OFFERED_COLUMN_NAME)
   public Boolean getInsuranceOptionOffered() {
     return insuranceOptionOffered;
   }
 
+  public void setInsuranceOptionOffered(final Boolean insuranceOptionOffered) {
+    this.insuranceOptionOffered = insuranceOptionOffered;
+  }
+
+  @JsonProperty
   @XmlElement(required = true)
   @Column(name = INSURANCE_TOTAL_COLUMN_NAME, nullable = false)
   public BigDecimal getInsuranceTotal() {
@@ -306,12 +405,22 @@ public class Order extends AbstractAccess {
     return insuranceTotal;
   }
 
+  public void setInsuranceTotal(final BigDecimal insuranceTotal) {
+    this.insuranceTotal = insuranceTotal;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @OneToOne(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, orphanRemoval = true, optional = false)
   public Invoice getInvoice() {
     return invoice;
   }
 
+  public void setInvoice(final Invoice invoice) {
+    this.invoice = invoice;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_TOTAL_COLUMN_NAME)
   public BigDecimal getItemTotal() {
@@ -322,6 +431,11 @@ public class Order extends AbstractAccess {
     return itemTotal;
   }
 
+  public void setItemTotal(final BigDecimal itemTotal) {
+    this.itemTotal = itemTotal;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = MAX_TOTAL_COLUMN_NAME)
   public BigDecimal getMaxTotal() {
@@ -331,36 +445,66 @@ public class Order extends AbstractAccess {
     return maxTotal;
   }
 
+  public void setMaxTotal(final BigDecimal maxTotal) {
+    this.maxTotal = maxTotal;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = NOTE_COLUMN_NAME)
   public String getNote() {
     return note;
   }
 
+  public void setNote(final String note) {
+    this.note = note;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = NOTE_TEXT_COLUMN_NAME)
   public String getNoteText() {
     return noteText;
   }
 
+  public void setNoteText(final String noteText) {
+    this.noteText = noteText;
+  }
+
+  @JsonProperty
   @XmlElement
   @Transient
   public String getNotificationId() {
     return notificationId;
   }
 
+  public void setNotificationId(final String notificationId) {
+    this.notificationId = notificationId;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ORDER_DATE_COLUMN_NAME)
   public Date getOrderDate() {
     return orderDate;
   }
 
+  public void setOrderDate(final Date orderDate) {
+    this.orderDate = orderDate;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ORDER_DESCRIPTION_COLUMN_NAME)
   public String getOrderDescription() {
     return orderDescription;
   }
 
+  public void setOrderDescription(final String orderDescription) {
+    this.orderDescription = orderDescription;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = ORDER_ID_COLUMN_NAME, nullable = false)
   public String getOrderId() {
@@ -370,6 +514,11 @@ public class Order extends AbstractAccess {
     return orderId;
   }
 
+  public void setOrderId(final String orderId) {
+    this.orderId = orderId;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ORDER_TOTAL_COLUMN_NAME)
   public BigDecimal getOrderTotal() {
@@ -377,6 +526,10 @@ public class Order extends AbstractAccess {
       orderTotal = getItemTotal().add(getShippingTotal()).subtract(getShippingDiscount()).add(getExtraAmount());
     }
     return orderTotal;
+  }
+
+  public void setOrderTotal(final BigDecimal orderTotal) {
+    this.orderTotal = orderTotal;
   }
 
   @OrderBy(POSITION_ASC)
@@ -388,12 +541,22 @@ public class Order extends AbstractAccess {
     return records;
   }
 
+  public void setRecords(final Set<OrderRecord> records) {
+    this.records = records;
+  }
+
+  @JsonProperty
   @XmlElement
   @OneToOne(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, orphanRemoval = true)
   public Shipment getShipment() {
     return shipment;
   }
 
+  public void setShipment(final Shipment shipment) {
+    this.shipment = shipment;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = SHIPPING_DISCOUNT_COLUMN_NAME, nullable = false)
   public BigDecimal getShippingDiscount() {
@@ -403,6 +566,11 @@ public class Order extends AbstractAccess {
     return shippingDiscount;
   }
 
+  public void setShippingDiscount(final BigDecimal shippingDiscount) {
+    this.shippingDiscount = shippingDiscount;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = SHIPPING_TOTAL_COLUMN_NAME)
   public BigDecimal getShippingTotal() {
@@ -413,6 +581,11 @@ public class Order extends AbstractAccess {
     return shippingTotal;
   }
 
+  public void setShippingTotal(final BigDecimal shippingTotal) {
+    this.shippingTotal = shippingTotal;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = TAX_TOTAL_COLUMN_NAME)
   public BigDecimal getTaxTotal() {
@@ -423,148 +596,25 @@ public class Order extends AbstractAccess {
     return taxTotal;
   }
 
+  public void setTaxTotal(final BigDecimal taxTotal) {
+    this.taxTotal = taxTotal;
+  }
+
   @XmlElement
   @Column(name = TOKEN_COLUMN_NAME)
   public String getToken() {
     return token;
   }
 
+  public void setToken(final String token) {
+    this.token = token;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = TRANSACTION_ID_COLUMN_NAME)
   public String getTransactionId() {
     return transactionId;
-  }
-
-  public void setBillingAgreementId(final String billingAgreementId) {
-    this.billingAgreementId = billingAgreementId;
-  }
-
-  public void setCheckout(final String checkout) {
-    this.checkout = checkout;
-  }
-
-  public void setCheckoutStatus(final String checkoutStatus) {
-    this.checkoutStatus = checkoutStatus;
-  }
-
-  public void setContract(final Contract contract) {
-    this.contract = contract;
-  }
-
-  public void setCustom(final String custom) {
-    this.custom = custom;
-  }
-
-  public void setDiscountTotal(final BigDecimal discountTotal) {
-    this.discountTotal = discountTotal;
-  }
-
-  public void setExtraAmount(final BigDecimal extraAmount) {
-    this.extraAmount = extraAmount;
-  }
-
-  public void setGiftMessage(final String giftMessage) {
-    this.giftMessage = giftMessage;
-  }
-
-  public void setGiftMessageEnable(final Boolean giftMessageEnable) {
-    this.giftMessageEnable = giftMessageEnable;
-  }
-
-  public void setGiftReceiptEnable(final Boolean giftReceiptEnable) {
-    this.giftReceiptEnable = giftReceiptEnable;
-  }
-
-  public void setGiftWrapAmount(final BigDecimal giftWrapAmount) {
-    this.giftWrapAmount = giftWrapAmount;
-  }
-
-  public void setGiftWrapEnable(final Boolean giftWrapEnable) {
-    this.giftWrapEnable = giftWrapEnable;
-  }
-
-  public void setGiftWrapName(final String giftWrapName) {
-    this.giftWrapName = giftWrapName;
-  }
-
-  public void setHandlingTotal(final BigDecimal handlingTotal) {
-    this.handlingTotal = handlingTotal;
-  }
-
-  public void setInsuranceOptionOffered(final Boolean insuranceOptionOffered) {
-    this.insuranceOptionOffered = insuranceOptionOffered;
-  }
-
-  public void setInsuranceTotal(final BigDecimal insuranceTotal) {
-    this.insuranceTotal = insuranceTotal;
-  }
-
-  public void setInvoice(final Invoice invoice) {
-    this.invoice = invoice;
-  }
-
-  public void setItemTotal(final BigDecimal itemTotal) {
-    this.itemTotal = itemTotal;
-  }
-
-  public void setMaxTotal(final BigDecimal maxTotal) {
-    this.maxTotal = maxTotal;
-  }
-
-  public void setNote(final String note) {
-    this.note = note;
-  }
-
-  public void setNoteText(final String noteText) {
-    this.noteText = noteText;
-  }
-
-  public void setNotificationId(final String notificationId) {
-    this.notificationId = notificationId;
-  }
-
-  public void setOrderDate(final Date orderDate) {
-    this.orderDate = orderDate;
-  }
-
-  public void setOrderDate(final Timestamp orderDate) {
-    this.orderDate = orderDate;
-  }
-
-  public void setOrderDescription(final String orderDescription) {
-    this.orderDescription = orderDescription;
-  }
-
-  public void setOrderId(final String orderId) {
-    this.orderId = orderId;
-  }
-
-  public void setOrderTotal(final BigDecimal orderTotal) {
-    this.orderTotal = orderTotal;
-  }
-
-  public void setRecords(final Set<OrderRecord> records) {
-    this.records = records;
-  }
-
-  public void setShipment(final Shipment shipment) {
-    this.shipment = shipment;
-  }
-
-  public void setShippingDiscount(final BigDecimal shippingDiscount) {
-    this.shippingDiscount = shippingDiscount;
-  }
-
-  public void setShippingTotal(final BigDecimal shippingTotal) {
-    this.shippingTotal = shippingTotal;
-  }
-
-  public void setTaxTotal(final BigDecimal taxTotal) {
-    this.taxTotal = taxTotal;
-  }
-
-  public void setToken(final String token) {
-    this.token = token;
   }
 
   public void setTransactionId(final String transactionId) {

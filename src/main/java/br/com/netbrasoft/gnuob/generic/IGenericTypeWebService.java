@@ -22,9 +22,9 @@ public abstract interface IGenericTypeWebService<T> {
 
   public abstract long count(MetaData credentials, T type);
 
-  public abstract List<T> find(MetaData credentials, T type, Paging paging, OrderByEnum orderingProperty);
-
   public abstract T find(MetaData credentials, T type);
+
+  public abstract List<T> find(MetaData credentials, T type, Paging paging, OrderByEnum orderingProperty);
 
   public abstract T persist(MetaData credentials, T type);
 

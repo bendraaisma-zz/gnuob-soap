@@ -14,9 +14,11 @@
 
 package br.com.netbrasoft.gnuob.generic.contract;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getContractInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -32,6 +34,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.After;
@@ -63,6 +68,22 @@ public class ContractTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonContent() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Contract contract = getContractInstance();
+    final Contract jsonContract = Contract.getInstanceByJson(mapper.writeValueAsString(contract));
+    assertEquals(contract.getActive(), jsonContract.getActive());
+    assertEquals(contract.getId(), jsonContract.getId());
+    assertEquals(contract.getVersion(), jsonContract.getVersion());
+    assertEquals(contract.getContractId(), jsonContract.getContractId());
+    assertNotNull(jsonContract.getCustomer());
+    assertEquals(contract.getPermission().getGroup(), jsonContract.getPermission().getGroup());
+    assertEquals(contract.getPermission().getOthers(), jsonContract.getPermission().getOthers());
+    assertEquals(contract.getPermission().getOwner(), jsonContract.getPermission().getOwner());
+    assertTrue(jsonContract.getOffers().isEmpty());
+    assertTrue(jsonContract.getOrders().isEmpty());
+  }
 
   @Test
   public void testAccept() {

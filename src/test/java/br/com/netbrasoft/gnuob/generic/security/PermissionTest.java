@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.security;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -23,13 +24,13 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import br.com.netbrasoft.gnuob.generic.security.Permission;
-import br.com.netbrasoft.gnuob.generic.security.Rule;
 
 public class PermissionTest {
 
@@ -42,6 +43,15 @@ public class PermissionTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonPermission() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Permission permission = Permission.getInstance();
+    final Permission jsonPermission = Permission.getInstanceByJson(mapper.writeValueAsString(permission));
+    assertEquals(permission.getGroup(), jsonPermission.getGroup());
+    assertEquals(permission.getOwner(), jsonPermission.getOwner());
+    assertEquals(permission.getOthers(), jsonPermission.getOthers());
+  }
 
   @Test
   public void testGetGroup() {

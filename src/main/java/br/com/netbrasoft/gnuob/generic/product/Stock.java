@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.product;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MAX_QUANTITY_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.MIN_QUANTITY_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.QUANTITY_COLUMN_NAME;
@@ -25,8 +26,12 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigInteger;
 
 import javax.persistence.Cacheable;
@@ -40,7 +45,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 
@@ -58,46 +64,68 @@ public class Stock extends AbstractType {
   private Product product;
   private BigInteger quantity;
 
+  public Stock() {
+    super();
+  }
+
+  public Stock(String json) throws IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, Stock.class));
+  }
+
+  public static Stock getInstance() {
+    return new Stock();
+  }
+
+  public static Stock getInstanceByJson(String json)
+      throws IllegalAccessException, InvocationTargetException, IOException {
+    return new Stock(json);
+  }
+
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return isAbstractTypeDetached();
   }
 
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = MAX_QUANTITY_COLUMN_NAME, nullable = false)
   public BigInteger getMaxQuantity() {
     return maxQuantity;
   }
 
+  public void setMaxQuantity(final BigInteger maxQuantity) {
+    this.maxQuantity = maxQuantity;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = MIN_QUANTITY_COLUMN_NAME, nullable = false)
   public BigInteger getMinQuantity() {
     return minQuantity;
   }
 
+  public void setMinQuantity(final BigInteger minQuantity) {
+    this.minQuantity = minQuantity;
+  }
+
+  @JsonIgnore
   @XmlTransient
   @OneToOne(cascade = {PERSIST, MERGE, REFRESH, REMOVE}, mappedBy = STOCK_PARAM_NAME)
   public Product getProduct() {
     return product;
   }
 
+  public void setProduct(final Product product) {
+    this.product = product;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = QUANTITY_COLUMN_NAME, nullable = false)
   public BigInteger getQuantity() {
     return quantity;
-  }
-
-  public void setMaxQuantity(final BigInteger maxQuantity) {
-    this.maxQuantity = maxQuantity;
-  }
-
-  public void setMinQuantity(final BigInteger minQuantity) {
-    this.minQuantity = minQuantity;
-  }
-
-  public void setProduct(final Product product) {
-    this.product = product;
   }
 
   public void setQuantity(final BigInteger quantity) {

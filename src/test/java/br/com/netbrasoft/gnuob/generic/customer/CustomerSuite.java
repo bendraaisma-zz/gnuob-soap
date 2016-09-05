@@ -20,7 +20,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
 @SuiteClasses({AddressTest.class, CustomerTest.class, PostalCodeTest.class, CustomerWebServiceImplTest.class,
-    PostalCodeWebServiceImplTest.class})
+    CustomerRESTfulServiceImplTest.class, PostalCodeWebServiceImplTest.class, PostalCodeRESTfulServiceImplTest.class})
 public class CustomerSuite {
 
 }

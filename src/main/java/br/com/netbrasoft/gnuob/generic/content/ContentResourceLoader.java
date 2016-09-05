@@ -17,7 +17,7 @@ package br.com.netbrasoft.gnuob.generic.content;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.COULDN_T_FIND_CONTENT_WITH_GIVEN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.JAVA_MODULE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ONE;
-import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_PARAM_NAME;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PSWD_PARAM_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_PARAM_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.UNCHECKED_VALUE;
@@ -102,7 +102,7 @@ public class ContentResourceLoader<T extends Content> extends ResourceLoader {
   @Override
   public void init(final ExtendedProperties configuration) {
     setCredentials(MetaData.getInstance(configuration.getString(SITE_PARAM_NAME),
-        configuration.getString(USER_PARAM_NAME), configuration.getString(PASSWORD_PARAM_NAME)));
+        configuration.getString(USER_PARAM_NAME), configuration.getString(PSWD_PARAM_NAME)));
   }
 
   @Override

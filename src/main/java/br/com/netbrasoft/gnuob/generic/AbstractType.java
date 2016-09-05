@@ -21,6 +21,7 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.VERSION_CO
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ZERO;
 import static java.lang.System.currentTimeMillis;
 import static javax.persistence.GenerationType.IDENTITY;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
 import java.io.Serializable;
@@ -38,7 +39,8 @@ import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlTransient;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Cacheable(value = false)
 @MappedSuperclass
@@ -67,12 +69,24 @@ public abstract class AbstractType implements Serializable, ICallback {
     preUpdate();
   }
 
+  @JsonIgnore
+  @Transient
+  public boolean isAbstractTypeDetached() {
+    return id > ZERO;
+  }
+
+  @JsonIgnore
   @XmlTransient
   @Column(name = CREATION_COLUMN_NAME)
   public Timestamp getCreation() {
     return creation;
   }
 
+  public void setCreation(final Timestamp creation) {
+    this.creation = creation;
+  }
+
+  @JsonProperty
   @XmlAttribute
   @Id
   @GeneratedValue(strategy = IDENTITY)
@@ -81,34 +95,27 @@ public abstract class AbstractType implements Serializable, ICallback {
     return id;
   }
 
+  public void setId(final long id) {
+    this.id = id;
+  }
+
+  @JsonIgnore
   @XmlTransient
   @Column(name = MODIFICATION_COLUMN_NAME)
   public Timestamp getModification() {
     return modification;
   }
 
+  public void setModification(final Timestamp modification) {
+    this.modification = modification;
+  }
+
+  @JsonProperty
   @XmlAttribute
   @Version
   @Column(name = VERSION_COLUMN_NAME)
   public int getVersion() {
     return version;
-  }
-
-  @Transient
-  public boolean isAbstractTypeDetached() {
-    return id > ZERO;
-  }
-
-  public void setCreation(final Timestamp creation) {
-    this.creation = creation;
-  }
-
-  public void setId(final long id) {
-    this.id = id;
-  }
-
-  public void setModification(final Timestamp modification) {
-    this.modification = modification;
   }
 
   public void setVersion(final int version) {

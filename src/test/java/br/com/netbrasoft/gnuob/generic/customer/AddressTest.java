@@ -14,6 +14,8 @@
 
 package br.com.netbrasoft.gnuob.generic.customer;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getAddressInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -23,12 +25,13 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import br.com.netbrasoft.gnuob.generic.customer.Address;
 
 public class AddressTest {
 
@@ -41,6 +44,27 @@ public class AddressTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonAddress() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Address address = getAddressInstance();
+    final Address jsonAddress = Address.getInstanceByJson(mapper.writeValueAsString(address));
+    assertEquals(address.getId(), jsonAddress.getId());
+    assertEquals(address.getVersion(), jsonAddress.getVersion());
+    assertEquals(address.getCityName(), jsonAddress.getCityName());
+    assertEquals(address.getComplement(), jsonAddress.getComplement());
+    assertEquals(address.getCountry(), jsonAddress.getCountry());
+    assertEquals(address.getCountryName(), jsonAddress.getCountryName());
+    assertEquals(address.getDistrict(), jsonAddress.getDistrict());
+    assertEquals(address.getInternationalStateAndCity(), jsonAddress.getInternationalStateAndCity());
+    assertEquals(address.getInternationalStreet(), jsonAddress.getInternationalStreet());
+    assertEquals(address.getNumber(), jsonAddress.getNumber());
+    assertEquals(address.getPhone(), jsonAddress.getPhone());
+    assertEquals(address.getPostalCode(), jsonAddress.getPostalCode());
+    assertEquals(address.getStateOrProvince(), jsonAddress.getStateOrProvince());
+    assertEquals(address.getStreet1(), jsonAddress.getStreet1());
+    assertEquals(address.getStreet2(), jsonAddress.getStreet2());
+  }
 
   @Test
   public void testGetCityName() {

@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.order;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NOT_SPECIFIED;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_ENTITY_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SHIPMENT_TABLE_NAME;
@@ -25,8 +26,13 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -38,7 +44,8 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 import br.com.netbrasoft.gnuob.generic.customer.Address;
@@ -55,24 +62,49 @@ public class Shipment extends AbstractType {
   private Address address;
   private String shipmentType;
 
+  public Shipment() {
+    super();
+  }
+
+  public Shipment(String json) throws IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, Shipment.class));
+  }
+
+  public static Shipment getInstance() {
+    return new Shipment();
+  }
+
+  public static Shipment getInstanceByJson(String json)
+      throws IllegalAccessException, InvocationTargetException, IOException {
+    return new Shipment(json);
+  }
+
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return newArrayList(isAbstractTypeDetached(), isAddressDetached()).stream().filter(e -> e.booleanValue())
         .count() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isAddressDetached() {
     return address != null && address.isDetached();
   }
 
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @OneToOne(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, orphanRemoval = true, optional = false)
   public Address getAddress() {
     return address;
   }
 
+  public void setAddress(final Address address) {
+    this.address = address;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = SHIPMENT_TYPE_COLUMN_NAME)
   public String getShipmentType() {
@@ -80,10 +112,6 @@ public class Shipment extends AbstractType {
       shipmentType = NOT_SPECIFIED;
     }
     return shipmentType;
-  }
-
-  public void setAddress(final Address address) {
-    this.address = address;
   }
 
   public void setShipmentType(final String shipmentType) {

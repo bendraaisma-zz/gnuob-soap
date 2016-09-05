@@ -26,6 +26,7 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ORDER_PARA
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PAY_PAL_EXPRESS_CHECK_OUT_WEB_SERVICE_IMPL_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_GENERIC_TYPE_SERVICE_IMPL_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SECURED_PAY_PAL_EXPRESS_CHECK_OUT_SERVICE_IMPL_NAME;
+import static br.com.netbrasoft.gnuob.generic.OrderByEnum.NONE;
 import static br.com.netbrasoft.gnuob.generic.content.mail.MailEnum.CONFIRMATION_NEW_ORDER_MAIL;
 import static br.com.netbrasoft.gnuob.generic.content.mail.MailEnum.NO_MAIL;
 import static br.com.netbrasoft.gnuob.generic.factory.MessageCreaterFactory.createMessage;
@@ -41,7 +42,6 @@ import javax.jws.WebService;
 import org.slf4j.Logger;
 
 import br.com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
-import br.com.netbrasoft.gnuob.generic.OrderByEnum;
 import br.com.netbrasoft.gnuob.generic.Paging;
 import br.com.netbrasoft.gnuob.generic.content.mail.MailAction;
 import br.com.netbrasoft.gnuob.generic.content.mail.MailControl;
@@ -212,8 +212,7 @@ public class PayPalExpressCheckOutWebServiceImpl<T extends Order> implements ICh
   }
 
   private T findOrder(final MetaData credentials, final T type) {
-    return securedGenericOrderService.find(credentials, type, Paging.getInstance(0, 1), OrderByEnum.NONE).iterator()
-        .next();
+    return securedGenericOrderService.find(credentials, type, Paging.getInstance(0, 1), NONE).iterator().next();
   }
 
   @Override

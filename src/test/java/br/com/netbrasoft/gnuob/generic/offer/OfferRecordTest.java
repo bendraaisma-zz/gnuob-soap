@@ -14,6 +14,8 @@
 
 package br.com.netbrasoft.gnuob.generic.offer;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getOfferRecordInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -32,6 +34,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -40,7 +44,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.netbrasoft.gnuob.generic.offer.OfferRecord;
 import br.com.netbrasoft.gnuob.generic.product.Option;
 import br.com.netbrasoft.gnuob.generic.product.Product;
 
@@ -61,6 +64,33 @@ public class OfferRecordTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonOfferRecord() throws IllegalAccessException, InvocationTargetException, IOException {
+    final OfferRecord offerRecord = getOfferRecordInstance();
+    final OfferRecord jsonOfferRecord = OfferRecord.getInstanceByJson(mapper.writeValueAsString(offerRecord));
+    assertEquals(offerRecord.getId(), jsonOfferRecord.getId());
+    assertEquals(offerRecord.getVersion(), jsonOfferRecord.getVersion());
+    assertEquals(offerRecord.getAmount(), jsonOfferRecord.getAmount());
+    assertEquals(offerRecord.getDescription(), jsonOfferRecord.getDescription());
+    assertEquals(offerRecord.getDiscount(), jsonOfferRecord.getDiscount());
+    assertEquals(offerRecord.getItemHeight(), jsonOfferRecord.getItemHeight());
+    assertEquals(offerRecord.getItemHeightUnit(), jsonOfferRecord.getItemHeightUnit());
+    assertEquals(offerRecord.getItemLength(), jsonOfferRecord.getItemLength());
+    assertEquals(offerRecord.getItemLengthUnit(), jsonOfferRecord.getItemLengthUnit());
+    assertEquals(offerRecord.getItemUrl(), jsonOfferRecord.getItemUrl());
+    assertEquals(offerRecord.getItemWeight(), jsonOfferRecord.getItemWeight());
+    assertEquals(offerRecord.getItemWeightUnit(), jsonOfferRecord.getItemWeightUnit());
+    assertEquals(offerRecord.getItemWidth(), jsonOfferRecord.getItemWidth());
+    assertEquals(offerRecord.getItemWidthUnit(), jsonOfferRecord.getItemWidthUnit());
+    assertEquals(offerRecord.getName(), jsonOfferRecord.getName());
+    assertEquals(offerRecord.getOption(), jsonOfferRecord.getOption());
+    assertNotNull(offerRecord.getProduct());
+    assertEquals(offerRecord.getProductNumber(), jsonOfferRecord.getProductNumber());
+    assertEquals(offerRecord.getQuantity(), jsonOfferRecord.getQuantity());
+    assertEquals(offerRecord.getShippingCost(), jsonOfferRecord.getShippingCost());
+    assertEquals(offerRecord.getTax(), jsonOfferRecord.getTax());
+  }
 
   @Test
   public void testGetAmount() {

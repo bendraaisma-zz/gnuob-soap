@@ -14,6 +14,8 @@
 
 package br.com.netbrasoft.gnuob.generic.order;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getPaymentInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -27,6 +29,8 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -35,8 +39,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import br.com.netbrasoft.gnuob.generic.order.Payment;
 
 public class PaymentTest {
 
@@ -49,6 +51,31 @@ public class PaymentTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonPayment() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Payment payment = getPaymentInstance();
+    final Payment jsonPayment = Payment.getInstanceByJson(mapper.writeValueAsString(payment));
+    assertEquals(payment.getId(), jsonPayment.getId());
+    assertEquals(payment.getVersion(), jsonPayment.getVersion());
+    assertEquals(payment.getExchangeRate(), jsonPayment.getExchangeRate());
+    assertEquals(payment.getFeeAmount(), jsonPayment.getFeeAmount());
+    assertEquals(payment.getGrossAmount(), jsonPayment.getGrossAmount());
+    assertEquals(payment.getHoldDecision(), jsonPayment.getHoldDecision());
+    assertEquals(payment.getInstallmentCount(), jsonPayment.getInstallmentCount());
+    assertEquals(payment.getPaymentRequestId(), jsonPayment.getPaymentRequestId());
+    assertEquals(payment.getPaymentStatus(), jsonPayment.getPaymentStatus());
+    assertEquals(payment.getPaymentType(), jsonPayment.getPaymentType());
+    assertEquals(payment.getPendingReason(), jsonPayment.getPendingReason());
+    assertEquals(payment.getProtectionEligibilityType(), jsonPayment.getProtectionEligibilityType());
+    assertEquals(payment.getReasonCode(), jsonPayment.getReasonCode());
+    assertEquals(payment.getSettleAmount(), jsonPayment.getSettleAmount());
+    assertEquals(payment.getStoreId(), jsonPayment.getStoreId());
+    assertEquals(payment.getTaxAmount(), jsonPayment.getTaxAmount());
+    assertEquals(payment.getTerminalId(), jsonPayment.getTerminalId());
+    assertEquals(payment.getTransactionId(), jsonPayment.getTransactionId());
+    assertEquals(payment.getTransactionType(), jsonPayment.getTransactionType());
+  }
 
   @Test
   public void testGetExchangeRate() {

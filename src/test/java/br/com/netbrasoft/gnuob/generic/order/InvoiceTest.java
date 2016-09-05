@@ -14,6 +14,9 @@
 
 package br.com.netbrasoft.gnuob.generic.order;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getInvoiceInstance;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -31,14 +34,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import br.com.netbrasoft.gnuob.generic.customer.Address;
-import br.com.netbrasoft.gnuob.generic.order.Invoice;
-import br.com.netbrasoft.gnuob.generic.order.Payment;
 
 public class InvoiceTest {
 
@@ -57,6 +60,17 @@ public class InvoiceTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonInvoice() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Invoice invoice = getInvoiceInstance();
+    final Invoice jsonInvoice = Invoice.getInstance(mapper.writeValueAsString(invoice));
+    assertEquals(invoice.getId(), jsonInvoice.getId());
+    assertEquals(invoice.getVersion(), jsonInvoice.getVersion());
+    assertEquals(invoice.getInvoiceId(), jsonInvoice.getInvoiceId());
+    assertNotNull(invoice.getAddress());
+    assertFalse(invoice.getPayments().isEmpty());
+  }
 
   @Test
   public void testGetAddress() {
@@ -187,6 +201,6 @@ public class InvoiceTest {
 
   @Test
   public void testToString() {
-    assertEquals(ToStringBuilder.reflectionToString(spyInvoice, SHORT_PREFIX_STYLE), spyInvoice.toString());
+    assertEquals(reflectionToString(spyInvoice, SHORT_PREFIX_STYLE), spyInvoice.toString());
   }
 }

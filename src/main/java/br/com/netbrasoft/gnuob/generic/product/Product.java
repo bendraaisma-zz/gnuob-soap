@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.product;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.AMOUNT_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.BESTSELLERS_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CONTENTS_ID_COLUMN_NAME;
@@ -56,8 +57,11 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
 import static org.hibernate.annotations.CacheConcurrencyStrategy.READ_ONLY;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -77,6 +81,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.velocity.context.Context;
 import org.hibernate.annotations.Cache;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.netbrasoft.gnuob.generic.category.SubCategory;
 import br.com.netbrasoft.gnuob.generic.content.Content;
@@ -122,29 +129,47 @@ public class Product extends AbstractAccess {
     subCategories = newHashSet();
   }
 
+  public Product(String json) throws IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, Product.class));
+  }
+
+  public static Product getInstance() {
+    return new Product();
+  }
+
+  public static Product getInstanceByJson(String json)
+      throws IllegalAccessException, InvocationTargetException, IOException {
+    return new Product(json);
+  }
+
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return newArrayList(isAbstractTypeDetached(), isStockDetached(), isSubCategoriesDetached(), isContentsDetached(),
         isOptionsDetached()).stream().filter(e -> e.booleanValue()).count() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isStockDetached() {
     return stock != null && stock.isDetached();
   }
 
+  @JsonIgnore
   @Transient
   private boolean isSubCategoriesDetached() {
     return subCategories != null
         && subCategories.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isContentsDetached() {
     return contents != null && contents.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isOptionsDetached() {
     return options != null && options.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
@@ -194,10 +219,19 @@ public class Product extends AbstractAccess {
     return amount;
   }
 
+  public void setAmount(final BigDecimal amount) {
+    this.amount = amount;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = BESTSELLERS_COLUMN_NAME)
   public Boolean getBestsellers() {
     return bestsellers;
+  }
+
+  public void setBestsellers(final Boolean bestsellers) {
+    this.bestsellers = bestsellers;
   }
 
   @Cache(usage = READ_ONLY)
@@ -210,64 +244,118 @@ public class Product extends AbstractAccess {
     return contents;
   }
 
+  public void setContents(final Set<Content> contents) {
+    this.contents = contents;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = DESCRIPTION_COLUMN_NAME, nullable = false)
   public String getDescription() {
     return description;
   }
 
+  public void setDescription(final String description) {
+    this.description = description;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = DISCOUNT_COLUMN_NAME, nullable = false)
   public BigDecimal getDiscount() {
     return discount;
   }
 
+  public void setDiscount(final BigDecimal discount) {
+    this.discount = discount;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_HEIGHT_COLUMN_NAME)
   public BigDecimal getItemHeight() {
     return itemHeight;
   }
 
+  public void setItemHeight(final BigDecimal itemHeight) {
+    this.itemHeight = itemHeight;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_HEIGHT_UNIT_COLUMN_NAME)
   public String getItemHeightUnit() {
     return itemHeightUnit;
   }
 
+  public void setItemHeightUnit(final String itemHeightUnit) {
+    this.itemHeightUnit = itemHeightUnit;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_LENGTH_COLUMN_NAME)
   public BigDecimal getItemLength() {
     return itemLength;
   }
 
+  public void setItemLength(final BigDecimal itemLength) {
+    this.itemLength = itemLength;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_LENGTH_UNIT_COLUMN_NAME)
   public String getItemLengthUnit() {
     return itemLengthUnit;
   }
 
+  public void setItemLengthUnit(final String itemLengthUnit) {
+    this.itemLengthUnit = itemLengthUnit;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_URL_COLUMN_NAME)
   public String getItemUrl() {
     return itemUrl;
   }
 
+  public void setItemUrl(final String itemUrl) {
+    this.itemUrl = itemUrl;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = ITEM_WEIGHT_COLUMN_NAME, nullable = false)
   public BigDecimal getItemWeight() {
     return itemWeight;
   }
 
+  public void setItemWeight(final BigDecimal itemWeight) {
+    this.itemWeight = itemWeight;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_WEIGHT_UNIT_COLUMN_NAME)
   public String getItemWeightUnit() {
     return itemWeightUnit;
   }
 
+  public void setItemWeightUnit(final String itemWeightUnit) {
+    this.itemWeightUnit = itemWeightUnit;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_WIDTH_COLUMN_NAME)
   public BigDecimal getItemWidth() {
     return itemWidth;
+  }
+
+  public void setItemWidth(final BigDecimal itemWidth) {
+    this.itemWidth = itemWidth;
   }
 
   @XmlElement
@@ -276,22 +364,41 @@ public class Product extends AbstractAccess {
     return itemWidthUnit;
   }
 
+  public void setItemWidthUnit(final String itemWidthUnit) {
+    this.itemWidthUnit = itemWidthUnit;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = LATEST_COLLECTION_COLUMN_NAME)
   public Boolean getLatestCollection() {
     return latestCollection;
   }
 
+  public void setLatestCollection(final Boolean latestCollection) {
+    this.latestCollection = latestCollection;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = NAME_COLUMN_NAME, nullable = false)
   public String getName() {
     return name;
   }
 
+  public void setName(final String name) {
+    this.name = name;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = NUMBER_COLUMN_NAME, nullable = false)
   public String getNumber() {
     return number;
+  }
+
+  public void setNumber(final String number) {
+    this.number = number;
   }
 
   @OrderBy(POSITION_ASC)
@@ -303,28 +410,52 @@ public class Product extends AbstractAccess {
     return options;
   }
 
+  public void setOptions(final Set<Option> options) {
+    this.options = options;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = RATING_COLUMN_NAME)
   public Integer getRating() {
     return rating;
   }
 
+  public void setRating(final Integer rating) {
+    this.rating = rating;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = RECOMMENDED_COLUMN_NAME)
   public Boolean getRecommended() {
     return recommended;
   }
 
+  public void setRecommended(final Boolean recommended) {
+    this.recommended = recommended;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = SHIPPING_COST_COLUMN_NAME, nullable = false)
   public BigDecimal getShippingCost() {
     return shippingCost;
   }
 
+  public void setShippingCost(final BigDecimal shippingCost) {
+    this.shippingCost = shippingCost;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @OneToOne(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, optional = false)
   public Stock getStock() {
     return stock;
+  }
+
+  public void setStock(final Stock stock) {
+    this.stock = stock;
   }
 
   @OrderBy(POSITION_ASC)
@@ -336,102 +467,15 @@ public class Product extends AbstractAccess {
     return subCategories;
   }
 
+  public void setSubCategories(final Set<SubCategory> subCategories) {
+    this.subCategories = subCategories;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = TAX_COLUMN_NAME, nullable = false)
   public BigDecimal getTax() {
     return tax;
-  }
-
-  public void setAmount(final BigDecimal amount) {
-    this.amount = amount;
-  }
-
-  public void setBestsellers(final Boolean bestsellers) {
-    this.bestsellers = bestsellers;
-  }
-
-  public void setContents(final Set<Content> contents) {
-    this.contents = contents;
-  }
-
-  public void setDescription(final String description) {
-    this.description = description;
-  }
-
-  public void setDiscount(final BigDecimal discount) {
-    this.discount = discount;
-  }
-
-  public void setItemHeight(final BigDecimal itemHeight) {
-    this.itemHeight = itemHeight;
-  }
-
-  public void setItemHeightUnit(final String itemHeightUnit) {
-    this.itemHeightUnit = itemHeightUnit;
-  }
-
-  public void setItemLength(final BigDecimal itemLength) {
-    this.itemLength = itemLength;
-  }
-
-  public void setItemLengthUnit(final String itemLengthUnit) {
-    this.itemLengthUnit = itemLengthUnit;
-  }
-
-  public void setItemUrl(final String itemUrl) {
-    this.itemUrl = itemUrl;
-  }
-
-  public void setItemWeight(final BigDecimal itemWeight) {
-    this.itemWeight = itemWeight;
-  }
-
-  public void setItemWeightUnit(final String itemWeightUnit) {
-    this.itemWeightUnit = itemWeightUnit;
-  }
-
-  public void setItemWidth(final BigDecimal itemWidth) {
-    this.itemWidth = itemWidth;
-  }
-
-  public void setItemWidthUnit(final String itemWidthUnit) {
-    this.itemWidthUnit = itemWidthUnit;
-  }
-
-  public void setLatestCollection(final Boolean latestCollection) {
-    this.latestCollection = latestCollection;
-  }
-
-  public void setName(final String name) {
-    this.name = name;
-  }
-
-  public void setNumber(final String number) {
-    this.number = number;
-  }
-
-  public void setOptions(final Set<Option> options) {
-    this.options = options;
-  }
-
-  public void setRating(final Integer rating) {
-    this.rating = rating;
-  }
-
-  public void setRecommended(final Boolean recommended) {
-    this.recommended = recommended;
-  }
-
-  public void setShippingCost(final BigDecimal shippingCost) {
-    this.shippingCost = shippingCost;
-  }
-
-  public void setStock(final Stock stock) {
-    this.stock = stock;
-  }
-
-  public void setSubCategories(final Set<SubCategory> subCategories) {
-    this.subCategories = subCategories;
   }
 
   public void setTax(final BigDecimal tax) {

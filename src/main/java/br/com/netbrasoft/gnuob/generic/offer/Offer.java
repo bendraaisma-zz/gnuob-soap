@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.offer;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DISCOUNT_TOTAL_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.EXTRA_AMOUNT_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_OFFERS_GNUOB_OFFER_RECORDS_TABLE_NAME;
@@ -44,8 +45,11 @@ import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -63,6 +67,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.velocity.context.Context;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
 import br.com.netbrasoft.gnuob.generic.contract.Contract;
@@ -95,18 +102,33 @@ public class Offer extends AbstractAccess {
     records = newHashSet();
   }
 
+  public Offer(String json) throws IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, Offer.class));
+  }
+
+  public static Offer getInstance() {
+    return new Offer();
+  }
+
+  public static Offer getInstanceByJson(String json) throws IllegalAccessException, InvocationTargetException, IOException {
+    return new Offer(json);
+  }
+
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return newArrayList(isAbstractTypeDetached(), isContractDetached(), isOfferRecordsDetached()).stream()
         .filter(e -> e.booleanValue()).count() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isContractDetached() {
     return contract != null && contract.isDetached();
   }
 
+  @JsonIgnore
   @Transient
   private boolean isOfferRecordsDetached() {
     return records != null && records.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
@@ -141,12 +163,18 @@ public class Offer extends AbstractAccess {
     return visitor.visit(this);
   }
 
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @ManyToOne(cascade = {PERSIST, MERGE, REFRESH})
   public Contract getContract() {
     return contract;
   }
 
+  public void setContract(final Contract contract) {
+    this.contract = contract;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = DISCOUNT_TOTAL_COLUMN_NAME)
   public BigDecimal getDiscountTotal() {
@@ -157,6 +185,11 @@ public class Offer extends AbstractAccess {
     return discountTotal;
   }
 
+  public void setDiscountTotal(final BigDecimal discountTotal) {
+    this.discountTotal = discountTotal;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = EXTRA_AMOUNT_COLUMN_NAME, nullable = false)
   public BigDecimal getExtraAmount() {
@@ -166,6 +199,11 @@ public class Offer extends AbstractAccess {
     return extraAmount;
   }
 
+  public void setExtraAmount(final BigDecimal extraAmount) {
+    this.extraAmount = extraAmount;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = HANDLING_TOTAL_COLUMN_NAME, nullable = false)
   public BigDecimal getHandlingTotal() {
@@ -175,6 +213,11 @@ public class Offer extends AbstractAccess {
     return handlingTotal;
   }
 
+  public void setHandlingTotal(final BigDecimal handlingTotal) {
+    this.handlingTotal = handlingTotal;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = INSURANCE_TOTAL_COLUMN_NAME, nullable = false)
   public BigDecimal getInsuranceTotal() {
@@ -184,6 +227,11 @@ public class Offer extends AbstractAccess {
     return insuranceTotal;
   }
 
+  public void setInsuranceTotal(final BigDecimal insuranceTotal) {
+    this.insuranceTotal = insuranceTotal;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_TOTAL_COLUMN_NAME)
   public BigDecimal getItemTotal() {
@@ -194,6 +242,11 @@ public class Offer extends AbstractAccess {
     return itemTotal;
   }
 
+  public void setItemTotal(final BigDecimal itemTotal) {
+    this.itemTotal = itemTotal;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = MAX_TOTAL_COLUMN_NAME)
   public BigDecimal getMaxTotal() {
@@ -203,12 +256,22 @@ public class Offer extends AbstractAccess {
     return maxTotal;
   }
 
+  public void setMaxTotal(final BigDecimal maxTotal) {
+    this.maxTotal = maxTotal;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = OFFER_DESCRIPTION_COLUMN_NAME)
   public String getOfferDescription() {
     return offerDescription;
   }
 
+  public void setOfferDescription(final String offerDescription) {
+    this.offerDescription = offerDescription;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = OFFER_ID_COLUMN_NAME, nullable = false)
   public String getOfferId() {
@@ -218,6 +281,11 @@ public class Offer extends AbstractAccess {
     return offerId;
   }
 
+  public void setOfferId(final String offerId) {
+    this.offerId = offerId;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = OFFER_TOTAL_COLUMN_NAME)
   public BigDecimal getOfferTotal() {
@@ -225,6 +293,10 @@ public class Offer extends AbstractAccess {
       offerTotal = getItemTotal().add(getShippingTotal()).subtract(getShippingDiscount()).add(getExtraAmount());
     }
     return offerTotal;
+  }
+
+  public void setOfferTotal(final BigDecimal offerTotal) {
+    this.offerTotal = offerTotal;
   }
 
   @OrderBy(POSITION_ASC)
@@ -236,6 +308,11 @@ public class Offer extends AbstractAccess {
     return records;
   }
 
+  public void setRecords(final Set<OfferRecord> records) {
+    this.records = records;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = SHIPPING_DISCOUNT_COLUMN_NAME, nullable = false)
   public BigDecimal getShippingDiscount() {
@@ -245,6 +322,11 @@ public class Offer extends AbstractAccess {
     return shippingDiscount;
   }
 
+  public void setShippingDiscount(final BigDecimal shippingDiscount) {
+    this.shippingDiscount = shippingDiscount;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = SHIPPING_TOTAL_COLUMN_NAME, nullable = false)
   public BigDecimal getShippingTotal() {
@@ -255,6 +337,11 @@ public class Offer extends AbstractAccess {
     return shippingTotal;
   }
 
+  public void setShippingTotal(final BigDecimal shippingTotal) {
+    this.shippingTotal = shippingTotal;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = TAX_TOTAL_COLUMN_NAME)
   public BigDecimal getTaxTotal() {
@@ -263,58 +350,6 @@ public class Offer extends AbstractAccess {
       records.stream().forEach(e -> taxTotal.add(e.getTaxTotal()));
     }
     return taxTotal;
-  }
-
-  public void setContract(final Contract contract) {
-    this.contract = contract;
-  }
-
-  public void setDiscountTotal(final BigDecimal discountTotal) {
-    this.discountTotal = discountTotal;
-  }
-
-  public void setExtraAmount(final BigDecimal extraAmount) {
-    this.extraAmount = extraAmount;
-  }
-
-  public void setHandlingTotal(final BigDecimal handlingTotal) {
-    this.handlingTotal = handlingTotal;
-  }
-
-  public void setInsuranceTotal(final BigDecimal insuranceTotal) {
-    this.insuranceTotal = insuranceTotal;
-  }
-
-  public void setItemTotal(final BigDecimal itemTotal) {
-    this.itemTotal = itemTotal;
-  }
-
-  public void setMaxTotal(final BigDecimal maxTotal) {
-    this.maxTotal = maxTotal;
-  }
-
-  public void setOfferDescription(final String offerDescription) {
-    this.offerDescription = offerDescription;
-  }
-
-  public void setOfferId(final String offerId) {
-    this.offerId = offerId;
-  }
-
-  public void setOfferTotal(final BigDecimal offerTotal) {
-    this.offerTotal = offerTotal;
-  }
-
-  public void setRecords(final Set<OfferRecord> records) {
-    this.records = records;
-  }
-
-  public void setShippingDiscount(final BigDecimal shippingDiscount) {
-    this.shippingDiscount = shippingDiscount;
-  }
-
-  public void setShippingTotal(final BigDecimal shippingTotal) {
-    this.shippingTotal = shippingTotal;
   }
 
   public void setTaxTotal(final BigDecimal taxTotal) {

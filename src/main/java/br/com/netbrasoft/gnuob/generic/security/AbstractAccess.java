@@ -47,6 +47,9 @@ import org.hibernate.annotations.FilterDefs;
 import org.hibernate.annotations.Filters;
 import org.hibernate.annotations.ParamDef;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 import br.com.netbrasoft.gnuob.generic.content.contexts.IContextElement;
 
@@ -90,18 +93,21 @@ public abstract class AbstractAccess extends AbstractType implements IContextEle
   private Permission permission;
   private Site site;
 
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = ACTIVE_COLUMN_NAME, nullable = false)
   public Boolean getActive() {
     return active;
   }
 
+  @JsonIgnore
   @XmlTransient
   @ManyToOne(cascade = {PERSIST}, optional = false)
   public Group getGroup() {
     return group;
   }
 
+  @JsonIgnore
   @XmlTransient
   @ManyToOne(cascade = {PERSIST}, optional = false)
   public User getOwner() {
@@ -113,6 +119,7 @@ public abstract class AbstractAccess extends AbstractType implements IContextEle
     return permission;
   }
 
+  @JsonIgnore
   @XmlTransient
   @ManyToOne(cascade = {PERSIST}, optional = false)
   public Site getSite() {

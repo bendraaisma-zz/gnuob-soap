@@ -14,6 +14,8 @@
 
 package br.com.netbrasoft.gnuob.generic.customer;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getPostalCodeInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -25,14 +27,14 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import br.com.netbrasoft.gnuob.generic.customer.PostalCode;
 
 public class PostalCodeTest {
 
@@ -45,6 +47,26 @@ public class PostalCodeTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonPostalCode() throws IllegalAccessException, InvocationTargetException, IOException {
+    final PostalCode postalCode = getPostalCodeInstance();
+    final PostalCode jsonPostalCode = PostalCode.getInstanceByJson(mapper.writeValueAsString(postalCode));
+    assertEquals(postalCode.getId(), jsonPostalCode.getId());
+    assertEquals(postalCode.getVersion(), jsonPostalCode.getVersion());
+    assertEquals(postalCode.getAccuracy(), jsonPostalCode.getAccuracy());
+    assertEquals(postalCode.getAdminCode1(), jsonPostalCode.getAdminCode1());
+    assertEquals(postalCode.getAdminCode2(), jsonPostalCode.getAdminCode2());
+    assertEquals(postalCode.getAdminCode3(), jsonPostalCode.getAdminCode3());
+    assertEquals(postalCode.getAdminName1(), jsonPostalCode.getAdminName1());
+    assertEquals(postalCode.getAdminName2(), jsonPostalCode.getAdminName2());
+    assertEquals(postalCode.getAdminName3(), jsonPostalCode.getAdminName3());
+    assertEquals(postalCode.getCountryCode(), jsonPostalCode.getCountryCode());
+    assertEquals(postalCode.getLatitude(), jsonPostalCode.getLatitude());
+    assertEquals(postalCode.getLongitude(), jsonPostalCode.getLongitude());
+    assertEquals(postalCode.getPlaceName(), jsonPostalCode.getPlaceName());
+    assertEquals(postalCode.getPostalCode(), jsonPostalCode.getPostalCode());
+  }
 
   @Test
   public void testGetAccuracy() {

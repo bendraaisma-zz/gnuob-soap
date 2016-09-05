@@ -14,9 +14,11 @@
 
 package br.com.netbrasoft.gnuob.generic.content;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getContentInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -28,6 +30,9 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.After;
@@ -47,6 +52,21 @@ public class ContentTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonContent() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Content content = getContentInstance();
+    final Content jsonContent = Content.getInstanceByJson(mapper.writeValueAsString(content));
+    assertEquals(content.getActive(), jsonContent.getActive());
+    assertEquals(content.getId(), jsonContent.getId());
+    assertEquals(content.getVersion(), jsonContent.getVersion());
+    assertEquals(content.getData()[0], jsonContent.getData()[0]);
+    assertEquals(content.getFormat(), jsonContent.getFormat());
+    assertEquals(content.getName(), jsonContent.getName());
+    assertEquals(content.getPermission().getGroup(), jsonContent.getPermission().getGroup());
+    assertEquals(content.getPermission().getOthers(), jsonContent.getPermission().getOthers());
+    assertEquals(content.getPermission().getOwner(), jsonContent.getPermission().getOwner());
+  }
 
   @Test
   public void testAccept() {

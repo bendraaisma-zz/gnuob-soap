@@ -19,7 +19,8 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({OfferTest.class, OfferRecordTest.class, OfferWebServiceImplTest.class})
+@SuiteClasses({OfferTest.class, OfferRecordTest.class, OfferWebServiceImplTest.class,
+    OfferRESTfulServiceImplTest.class})
 public class OfferSuite {
 
 }

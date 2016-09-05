@@ -14,9 +14,11 @@
 
 package br.com.netbrasoft.gnuob.generic.customer;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getCustomerInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -31,6 +33,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -54,6 +58,35 @@ public class CustomerTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonCustomer() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Customer customer = getCustomerInstance();
+    final Customer jsonCustomer = Customer.getInstanceByJson(mapper.writeValueAsString(customer));
+    assertEquals(customer.getActive(), jsonCustomer.getActive());
+    assertEquals(customer.getId(), jsonCustomer.getId());
+    assertEquals(customer.getVersion(), jsonCustomer.getVersion());
+    assertNotNull(customer.getAddress());
+    assertEquals(customer.getBuyerEmail(), jsonCustomer.getBuyerEmail());
+    assertEquals(customer.getBuyerMarketingEmail(), jsonCustomer.getBuyerMarketingEmail());
+    assertEquals(customer.getContactPhone(), jsonCustomer.getContactPhone());
+    assertEquals(customer.getDateOfBirth(), jsonCustomer.getDateOfBirth());
+    assertEquals(customer.getFirstName(), jsonCustomer.getFirstName());
+    assertEquals(customer.getFriendlyName(), jsonCustomer.getFriendlyName());
+    assertEquals(customer.getLastName(), jsonCustomer.getLastName());
+    assertEquals(customer.getMiddleName(), jsonCustomer.getMiddleName());
+    assertEquals(customer.getPayer(), jsonCustomer.getPayer());
+    assertEquals(customer.getPayerBusiness(), jsonCustomer.getPayerBusiness());
+    assertEquals(customer.getPayerId(), jsonCustomer.getPayerId());
+    assertEquals(customer.getPayerStatus(), jsonCustomer.getPayerStatus());
+    assertEquals(customer.getPermission().getGroup(), jsonCustomer.getPermission().getGroup());
+    assertEquals(customer.getPermission().getOthers(), jsonCustomer.getPermission().getOthers());
+    assertEquals(customer.getPermission().getOwner(), jsonCustomer.getPermission().getOwner());
+    assertEquals(customer.getSalutation(), jsonCustomer.getSalutation());
+    assertEquals(customer.getSuffix(), jsonCustomer.getSuffix());
+    assertEquals(customer.getTaxId(), jsonCustomer.getTaxId());
+    assertEquals(customer.getTaxIdType(), jsonCustomer.getTaxIdType());
+  }
 
   @Test
   public void testAccept() {

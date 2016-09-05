@@ -40,7 +40,9 @@
       <version.jasper.report>RELEASE</version.jasper.report>
       <version.liquibase>3.5.1</version.liquibase>
       <version.guava>18.0</version.guava>
+      <version.ws.rs>2.0</version.ws.rs>
       <version.commons-lang3>3.4</version.commons-lang3>
+      <version.gnuob-api>0.0.9-SNAPSHOT</version.gnuob-api>
       <maven.compiler.target>1.8</maven.compiler.target>
       <maven.compiler.source>1.8</maven.compiler.source>
    </properties>
@@ -112,6 +114,13 @@
          <version>${version.mockito-all}</version>
          <scope>test</scope>
       </dependency>
+       <!-- GNUOB -->
+      <dependency>
+         <groupId>br.com.netbrasoft</groupId>
+         <artifactId>gnuob-api</artifactId>
+         <version>${version.gnuob-api}</version>
+         <scope>test</scope>
+      </dependency>
       <!-- UTILS -->
       <dependency>
          <groupId>com.paypal</groupId>
@@ -157,6 +166,12 @@
          <groupId>com.google.guava</groupId>
          <artifactId>guava</artifactId>
          <version>${version.guava}</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>javax.ws.rs</groupId>
+         <artifactId>javax.ws.rs-api</artifactId>
+         <version>${version.ws.rs}</version>
          <scope>provided</scope>
       </dependency>
       <!-- SIMON -->

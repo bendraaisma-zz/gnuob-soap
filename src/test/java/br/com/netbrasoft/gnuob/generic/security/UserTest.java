@@ -14,9 +14,11 @@
 
 package br.com.netbrasoft.gnuob.generic.security;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getUserInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -32,6 +34,9 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.After;
@@ -49,7 +54,6 @@ public class UserTest {
   public final ExpectedException expectedException = ExpectedException.none();
   private Group mockGroup;
   private Site mockSite;
-
   private User spyUser;
 
   @Before
@@ -63,6 +67,24 @@ public class UserTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonUser() throws IllegalAccessException, InvocationTargetException, IOException {
+    final User user = getUserInstance();
+    final User jsonUser = User.getInstanceByJson(mapper.writeValueAsString(user));
+    assertEquals(user.getActive(), jsonUser.getActive());
+    assertEquals(user.getId(), jsonUser.getId());
+    assertEquals(user.getVersion(), jsonUser.getVersion());
+    assertEquals(user.getAccess(), jsonUser.getAccess());
+    assertEquals(user.getDescription(), jsonUser.getDescription());
+    assertEquals(user.getName(), jsonUser.getName());
+    assertEquals(user.getPassword(), jsonUser.getPassword());
+    assertEquals(user.getPermission().getGroup(), jsonUser.getPermission().getGroup());
+    assertEquals(user.getPermission().getOthers(), jsonUser.getPermission().getOthers());
+    assertEquals(user.getPermission().getOwner(), jsonUser.getPermission().getOwner());
+    assertFalse(jsonUser.getSites().isEmpty());
+    assertFalse(jsonUser.getGroups().isEmpty());
+  }
 
   @Test
   public void testAccept() {

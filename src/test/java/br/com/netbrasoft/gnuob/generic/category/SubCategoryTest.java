@@ -14,6 +14,8 @@
 
 package br.com.netbrasoft.gnuob.generic.category;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getSubCategoryInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -30,12 +32,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.collections.Sets.newSet;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import br.com.netbrasoft.gnuob.generic.category.SubCategory;
 import br.com.netbrasoft.gnuob.generic.content.Content;
 
 public class SubCategoryTest {
@@ -55,6 +59,18 @@ public class SubCategoryTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonCategory() throws IllegalAccessException, InvocationTargetException, IOException {
+    final SubCategory subCategory = getSubCategoryInstance();
+    final SubCategory jsonSubCategory = SubCategory.getInstanceByJson(mapper.writeValueAsString(subCategory));
+    assertEquals(subCategory.getId(), jsonSubCategory.getId());
+    assertEquals(subCategory.getVersion(), jsonSubCategory.getVersion());
+    assertEquals(subCategory.getName(), jsonSubCategory.getName());
+    assertEquals(subCategory.getDescription(), jsonSubCategory.getDescription());
+    assertTrue(jsonSubCategory.getContents().isEmpty());
+    assertTrue(jsonSubCategory.getSubCategories().isEmpty());
+  }
 
   @Test
   public void testGetContents() {

@@ -14,6 +14,8 @@
 
 package br.com.netbrasoft.gnuob.generic.order;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getShipmentInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -28,13 +30,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import br.com.netbrasoft.gnuob.generic.customer.Address;
-import br.com.netbrasoft.gnuob.generic.order.Shipment;
 
 public class ShipmentTest {
 
@@ -50,6 +54,16 @@ public class ShipmentTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonShipment() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Shipment shipment = getShipmentInstance();
+    final Shipment jsonShipment = Shipment.getInstanceByJson(mapper.writeValueAsString(shipment));
+    assertEquals(shipment.getId(), jsonShipment.getId());
+    assertEquals(shipment.getVersion(), jsonShipment.getVersion());
+    assertEquals(shipment.getShipmentType(), jsonShipment.getShipmentType());
+    assertNotNull(shipment.getAddress());
+  }
 
   @Test
   public void testGetAddress() {

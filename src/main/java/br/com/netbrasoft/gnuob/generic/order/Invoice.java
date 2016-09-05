@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.order;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_INVOICES_GNUOB_PAYMENTS_TABLE_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_INVOICES_ID_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ID_COLUMN_NAME;
@@ -35,9 +36,13 @@ import static javax.persistence.CascadeType.REFRESH;
 import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import javax.persistence.Cacheable;
@@ -54,7 +59,9 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 import br.com.netbrasoft.gnuob.generic.customer.Address;
@@ -76,18 +83,35 @@ public class Invoice extends AbstractType {
     payments = newHashSet();
   }
 
+  public Invoice(String json)
+      throws JsonMappingException, IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, Invoice.class));
+  }
+
+  public static Invoice getInstance() {
+    return new Invoice();
+  }
+
+  public static Invoice getInstance(String json)
+      throws JsonMappingException, IllegalAccessException, InvocationTargetException, IOException {
+    return new Invoice(json);
+  }
+
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return newArrayList(isAbstractTypeDetached(), isAddressDetached(), isPaymentsDetached()).stream()
         .filter(e -> e.booleanValue()).count() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isAddressDetached() {
     return address != null && address.isDetached();
   }
 
+  @JsonIgnore
   @Transient
   private boolean isPaymentsDetached() {
     return payments != null && payments.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
@@ -111,12 +135,18 @@ public class Invoice extends AbstractType {
     }
   }
 
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @OneToOne(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, orphanRemoval = true, optional = false)
   public Address getAddress() {
     return address;
   }
 
+  public void setAddress(final Address address) {
+    this.address = address;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = INVOICE_ID_COLUMN_NAME, nullable = false)
   public String getInvoiceId() {
@@ -126,7 +156,10 @@ public class Invoice extends AbstractType {
     return invoiceId;
   }
 
-  @XmlElement
+  public void setInvoiceId(final String invoiceId) {
+    this.invoiceId = invoiceId;
+  }
+
   @OrderBy(POSITION_ASC)
   @OneToMany(cascade = {PERSIST, MERGE, REMOVE, REFRESH}, orphanRemoval = true, fetch = EAGER)
   @JoinTable(name = GNUOB_INVOICES_GNUOB_PAYMENTS_TABLE_NAME,
@@ -134,14 +167,6 @@ public class Invoice extends AbstractType {
       inverseJoinColumns = {@JoinColumn(name = PAYMENTS_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
   public Set<Payment> getPayments() {
     return payments;
-  }
-
-  public void setAddress(final Address address) {
-    this.address = address;
-  }
-
-  public void setInvoiceId(final String invoiceId) {
-    this.invoiceId = invoiceId;
   }
 
   public void setPayments(final Set<Payment> payments) {

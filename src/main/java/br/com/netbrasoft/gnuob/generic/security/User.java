@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.security;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ACCESS_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DESCRIPTION_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_ROLES_COLUMN_NAME;
@@ -23,8 +24,8 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_USER
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUPS_ID_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ID_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.NAME_COLUMN_NAME;
-import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_COLUMN_NAME;
-import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_REGEX;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PSWD_COLUMN_NAME;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PSWD_REGEX;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ROLE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.ROOT_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITES_ID_COLUMN_NAME;
@@ -38,7 +39,10 @@ import static java.util.stream.Collectors.counting;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.EAGER;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
 
 import javax.persistence.Cacheable;
@@ -56,6 +60,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.velocity.context.Context;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import br.com.netbrasoft.gnuob.generic.content.contexts.IContextVisitor;
@@ -83,31 +90,40 @@ public class User extends AbstractAccess {
     sites = newHashSet();
   }
 
-  private User(final String name) {
-    this();
-    this.name = name;
+  public User(String json) throws IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, User.class));
   }
 
   public static User getInstance() {
     return new User();
   }
 
-  public static User getInstance(final String name) {
-    return new User(name);
+  public static User getInstanceByJson(String json)
+      throws IllegalAccessException, InvocationTargetException, IOException {
+    return new User(json);
   }
 
-  @Transient
+  public static User getInstance(final String name) {
+    final User user = new User();
+    user.setName(name);
+    return user;
+  }
+
   @Override
+  @JsonIgnore
+  @Transient
   public boolean isDetached() {
     return newArrayList(isAbstractTypeDetached(), isSitesDetached(), isGroupsDetached()).stream()
         .filter(e -> e.booleanValue()).count() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isSitesDetached() {
     return sites != null && sites.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isGroupsDetached() {
     return groups != null && groups.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
@@ -115,7 +131,7 @@ public class User extends AbstractAccess {
 
   @Override
   public void prePersist() {
-    if (!password.matches(PASSWORD_REGEX)) {
+    if (!password.matches(PSWD_REGEX)) {
       throw new GNUOpenBusinessServiceException(
           format("Given user [%s] doesn't contain a valid password, verify that the given password is valid", name));
     }
@@ -137,10 +153,19 @@ public class User extends AbstractAccess {
     return access;
   }
 
+  public void setAccess(final Rule access) {
+    this.access = access;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = DESCRIPTION_COLUMN_NAME)
   public String getDescription() {
     return description;
+  }
+
+  public void setDescription(final String description) {
+    this.description = description;
   }
 
   @ManyToMany(cascade = {PERSIST}, fetch = EAGER)
@@ -151,16 +176,30 @@ public class User extends AbstractAccess {
     return groups;
   }
 
+  public void setGroups(final Set<Group> groups) {
+    this.groups = groups;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = NAME_COLUMN_NAME, nullable = false, unique = true)
   public String getName() {
     return name;
   }
 
+  public void setName(final String name) {
+    this.name = name;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
-  @Column(name = PASSWORD_COLUMN_NAME, nullable = false)
+  @Column(name = PSWD_COLUMN_NAME, nullable = false)
   public String getPassword() {
     return password;
+  }
+
+  public void setPassword(final String password) {
+    this.password = password;
   }
 
   @ElementCollection(targetClass = Role.class, fetch = EAGER)
@@ -171,10 +210,19 @@ public class User extends AbstractAccess {
     return roles;
   }
 
+  public void setRoles(final Set<Role> roles) {
+    this.roles = roles;
+  }
+
+  @JsonIgnore
   @XmlTransient
   @Column(name = ROOT_COLUMN_NAME)
   public Boolean getRoot() {
     return root;
+  }
+
+  public void setRoot(final Boolean root) {
+    this.root = root;
   }
 
   @ManyToMany(cascade = {PERSIST}, fetch = EAGER)
@@ -183,34 +231,6 @@ public class User extends AbstractAccess {
       inverseJoinColumns = {@JoinColumn(name = SITES_ID_COLUMN_NAME, referencedColumnName = ID_COLUMN_NAME)})
   public Set<Site> getSites() {
     return sites;
-  }
-
-  public void setAccess(final Rule access) {
-    this.access = access;
-  }
-
-  public void setDescription(final String description) {
-    this.description = description;
-  }
-
-  public void setGroups(final Set<Group> groups) {
-    this.groups = groups;
-  }
-
-  public void setName(final String name) {
-    this.name = name;
-  }
-
-  public void setPassword(final String password) {
-    this.password = password;
-  }
-
-  public void setRoles(final Set<Role> roles) {
-    this.roles = roles;
-  }
-
-  public void setRoot(final Boolean root) {
-    this.root = root;
   }
 
   public void setSites(final Set<Site> sites) {

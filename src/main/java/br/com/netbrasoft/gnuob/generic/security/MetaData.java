@@ -14,20 +14,24 @@
 
 package br.com.netbrasoft.gnuob.generic.security;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.META_DATA_ENTITY_NAME;
-import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_PARAM_NAME;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PSWD_PARAM_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_PARAM_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER_PARAM_NAME;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
-
 @XmlRootElement(name = META_DATA_ENTITY_NAME)
-@XmlType(propOrder = {SITE_PARAM_NAME, USER_PARAM_NAME, PASSWORD_PARAM_NAME})
+@XmlType(propOrder = {SITE_PARAM_NAME, USER_PARAM_NAME, PSWD_PARAM_NAME})
 public class MetaData {
 
   private String password;
@@ -38,6 +42,10 @@ public class MetaData {
     this(null, null, null);
   }
 
+  public MetaData(String json) throws IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, MetaData.class));
+  }
+
   private MetaData(final String site, final String user, final String password) {
     this.site = site;
     this.user = user;
@@ -46,6 +54,11 @@ public class MetaData {
 
   public static MetaData getInstance() {
     return new MetaData();
+  }
+
+  public static MetaData getInstanceByJson(String json)
+      throws InvocationTargetException, IOException, IllegalAccessException {
+    return new MetaData(json);
   }
 
   public static MetaData getInstance(final String site, final String user, final String password) {

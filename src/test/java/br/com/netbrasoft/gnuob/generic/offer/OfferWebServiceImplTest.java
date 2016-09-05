@@ -15,6 +15,7 @@
 package br.com.netbrasoft.gnuob.generic.offer;
 
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.UNCHECKED_VALUE;
+import static br.com.netbrasoft.gnuob.generic.OrderByEnum.NONE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -36,13 +37,9 @@ import org.junit.Test;
 
 import br.com.netbrasoft.gnuob.exception.GNUOpenBusinessServiceException;
 import br.com.netbrasoft.gnuob.generic.IGenericTypeWebService;
-import br.com.netbrasoft.gnuob.generic.OrderByEnum;
 import br.com.netbrasoft.gnuob.generic.Paging;
 import br.com.netbrasoft.gnuob.generic.contract.Contract;
 import br.com.netbrasoft.gnuob.generic.customer.Customer;
-import br.com.netbrasoft.gnuob.generic.offer.Offer;
-import br.com.netbrasoft.gnuob.generic.offer.OfferRecord;
-import br.com.netbrasoft.gnuob.generic.offer.OfferWebServiceImpl;
 import br.com.netbrasoft.gnuob.generic.security.ISecuredGenericTypeService;
 import br.com.netbrasoft.gnuob.generic.security.MetaData;
 
@@ -155,13 +152,13 @@ public class OfferWebServiceImplTest {
   public void testFindOfferPagingGettingGNUOpenBusinessServiceException() {
     when(mockSecuredGenericOfferService.find(any(), any(), any(), any(), anyVararg()))
         .thenThrow(new RuntimeException());
-    offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, OrderByEnum.NONE);
+    offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, NONE);
   }
 
   @Test
   public void testFindOfferPagingWithContractIsNull() {
     when(spyOffer.getContract()).thenReturn(null);
-    assertTrue("Find", offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, OrderByEnum.NONE).isEmpty());
+    assertTrue("Find", offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, NONE).isEmpty());
     verify(mockSecuredGenericCustomerService, never()).read(any(), any());
     verify(mockSecuredGenericContractService, never()).read(any(), any());
     verify(mockSecuredGenericOfferService, times(1)).find(any(), any(), any(), any(), anyVararg());
@@ -170,7 +167,7 @@ public class OfferWebServiceImplTest {
   @Test
   public void testFindOfferPagingWithDetachedContract() {
     when(mockContract.isDetached()).thenReturn(true);
-    assertTrue("Find", offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, OrderByEnum.NONE).isEmpty());
+    assertTrue("Find", offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, NONE).isEmpty());
     verify(mockSecuredGenericCustomerService, never()).read(any(), any());
     verify(mockSecuredGenericContractService, times(1)).read(any(), any());
     verify(mockSecuredGenericOfferService, times(1)).find(any(), any(), any(), any(), anyVararg());
@@ -181,7 +178,7 @@ public class OfferWebServiceImplTest {
     when(mockContract.isDetached()).thenReturn(true);
     when(mockContract.getCustomer()).thenReturn(mockCustomer);
     when(mockCustomer.isDetached()).thenReturn(true);
-    assertTrue("Find", offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, OrderByEnum.NONE).isEmpty());
+    assertTrue("Find", offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, NONE).isEmpty());
     verify(mockSecuredGenericCustomerService, times(1)).read(any(), any());
     verify(mockSecuredGenericContractService, times(1)).read(any(), any());
     verify(mockSecuredGenericOfferService, times(1)).find(any(), any(), any(), any(), anyVararg());
@@ -191,7 +188,7 @@ public class OfferWebServiceImplTest {
   public void testFindOfferPagingWithDetachedContractAndCustomerInNull() {
     when(mockContract.isDetached()).thenReturn(true);
     when(mockContract.getCustomer()).thenReturn(null);
-    assertTrue("Find", offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, OrderByEnum.NONE).isEmpty());
+    assertTrue("Find", offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, NONE).isEmpty());
     verify(mockSecuredGenericCustomerService, never()).read(any(), any());
     verify(mockSecuredGenericContractService, times(1)).read(any(), any());
     verify(mockSecuredGenericOfferService, times(1)).find(any(), any(), any(), any(), anyVararg());
@@ -202,7 +199,7 @@ public class OfferWebServiceImplTest {
     when(mockContract.isDetached()).thenReturn(true);
     when(mockContract.getCustomer()).thenReturn(mockCustomer);
     when(mockCustomer.isDetached()).thenReturn(false);
-    assertTrue("Find", offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, OrderByEnum.NONE).isEmpty());
+    assertTrue("Find", offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, NONE).isEmpty());
     verify(mockSecuredGenericCustomerService, never()).read(any(), any());
     verify(mockSecuredGenericContractService, times(1)).read(any(), any());
     verify(mockSecuredGenericOfferService, times(1)).find(any(), any(), any(), any(), anyVararg());
@@ -212,7 +209,7 @@ public class OfferWebServiceImplTest {
   @Test
   public void testFindOfferPagingWithNoDetachedContract() {
     when(mockContract.isDetached()).thenReturn(false);
-    assertTrue("Find", offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, OrderByEnum.NONE).isEmpty());
+    assertTrue("Find", offerWebServiceImpl.find(mockCredentials, spyOffer, mockPaging, NONE).isEmpty());
     verify(mockSecuredGenericCustomerService, never()).read(any(), any());
     verify(mockSecuredGenericContractService, never()).read(any(), any());
     verify(mockSecuredGenericOfferService, times(1)).find(any(), any(), any(), any(), anyVararg());

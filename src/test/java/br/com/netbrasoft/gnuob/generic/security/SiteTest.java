@@ -14,9 +14,11 @@
 
 package br.com.netbrasoft.gnuob.generic.security;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getSiteInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -27,6 +29,9 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.After;
@@ -46,6 +51,20 @@ public class SiteTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonSite() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Site site = getSiteInstance();
+    final Site jsonSite = Site.getInstanceByJson(mapper.writeValueAsString(site));
+    assertEquals(site.getActive(), jsonSite.getActive());
+    assertEquals(site.getVersion(), jsonSite.getVersion());
+    assertEquals(site.getId(), jsonSite.getId());
+    assertEquals(site.getName(), jsonSite.getName());
+    assertEquals(site.getDescription(), jsonSite.getDescription());
+    assertEquals(site.getPermission().getGroup(), jsonSite.getPermission().getGroup());
+    assertEquals(site.getPermission().getOthers(), jsonSite.getPermission().getOthers());
+    assertEquals(site.getPermission().getOwner(), jsonSite.getPermission().getOwner());
+  }
 
   @Test
   public void testAccept() {

@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.order;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.AMOUNT_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DELIVERY_DATE_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.DESCRIPTION_COLUMN_NAME;
@@ -53,9 +54,13 @@ import static javax.persistence.CascadeType.MERGE;
 import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
@@ -75,7 +80,8 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 import br.com.netbrasoft.gnuob.generic.product.Option;
@@ -118,13 +124,28 @@ public class OrderRecord extends AbstractType {
     options = newHashSet();
   }
 
+  public OrderRecord(String json) throws IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, OrderRecord.class));
+  }
+
+  public static OrderRecord getInstance() {
+    return new OrderRecord();
+  }
+
+  public static OrderRecord getInstanceByJson(String json)
+      throws IllegalAccessException, InvocationTargetException, IOException {
+    return new OrderRecord(json);
+  }
+
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return newArrayList(isAbstractTypeDetached(), isOptionsDetached()).stream().filter(e -> e.booleanValue())
         .count() > ZERO;
   }
 
+  @JsonIgnore
   @Transient
   private boolean isOptionsDetached() {
     return options != null && options.stream().filter(e -> e.isDetached()).collect(counting()).intValue() > ZERO;
@@ -163,6 +184,7 @@ public class OrderRecord extends AbstractType {
     }
   }
 
+  @JsonProperty
   @XmlElement
   @Column(name = AMOUNT_COLUMN_NAME, nullable = false)
   public BigDecimal getAmount() {
@@ -172,12 +194,22 @@ public class OrderRecord extends AbstractType {
     return amount;
   }
 
+  public void setAmount(final BigDecimal amount) {
+    this.amount = amount;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = DELIVERY_DATE_COLUMN_NAME)
   public Date getDeliveryDate() {
     return deliveryDate;
   }
 
+  public void setDeliveryDate(final Date deliveryDate) {
+    this.deliveryDate = deliveryDate;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = DESCRIPTION_COLUMN_NAME)
   public String getDescription() {
@@ -187,6 +219,11 @@ public class OrderRecord extends AbstractType {
     return description;
   }
 
+  public void setDescription(final String description) {
+    this.description = description;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = DISCOUNT_COLUMN_NAME)
   public BigDecimal getDiscount() {
@@ -196,6 +233,11 @@ public class OrderRecord extends AbstractType {
     return discount;
   }
 
+  public void setDiscount(final BigDecimal discount) {
+    this.discount = discount;
+  }
+
+  @JsonIgnore
   @Transient
   @XmlTransient
   public BigDecimal getDiscountTotal() {
@@ -205,6 +247,7 @@ public class OrderRecord extends AbstractType {
     return BigDecimal.ZERO;
   }
 
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_HEIGHT_COLUMN_NAME)
   public BigDecimal getItemHeight() {
@@ -214,6 +257,11 @@ public class OrderRecord extends AbstractType {
     return itemHeight;
   }
 
+  public void setItemHeight(final BigDecimal itemHeight) {
+    this.itemHeight = itemHeight;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_HEIGHT_UNIT_COLUMN_NAME)
   public String getItemHeightUnit() {
@@ -223,6 +271,11 @@ public class OrderRecord extends AbstractType {
     return itemHeightUnit;
   }
 
+  public void setItemHeightUnit(final String itemHeightUnit) {
+    this.itemHeightUnit = itemHeightUnit;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_LENGTH_COLUMN_NAME)
   public BigDecimal getItemLength() {
@@ -232,6 +285,11 @@ public class OrderRecord extends AbstractType {
     return itemLength;
   }
 
+  public void setItemLength(final BigDecimal itemLength) {
+    this.itemLength = itemLength;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_LENGTH_UNIT_COLUMN_NAME)
   public String getItemLengthUnit() {
@@ -241,6 +299,11 @@ public class OrderRecord extends AbstractType {
     return itemLengthUnit;
   }
 
+  public void setItemLengthUnit(final String itemLengthUnit) {
+    this.itemLengthUnit = itemLengthUnit;
+  }
+
+  @JsonIgnore
   @Transient
   @XmlTransient
   public BigDecimal getItemTotal() {
@@ -250,6 +313,7 @@ public class OrderRecord extends AbstractType {
     return BigDecimal.ZERO;
   }
 
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_URL_COLUMN_NAME)
   public String getItemUrl() {
@@ -259,6 +323,11 @@ public class OrderRecord extends AbstractType {
     return itemUrl;
   }
 
+  public void setItemUrl(final String itemUrl) {
+    this.itemUrl = itemUrl;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_WEIGHT_COLUMN_NAME)
   public BigDecimal getItemWeight() {
@@ -268,6 +337,11 @@ public class OrderRecord extends AbstractType {
     return itemWeight;
   }
 
+  public void setItemWeight(final BigDecimal itemWeight) {
+    this.itemWeight = itemWeight;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_WEIGHT_UNIT_COLUMN_NAME)
   public String getItemWeightUnit() {
@@ -277,6 +351,11 @@ public class OrderRecord extends AbstractType {
     return itemWeightUnit;
   }
 
+  public void setItemWeightUnit(final String itemWeightUnit) {
+    this.itemWeightUnit = itemWeightUnit;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_WIDTH_COLUMN_NAME)
   public BigDecimal getItemWidth() {
@@ -286,6 +365,11 @@ public class OrderRecord extends AbstractType {
     return itemWidth;
   }
 
+  public void setItemWidth(final BigDecimal itemWidth) {
+    this.itemWidth = itemWidth;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = ITEM_WIDTH_UNIT_COLUMN_NAME)
   public String getItemWidthUnit() {
@@ -295,6 +379,11 @@ public class OrderRecord extends AbstractType {
     return itemWidthUnit;
   }
 
+  public void setItemWidthUnit(final String itemWidthUnit) {
+    this.itemWidthUnit = itemWidthUnit;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = NAME_COLUMN_NAME)
   public String getName() {
@@ -304,10 +393,23 @@ public class OrderRecord extends AbstractType {
     return name;
   }
 
+  public void setName(final String name) {
+    this.name = name;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = OPTION_COLUMN_NAME)
   public String getOption() {
     return option;
+  }
+
+  public void setOption(final String option) {
+    this.option = option;
+  }
+
+  public void setOptions(final Set<Option> options) {
+    this.options = options;
   }
 
   @OrderBy(POSITION_ASC)
@@ -319,6 +421,7 @@ public class OrderRecord extends AbstractType {
     return options;
   }
 
+  @JsonProperty
   @XmlElement
   @Column(name = ORDER_RECORD_ID_COLUMN_NAME, nullable = false)
   public String getOrderRecordId() {
@@ -328,17 +431,32 @@ public class OrderRecord extends AbstractType {
     return orderRecordId;
   }
 
+  public void setOrderRecordId(final String orderRecordId) {
+    this.orderRecordId = orderRecordId;
+  }
+
+  @JsonIgnore
   @XmlTransient
   @Column(name = POSITION_COLUMN_NAME)
   public Integer getPosition() {
     return position;
   }
 
+  public void setPosition(final Integer position) {
+    this.position = position;
+  }
+
+  @JsonIgnore
   @Transient
   public Product getProduct() {
     return product;
   }
 
+  public void setProduct(final Product product) {
+    this.product = product;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = PRODUCT_NUMBER_COLUMN_NAME, nullable = false)
   public String getProductNumber() {
@@ -348,12 +466,22 @@ public class OrderRecord extends AbstractType {
     return productNumber;
   }
 
+  public void setProductNumber(final String productNumber) {
+    this.productNumber = productNumber;
+  }
+
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = QUANTITY_COLUMN_NAME, nullable = false)
   public BigInteger getQuantity() {
     return quantity;
   }
 
+  public void setQuantity(final BigInteger quantity) {
+    this.quantity = quantity;
+  }
+
+  @JsonProperty
   @XmlElement
   @Column(name = SHIPPING_COST_COLUMN_NAME)
   public BigDecimal getShippingCost() {
@@ -363,6 +491,11 @@ public class OrderRecord extends AbstractType {
     return shippingCost;
   }
 
+  public void setShippingCost(final BigDecimal shippingCost) {
+    this.shippingCost = shippingCost;
+  }
+
+  @JsonIgnore
   @Transient
   @XmlTransient
   public BigDecimal getShippingTotal() {
@@ -372,6 +505,7 @@ public class OrderRecord extends AbstractType {
     return BigDecimal.ZERO;
   }
 
+  @JsonProperty
   @XmlElement
   @Column(name = TAX_COLUMN_NAME)
   public BigDecimal getTax() {
@@ -381,6 +515,11 @@ public class OrderRecord extends AbstractType {
     return tax;
   }
 
+  public void setTax(final BigDecimal tax) {
+    this.tax = tax;
+  }
+
+  @JsonIgnore
   @Transient
   @XmlTransient
   public BigDecimal getTaxTotal() {
@@ -388,98 +527,6 @@ public class OrderRecord extends AbstractType {
       return getTax().multiply(new BigDecimal(getQuantity()));
     }
     return BigDecimal.ZERO;
-  }
-
-  public void setAmount(final BigDecimal amount) {
-    this.amount = amount;
-  }
-
-  public void setDeliveryDate(final Date deliveryDate) {
-    this.deliveryDate = deliveryDate;
-  }
-
-  public void setDescription(final String description) {
-    this.description = description;
-  }
-
-  public void setDiscount(final BigDecimal discount) {
-    this.discount = discount;
-  }
-
-  public void setItemHeight(final BigDecimal itemHeight) {
-    this.itemHeight = itemHeight;
-  }
-
-  public void setItemHeightUnit(final String itemHeightUnit) {
-    this.itemHeightUnit = itemHeightUnit;
-  }
-
-  public void setItemLength(final BigDecimal itemLength) {
-    this.itemLength = itemLength;
-  }
-
-  public void setItemLengthUnit(final String itemLengthUnit) {
-    this.itemLengthUnit = itemLengthUnit;
-  }
-
-  public void setItemUrl(final String itemUrl) {
-    this.itemUrl = itemUrl;
-  }
-
-  public void setItemWeight(final BigDecimal itemWeight) {
-    this.itemWeight = itemWeight;
-  }
-
-  public void setItemWeightUnit(final String itemWeightUnit) {
-    this.itemWeightUnit = itemWeightUnit;
-  }
-
-  public void setItemWidth(final BigDecimal itemWidth) {
-    this.itemWidth = itemWidth;
-  }
-
-  public void setItemWidthUnit(final String itemWidthUnit) {
-    this.itemWidthUnit = itemWidthUnit;
-  }
-
-  public void setName(final String name) {
-    this.name = name;
-  }
-
-  public void setOption(final String option) {
-    this.option = option;
-  }
-
-  public void setOptions(final Set<Option> options) {
-    this.options = options;
-  }
-
-  public void setOrderRecordId(final String orderRecordId) {
-    this.orderRecordId = orderRecordId;
-  }
-
-  public void setPosition(final Integer position) {
-    this.position = position;
-  }
-
-  public void setProduct(final Product product) {
-    this.product = product;
-  }
-
-  public void setProductNumber(final String productNumber) {
-    this.productNumber = productNumber;
-  }
-
-  public void setQuantity(final BigInteger quantity) {
-    this.quantity = quantity;
-  }
-
-  public void setShippingCost(final BigDecimal shippingCost) {
-    this.shippingCost = shippingCost;
-  }
-
-  public void setTax(final BigDecimal tax) {
-    this.tax = tax;
   }
 
   @Override

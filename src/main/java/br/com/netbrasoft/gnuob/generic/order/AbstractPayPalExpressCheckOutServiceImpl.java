@@ -18,7 +18,7 @@ import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.CUSTOMER_S
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_SITE_CANCEL_PROPERTY_VALUE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_SITE_PAYPAL_NOTIFICATION_PROPERTY_VALUE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GNUOB_SITE_REDIRECT_PROPERTY_VALUE;
-import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PASSWORD_PROPERTY;
+import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.PSWD_PROPERTY;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SIGNATURE_PROPERTY;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE_PROPERTY;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USERNAME_PROPERTY;
@@ -814,7 +814,7 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
       final UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
 
       userIdPasswordType.setUsername(USERNAME_PROPERTY);
-      userIdPasswordType.setPassword(PASSWORD_PROPERTY);
+      userIdPasswordType.setPassword(PSWD_PROPERTY);
       userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
 
       httpClientPolicy.setConnectionTimeout(36000);
@@ -855,7 +855,7 @@ public abstract class AbstractPayPalExpressCheckOutServiceImpl<O extends Order> 
 
       final UserIdPasswordType userIdPasswordType = new UserIdPasswordType();
       userIdPasswordType.setUsername(USERNAME_PROPERTY);
-      userIdPasswordType.setPassword(PASSWORD_PROPERTY);
+      userIdPasswordType.setPassword(PSWD_PROPERTY);
       userIdPasswordType.setSignature(SIGNATURE_PROPERTY);
 
       final CustomSecurityHeaderType customSecurityHeaderType = new CustomSecurityHeaderType();

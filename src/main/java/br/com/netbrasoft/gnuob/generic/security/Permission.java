@@ -14,6 +14,7 @@
 
 package br.com.netbrasoft.gnuob.generic.security;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OTHERS_COLUMN_NAME;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.OWNER_COLUMN_NAME;
@@ -23,7 +24,12 @@ import static br.com.netbrasoft.gnuob.generic.security.Rule.DELETE_ACCESS;
 import static br.com.netbrasoft.gnuob.generic.security.Rule.READ_ACCESS;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.InheritanceType.SINGLE_TABLE;
+import static org.apache.commons.beanutils.BeanUtils.copyProperties;
+import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -35,7 +41,8 @@ import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.netbrasoft.gnuob.generic.AbstractType;
 
@@ -52,11 +59,25 @@ public class Permission extends AbstractType {
   private Rule others;
   private Rule owner;
 
+  public Permission() {
+    super();
+  }
+
+  public Permission(String json) throws IOException, IllegalAccessException, InvocationTargetException {
+    copyProperties(this, mapper.readValue(json, Permission.class));
+  }
+
   public static Permission getInstance() {
     return new Permission();
   }
 
+  public static Permission getInstanceByJson(String json)
+      throws IllegalAccessException, InvocationTargetException, IOException {
+    return new Permission(json);
+  }
+
   @Override
+  @JsonIgnore
   @Transient
   public boolean isDetached() {
     return isAbstractTypeDetached();
@@ -74,6 +95,7 @@ public class Permission extends AbstractType {
     prePersist();
   }
 
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = GROUP_COLUMN_NAME, nullable = false)
   @Enumerated(STRING)
@@ -84,6 +106,7 @@ public class Permission extends AbstractType {
     return group;
   }
 
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = OTHERS_COLUMN_NAME, nullable = false)
   @Enumerated(STRING)
@@ -94,6 +117,7 @@ public class Permission extends AbstractType {
     return others;
   }
 
+  @JsonProperty(required = true)
   @XmlElement(required = true)
   @Column(name = OWNER_COLUMN_NAME, nullable = false)
   @Enumerated(STRING)

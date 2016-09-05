@@ -14,9 +14,11 @@
 
 package br.com.netbrasoft.gnuob.generic.setting;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.GROUP;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.SITE;
 import static br.com.netbrasoft.gnuob.generic.NetbrasoftSoapConstants.USER;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getSettingInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -28,6 +30,9 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.junit.After;
@@ -47,6 +52,21 @@ public class SettingTest {
 
   @After
   public void tearDown() throws Exception {}
+
+  @Test
+  public void testJsonSetting() throws IllegalAccessException, InvocationTargetException, IOException {
+    final Setting setting = getSettingInstance();
+    final Setting jsonSetting = Setting.getInstanceByJson(mapper.writeValueAsString(setting));
+    assertEquals(setting.getActive(), jsonSetting.getActive());
+    assertEquals(setting.getVersion(), jsonSetting.getVersion());
+    assertEquals(setting.getId(), jsonSetting.getId());
+    assertEquals(setting.getProperty(), jsonSetting.getProperty());
+    assertEquals(setting.getValue(), jsonSetting.getValue());
+    assertEquals(setting.getDescription(), jsonSetting.getDescription());
+    assertEquals(setting.getPermission().getGroup(), jsonSetting.getPermission().getGroup());
+    assertEquals(setting.getPermission().getOthers(), jsonSetting.getPermission().getOthers());
+    assertEquals(setting.getPermission().getOwner(), jsonSetting.getPermission().getOwner());
+  }
 
   @Test
   public void testSettingIsDetached() {

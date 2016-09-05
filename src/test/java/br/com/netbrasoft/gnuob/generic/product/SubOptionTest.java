@@ -14,6 +14,8 @@
 
 package br.com.netbrasoft.gnuob.generic.product;
 
+import static br.com.netbrasoft.gnuob.generic.JaxRsActivator.mapper;
+import static br.com.netbrasoft.gnuob.generic.utils.DummyInstanceHelper.getSubOptionInstance;
 import static org.apache.commons.lang3.builder.ToStringStyle.SHORT_PREFIX_STYLE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -26,6 +28,9 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.junit.After;
@@ -45,6 +50,18 @@ public class SubOptionTest {
 
   @After
   public void tearDown() throws Exception {}
+  
+  @Test
+  public void testJsonOption() throws IllegalAccessException, InvocationTargetException, IOException {
+    final SubOption subOption = getSubOptionInstance();
+    final SubOption jsonSubOption = SubOption.getInstanceByJson(mapper.writeValueAsString(subOption));
+    assertEquals(subOption.getId(), jsonSubOption.getId());
+    assertEquals(subOption.getVersion(), jsonSubOption.getVersion());
+    assertEquals(subOption.getDescription(), jsonSubOption.getDescription());
+    assertEquals(subOption.getPosition(), jsonSubOption.getPosition());
+    assertEquals(subOption.isDisabled(), jsonSubOption.isDisabled());
+    assertEquals(subOption.getValue(), jsonSubOption.getValue());
+  }
 
   @Test
   public void testGetDescription() {
